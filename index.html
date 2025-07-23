@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game</title>
+    <title>Snake Game with Enhanced Sound Effects</title>
     <style>
         * {
             margin: 0;
@@ -171,6 +171,19 @@
         .right-btn { grid-column: 3; grid-row: 2; }
         .down-btn { grid-column: 2; grid-row: 2; }
         
+        .sound-control {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sound-control label {
+            color: white;
+            font-size: 1rem;
+        }
+        
         @media (max-width: 600px) {
             .mobile-controls {
                 display: grid;
@@ -197,6 +210,11 @@
         </div>
         
         <canvas id="gameCanvas" width="500" height="500"></canvas>
+        
+        <div class="sound-control">
+            <label for="soundToggle">Sound Effects:</label>
+            <input type="checkbox" id="soundToggle" checked>
+        </div>
         
         <div class="controls">
             <button id="startBtn">Start Game</button>
@@ -235,6 +253,7 @@
         const pauseBtn = document.getElementById('pauseBtn');
         const resetBtn = document.getElementById('resetBtn');
         const restartBtn = document.getElementById('restartBtn');
+        const soundToggle = document.getElementById('soundToggle');
         
         // Mobile controls
         const upBtn = document.querySelector('.up-btn');
@@ -259,6 +278,125 @@
         let gameInterval;
         let gameRunning = false;
         let gamePaused = false;
+        let moveSoundTimer = 0;
+        let moveSoundInterval = 15;
+        
+        // Audio context for sound effects
+        let audioContext;
+        let soundEnabled = true;
+        
+        // Initialize audio
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) {
+                console.error('Web Audio API is not supported in this browser');
+            }
+        }
+        
+        // Enhanced sound effects
+        function playEatSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Create a pleasant "collect" sound
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+            oscillator.frequency.exponentialRampToValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+        
+        function playCollisionSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Create a harsh "collision" sound
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(110, audioContext.currentTime); // A2
+            oscillator.frequency.exponentialRampToValueAtTime(55, audioContext.currentTime + 0.5);
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
+        function playMoveSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Create a subtle "slither" sound
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(220 + Math.random() * 40, audioContext.currentTime);
+            
+            gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+        
+        function playBackgroundMusic() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Create a simple ambient background melody
+            const startTime = audioContext.currentTime;
+            const notes = [
+                {freq: 261.63, duration: 0.4}, // C4
+                {freq: 329.63, duration: 0.4}, // E4
+                {freq: 392.00, duration: 0.4}, // G4
+                {freq: 523.25, duration: 0.8}, // C5
+                {freq: 493.88, duration: 0.4}, // B4
+                {freq: 440.00, duration: 0.4}, // A4
+                {freq: 392.00, duration: 0.8}, // G4
+                {freq: 329.63, duration: 0.4}, // E4
+                {freq: 392.00, duration: 0.4}, // G4
+                {freq: 440.00, duration: 0.8}  // A4
+            ];
+            
+            let timeOffset = 0;
+            
+            notes.forEach(note => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = note.freq;
+                gainNode.gain.value = 0.1;
+                
+                gainNode.gain.setValueAtTime(0.1, startTime + timeOffset);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + timeOffset + note.duration - 0.05);
+                
+                oscillator.start(startTime + timeOffset);
+                oscillator.stop(startTime + timeOffset + note.duration);
+                
+                timeOffset += note.duration;
+            });
+        }
         
         // Initialize game
         function initGame() {
@@ -277,6 +415,7 @@
             nextDirection = 'right';
             score = 0;
             gameSpeed = initialSpeed;
+            moveSoundTimer = 0;
             updateScore();
             
             // Hide game over screen
@@ -393,6 +532,13 @@
             // Update direction
             direction = nextDirection;
             
+            // Play move sound periodically
+            moveSoundTimer++;
+            if (moveSoundTimer >= moveSoundInterval) {
+                playMoveSound();
+                moveSoundTimer = 0;
+            }
+            
             // Calculate new head position
             const head = {x: snake[0].x, y: snake[0].y};
             
@@ -413,6 +559,7 @@
             
             // Check collision with walls
             if (head.x < 0 || head.x >= gridWidth || head.y < 0 || head.y >= gridHeight) {
+                playCollisionSound();
                 gameOver();
                 return;
             }
@@ -420,6 +567,7 @@
             // Check collision with self
             for (let i = 0; i < snake.length; i++) {
                 if (snake[i].x === head.x && snake[i].y === head.y) {
+                    playCollisionSound();
                     gameOver();
                     return;
                 }
@@ -430,6 +578,8 @@
             
             // Check if food is eaten
             if (head.x === food.x && head.y === food.y) {
+                playEatSound();
+                
                 // Increase score
                 score += 10;
                 updateScore();
@@ -474,6 +624,7 @@
             pauseBtn.textContent = "Pause";
             draw();
             gameInterval = setInterval(update, gameSpeed);
+            playBackgroundMusic();
         }
         
         // Pause/resume game
@@ -510,12 +661,18 @@
             }
         }
         
+        // Toggle sound effects
+        function toggleSound() {
+            soundEnabled = soundToggle.checked;
+        }
+        
         // Event listeners
         document.addEventListener('keydown', handleKeydown);
         startBtn.addEventListener('click', startGame);
         pauseBtn.addEventListener('click', togglePause);
         resetBtn.addEventListener('click', resetGame);
         restartBtn.addEventListener('click', startGame);
+        soundToggle.addEventListener('change', toggleSound);
         
         // Mobile controls
         upBtn.addEventListener('click', () => { if (direction !== 'down') nextDirection = 'up'; });
@@ -523,9 +680,12 @@
         leftBtn.addEventListener('click', () => { if (direction !== 'right') nextDirection = 'left'; });
         rightBtn.addEventListener('click', () => { if (direction !== 'left') nextDirection = 'right'; });
         
-        // Initialize and draw initial state
-        initGame();
-        draw();
+        // Initialize audio and game
+        window.addEventListener('load', () => {
+            initAudio();
+            initGame();
+            draw();
+        });
     </script>
 </body>
 </html>
