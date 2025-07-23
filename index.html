@@ -1,1963 +1,531 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head> 
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiches de Physique - Chapitres T4 et T5</title>
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Snake Game</title>
     <style>
-        /* Base styles and theme variables */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-card: #ffffff;
-            --text-primary: #2e3338;
-            --text-secondary: #6b7280;
-            --text-accent: #0066cc;
-            --border: #e5e7eb;
-            --shadow: rgba(0, 0, 0, 0.1);
-            --code-bg: #f3f4f6;
-            --highlight: #fef3c7;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1d23;
-            --bg-secondary: #25272d;
-            --bg-card: #2f3349;
-            --text-primary: #f1f3f4;
-            --text-secondary: #9ca3af;
-            --text-accent: #60a5fa;
-            --border: #374151;
-            --shadow: rgba(0, 0, 0, 0.3);
-            --code-bg: #374151;
-            --highlight: #451a03;
-            --success: #059669;
-            --warning: #d97706;
-            --danger: #dc2626;
-        }
-
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: all 0.3s ease;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem;
-            background: var(--bg-card);
-            border-radius: 12px;
-            box-shadow: 0 2px 10px var(--shadow);
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            box-shadow: 0 2px 10px var(--shadow);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-
-        /* Burger Menu Styles */
-        .burger-menu-icon {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
             display: flex;
-            flex-direction: column;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
-            padding: 8px;
-            cursor: pointer;
-            box-shadow: 0 2px 10px var(--shadow);
-            transition: all 0.3s ease;
-            z-index: 1000;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            padding: 20px;
+            overflow: hidden;
         }
-
-        .burger-menu-icon .line {
-            width: 80%;
-            height: 3px;
-            background: var(--text-primary);
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100%;
-            background: var(--bg-card);
-            box-shadow: 2px 0 10px var(--shadow);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-            z-index: 999;
-            padding-top: 80px; /* Space for the fixed header/icon */
-            border-right: 1px solid var(--border);
-            border-radius: 0 12px 12px 0;
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar ul li a {
-            display: block;
-            padding: 15px 20px;
-            color: var(--text-primary);
-            text-decoration: none;
-            border-bottom: 1px solid var(--border);
-            transition: background 0.2s ease;
-        }
-
-        .sidebar ul li a:hover {
-            background: var(--bg-secondary);
-            color: var(--text-accent);
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-            z-index: 998;
-        }
-
-        .overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        h1 {
-            color: var(--text-accent);
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        h2 {
-            color: var(--text-accent);
-            font-size: 1.8rem;
-            margin: 2rem 0 1rem 0;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--text-accent);
-        }
-
-        h3 {
-            color: var(--text-primary);
-            font-size: 1.4rem;
-            margin: 1.5rem 0 0.8rem 0;
-            font-weight: 600;
-        }
-
-        h4 {
-            color: var(--text-primary);
-            font-size: 1.2rem;
-            margin: 1rem 0 0.5rem 0;
-            font-weight: 600;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            box-shadow: 0 2px 8px var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px var(--shadow);
-        }
-
-        /* Specific content sections styling */
-        .property, .definition, .theorem {
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card));
-            border-radius: 0 8px 8px 0;
-            padding: 1rem;
-            margin: 1rem 0;
-            box-shadow: 0 1px 6px var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .property {
-            border-left: 4px solid var(--success);
-        }
-
-        .definition {
-            border-left: 4px solid var(--text-accent);
-        }
-
-        .theorem {
-            border-left: 4px solid var(--warning);
-            background: linear-gradient(135deg, var(--highlight), var(--bg-card));
-        }
-
-        .application {
-            background: var(--bg-secondary);
-            border: 2px dashed var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-
-        .demo {
-            background: var(--code-bg);
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 0.5rem 0;
-            font-style: italic;
-            color: var(--text-secondary);
-        }
-
-        .plan {
-            background: var(--bg-secondary);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .plan ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .plan li {
-            padding: 0.3rem 0;
-            padding-left: 1rem;
+        
+        .game-container {
             position: relative;
-        }
-
-        .plan li:before {
-            content: "▶";
-            color: var(--text-accent);
-            position: absolute;
-            left: 0;
-        }
-
-        .plan li ul {
-            margin-left: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .plan li ul li:before {
-            content: "→";
-        }
-
-        .formula {
-            background: var(--code-bg);
-            padding: 0.8rem;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.6rem; /* Increased font size for formulas for better fraction visibility */
+            width: 100%;
+            max-width: 600px;
             text-align: center;
-            margin: 0.5rem 0;
-            border: 1px solid var(--border);
-            overflow-x: auto;
         }
-
-        .important {
-            background: linear-gradient(135deg, var(--danger), rgba(239, 68, 68, 0.1));
+        
+        .header {
+            margin-bottom: 20px;
             color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
-        [data-theme="dark"] .important {
-            background: linear-gradient(135deg, var(--danger), rgba(220, 38, 38, 0.2));
-            color: var(--text-primary);
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .schema {
-            text-align: center;
-            padding: 2rem;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            margin: 1rem 0;
-            border: 2px solid var(--border);
-            box-shadow: 0 2px 8px var(--shadow);
-            font-family: monospace;
-            font-size: 1.1rem;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .summary-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px var(--shadow);
-            transition: all 0.3s ease;
-        }
-        .summary-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px var(--shadow);
-        }
-
-        .badge {
-            display: inline-block;
-            background: var(--text-accent);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin: 0.2rem;
-        }
-
-        .ordres-grandeur {
-            background: var(--bg-secondary);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .ordres-grandeur ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .ordres-grandeur li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
+        
+        .stats {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #fff;
         }
-
-        .ordres-grandeur li:last-child {
-            border-bottom: none;
+        
+        .stats div {
+            flex: 1;
         }
-
-        .rendement {
-            background: var(--success);
+        
+        .stats .speed {
+            text-align: right;
+        }
+        
+        canvas {
+            background: #0d1b2a;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
             color: white;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
+            font-size: 1.1rem;
             font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
-
-        table {
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #4facfe;
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-collapse: collapse;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            color: white;
+            z-index: 10;
+            display: none;
         }
-        table th, table td {
-            padding: 1rem;
-            border: 1px solid var(--border);
-            text-align: left;
+        
+        .game-over h2 {
+            font-size: 3.5rem;
+            color: #ff4d4d;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.7);
         }
-        table thead tr {
-            background: var(--bg-secondary);
+        
+        .final-score {
+            font-size: 2rem;
+            margin-bottom: 30px;
         }
-
-        /* Animation specific CSS */
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        
+        .mobile-controls {
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
         }
-
-        .animate-on-scroll.is-visible {
-            opacity: 1;
-            transform: translateY(0);
+        
+        .mobile-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.5rem;
+            padding: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
         }
-
-        /* Chapter visibility */
-        section {
-            display: none; /* Hide all sections by default */
+        
+        .mobile-btn:active {
+            background: rgba(255, 255, 255, 0.4);
         }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
+        
+        .up-btn { grid-column: 2; grid-row: 1; }
+        .left-btn { grid-column: 1; grid-row: 2; }
+        .right-btn { grid-column: 3; grid-row: 2; }
+        .down-btn { grid-column: 2; grid-row: 2; }
+        
+        @media (max-width: 600px) {
+            .mobile-controls {
+                display: grid;
             }
             
-            h1 {
-                font-size: 2rem;
+            .header h1 {
+                font-size: 2.2rem;
             }
             
-            .theme-toggle {
-                top: 10px;
-                right: 10px;
-            }
-
-            .burger-menu-icon {
-                top: 10px;
-                left: 10px;
-            }
-            
-            .sidebar {
-                width: 200px;
-                padding-top: 60px;
-            }
-
-            .summary-grid {
-                grid-template-columns: 1fr;
+            .stats {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    
-    <div class="burger-menu-icon" onclick="toggleSidebar()">
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-    </div>
-
-    <div class="sidebar" id="sidebar">
-        <ul>
-            <li><a href="#chapitre-t4" onclick="selectChapter('chapitre-t4')">Chapitre T4 - Transition de phase</a></li>
-            <li><a href="#chapitre-t5" onclick="selectChapter('chapitre-t5')">Chapitre T5 - Machines thermiques</a></li>
-        </ul>
-    </div>
-    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
-    <div class="container">
-        <header class="header animate-on-scroll">
-            <h1>Physique - Lycée Paul Valéry MP2I</h1>
-            <p><strong>R. Metzdorff - 2024–2025</strong></p>
-        </header>
-
-        <!-- Chapitre T4 - Transition de phase -->
-        <section id="chapitre-t4">
-            <div class="header animate-on-scroll">
-                <h1>Chapitre T4 – Transition de phase</h1>
-            </div>
-
-            <div class="card plan animate-on-scroll">
-                <h2>📋 Plan du cours</h2>
-                <ul>
-                    <li>I Corps pur diphasé
-                        <ul>
-                            <li>I.1 Vocabulaire</li>
-                            <li>I.2 Diagramme de phase (P, T)</li>
-                            <li>I.3 Cas de l’eau dans une atmosphère inerte</li>
-                        </ul>
-                    </li>
-                    <li>II Équilibre liquide – vapeur
-                        <ul>
-                            <li>II.1 Diagramme de Clapeyron</li>
-                            <li>II.2 Titre en vapeur</li>
-                        </ul>
-                    </li>
-                    <li>III Bilans
-                        <ul>
-                            <li>III.1 Bilan d’énergie</li>
-                            <li>III.2 Bilan d’entropie</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="summary-grid">
-                <div class="summary-card animate-on-scroll">
-                    <h3>🎯 Ce qu’il faut savoir et savoir faire</h3>
-                    <ul>
-                        <li>Analyser un diagramme de phase expérimental (P, T).</li>
-                        <li>Proposer un jeu de variables d’état suffisant pour caractériser l’état d’équilibre d’un corps pur diphasé soumis aux seules forces de pression.</li>
-                        <li>Positionner les phases dans les diagrammes (P, T) et (P, v).</li>
-                        <li>Déterminer la composition d’un mélange diphasé en un point d’un diagramme (P, v).</li>
-                        <li>Exploiter l’extensivité de l’enthalpie et réaliser des bilans énergétiques en prenant en compte des transitions de phases.</li>
-                        <li>Exploiter la relation entre les variations d’entropie et d’enthalpie associées à une transition de phase.</li>
-                    </ul>
-                </div>
-                
-                <div class="summary-card animate-on-scroll">
-                    <h3>📝 Questions de cours</h3>
-                    <ul>
-                        <li>Tracer l’allure générale d’un diagramme (P, T) et y placer les phases. Nommer les lignes et les points particuliers.</li>
-                        <li>Tracer l’allure générale d’un diagramme de Clapeyron (P, v) pour un équilibre liquide – vapeur et y placer les phases. Nommer les lignes et le point particulier. Tracer l’allure de quelques isothermes.</li>
-                        <li>Énoncer le théorème des moments et expliquer son interprétation graphique dans le diagramme de Clapeyron.</li>
-                        <li>Conduire un bilan d’énergie et/ou d’entropie simple pour un système qui subit une transition de phase.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h2 class="animate-on-scroll">I. Documents</h2>
-            
-            <div class="card animate-on-scroll">
-                <h3>Document 1 – Diagramme de phase (P, T) de l’eau</h3>
-                <p>[Diagramme de phase (P, T) de l'eau]</p>
-            </div>
-
-            <div class="card animate-on-scroll">
-                <h3>Document 2 – Diagramme de phase (P, T) de H2 et CO2</h3>
-                <p>[Diagramme de phase (P, T) de H2 et CO2]</p>
-            </div>
-
-            <div class="card animate-on-scroll">
-                <h3>Document 3 – Point triple</h3>
-                <p>Le caractère unique du point triple en fait un candidat idéal pour définir une référence. Le point triple de l’eau a ainsi servi, entre 1954 et 2019, à la définition de la température thermodynamique. Il a pour coordonnées $T_c = 273,16 \text{ K} = 0,01 \text{ }^\circ\text{C}$ et $P_c = 611 \text{ Pa}$.</p>
-                <p><a href="https://youtu.be/Juz9pVVsmQQ" target="_blank" rel="noopener noreferrer">https://youtu.be/Juz9pVVsmQQ</a></p>
-            </div>
-
-            <div class="card animate-on-scroll">
-                <h3>Document 4 – Fluide supercritique</h3>
-                <p>Les propriétés d’un fluide supercritique, telles que sa densité ou sa viscosité, sont intermédiaires entre celles d’un liquide et d’un gaz. La transition gaz – fluide supercritique ou liquide – fluide supercritique ne se remarque pas, il ne s’agit pas d’une transition de phase. La délimitation de la zone associée au fluide supercritique dans le diagramme (P, T) est arbitraire : on considère qu’un fluide dont la température et la pression sont supérieures à celles du point critique est supercritique.</p>
-                <p>Il s’agit d’un état peut fréquent, mais exploité dans certains procédés industriels : le CO2, dont le point critique se situe vers ($31 \text{ }^\circ\text{C}$, $7 \text{ bar}$), est utilisé comme fluide supercritique pour décaféiner le café ou pour retirer le « goût de bouchon » des bouchons en liège.</p>
-                <p><a href="https://www.youtube.com/watch?v=GEr3NxsPTOA" target="_blank" rel="noopener noreferrer">L’actualité chimique</a> et <a href="https://youtu.be/2d7RGQMCX24" target="_blank" rel="noopener noreferrer">Fluides supercritiques et recyclage</a></p>
-            </div>
-
-            <div class="card animate-on-scroll">
-                <h3>Document 5 – Isothermes d’Andrews du SF6</h3>
-                <p>Une masse m d’hexafluorure de soufre SF6 est enfermée dans une enceinte fermée par un piston et en contact thermique avec un thermostat à la température T. On relève l’évolution de la pression du système en fonction du volume de l’enceinte pour quelques températures. Les courbes isothermes obtenues, appelées isothermes d’Andrews, sont représentées ci-dessous dans un diagramme de Watt (P, V ). Le système étant fermé, la masse m est constante et l’allure des courbes serait similaire dans le diagramme de Clapeyron (P, v).</p>
-                <p>[Graphique des isothermes d'Andrews du SF6]</p>
-            </div>
-
-            <h2 class="animate-on-scroll">II. Corps pur diphasé</h2>
-            <p>Dans ce chapitre, on se limite à l’étude de systèmes constitués d’une seule espèce chimique, on parle de corps pur.</p>
-            <h3>II.1 Vocabulaire</h3>
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Phase et Transition de phase</h4>
-                <p>Un corps pur peut exister sous trois formes, appelées phases : solide, liquide et gaz. Le passage d’une phase à l’autre s’appelle une <strong>transition de phase</strong>.</p>
-                <ul>
-                    <li>Solide $\leftrightarrow$ Liquide $\leftrightarrow$ Gaz</li>
-                </ul>
-                <p>Exemple :</p>
-                <ul>
-                    <li>L $\to$ G : ébullition de l’eau, évaporation de la sueur ;</li>
-                    <li>L $\to$ S : formation d’un glaçon au congélateur ;</li>
-                    <li>G $\to$ L : phénomène de rosée ;</li>
-                    <li>G $\to$ S : formation de givre ;</li>
-                    <li>S $\to$ L : glaçon dans un verre ;</li>
-                    <li>S $\to$ G : eau sur mars, sodium dans une lampe spectrale, neige carbonique.</li>
-                </ul>
-                <p>Rq : Attention, certaines expressions de la vie courante sont abusives !</p>
-                <p>Rq : Le terme vaporisation désigne la transition de phase L $\to$ G en général. On peu distinguer :</p>
-                <ul>
-                    <li>l’évaporation, qui correspond à la vaporisation de la surface du liquide ;</li>
-                    <li>l’ébullition, qui correspond à la vaporisation du liquide par formation de bulles au sein même du liquide.</li>
-                </ul>
-                <p>L’état du système à l’équilibre dépend de sa température et de sa pression.</p>
-            </div>
-
-            <h3>II.2 Diagramme de phase (P, T)</h3>
-            <p>Pour connaitre la phase d’un corps pur dans un état donné, les variables intensives P et T suffisent : on utilise alors les diagrammes de phases (P, T) (cf. Doc. 1 et 2).</p>
-            <div class="card animate-on-scroll">
-                <p>Le diagramme de phase comporte plusieurs parties :</p>
-                <ul>
-                    <li>domaine du solide (resp. liquide, gaz) : un corps pur à l’équilibre dans cette zone est intégralement à l’état solide (resp. liquide, gaz) ;</li>
-                    <li>ces domaines sont séparés par les <strong>courbes de coexistence</strong> (courbes de fusion, de vaporisation et de sublimation) : elles correspondent aux états où il peut y avoir équilibre entre deux phases distinctes ;</li>
-                    <li>l’intersection des courbes de coexistence est le <strong>point triple</strong> : il s’agit de l’unique couple de pression-température où les trois phases coexistent à l’équilibre (cf. Doc. 3) ;</li>
-                    <li>la courbe de coexistence liquide – gaz se termine au <strong>point critique</strong> ($T_c, P_c$). Pour $P > P_c$, quelle que soit la température, il ne peut y avoir d’équilibre liquide – gaz ;</li>
-                    <li>un système dont la pression et la température sont supérieures à celles du point triple passe à l’état de <strong>fluide supercritique</strong> : c’est un état peu courant, dont les propriétés sont intermédiaires entre celles d’un gaz et d’un liquide (cf. Doc. 4).</li>
-                </ul>
-            </div>
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Pression de vapeur saturante</h4>
-                <p>Pour un corps pur à la température T, la pression d’équilibre entre liquide et gaz s’appelle <strong>pression de vapeur saturante</strong> $P_{sat}(T)$. À l’équilibre :</p>
-                <ul>
-                    <li>si $P < P_{sat}(T)$, le système n’est constitué que de gaz : on parle de <strong>vapeur sèche</strong> ;</li>
-                    <li>si $P = P_{sat}(T)$, le système est constitué à la fois du liquide et du gaz ; dans des proportions variables ;</li>
-                    <li>si $P > P_{sat}(T)$, le système n’est constitué que de liquide.</li>
-                </ul>
-            </div>
-            <p>Plus la pression de vapeur saturante est élevée, plus le composé est volatil : à $293 \text{ K}$, la pression de vapeur saturante de l’éther est égale à $0,59 \text{ bar}$, tandis que celle de l’eau n’est que de $0,023 \text{ bar}$. L’éther s’évapore plus facilement que l’eau à température et pression ambiantes.</p>
-
-            <h3>II.3 Cas de l’eau dans une atmosphère inerte</h3>
-            <p>L’eau a un comportement qui diffère de celui de la plupart des espèces chimiques : la glace flotte sur l’eau liquide tandis que la plupart des solides coulent dans leur liquide ; la courbe de fusion dans le diagramme de phase de l’eau est décroissante, ce qui est rare.</p>
-            <div class="card animate-on-scroll">
-                <p>À $300 \text{ K}$, la pression de vapeur saturante de l’eau n’est que de $40 \text{ mbar}$. Toutefois, à température ambiante, il est possible de faire sécher du linge bien que la pression ambiante soit de $1 \text{ bar}$. Pour résoudre cet apparent paradoxe, il faut introduire la notion de pression partielle. Pour un mélange de gaz parfaits, on a :</p>
-                <div class="formula">$\frac{P_{tot}}{n_{tot}} = \frac{P_{H2O}}{n_{H2O}} = \frac{P_i}{n_i} = \frac{RT}{V}$</div>
-                <p>d’où $P_{H2O} = \frac{n_{H2O}}{n_{tot}} P_{tot}$ et $P_i = \frac{n_i}{n_{tot}} P_{tot}$.</p>
-            </div>
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Pression partielle</h4>
-                <p>La <strong>pression partielle</strong> $P_i$ d’un des constituants d’un mélange de gaz parfaits est la pression qu’exercerait ce gaz s’il occupait seul l’ensemble du volume du mélange. Elle s’exprime :</p>
-                <div class="formula">$P_i = \frac{n_i}{n_{tot}} P_{tot}$</div>
-                <p>La pression totale $P_{tot}$ est égale à la somme des pressions partielles.</p>
-            </div>
-            <p>Pour décrire la situation courante où l’eau est en contact avec l’air ambiant, on considère :</p>
-            <ul>
-                <li>que les phases solides et liquides sont pures (pas d’air dissous dans l’eau) ;</li>
-                <li>que la phase gaz est formée d’un mélange de gaz assimilés à des gaz parfaits inertes (pas de réaction chimique).</li>
-            </ul>
-            <p>Dans ces conditions le diagramme de phase de l’eau reste inchangé, en considérant la pression partielle en vapeur d’eau plutôt que la pression totale de l’air ambiant. En effet l’équilibre liquide – gaz correspond à la situation où la vaporisation et la liquéfaction se produisent à la même vitesse, et seule l’eau intervient dans la transformation $\text{H}_2\text{O(l)} \rightleftharpoons \text{H}_2\text{O(g)}$.</p>
-            <div class="property animate-on-scroll">
-                <h4>⚡ Propriété 1 - Diagramme de phase avec atmosphère inerte</h4>
-                <p>Le diagramme de phase (P, T) d’un corps pur en présence d’une atmosphère inerte est celui du corps pur en remplaçant en phase gaz la pression totale par la pression partielle $P_i$.</p>
-            </div>
-
-            <h2 class="animate-on-scroll">III. Équilibre liquide – vapeur</h2>
-            <p>Pour des valeurs de P et T données, il est possible de connaitre l’état du système à partir du diagramme de phase. Dans le cas d’un équilibre liquide – vapeur, la proportion de chaque phase reste inconnue. La donnée du volume massique v suffit à lever l’ambiguïté.</p>
-            <h3>III.1 Diagramme de Clapeyron</h3>
-            <p>On étudie l’état d’un corps pur à l’aide du diagramme de Clapeyron dans le cas d’un équilibre liquide – vapeur (cf. Doc. 5).</p>
-            <p>[Diagramme de Clapeyron (P,v)]</p>
-            <div class="card animate-on-scroll">
-                <p>Le diagramme comporte plusieurs zones :</p>
-                <ul>
-                    <li>liquide (v faible, i.e. $\rho$ élevé) : un corps pur y est intégralement à l’état liquide ;</li>
-                    <li>gaz (v élevé, i.e. $\rho$ faible) : un corps pur y est intégralement à l’état de gaz ;</li>
-                    <li>fluide supercritique : au dessus de l’isotherme $T_c$ et pour $P > P_c$ ;</li>
-                    <li>liquide + gaz : les deux phases coexistent ; à pression fixée, les isothermes dans cette zone sont des horizontales.</li>
-                </ul>
-                <p>Les différentes zones sont séparées par les <strong>courbes de saturation</strong> :</p>
-                <ul>
-                    <li>la courbe d’ébullition à gauche du point critique C ;</li>
-                    <li>la courbe de rosée à droite de C.</li>
-                </ul>
-            </div>
-
-            <h3>III.2 Titre en vapeur</h3>
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Titre massique en vapeur</h4>
-                <p>Pour un système de masse m constitué d’un corps pur à l’équilibre liquide – vapeur, on définit le <strong>titre massique en vapeur</strong> $w_v$ par le rapport :</p>
-                <div class="formula">$w_v = \frac{m_v}{m_v + m_\ell} = \frac{m_v}{m_{tot}}$</div>
-                <p>où $m_v$ et $m_\ell$ sont les masses de vapeur et de liquide.</p>
-            </div>
-            <div class="card animate-on-scroll">
-                <p>Sur la courbe précédente :</p>
-                <ul>
-                    <li>le point A correspond à l’apparition de la première bulle de vapeur, c’est le liquide saturant seul, où $v_A = v_\ell$ ;</li>
-                    <li>le point B correspond à la disparition de la dernière goutte de liquide, c’est la vapeur saturante seule, où $v_B = v_v$.</li>
-                </ul>
-                <p>Au point M, le volume massique du système est :</p>
-                <div class="formula">$v = \frac{V}{m} = \frac{V_v + V_\ell}{m_v + m_\ell} = \frac{m_v v_v + m_\ell v_\ell}{m_v + m_\ell} = \left(\frac{m_v}{m_v + m_\ell}\right) v_v + \left(1 - \frac{m_v}{m_v + m_\ell}\right) v_\ell$</div>
-                <p>On a donc :</p>
-                <div class="formula">$v = w_v v_v + (1 - w_v)v_\ell$, soit $v = w_v(v_v - v_\ell) + v_\ell$ d’où $w_v = \frac{v - v_\ell}{v_v - v_\ell} = \frac{\text{AM}}{\text{AB}}$.</div>
-            </div>
-            <div class="theorem animate-on-scroll">
-                <h4>🏆 Théorème des moments</h4>
-                <p>À une température donnée, les titres en vapeur et en liquide sont liés au volume massique du système :</p>
-                <div class="formula">$w_v = \frac{v - v_\ell}{v_v - v_\ell} = \frac{\text{AM}}{\text{AB}} \quad \text{et} \quad w_\ell = 1 - w_v = \frac{v - v_v}{v_\ell - v_v} = \frac{\text{MB}}{\text{AB}}$</div>
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    Le théorème des moments (ou règle des leviers) est une conséquence directe de la conservation de la masse et de l'additivité des grandeurs extensives (comme le volume ou l'enthalpie).
-                    Soit $m$ la masse totale du système diphasé, composée de $m_v$ de vapeur et $m_\ell$ de liquide.
-                    Le volume total du système est $V = m_v v_v + m_\ell v_\ell$.
-                    Le volume massique du système est $v = \frac{V}{m} = \frac{m_v v_v + m_\ell v_\ell}{m_v + m_\ell}$.
-                    En divisant numérateur et dénominateur par $m$, on obtient :
-                    $v = \frac{\frac{m_v}{m} v_v + \frac{m_\ell}{m} v_\ell}{1}$.
-                    Par définition, $w_v = \frac{m_v}{m}$ et $w_\ell = \frac{m_\ell}{m}$. De plus, $w_\ell = 1 - w_v$.
-                    Donc, $v = w_v v_v + (1 - w_v)v_\ell$.
-                    En réarrangeant pour $w_v$:
-                    $v - v_\ell = w_v v_v - w_v v_\ell \implies v - v_\ell = w_v (v_v - v_\ell)$.
-                    D'où : $w_v = \frac{v - v_\ell}{v_v - v_\ell}$.
-                    Graphiquement, si A est le point correspondant au liquide saturant ($v_\ell$) et B à la vapeur saturante ($v_v$), et M est le point du mélange ($v$), la distance AM est $v - v_\ell$ et AB est $v_v - v_\ell$. D'où la relation géométrique.
-                    De même pour $w_\ell$:
-                    $v - v_v = (1 - w_v)v_\ell - (1 - w_v)v_v \implies v - v_v = (1 - w_v)(v_\ell - v_v)$.
-                    D'où : $w_\ell = 1 - w_v = \frac{v - v_v}{v_\ell - v_v}$.
-                </div>
-                <p>Rq : Ces formules peuvent être vérifiées en les appliquant aux cas limites, c’est-à-dire en A ou B. Par exemple, en A (liquide saturant), le système est entièrement à l’état liquide, donc son volume massique est celui du liquide. Les formules doivent alors donner $w_\ell = 1$ et $w_v = 0$.</p>
-                <p>Rq : La notation $x_v$ est habituellement réservée au titre molaire. Pour un corps pur $w_v = x_v$.</p>
-            </div>
-
-            <h2 class="animate-on-scroll">IV. Bilans</h2>
-            <h3>IV.1 Bilan d’énergie</h3>
-            <p>Dans les cas courants, les transitions de phase se font en contact avec l’atmosphère, c’est à dire à pression constante. En pratique, l’équilibre mécanique est vérifié à tout instant, ce qui justifie l’utilisation de l’enthalpie.</p>
-            <div class="card animate-on-scroll">
-                <h4>Corps pur diphasé</h4>
-                <p>Pour déterminer l’enthalpie d’un corps pur diphasé, on exploite l’extensivité (l’additivité) de l’enthalpie. Par exemple, pour un corps pur à l’équilibre liquide – vapeur, on a :</p>
-                <div class="formula">$H = m_\ell h_\ell + m_v h_v = m(w_\ell h_\ell + w_v h_v) = m((1 - w_v)h_\ell + w_v h_v)$</div>
-                <p>d’où :</p>
-                <div class="formula">$H = m(h_\ell + w_v \Delta_{vaph}h)$</div>
-            </div>
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Enthalpie de changement d’état</h4>
-                <p>L’enthalpie massique de fusion (resp. vaporisation, sublimation) à une température T donnée, notée $\Delta_{fus}h(T)$ (resp. $\Delta_{vap}h(T)$, $\Delta_{sub}h(T)$) est la variation d’enthalpie massique du corps pur lors de la transition de phase à la température T constante.</p>
-                <p>L’enthalpie massique de fusion correspond à l’énergie à fournir pour faire fusionner un solide à T = cste, par unité de masse.</p>
-                <p>Un transfert thermique ne s’accompagne pas nécessairement d’un changement de température. C’est notamment le cas d’une transition de phase (cf. TP23).</p>
-                <p>Rq : Puisque l’enthalpie est une fonction d’état, on a :</p>
-                <div class="formula">$\Delta_{sol}h(T) = h_s - h_\ell = -\Delta_{fus}h(T)$</div>
-                <div class="formula">$\Delta_{liq}h(T) = -\Delta_{vap}h(T)$</div>
-                <div class="formula">$\Delta_{con}h(T) = -\Delta_{sub}h(T)$</div>
-            </div>
-            <div class="card animate-on-scroll">
-                <h4>Bilan</h4>
-                <p>Pour conduire un bilan d’énergie, on exploite les propriétés de l’enthalpie (extensivité, additivité et fonction d’état) pour décomposer la transformation globale en une série de transformations simples, éventuellement fictives mais qui préservent l’état initial et l’état final.</p>
-                <p>Rq : Les transitions de phases sont associées à des transferts d’énergie très importants. Exemple : Enthalpie massique de vaporisation de l’eau à $100 \text{ }^\circ\text{C}$ : $\Delta_{vap}h_{eau} = 2400 \text{ kJ} \cdot \text{kg}^{-1}$.</p>
-            </div>
-
-            <h3>IV.2 Bilan d’entropie</h3>
-            <p>Comme pour l’enthalpie d’un corps pur diphasé on utilise l’additivité de l’entropie pour exprimer l’entropie d’un système diphasé. Par exemple pour un équilibre liquide – vapeur, on a :</p>
-            <div class="formula">$S = m_\ell s_\ell + m_v s_v = m(w_\ell s_\ell + w_v s_v) = m((1 - w_v)s_\ell + w_v s_v)$</div>
-            <p>d’où :</p>
-            <div class="formula">$S = m(s_\ell + w_v \Delta_{vap}s)$</div>
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Entropie de changement d’état</h4>
-                <p>L’entropie massique de fusion (resp. vaporisation, sublimation) à température T donnée, notée $\Delta_{fus}s(T)$ (resp. $\Delta_{vap}s(T)$, $\Delta_{sub}s(T)$) est la variation d’entropie massique du corps pur lors de la transition de phase.</p>
-                <p>Rq : Comme avec l’enthalpie de changement d’état, on a :</p>
-                <div class="formula">$\Delta_{sol}s(T) = s_s - s_\ell = -\Delta_{fus}s(T)$</div>
-                <div class="formula">$\Delta_{liq}s(T) = -\Delta_{vap}s(T)$</div>
-                <div class="formula">$\Delta_{con}s(T) = -\Delta_{sub}s(T)$</div>
-            </div>
-            <div class="property animate-on-scroll">
-                <h4>⚡ Propriété 2 - Lien entre entropie et enthalpie de changement d’état</h4>
-                <p>À la température $T_0$ de changement d’état, l’enthalpie massique de changement d’état et l’entropie massique de changement d’état sont liées par la relation, par exemple pour une vaporisation :</p>
-                <div class="formula">$\Delta_{vap}s(T_0) = \frac{\Delta_{vap}h(T_0)}{T_0}$</div>
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    On considère un système formé d’un corps pur diphasé (par exemple liquide – vapeur) qui subit une transformation isotherme et isobare avec changement d’état, de $w_{v,i}$ à $w_{v,f}$. Cette transformation peut être considérée comme réversible car elle se fait à l'équilibre.
-                    Le premier principe de la thermodynamique appliqué à une transformation isobare réversible donne :
-                    $Q = \Delta H = m \left( (h_\ell + w_{v,f} \Delta_{vap}h(T_0)) - (h_\ell + w_{v,i} \Delta_{vap}h(T_0)) \right) = m(w_{v,f} - w_{v,i}) \Delta_{vap}h(T_0)$.
-                    Le deuxième principe de la thermodynamique pour une transformation réversible à température $T_0$ donne :
-                    $\Delta S = \frac{Q}{T_0}$.
-                    On exprime la variation d'entropie du système :
-                    $\Delta S = m \left( (s_\ell + w_{v,f} \Delta_{vap}s(T_0)) - (s_\ell + w_{v,i} \Delta_{vap}s(T_0)) \right) = m(w_{v,f} - w_{v,i}) \Delta_{vap}s(T_0)$.
-                    En égalisant les deux expressions de $\Delta S$:
-                    $m(w_{v,f} - w_{v,i}) \Delta_{vap}s(T_0) = \frac{m(w_{v,f} - w_{v,i}) \Delta_{vap}h(T_0)}{T_0}$.
-                    En simplifiant par $m(w_{v,f} - w_{v,i})$ (pour autant qu'il y ait un changement de phase), on obtient :
-                    $\Delta_{vap}s(T_0) = \frac{\Delta_{vap}h(T_0)}{T_0}$.
-                    Ce raisonnement s’applique de manière générale à toutes les transitions de phase à l'équilibre.
-                </div>
-            </div>
-
-            <h2 class="animate-on-scroll">🔧 Applications résolues (Chapitre T4)</h2>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 1 - Diagramme de phase (P, T)</h4>
-                <p><strong>Énoncé :</strong> Les diagrammes de phases réels sont en général complexes, mais ils présentent une allure similaire, semblable à celle représentée ci-contre.</p>
-                <p>[Schéma d'un diagramme de phase (P, T) générique]</p>
-                <p>1. Reproduire l’allure du diagramme et indiquer les phases associées aux différents domaines du diagramme (P, T). Justifier.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <ol>
-                    <li>
-                        <p>[Reproduction du schéma avec zones de phases identifiées]</p>
-                        <ul>
-                            <li>La zone de plus basse température et plus haute pression est la phase **Solide**. La phase solide est la plus dense et stable à basse température et haute pression.</li>
-                            <li>La zone de plus haute température et plus basse pression est la phase **Gaz**. La phase gazeuse est la moins dense et stable à haute température et basse pression.</li>
-                            <li>Entre le solide et le gaz se trouve la phase **Liquide**, qui est stable à des températures et pressions intermédiaires.</li>
-                            <li>Les lignes sont les **courbes de coexistence** (fusion, vaporisation, sublimation).</li>
-                            <li>Le point où les trois courbes se rencontrent est le **point triple** ($Tr$).</li>
-                            <li>La courbe liquide-gaz se termine au **point critique** ($C$).</li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 2 – Vapeur sèche ou saturante ?</h4>
-                <p><strong>Énoncé :</strong> On introduit une masse $m = 10 \text{ g}$ de vapeur d’eau, de masse molaire $M_{H2O} = 18 \text{ g} \cdot \text{mol}^{-1}$, dans une enceinte de volume $V = 20 \text{ L}$ initialement vide, indéformable, en contact avec un thermostat de température $T = 373 \text{ K}$. On rappelle qu’à $373 \text{ K}$, la pression de vapeur saturante de l’eau vaut $P_{sat} = 1 \text{ bar}$.</p>
-                <p>1. L’état d’équilibre correspond-il à une vapeur sèche ou saturante ? Déterminer, le cas échéant, les proportions du mélange liquide – vapeur.</p>
-                <p>2. Même question si $V = 10 \text{ L}$.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <p>On utilise la loi des gaz parfaits pour estimer la pression que la vapeur d'eau exercerait si elle était entièrement gazeuse, et on la compare à la pression de vapeur saturante $P_{sat}$.</p>
-                <p>Nombre de moles d'eau : $n = \frac{m}{M_{H2O}} = \frac{10 \text{ g}}{18 \text{ g/mol}} \approx 0,556 \text{ mol}$.</p>
-                <p>Température $T = 373 \text{ K}$. Constante des gaz parfaits $R = 8,314 \text{ J} \cdot \text{mol}^{-1} \cdot \text{K}^{-1}$.</p>
-                <p>$P_{sat}(373 \text{ K}) = 1 \text{ bar} = 10^5 \text{ Pa}$.</p>
-                <ol>
-                    <li><strong>Cas 1 : $V = 20 \text{ L} = 20 \times 10^{-3} \text{ m}^3$.</strong>
-                        <p>Pression hypothétique si toute l'eau était gaz : $P_{hyp} = \frac{nRT}{V} = \frac{0,556 \times 8,314 \times 373}{20 \times 10^{-3}} \approx 86220 \text{ Pa} \approx 0,862 \text{ bar}$.</p>
-                        <p>Puisque $P_{hyp} < P_{sat}$ ($0,862 \text{ bar} < 1 \text{ bar}$), cela signifie que toute la masse d'eau peut exister sous forme de vapeur à ce volume et cette température. Il n'y aura pas de condensation.</p>
-                        <p>L'état d'équilibre est une **vapeur sèche**. Les proportions sont $w_v = 1$ (100% vapeur) et $w_\ell = 0$ (0% liquide).</p>
-                    </li>
-                    <li><strong>Cas 2 : $V = 10 \text{ L} = 10 \times 10^{-3} \text{ m}^3$.</strong>
-                        <p>Pression hypothétique si toute l'eau était gaz : $P_{hyp} = \frac{nRT}{V} = \frac{0,556 \times 8,314 \times 373}{10 \times 10^{-3}} \approx 172440 \text{ Pa} \approx 1,724 \text{ bar}$.</p>
-                        <p>Puisque $P_{hyp} > P_{sat}$ ($1,724 \text{ bar} > 1 \text{ bar}$), cela signifie que la pression de la vapeur seule dépasserait la pression de vapeur saturante. Il y aura donc condensation et coexistence des deux phases.</p>
-                        <p>L'état d'équilibre est une **vapeur saturante** (mélange liquide-vapeur). La pression sera $P = P_{sat} = 1 \text{ bar}$.</p>
-                        <p>Calculons le volume massique du mélange : $v = \frac{V}{m} = \frac{10 \times 10^{-3} \text{ m}^3}{10 \times 10^{-3} \text{ kg}} = 1 \text{ m}^3 \cdot \text{kg}^{-1}$.</p>
-                        <p>Calculons les volumes massiques de la vapeur saturante et du liquide saturant à $373 \text{ K}$ et $1 \text{ bar}$. Pour la vapeur saturante (gaz parfait) : $v_v = \frac{RT}{P_{sat}} = \frac{8,314 \times 373}{1 \times 10^5} \approx 0,031 \text{ m}^3 \cdot \text{kg}^{-1}$ (Ce n'est pas $P_{sat}$ qui est utilisé ici mais la pression partielle si le gaz et seul, et $m$ est la masse du gaz). Reprenons avec des valeurs réelles pour l'eau.</p>
-                        <p>Pour l'eau à $373 \text{ K}$ ($100 \text{ }^\circ\text{C}$) et $1 \text{ bar}$ :</p>
-                        <ul>
-                            <li>Volume massique de vapeur saturante $v_v \approx 1,67 \text{ m}^3 \cdot \text{kg}^{-1}$.</li>
-                            <li>Volume massique de liquide saturant $v_\ell \approx 1,04 \times 10^{-3} \text{ m}^3 \cdot \text{kg}^{-1}$.</li>
-                        </ul>
-                        <p>Utilisons la formule du titre en vapeur : $w_v = \frac{v - v_\ell}{v_v - v_\ell}$.</p>
-                        <p>$w_v = \frac{1 - 1,04 \times 10^{-3}}{1,67 - 1,04 \times 10^{-3}} \approx \frac{0,99896}{1,66896} \approx 0,5985$.</p>
-                        <p>Donc, les proportions sont $w_v \approx 59,85\%$ de vapeur et $w_\ell = 1 - w_v \approx 40,15\%$ de liquide.</p>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 3 – Diagramme de phase (P, T)</h4>
-                <p><strong>Énoncé :</strong> Le point triple de l’eau a pour coordonnées $(273,16 \text{ K}, 611 \text{ Pa})$, tandis que son point critique se situe à $(374,15 \text{ }^\circ\text{C}, 221,2 \text{ bar})$. Sur le diagramme de phase (P, T) de l’eau, représenter les points associés aux états décrits ci-dessous.</p>
-                <p>1. A : fusion d’un glaçon à température ambiante.</p>
-                <p>2. B : ébullition de l’eau au niveau de la mer.</p>
-                <p>3. C : ébullition de l’eau en altitude.</p>
-                <p>4. D : ébullition de l’eau dans un autocuiseur.</p>
-                <p>5. E : un verre d’eau à l’équilibre à température ambiante, au niveau de la mer.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <p>[Schéma d'un diagramme de phase (P, T) de l'eau avec les points A, B, C, D, E]</p>
-                <ul>
-                    <li><strong>Point A (fusion glaçon, température ambiante) :</strong> La fusion se produit à $0 \text{ }^\circ\text{C}$ (273.15 K) sous pression atmosphérique (environ $1 \text{ bar}$). Ce point se situe sur la courbe de fusion (solide-liquide).</li>
-                    <li><strong>Point B (ébullition eau, niveau de la mer) :</strong> L'ébullition se produit à $100 \text{ }^\circ\text{C}$ (373.15 K) sous pression atmosphérique ($1 \text{ bar}$). Ce point se situe sur la courbe de vaporisation (liquide-gaz).</li>
-                    <li><strong>Point C (ébullition eau, altitude) :</strong> En altitude, la pression atmosphérique est plus faible. L'ébullition se produit donc à une température inférieure à $100 \text{ }^\circ\text{C}$ pour une pression plus faible. Ce point est sur la courbe de vaporisation, mais plus bas que B.</li>
-                    <li><strong>Point D (ébullition eau, autocuiseur) :</strong> Un autocuiseur augmente la pression au-delà de $1 \text{ bar}$. L'ébullition se produit donc à une température supérieure à $100 \text{ }^\circ\text{C}$ pour une pression plus élevée. Ce point est sur la courbe de vaporisation, mais plus haut que B.</li>
-                    <li><strong>Point E (verre d'eau équilibre, température ambiante, niveau de la mer) :</strong> À température ambiante ($~20-25 \text{ }^\circ\text{C}$, 293-298 K) et pression atmosphérique ($1 \text{ bar}$), l'eau est liquide. Ce point se situe dans le domaine liquide du diagramme (P, T).</li>
-                </ul>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 4 – Évaporation de l’eau</h4>
-                <p><strong>Énoncé :</strong> Dans une pièce hermétiquement fermée, de volume $V = 40 \text{ m}^3$, on place un récipient contenant un volume $V_0 = 200 \text{ mL}$ d’eau liquide. L’air est à la pression $P_0 = 1,0 \text{ bar}$ et à la température $\theta_0 = 20 \text{ }^\circ\text{C}$. Son degré d’hygrométrie est $H = 60 \text{ \%}$. H est le rapport de la pression partielle de l’eau divisée par sa pression de vapeur saturante, valant dans ces conditions $P_{sat}(20 \text{ }^\circ\text{C}) = 2,4 \text{ kPa}$. On assimile la vapeur d’eau à un gaz parfait de masse molaire $M = 18 \text{ g} \cdot \text{mol}^{-1}$.</p>
-                <p>1. Calculer la masse d’eau initialement contenue dans l’atmosphère de la pièce.</p>
-                <p>2. Montrer que toute l’eau contenue dans le verre s’évapore. Quel est le degré d’hygrométrie final de l’air de la pièce ?</p>
-                <p>3. Quel volume d’eau liquide faut-il évaporer pour saturer la pièce en eau ?</p>
-                
-                <p><strong>Solution :</strong></p>
-                <p>Données : $V = 40 \text{ m}^3$, $V_0 = 200 \text{ mL} = 0,2 \text{ L} = 0,2 \times 10^{-3} \text{ m}^3$.</p>
-                <p>$P_0 = 1,0 \text{ bar} = 10^5 \text{ Pa}$. $\theta_0 = 20 \text{ }^\circ\text{C} = 293,15 \text{ K}$.</p>
-                <p>$H = 60 \text{ \%} = 0,6$. $P_{sat}(20 \text{ }^\circ\text{C}) = 2,4 \text{ kPa} = 2400 \text{ Pa}$. $M = 18 \text{ g} \cdot \text{mol}^{-1} = 0,018 \text{ kg} \cdot \text{mol}^{-1}$.</p>
-                <p>Constante des gaz parfaits $R = 8,314 \text{ J} \cdot \text{mol}^{-1} \cdot \text{K}^{-1}$.</p>
-                <ol>
-                    <li><strong>Masse d’eau initialement contenue dans l’atmosphère :</strong>
-                        <p>Pression partielle initiale de la vapeur d'eau : $P_{H2O,i} = H \times P_{sat}(T) = 0,6 \times 2400 \text{ Pa} = 1440 \text{ Pa}$.</p>
-                        <p>En considérant la vapeur d'eau comme un gaz parfait : $P_{H2O,i} V = n_{H2O,i} RT$.</p>
-                        <p>$n_{H2O,i} = \frac{P_{H2O,i} V}{RT} = \frac{1440 \times 40}{8,314 \times 293,15} \approx 23,65 \text{ mol}$.</p>
-                        <p>Masse d'eau initiale dans l'air : $m_{H2O,i} = n_{H2O,i} \times M = 23,65 \text{ mol} \times 0,018 \text{ kg/mol} \approx 0,4257 \text{ kg}$.</p>
-                    </li>
-                    <li><strong>L'eau du verre s'évapore-t-elle entièrement ? Degré d'hygrométrie final :</strong>
-                        <p>Masse d'eau dans le verre : $\rho_{eau} \times V_0 = 1000 \text{ kg/m}^3 \times 0,2 \times 10^{-3} \text{ m}^3 = 0,2 \text{ kg}$.</p>
-                        <p>Masse totale d'eau si toute l'eau du verre s'évapore : $m_{totale} = m_{H2O,i} + 0,2 \text{ kg} = 0,4257 + 0,2 = 0,6257 \text{ kg}$.</p>
-                        <p>Nombre de moles total : $n_{totale} = \frac{0,6257 \text{ kg}}{0,018 \text{ kg/mol}} \approx 34,76 \text{ mol}$.</p>
-                        <p>Pression partielle si toute l'eau était vapeur : $P_{H2O,f,hyp} = \frac{n_{totale} RT}{V} = \frac{34,76 \times 8,314 \times 293,15}{40} \approx 2119 \text{ Pa}$.</p>
-                        <p>Puisque $P_{H2O,f,hyp} < P_{sat}(20 \text{ }^\circ\text{C})$ ($2119 \text{ Pa} < 2400 \text{ Pa}$), toute l'eau du verre s'évapore.</p>
-                        <p>Le degré d'hygrométrie final est : $H_{final} = \frac{P_{H2O,f,hyp}}{P_{sat}(20 \text{ }^\circ\text{C})} = \frac{2119}{2400} \approx 0,883 = 88,3\%$.</p>
-                    </li>
-                    <li><strong>Volume d’eau liquide à évaporer pour saturer la pièce :</strong>
-                        <p>Pour saturer la pièce, la pression partielle de vapeur d'eau doit atteindre $P_{sat}(20 \text{ }^\circ\text{C}) = 2400 \text{ Pa}$.</p>
-                        <p>Nombre de moles d'eau à la saturation : $n_{sat} = \frac{P_{sat} V}{RT} = \frac{2400 \times 40}{8,314 \times 293,15} \approx 39,42 \text{ mol}$.</p>
-                        <p>Masse d'eau à la saturation : $m_{sat} = n_{sat} \times M = 39,42 \text{ mol} \times 0,018 \text{ kg/mol} \approx 0,7096 \text{ kg}$.</p>
-                        <p>Masse d'eau supplémentaire à évaporer : $m_{supp} = m_{sat} - m_{H2O,i} = 0,7096 - 0,4257 = 0,2839 \text{ kg}$.</p>
-                        <p>Volume d'eau liquide correspondant : $V_{supp} = \frac{m_{supp}}{\rho_{eau}} = \frac{0,2839 \text{ kg}}{1000 \text{ kg/m}^3} = 0,0002839 \text{ m}^3 = 283,9 \text{ mL}$.</p>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 5 – Composition d’un équilibre liquide – vapeur à l’équilibre</h4>
-                <p><strong>Énoncé :</strong> À $T = 423 \text{ K}$, on donne les volumes massiques de la vapeur saturante $v_v = 0,393 \text{ m}^3 \cdot \text{kg}^{-1}$ et de l’eau liquide $v_\ell = 1,09 \times 10^{-3} \text{ m}^3 \cdot \text{kg}^{-1}$. On place dans une enceinte vide de volume V, maintenue à $423 \text{ K}$, une masse d’eau $m = 100 \text{ g}$ d’eau liquide :</p>
-                <ul>
-                    <li>cas 1 : $V = V_1 = 50 \text{ L}$.</li>
-                    <li>cas 2 : $V = V_2 = 1 \text{ L}$.</li>
-                </ul>
-                <p>1. Placer les points correspondant à ces états d’équilibre dans le diagramme (P, v).</p>
-                <p>2. Dans chaque cas, déterminer la composition du système à l’équilibre.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <p>Température $T = 423 \text{ K}$. $v_v = 0,393 \text{ m}^3 \cdot \text{kg}^{-1}$. $v_\ell = 1,09 \times 10^{-3} \text{ m}^3 \cdot \text{kg}^{-1}$. $m = 100 \text{ g} = 0,1 \text{ kg}$.</p>
-                <ol>
-                    <li><strong>Placer les points dans le diagramme (P, v) :</strong>
-                        <p>Pour chaque cas, nous devons calculer le volume massique du système $v = V/m$ et le comparer aux volumes massiques du liquide et de la vapeur saturante pour la température donnée. La pression d'équilibre sera la pression de vapeur saturante à $423 \text{ K}$ (qui n'est pas donnée, mais ce n'est pas nécessaire pour le placement relatif).</p>
-                        <ul>
-                            <li><strong>Cas 1 : $V_1 = 50 \text{ L} = 0,050 \text{ m}^3$.</strong>
-                                <p>$v_1 = \frac{0,050 \text{ m}^3}{0,1 \text{ kg}} = 0,5 \text{ m}^3 \cdot \text{kg}^{-1}$.</p>
-                                <p>Puisque $v_1 > v_v$ ($0,5 > 0,393$), le système est entièrement sous forme de vapeur (vapeur surchauffée). Le point sera dans la zone gaz, à droite de la courbe de rosée.</p>
-                            </li>
-                            <li><strong>Cas 2 : $V_2 = 1 \text{ L} = 0,001 \text{ m}^3$.</strong>
-                                <p>$v_2 = \frac{0,001 \text{ m}^3}{0,1 \text{ kg}} = 0,01 \text{ m}^3 \cdot \text{kg}^{-1}$.</p>
-                                <p>Puisque $v_\ell < v_2 < v_v$ ($1,09 \times 10^{-3} < 0,01 < 0,393$), le système est un mélange liquide-vapeur (vapeur saturante). Le point sera sur l'horizontale d'isotherme dans la zone de coexistence.</p>
-                            </li>
-                        </ul>
-                        <p>[Schéma du diagramme (P,v) avec points A et B (pour v1 et v2) sur l'isotherme T=423K]</p>
-                    </li>
-                    <li><strong>Déterminer la composition du système :</strong>
-                        <ul>
-                            <li><strong>Cas 1 : $v_1 = 0,5 \text{ m}^3 \cdot \text{kg}^{-1}$.</strong>
-                                <p>Comme $v_1 > v_v$, toute l'eau s'est évaporée. Il n'y a pas de liquide.</p>
-                                <p>Composition : $w_v = 1$ (100% vapeur), $w_\ell = 0$ (0% liquide).</p>
-                            </li>
-                            <li><strong>Cas 2 : $v_2 = 0,01 \text{ m}^3 \cdot \text{kg}^{-1}$.</strong>
-                                <p>Comme $v_\ell < v_2 < v_v$, le système est un mélange liquide-vapeur. On utilise le théorème des moments :</p>
-                                <p>$w_v = \frac{v_2 - v_\ell}{v_v - v_\ell} = \frac{0,01 - 1,09 \times 10^{-3}}{0,393 - 1,09 \times 10^{-3}} = \frac{0,00891}{0,39191} \approx 0,0227$.</p>
-                                <p>Composition : $w_v \approx 2,27\%$ de vapeur, $w_\ell = 1 - w_v \approx 97,73\%$ de liquide.</p>
-                            </li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 6 – Température d’un apéritif</h4>
-                <p><strong>Énoncé :</strong> Après avoir versé un fond de pastis, on remplit un verre de $15 \text{ cL}$ d’eau fraîche à $12 \text{ }^\circ\text{C}$ puis on ajoute un glaçon de $9 \text{ g}$ sortant du congélateur à $-18 \text{ }^\circ\text{C}$. On néglige les transferts thermiques entre l’eau et l’air/le verre.</p>
-                <p>1. Justifier que l’évolution du système {eau liquide + glaçon} est isenthalpique.</p>
-                <p>2. Calculer la température du mélange une fois le glaçon fondu.</</p>
-                <p>Données : enthalpie massique de fusion de l’eau $\Delta_{fus}h_{eau} = 336 \text{ kJ} \cdot \text{kg}^{-1}$; capacité thermique massique de la glace $c_g = 2,1 \times 10^3 \text{ J} \cdot \text{K}^{-1} \cdot \text{kg}^{-1}$.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <p>Masse d'eau liquide : $m_e = 150 \text{ g} = 0,15 \text{ kg}$. $T_{e,i} = 12 \text{ }^\circ\text{C} = 285,15 \text{ K}$.</p>
-                <p>Masse de glace : $m_g = 9 \text{ g} = 0,009 \text{ kg}$. $T_{g,i} = -18 \text{ }^\circ\text{C} = 255,15 \text{ K}$.</p>
-                <p>Capacité thermique massique de l'eau liquide $c_{eau} = 4,18 \times 10^3 \text{ J} \cdot \text{K}^{-1} \cdot \text{kg}^{-1}$ (valeur usuelle non fournie, mais indispensable).</p>
-                <p>Point de fusion de la glace : $0 \text{ }^\circ\text{C} = 273,15 \text{ K}$.</p>
-                <ol>
-                    <li><strong>Justification de l'évolution isenthalpique :</strong>
-                        <p>Le système {eau liquide + glaçon} est parfaitement calorifugé (on néglige les transferts avec l'air et le verre), ce qui signifie qu'il n'y a pas d'échange de chaleur avec l'extérieur ($Q = 0$).</p>
-                        <p>De plus, l'évolution se fait à pression ambiante constante (verre ouvert). Dans ces conditions, le travail échangé est dû aux forces de pression. Si le volume du système change, il y a un travail $W = -P \Delta V$.</p>
-                        <p>Le premier principe de la thermodynamique pour un système fermé donne $\Delta U = W + Q$.</p>
-                        <p>Pour une transformation à pression constante, l'enthalpie $H = U + PV$. Donc $\Delta H = \Delta U + P \Delta V = (W + Q) + P \Delta V$.</p>
-                        <p>Si $W = -P \Delta V$, alors $\Delta H = (-P \Delta V + Q) + P \Delta V = Q$.</p>
-                        <p>Puisque le système est calorifugé ($Q=0$), alors $\Delta H = 0$. L'évolution est donc **isenthalpique**.</p>
-                    </li>
-                    <li><strong>Température finale du mélange :</strong>
-                        <p>L'enthalpie totale du système est conservée : $H_{initial} = H_{final}$.</p>
-                        <p>On choisit l'eau liquide à $0 \text{ }^\circ\text{C}$ comme état de référence pour l'enthalpie ($h_{ref} = 0$).</p>
-                        <p>Enthalpie initiale : $H_i = H_{eau,i} + H_{glace,i}$.</p>
-                        <ul>
-                            <li>$H_{eau,i} = m_e c_{eau} (T_{e,i} - T_{ref}) = 0,15 \times 4180 \times (285,15 - 273,15) = 0,15 \times 4180 \times 12 = 7524 \text{ J}$.</li>
-                            <li>$H_{glace,i} = m_g c_g (T_{g,i} - T_{ref}) + m_g (-\Delta_{fus}h_{eau})$. Le terme $\Delta_{fus}h_{eau}$ est négatif car il faut fournir de l'énergie pour fondre, donc pour aller de l'eau liquide à $0^\circ C$ à la glace à $0^\circ C$, on retire l'enthalpie de fusion. Ou plus simplement : $H_{glace,i} = m_g c_g (T_{g,i} - 273.15) + m_g h_{liquide\_a\_0degC} - m_g \Delta_{fus}h_{eau}$. Si $h_{liquide\_a\_0degC}=0$, alors $H_{glace,i} = m_g c_g (T_{g,i} - 273.15) - m_g \Delta_{fus}h_{eau}$.</li>
-                            <li>$H_{glace,i} = 0,009 \times 2100 \times (255,15 - 273,15) - 0,009 \times 336 \times 10^3 = 0,009 \times 2100 \times (-18) - 3024 = -340,2 - 3024 = -3364,2 \text{ J}$.</li>
-                        </ul>
-                        <p>$H_{initial} = 7524 - 3364,2 = 4159,8 \text{ J}$.</p>
-                        <p>Enthalpie finale : $H_f = (m_e + m_g) c_{eau} (T_f - T_{ref})$.</p>
-                        <p>On cherche $T_f$ telle que $H_{final} = H_{initial}$.</p>
-                        <p>$(0,15 + 0,009) \times 4180 \times (T_f - 273,15) = 4159,8$.</p>
-                        <p>$0,159 \times 4180 \times (T_f - 273,15) = 4159,8$.</p>
-                        <p>$664,62 \times (T_f - 273,15) = 4159,8$.</p>
-                        <p>$T_f - 273,15 = \frac{4159,8}{664,62} \approx 6,259$.</p>
-                        <p>$T_f \approx 273,15 + 6,259 = 279,409 \text{ K} \approx 6,26 \text{ }^\circ\text{C}$.</p>
-                        <p>La température finale du mélange est d'environ $6,26 \text{ }^\circ\text{C}$.</p>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 7 – Puissance d’un sabre laser</h4>
-                <p><strong>Énoncé :</strong> Dans l’épisode I La menace fantôme, Qui-Gon Jinn fait la démonstration de la puissance du sabre laser en s’attaquant à une porte blindée pour atteindre le vice-roi de la Fédération du commerce. D’après cette scène, proposer une estimation de la puissance du sabre laser. Commenter.</p>
-                <p><a href="https://youtu.be/3RCYs0N5Wsc?t=93" target="_blank" rel="noopener noreferrer">Faire des sciences avec Star Wars, Roland Lehoucq.</a></p>
-                
-                <p><strong>Solution :</strong></p>
-                <p>Pour estimer la puissance du sabre laser, il faut évaluer l'énergie nécessaire pour percer la porte et le temps que cela prend.</p>
-                <p>Hypothèses et ordres de grandeur :</p>
-                <ul>
-                    <li>La porte est en acier, dont la densité est $\rho \approx 7800 \text{ kg} \cdot \text{m}^{-3}$.</li>
-                    <li>L'épaisseur de la porte est $e \approx 10 \text{ cm} = 0,1 \text{ m}$.</li>
-                    <li>La section du trou percé par le sabre est un cercle de diamètre $d \approx 5 \text{ cm} = 0,05 \text{ m}$, donc la surface $S = \pi (d/2)^2 \approx \pi (0,025)^2 \approx 1,96 \times 10^{-3} \text{ m}^2$.</li>
-                    <li>Le volume de matière fondu : $V_{matière} = S \times e = 1,96 \times 10^{-3} \times 0,1 = 1,96 \times 10^{-4} \text{ m}^3$.</li>
-                    <li>La masse de matière fondue : $m = \rho \times V_{matière} = 7800 \times 1,96 \times 10^{-4} \approx 1,53 \text{ kg}$.</li>
-                    <li>La température de fusion de l'acier est $T_{fus} \approx 1500 \text{ }^\circ\text{C} = 1773 \text{ K}$. On suppose que la porte est initialement à $20 \text{ }^\circ\text{C} = 293 \text{ K}$.</li>
-                    <li>Capacité thermique massique de l'acier (solide) $c_{acier} \approx 500 \text{ J} \cdot \text{kg}^{-1} \cdot \text{K}^{-1}$.</li>
-                    <li>Enthalpie massique de fusion de l'acier $\Delta_{fus}h_{acier} \approx 270 \text{ kJ} \cdot \text{kg}^{-1} = 270 \times 10^3 \text{ J} \cdot \text{kg}^{-1}$.</li>
-                    <li>Temps mis pour percer la porte : $\Delta t \approx 10 \text{ s}$ (estimation visuelle de la scène).</li>
-                </ul>
-                <p>Énergie nécessaire pour percer la porte :</p>
-                <ul>
-                    <li>Énergie pour chauffer l'acier jusqu'à la température de fusion : $Q_1 = m c_{acier} (T_{fus} - T_{initial}) = 1,53 \times 500 \times (1773 - 293) = 1,53 \times 500 \times 1480 \approx 1,13 \times 10^6 \text{ J}$.</li>
-                    <li>Énergie pour faire fondre l'acier : $Q_2 = m \Delta_{fus}h_{acier} = 1,53 \times 270 \times 10^3 \approx 0,413 \times 10^6 \text{ J}$.</li>
-                    <li>Énergie totale : $E_{totale} = Q_1 + Q_2 \approx 1,13 \times 10^6 + 0,413 \times 10^6 = 1,543 \times 10^6 \text{ J}$.</li>
-                </ul>
-                <p>Puissance du sabre laser : $P = \frac{E_{totale}}{\Delta t} = \frac{1,543 \times 10^6 \text{ J}}{10 \text{ s}} \approx 1,5 \times 10^5 \text{ W} = 150 \text{ kW}$.</p>
-                <p><strong>Commentaire :</strong> Cette puissance de $150 \text{ kW}$ est considérable. À titre de comparaison, c'est l'équivalent de la puissance d'une voiture de sport ou de plusieurs dizaines de fours à micro-ondes. Cela justifie visuellement la capacité du sabre laser à "couper" la matière en la faisant fondre quasi instantanément. Cependant, l'estimation est simplifiée (pas de vaporisation, pas de pertes thermiques, etc.).</p>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 8 – Fonte de glace dans l’eau</h4>
-                <p><strong>Énoncé :</strong> Dans un récipient parfaitement calorifugé, on met un morceau de glace à la température de $0 \text{ }^\circ\text{C}$ dans un kilogramme d’eau initialement à la température de $20 \text{ }^\circ\text{C}$.</p>
-                <p>1. Déterminer la masse minimale $m_g$ de glace nécessaire pour que l’eau soit à la température de $0 \text{ }^\circ\text{C}$ dans l’état final.</p>
-                <p>2. Calculer dans ce cas la variation d’entropie $\Delta S_e$ de l’eau initialement à l’état liquide.</p>
-                <p>3. Même question pour $\Delta S_g$ pour l’eau initialement sous forme de glace.</p>
-                <p>4. En déduire le bilan d’entropie de l’évolution. Conclure.</p>
-                <p>Données : capacité thermique massique de l’eau liquide $c = 4,2 \text{ kJ} \cdot \text{K}^{-1} \cdot \text{kg}^{-1}$; enthalpie massique de fusion de la glace $\Delta_{fus}h = 336 \text{ kJ} \cdot \text{kg}^{-1}$; entropie massique d’une phase condensée : $s(T) = c \ln \frac{T}{T_{ref}} + s_{ref}$.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <p>Masse d'eau liquide : $m_e = 1 \text{ kg}$. $T_{e,i} = 20 \text{ }^\circ\text{C} = 293,15 \text{ K}$.</p>
-                <p>Température finale souhaitée : $T_f = 0 \text{ }^\circ\text{C} = 273,15 \text{ K}$.</p>
-                <p>Température initiale de la glace : $T_{g,i} = 0 \text{ }^\circ\text{C} = 273,15 \text{ K}$.</p>
-                <p>$c = 4,2 \text{ kJ} \cdot \text{K}^{-1} \cdot \text{kg}^{-1} = 4200 \text{ J} \cdot \text{K}^{-1} \cdot \text{kg}^{-1}$.</p>
-                <p>$\Delta_{fus}h = 336 \text{ kJ} \cdot \text{kg}^{-1} = 336 \times 10^3 \text{ J} \cdot \text{kg}^{-1}$.</p>
-                <ol>
-                    <li><strong>Masse minimale de glace $m_g$ :</strong>
-                        <p>Le système est parfaitement calorifugé, donc l'évolution est isenthalpique ($\Delta H = 0$).</p>
-                        <p>L'enthalpie totale initiale est égale à l'enthalpie totale finale.</p>
-                        <p>Pour que l'eau atteigne $0 \text{ }^\circ\text{C}$ (et que toute la glace fonde), l'énergie cédée par l'eau liquide doit être suffisante pour faire fondre la glace (qui est déjà à $0 \text{ }^\circ\text{C}$, donc seul le changement de phase compte).</p>
-                        <p>Énergie cédée par l'eau liquide : $Q_{eau} = m_e c (T_f - T_{e,i}) = 1 \times 4200 \times (273,15 - 293,15) = 1 \times 4200 \times (-20) = -84000 \text{ J}$.</p>
-                        <p>L'eau liquide cède $84 \text{ kJ}$. Cette énergie doit être absorbée par la glace pour fondre.</p>
-                        <p>Énergie nécessaire pour faire fondre $m_g$ de glace : $Q_{glace} = m_g \Delta_{fus}h$.</p>
-                        <p>Puisque le système est isolé, $Q_{eau} + Q_{glace} = 0$. Donc $Q_{glace} = -Q_{eau} = 84000 \text{ J}$.</p>
-                        <p>$m_g = \frac{Q_{glace}}{\Delta_{fus}h} = \frac{84000 \text{ J}}{336 \times 10^3 \text{ J/kg}} = \frac{84}{336} = 0,25 \text{ kg}$.</p>
-                        <p>La masse minimale de glace est $250 \text{ g}$.</p>
-                    </li>
-                    <li><strong>Variation d’entropie $\Delta S_e$ de l’eau liquide :</strong>
-                        <p>L'eau liquide se refroidit de $20 \text{ }^\circ\text{C}$ à $0 \text{ }^\circ\text{C}$.</p>
-                        <p>$\Delta S_e = \int_{T_{e,i}}^{T_f} \frac{m_e c dT}{T} = m_e c \ln\left(\frac{T_f}{T_{e,i}}\right)$.</p>
-                        <p>$\Delta S_e = 1 \times 4200 \times \ln\left(\frac{273,15}{293,15}\right) = 4200 \times \ln(0,9317) \approx 4200 \times (-0,0706) \approx -296,5 \text{ J} \cdot \text{K}^{-1}$.</p>
-                    </li>
-                    <li><strong>Variation d’entropie $\Delta S_g$ de la glace :</strong>
-                        <p>La glace (à $0 \text{ }^\circ\text{C}$) fond et se transforme en eau liquide (à $0 \text{ }^\circ\text{C}$).</p>
-                        <p>On utilise la propriété 2 : $\Delta_{fus}s = \frac{\Delta_{fus}h}{T_f}$.</p>
-                        <p>$\Delta S_g = m_g \Delta_{fus}s = m_g \frac{\Delta_{fus}h}{T_f} = 0,25 \times \frac{336 \times 10^3}{273,15} \approx 0,25 \times 1230,13 \approx 307,5 \text{ J} \cdot \text{K}^{-1}$.</p>
-                    </li>
-                    <li><strong>Bilan d’entropie de l’évolution. Conclusion :</strong>
-                        <p>L'entropie créée par le système isolé (eau + glace) est $S_{créée} = \Delta S_{totale} = \Delta S_e + \Delta S_g$.</p>
-                        <p>$S_{créée} = -296,5 + 307,5 = 11 \text{ J} \cdot \text{K}^{-1}$.</p>
-                        <p>Conclusion : Puisque $S_{créée} > 0$, l'évolution est **irréversible**. Cela est attendu car il y a un transfert thermique spontané de l'eau plus chaude vers la glace plus froide, ce qui est un processus irréversible par nature (même si la glace est à la température de fusion, le transfert de chaleur pour la faire fondre est irréversible tant que l'eau n'est pas à la même température).</p>
-                    </li>
-                </ol>
-            </div>
-
-            <h2 class="animate-on-scroll">📝 Méthodes et conseils</h2>
-
-            <div class="summary-grid">
-                <div class="summary-card animate-on-scroll">
-                    <h4>🎯 Méthode générale pour analyser une transition de phase</h4>
-                    <ol>
-                        <li>Identifier les phases en présence et les conditions de pression et température.</li>
-                        <li>Utiliser le diagramme (P, T) pour déterminer l'état d'équilibre (solide, liquide, gaz, ou coexistence).</li>
-                        <li>Si coexistence, utiliser le diagramme (P, v) et le théorème des moments pour déterminer les proportions.</li>
-                        <li>Appliquer les bilans d'énergie (enthalpie pour P=cste) et d'entropie.</li>
-                        <li>Toujours vérifier la cohérence des signes des grandeurs et l'irréversibilité via l'entropie créée.</li>
-                    </ol>
-                </div>
-                
-                <div class="summary-card animate-on-scroll">
-                    <h4>⚠️ Pièges à éviter</h4>
-                    <ul>
-                        <li>Confondre pression totale et pression partielle en présence d'une atmosphère inerte.</li>
-                        <li>Oublier les conversions de température en Kelvin pour les formules thermodynamiques.</li>
-                        <li>Mélanger enthalpie et énergie interne sans justification du processus (P=cste vs V=cste).</li>
-                        <li>Négliger les changements d'enthalpie et d'entropie liés aux transitions de phase.</li>
-                    </ul>
-                </div>
-                
-                <div class="summary-card animate-on-scroll">
-                    <h4>💡 Points clés à retenir</h4>
-                    <ul>
-                        <li>Les diagrammes (P, T) et (P, v) sont complémentaires pour caractériser un corps pur.</li>
-                        <li>Le point triple et le point critique sont des points remarquables avec des propriétés uniques.</li>
-                        <li>Le théorème des moments est essentiel pour les mélanges diphasés.</li>
-                        <li>Les transitions de phase sont des processus à température constante (à pression constante) et impliquent d'importants transferts d'énergie.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="theorem animate-on-scroll">
-                <h4>🔑 Formules essentielles</h4>
-                <div class="formula">
-                    <div><strong>Loi des gaz parfaits :</strong> $PV = nRT$ ou $P = \rho r T$</div>
-                    <div><strong>Pression partielle :</strong> $P_i = \frac{n_i}{n_{tot}} P_{tot}$</div>
-                    <div><strong>Théorème des moments (titre en vapeur) :</strong> $w_v = \frac{v - v_\ell}{v_v - v_\ell}$</div>
-                    <div><strong>Enthalpie pour diphasé :</strong> $H = m(h_\ell + w_v \Delta_{vap}h)$</div>
-                    <div><strong>Entropie pour diphasé :</strong> $S = m(s_\ell + w_v \Delta_{vap}s)$</div>
-                    <div><strong>Lien entre $\Delta h$ et $\Delta s$ à $T_0$ :</strong> $\Delta s = \frac{\Delta h}{T_0}$</div>
-                </div>
-            </div>
-
-            <div class="important animate-on-scroll">
-                <h4>🚨 Points cruciaux pour l'examen</h4>
-                <ul>
-                    <li>Savoir interpréter et tracer les diagrammes de phase (P, T) et (P, v).</li>
-                    <li>Maîtriser les notions de pression de vapeur saturante et de pression partielle.</li>
-                    <li>Savoir utiliser le théorème des moments pour calculer les compositions.</li>
-                    <li>Réaliser des bilans d'énergie (enthalpie) et d'entropie lors de transitions de phase.</li>
-                    <li>Comprendre et justifier le caractère irréversible de la plupart des transitions de phase réelles.</li>
-                </ul>
-            </div>
-        </section>
-
-        <hr>
-
-        <!-- Chapitre T5 - Machines thermiques -->
-        <section id="chapitre-t5">
-            <div class="header animate-on-scroll">
-                <h1>Chapitre T5 – Machines thermiques</h1>
-                <p><strong>Physique - Classe préparatoire</strong></p>
-            </div>
-
-            <div class="card plan animate-on-scroll">
-                <h2>📋 Plan du cours</h2>
-                <ul>
-                    <li>Machine thermique
-                        <ul>
-                            <li>Machine thermique ditherme</li>
-                            <li>Diagramme de Clapeyron</li>
-                        </ul>
-                    </li>
-                    <li>Moteur ditherme
-                        <ul>
-                            <li>Impossibilité d'un moteur thermique monotherme</li>
-                            <li>Sens réel des échanges d'énergie</li>
-                            <li>Rendement</li>
-                        </ul>
-                    </li>
-                    <li>Récepteurs dithermes
-                        <ul>
-                            <li>Sens réel des échanges d'énergie</li>
-                            <li>Efficacité</li>
-                            <li>Pompe à chaleur</li>
-                        </ul>
-                    </li>
-                    <li>Bilan</li>
-                </ul>
-            </div>
-
-            <div class="summary-grid">
-                <div class="summary-card animate-on-scroll">
-                    <h3>🎯 Ce qu'il faut savoir et savoir faire</h3>
-                    <ul>
-                        <li>Donner le sens des échanges énergétiques pour un moteur ou un récepteur thermique ditherme.</li>
-                        <li>Analyser un dispositif concret et le modéliser par une machine cyclique ditherme.</li>
-                        <li>Définir un rendement ou une efficacité et les relier aux énergies échangées au cours d’un cycle.</li>
-                        <li>Justifier et utiliser le théorème de Carnot.</li>
-                        <li>Citer quelques ordres de grandeur des rendements des machines thermiques réelles actuelles.</li>
-                        <li>Expliquer le principe de la cogénération.</li>
-                    </ul>
-                </div>
-                
-                <div class="summary-card animate-on-scroll">
-                    <h3>📝 Questions de cours</h3>
-                    <ul>
-                        <li>Donner le sens réel des échanges d’énergie dans un moteur, une pompe à chaleur, un réfrigérateur.</li>
-                        <li>Citer quelques ordres de grandeur des rendements des machines thermiques réelles actuelles.</li>
-                        <li>Définir le rendement ou l’efficacité de chaque type de machine en fonction des énergies échangées au cours du cycle et établir la formulation associée au théorème de Carnot.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h2 class="animate-on-scroll">I. Documents</h2>
-            
-            <div class="card animate-on-scroll">
-                <h3>Document 1 – Réflexions sur la puissance motrice du feu</h3>
-                <p>La thermodynamique est née durant la révolution industrielle, avec la volonté d’exploiter l’énergie libérée par la combustion du charbon pour produire un mouvement. Désirant améliorer l’efficacité des machines à vapeur, <strong>Sadi Carnot (1796 – 1832)</strong> publia en 1824 un mémoire intitulé <em>Réflexions sur la puissance motrice du feu</em>. Il est l’un des fondateurs de la thermodynamique.</p>
-            </div>
-
-            <div class="schema animate-on-scroll">
-                <h3>Document 2 – Schéma de principe d’un réacteur à eau pressurisée</h3>
-                <p>
-                    [Schéma de principe d'un réacteur à eau pressurisée]
-                </p>
-                <p style="margin-top: 1rem; font-style: italic; color: var(--text-secondary);">
-                    Un réacteur à eau pressurisée est une source de chaleur intense, convertissant l'énergie nucléaire en énergie thermique pour chauffer de l'eau sous pression, qui transfère ensuite cette chaleur à un circuit secondaire pour produire de la vapeur et entraîner une turbine.
-                </p>
-            </div>
-
-            <div class="card animate-on-scroll">
-                <h3>Document 3 – Moteurs réels</h3>
-                <p>Les moteurs réels fonctionnent sur des cycles irréversibles ; leur rendement est toujours inférieur au rendement de Carnot $\eta_C$. Pour des machines thermiques réelles :</p>
-                <ul>
-                    <li>Une centrale nucléaire avec $T_c \sim 600 \text{ K}$ (le réacteur) et $T_f \sim 300 \text{ K}$ (une rivière), a un $\eta_C = 0,5$, mais le rendement réel n’est que de <strong>30 à 40 %</strong>.</li>
-                    <li>Un moteur de voiture, avec $T_c \sim 3000 \text{ K}$ (les gaz en combustion) et $T_f \sim 300 \text{ K}$ (l’atmosphère), a un $\eta_C = 0,9$, alors qu’en pratique, son rendement est de l’ordre de <strong>0,4</strong> dans des conditions optimales.</li>
-                    <li>Le rendement des moteurs Diesel (<strong>42 %</strong>) est légèrement plus élevé que celui des moteurs à essence (<strong>36 %</strong>).</li>
-                    <li>En ville, le régime de fonctionnement de ces moteurs n’est pas optimal et le rendement n’atteint que <strong>15 %</strong>.</li>
-                </ul>
-                <p>En comparaison, le rendement des moteurs électriques peut atteindre <strong>98 %</strong> !</p>
-            </div>
-
-            <div class="card animate-on-scroll">
-                <h3>Document 4 – Moteur de Stirling</h3>
-                <p>Le moteur de Stirling, breveté en 1816, utilise une source de chaleur extérieure, ce qui le rend polyvalent (centrales solaires, sous-marins, cogénération). Utilisé comme récepteur, il peut aussi être exploité comme réfrigérateur pour liquéfier des gaz.</p>
-                <p>Son principe général consiste à comprimer un gaz quand il est froid (peu coûteux car sa pression est faible), puis à le chauffer et récupérer le travail en le détendant (sa pression est alors plus importante).</p>
-                <p>Le cycle de Stirling se décompose en quatre étapes :</p>
-                <ol>
-                    <li><strong>Compression isotherme (contact source froide, $T_f$, Vmax à Vmin) :</strong> Le gaz, majoritairement dans la zone en contact avec la source froide, est froid ($\sim T_f$). Il est comprimé jusqu’au volume minimal ($V_{min} < V_{max}$).</li>
-                    <li><strong>Chauffage isochore (déplacement vers source chaude) :</strong> Le gaz est déplacé par le piston intérieur vers la source chaude.</li>
-                    <li><strong>Détente isotherme (contact source chaude, $T_c$, Vmin à Vmax) :</strong> À la fin des échanges thermiques, le gaz est chaud ($\sim T_c$). Il est détendu jusqu’au volume maximal ($V_{max}$).</li>
-                    <li><strong>Refroidissement isochore (déplacement vers source froide) :</strong> Le gaz est déplacé à nouveau par le piston intérieur vers la zone froide et le cycle recommence.</li>
-                </ol>
-                <p>
-                    [Schéma de principe du moteur de Stirling]
-                </p>
-            </div>
-
-            <h2 class="animate-on-scroll">II. Machine thermique</h2>
-            
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Machine thermique</h4>
-                <p>Une <strong>machine thermique</strong> est un dispositif qui réalise des conversions d'énergie impliquant des transferts thermiques.</p>
-                <p>Cela peut désigner un dispositif destiné à :</p>
-                <ul>
-                    <li><strong>Produire du travail :</strong> on parle de <strong>moteur thermique</strong>.</li>
-                    <li><strong>Réaliser des échanges thermiques :</strong> on parle de <strong>récepteur thermique</strong> (réfrigérateur ou pompe à chaleur).</li>
-                </ul>
-                <p>Ces dispositifs fonctionnent grâce à un fluide qui subit une série de transformations thermodynamiques. On ne s’intéressera qu’à des machines dont le comportement est cyclique.</p>
-            </div>
-
-            <div class="property animate-on-scroll">
-                <h4>⚡ Propriété 1 - Machine cyclique</h4>
-                <p>Pour une machine thermique cyclique, sur un cycle on a :</p>
-                <div class="formula">$\Delta U = 0 \quad \text{et} \quad \Delta S = 0$</div>
-                <p>car les états initial et final sont identiques. On ne s’intéresse qu’au régime permanent du fonctionnement de ces machines.</p>
-            </div>
-
-            <h3 class="animate-on-scroll">II.1 Machine thermique ditherme</h3>
-            <p>On s’intéresse aux échanges d’énergie entre :</p>
-            <ul>
-                <li>Le fluide de la machine thermique : c’est le système.</li>
-                <li>Un système mécanique ou électrique avec lequel elle échange du travail $W$.</li>
-                <li>Deux thermostats : une source chaude à la température $T_c$ et une source froide à $T_f$. On parle de <strong>machine thermique ditherme</strong>. On note respectivement $Q_c$ et $Q_f$ les échanges thermiques entre la machine et les sources chaude et froide.</li>
-            </ul>
-            <p>Le sens conventionnel des échanges d’énergie (par opposition au sens réel que l’on verra plus tard) est toujours celui de la <strong>convention égoïste</strong> : tous les transferts d’énergie $W, Q_f$ et $Q_c$ sont algébriques et comptés positivement s'ils sont reçus par la machine.</p>
-
-            <div class="schema animate-on-scroll">
-                <h4>Schéma conventionnel d’une machine thermique ditherme</h4>
-                <p>[Schéma conventionnel d’une machine thermique ditherme]</p>
-                <p style="margin-top: 1rem; font-style: italic; color: var(--text-secondary);">
-                    Convention égoïste : les transferts $W, Q_c, Q_f$ sont reçus par la machine.
-                </p>
-            </div>
-
-            <h3 class="animate-on-scroll">II.2 Diagramme de Clapeyron</h3>
-            <p>Dans le cas d’un fonctionnement quasi-statique ou réversible, pour étudier le comportement d’une machine thermique, on représente le cycle subi par le fluide dans le diagramme de Clapeyron ($P,V$).</p>
-
-            <div class="property animate-on-scroll">
-                <h4>⚡ Propriété 2 - Sens de parcours du cycle</h4>
-                <p>Dans le diagramme de Clapeyron ($P,V$) :</p>
-                <ul>
-                    <li><strong>Sens horaire</strong> : le travail $W$ reçu par le fluide est négatif ($W < 0$) $\to$ fonctionnement moteur.</li>
-                    <li><strong>Sens trigonométrique</strong> : le travail $W$ reçu par le fluide est positif ($W > 0$) $\to$ fonctionnement récepteur.</li>
-                </ul>
-                <p>Le travail $W$ reçu par le fluide au cours d’un cycle est directement proportionnel à l’aire algébrique $A$ du cycle et à la masse de fluide $m$ :</p>
-                <div class="formula">$W = -mA$</div>
-                
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    Le travail reçu par le fluide au cours d'un cycle quasi-statique est donné par l'intégrale $W = -\int P dV$. Dans le diagramme de Clapeyron, cette intégrale représente l'opposé de l'aire algébrique délimitée par le cycle.
-                    <ul>
-                        <li>Si le cycle est parcouru dans le <strong>sens horaire</strong>, les compressions se produisent à des pressions plus élevées que les détentes pour les mêmes variations de volume. L'aire délimitée est positive. Puisque $W = - \text{Aire}$, le travail $W$ reçu est négatif ($W < 0$). La machine fournit du travail : elle est un moteur.</li>
-                        <li>Si le cycle est parcouru dans le <strong>sens trigonométrique (anti-horaire)</strong>, les compressions se produisent à des pressions plus faibles que les détentes. L'aire délimitée est négative. Puisque $W = - \text{Aire}$, le travail $W$ reçu est positif ($W > 0$). La machine reçoit du travail pour fonctionner : elle est un récepteur.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h2 class="animate-on-scroll">III. Moteur ditherme</h2>
-
-            <h3 class="animate-on-scroll">III.1 Impossibilité d’un moteur thermique monotherme</h3>
-            <p>On considère une machine thermique en contact avec un unique thermostat à la température $T_c$. Cette machine peut-elle se compporter comme un moteur?</p>
-
-            <div class="property animate-on-scroll">
-                <h4>⚡ Propriété 3 - Impossibilité moteur monotherme</h4>
-                <div class="important">
-                    Il est impossible de réaliser un moteur thermique monotherme.
-                </div>
-                <p>Il faut donc au minimum deux sources de températures différentes pour obtenir un moteur thermique. On ne s’intéressera qu’à des machines thermiques dithermes.</p>
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    Supposons qu'une machine thermique cyclique monotherme fonctionne comme un moteur, c'est-à-dire qu'elle produit du travail ($W_{reçu} < 0$). Elle est en contact avec un unique thermostat à la température $T_c$.
-                    <ul>
-                        <li><strong>Premier principe de la thermodynamique (sur un cycle) :</strong>
-                            $\Delta U = W_{reçu} + Q_c = 0 \implies Q_c = -W_{reçu}$.
-                            Puisque $W_{reçu} < 0$, alors $Q_c > 0$. La machine doit recevoir de la chaleur de la source.
-                        </li>
-                        <li><strong>Deuxième principe de la thermodynamique (sur un cycle) :</strong>
-                            Pour un cycle, la variation d'entropie du fluide est nulle ($\Delta S_{fluide} = 0$). La variation d'entropie de la source est $\Delta S_{source} = -Q_c/T_c$.
-                            L'entropie créée par le système isolé (machine + source) doit être positive ou nulle : $S_{créée} = \Delta S_{fluide} + \Delta S_{source} = 0 - Q_c/T_c \ge 0$.
-                            Puisque $T_c > 0$ (température absolue), l'inégalité $S_{créée} = -Q_c/T_c \ge 0$ implique $Q_c \le 0$.
-                        </li>
-                    </ul>
-                    Nous avons une contradiction : le premier principe impose $Q_c > 0$, tandis que le deuxième principe impose $Q_c \le 0$. La seule façon de satisfaire ces deux conditions est si $Q_c = 0$, ce qui impliquerait $W_{reçu} = 0$. Donc, une machine thermique monotherme ne peut pas produire de travail. Elle ne peut fonctionner qu'en récepteur (recevant du travail pour transférer de la chaleur).
-                </div>
-            </div>
-
-            <h3 class="animate-on-scroll">III.2 Sens réel des échanges d’énergie</h3>
-            <p>Dans un moteur thermique réel, le système est le fluide. La source chaude est le milieu de combustion (par exemple, les gaz chauds issus de la combustion du carburant dans un moteur de voiture) et la source froide est l'atmosphère ou un système de refroidissement.</p>
-            <p>On considère une machine thermique ditherme en contact avec deux sources, l’une froide et l’autre plus chaude, assimilées à des thermostats de températures respectives $T_f$ et $T_c$. On souhaite que la machine soit motrice, c’est-à-dire qu’en moyenne elle puisse fournir un travail mécanique récupérable par un opérateur extérieur. Le travail $W$ reçu par la machine sur un cycle est donc négatif : on a $W < 0$.</p>
-            <p>Les deux principes de la thermodynamique permettent de déterminer le signe des échanges d’énergie thermique avec les sources froide et chaude, notés respectivement $Q_f$ et $Q_c$.</p>
-
-            <div class="property animate-on-scroll">
-                <h4>⚡ Propriété 4 - Sens des échanges pour un moteur</h4>
-                <p>Pour un moteur thermique ditherme, on a :</p>
-                <div class="formula">$W < 0, \quad Q_c > 0, \quad Q_f < 0$</div>
-                
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    Supposons qu'une machine thermique ditherme fonctionne comme un moteur ($W < 0$).
-                    <ul>
-                        <li><strong>Premier principe (sur un cycle) :</strong>
-                            $\Delta U = W + Q_c + Q_f = 0 \implies Q_c + Q_f = -W$.
-                            Puisque $W < 0$, alors $-W > 0 \implies Q_c + Q_f > 0$.
-                        </li>
-                        <li><strong>Deuxième principe (Inégalité de Clausius, sur un cycle) :</strong>
-                            $\frac{Q_c}{T_c} + \frac{Q_f}{T_f} \le 0$.
-                        </li>
-                    </ul>
-                    Réarrangeons l'inégalité de Clausius : $\frac{Q_f}{T_f} \le -\frac{Q_c}{T_c}$.
-                    Multiplions par $T_f$ (qui est positif) : $Q_f \le -Q_c \frac{T_f}{T_c}$.
-                    
-                    Pour que le moteur fonctionne, il doit recevoir de la chaleur de la source chaude. Donc $Q_c > 0$.
-                    Si $Q_c > 0$, alors $-Q_c \frac{T_f}{T_c}$ est négatif. Par conséquent, $Q_f$ doit être négatif ($Q_f < 0$). Le moteur cède de la chaleur à la source froide.
-                    
-                    Ensuite, reprenons le premier principe : $Q_c + Q_f = -W$.
-                    Puisque $Q_c > 0$ et $Q_f < 0$, et que leur somme doit être positive (car $-W > 0$), il est nécessaire que la valeur absolue de $Q_c$ soit supérieure à la valeur absolue de $Q_f$ (c'est-à-dire $Q_c > |Q_f|$).
-                    
-                    En résumé : Pour un moteur, on doit recevoir de la chaleur de la source chaude ($Q_c > 0$), céder de la chaleur à la source froide ($Q_f < 0$), et produire du travail ($W < 0$).
-                </div>
-            </div>
-
-            <div class="theorem animate-on-scroll">
-                <h4>📏 Inégalité de Clausius</h4>
-                <p>Pour une machine thermique cyclique ditherme, on a toujours :</p>
-                <div class="formula">$\frac{Q_c}{T_c} + \frac{Q_f}{T_f} \le 0$</div>
-                <p>L'égalité est obtenue pour un cycle réversible.</p>
-            </div>
-
-            <div class="schema animate-on-scroll">
-                <h4>Sens réel des échanges - Moteur</h4>
-                <p>[Schéma sens réel des échanges - Moteur]</p>
-                <p style="margin-top: 1rem; font-style: italic; color: var(--text-secondary);">
-                    L’énergie de la source chaude est partiellement convertie en travail exploitable, le reste est « perdu » sous la forme d’un transfert thermique vers la source froide.
-                </p>
-            </div>
-
-            <h3 class="animate-on-scroll">III.3 Rendement</h3>
-
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Rendement</h4>
-                <p>Pour un moteur thermique, on définit le rendement $\eta$ comme le rapport, sur un cycle :</p>
-                <div class="formula">$\eta = \frac{E_{utile}}{E_{coûteuse}}$</div>
-                <p>où $E_{utile}$ est l’énergie effectivement utilisée à chaque cycle, et où $E_{coûteuse}$ est l’énergie qu’il faut fournir, à chaque cycle, pour entretenir le fonctionnement du moteur.</p>
-                <p>Pour un moteur thermique, on a toujours :</p>
-                <div class="formula">$0 < \eta < 1$</div>
-                <p>Le travail utile est l'opposé du travail reçu par la machine ($|W| = -W$ car $W<0$), et l'énergie coûteuse est la chaleur reçue de la source chaude ($Q_c$). Donc :</p>
-                <div class="formula">$\eta = \frac{|W|}{Q_c} = \frac{-W}{Q_c}$</div>
-            </div>
-
-            <div class="theorem animate-on-scroll">
-                <h4>🏆 Théorème de Carnot - Moteur</h4>
-                <p>Le rendement d’un moteur thermique ditherme qui fonctionne entre deux sources de températures $T_c$ et $T_f < T_c$ est limité par le rendement de Carnot :</p>
-                <div class="formula">$\eta \le \eta_C \quad \text{avec} \quad \eta_C = 1 - \frac{T_f}{T_c}$</div>
-                <p>L’égalité est obtenue pour un cycle réversible.</p>
-                
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    Pour un moteur thermique, le rendement est $\eta = \frac{-W}{Q_c}$.
-                    D'après le premier principe, sur un cycle : $W + Q_c + Q_f = 0 \implies -W = Q_c + Q_f$.
-                    Donc, $\eta = \frac{Q_c + Q_f}{Q_c} = 1 + \frac{Q_f}{Q_c}$.
-                    
-                    D'après l'inégalité de Clausius : $\frac{Q_c}{T_c} + \frac{Q_f}{T_f} \le 0$.
-                    Puisque $Q_c > 0$ pour un moteur, on peut diviser par $Q_c$ et réarranger :
-                    $\frac{1}{T_c} + \frac{Q_f}{Q_c T_f} \le 0 \implies \frac{Q_f}{Q_c T_f} \le -\frac{1}{T_c}$.
-                    Multiplions par $T_f$ (qui est positif) : $\frac{Q_f}{Q_c} \le -\frac{T_f}{T_c}$.
-                    
-                    Substituons cette inégalité dans l'expression du rendement :
-                    $\eta = 1 + \frac{Q_f}{Q_c} \le 1 - \frac{T_f}{T_c}$.
-                    
-                    Donc $\eta \le 1 - \frac{T_f}{T_c}$. L'égalité ($\eta = 1 - \frac{T_f}{T_c}$) est atteinte lorsque le cycle est réversible, car dans ce cas, l'inégalité de Clausius devient une égalité ($\frac{Q_c}{T_c} + \frac{Q_f}{T_f} = 0$).
-                </div>
-            </div>
-
-            <div class="ordres-grandeur animate-on-scroll">
-                <h4>📊 Ordres de grandeur des rendements</h4>
-                <ul>
-                    <li>
-                        <span>Centrale nucléaire (réel)</span>
-                        <span class="rendement">30-40%</span>
-                    </li>
-                    <li>
-                        <span>Moteur essence (optimal)</span>
-                        <span class="rendement">36%</span>
-                    </li>
-                    <li>
-                        <span>Moteur Diesel (optimal)</span>
-                        <span class="rendement">42%</span>
-                    </li>
-                    <li>
-                        <span>Moteur en ville</span>
-                        <span class="rendement">15%</span>
-                    </li>
-                    <li>
-                        <span>Moteur électrique</span>
-                        <span class="rendement">98%</span>
-                    </li>
-                </ul>
-            </div>
-
-            <h2 class="animate-on-scroll">IV. Récepteurs dithermes</h2>
-
-            <h3 class="animate-on-scroll">IV.1 Sens réel des échanges d’énergie</h3>
-
-            <div class="property animate-on-scroll">
-                <h4>⚡ Propriété 6 - Récepteur ditherme</h4>
-                <p>L’intérêt d’une machine thermique ditherme réceptrice est de forcer les transferts thermiques non spontanés (c’est-à-dire de la source froide vers la source chaude), au prix d’un travail à fournir à la machine. Pour un récepteur thermique ditherme :</p>
-                <div class="formula">$Q_f > 0, \quad Q_c < 0, \quad W > 0$</div>
-                <p>Dans la machine, les échanges entre le fluide et les sources se font dans le sens spontané.</p>
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    Supposons qu'une machine ditherme fonctionne comme un récepteur ($W > 0$).
-                    L'objectif d'un réfrigérateur ou d'une pompe à chaleur est de transférer de la chaleur de la source froide vers la source chaude, ce qui est un processus non spontané qui nécessite un apport de travail.
-                    <ul>
-                        <li><strong>Pour un réfrigérateur :</strong> L'énergie utile est l'extraction de chaleur de la source froide. Donc $Q_f > 0$ (chaleur reçue de la source froide par la machine).</li>
-                        <li><strong>Premier principe (sur un cycle) :</strong>
-                            $\Delta U = W + Q_c + Q_f = 0 \implies Q_c = -W - Q_f$.
-                            Puisque $W > 0$ et $Q_f > 0$, $Q_c$ sera négatif ($Q_c < 0$). La machine cède de la chaleur à la source chaude.
-                        </li>
-                        <li><strong>Deuxième principe (Inégalité de Clausius) :</strong>
-                            $\frac{Q_c}{T_c} + \frac{Q_f}{T_f} \le 0$.
-                            Puisque $Q_c < 0$ et $Q_f > 0$, cette inégalité est satisfaite.
-                        </li>
-                    </ul>
-                    En résumé : Un récepteur doit recevoir du travail ($W > 0$), recevoir de la chaleur de la source froide ($Q_f > 0$) et céder de la chaleur à la source chaude ($Q_c < 0$). La chaleur cédée à la source chaude ($|Q_c|$) sera supérieure à la chaleur extraite de la source froide ($Q_f$) car $|Q_c| = W + Q_f$.
-                </div>
-            </div>
-
-            <h3 class="animate-on-scroll">IV.2 Efficacité</h3>
-
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Efficacité</h4>
-                <p>Dans le cas d’un réfrigérateur, le rapport $\frac{E_{utile}}{E_{coûteuse}}$ peut être supérieur à 1 quand $T_c$ et $T_f$ sont proches. Pour éviter des confusions, on ne parle donc pas de rendement, mais d’efficacité.</p>
-                <p>Pour une machine réceptrice ditherme, on définit l’efficacité $e$ comme le rapport :</p>
-                <div class="formula">$e = \frac{E_{utile}}{E_{coûteuse}}$</div>
-                <p>Pour un <strong>Réfrigérateur</strong>, l'énergie utile est la chaleur extraite du compartiment froid ($Q_f$) et l'énergie coûteuse est le travail fourni ($W$) :</p>
-                <div class="formula">$e = \frac{Q_f}{W}$</div>
-            </div>
-
-            <div class="theorem animate-on-scroll">
-                <h4>🏆 Théorème de Carnot - Réfrigérateur</h4>
-                <p>L’efficacité $e$ d’une machine frigorifique ditherme qui fonctionne entre deux sources de températures $T_c$ et $T_f < T_c$ est maximale pour un cycle réversible et on a :</p>
-                <div class="formula">$e \le \frac{T_f}{T_c - T_f}$</div>
-                <p>L’efficacité de la machine frigorifique augmente donc si les températures des deux sources sont proches.</p>
-                
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    Pour un réfrigérateur, l'efficacité est $e = \frac{Q_f}{W}$.
-                    D'après le premier principe, sur un cycle : $W + Q_c + Q_f = 0 \implies W = -(Q_c + Q_f)$.
-                    Donc, $e = \frac{Q_f}{-(Q_c + Q_f)}$.
-                    
-                    Pour un cycle réversible, l'inégalité de Clausius devient une égalité : $\frac{Q_c}{T_c} + \frac{Q_f}{T_f} = 0$.
-                    D'où $Q_c = -Q_f \frac{T_c}{T_f}$.
-                    
-                    Substituons cette expression de $Q_c$ dans l'expression de l'efficacité :
-                    $e = \frac{Q_f}{-(-Q_f \frac{T_c}{T_f} + Q_f)} = \frac{Q_f}{Q_f \frac{T_c}{T_f} - Q_f} = \frac{Q_f}{Q_f \left(\frac{T_c}{T_f} - 1\right)}$.
-                    Simplifiant par $Q_f$ (qui est positif) :
-                    $e = \frac{1}{\frac{T_c}{T_f} - 1} = \frac{1}{\frac{T_c - T_f}{T_f}} = \frac{T_f}{T_c - T_f}$.
-                    
-                    Pour un cycle irréversible, l'efficacité sera inférieure à cette valeur maximale. D'où $e \le \frac{T_f}{T_c - T_f}$.
-                </div>
-            </div>
-
-            <h3 class="animate-on-scroll">IV.3 Pompe à chaleur</h3>
-            <p>Le principe est identique à celui d’un réfrigérateur, sauf que l’on exploite cette fois le transfert thermique vers la source chaude (la chaleur $-Q_c$) pour, par exemple, chauffer l’intérieur d’une maison en hiver. Pour une pompe à chaleur, l'énergie utile est la chaleur cédée à la source chaude ($-Q_c$) et l'énergie coûteuse est le travail fourni ($W$).</p>
-            <p>On ne peut pas déterminer le signe des autres transferts d’énergie en utilisant le même raisonnement que précédemment car les inégalités obtenues ne permettent pas de conclure. On doit alors raisonner par l’absurde, par exemple en s’appuyant sur le diagramme de Raveau ($Q_c$ en fonction de $Q_f$) qui permet de classer les machines thermiques dithermes.</p>
-
-            <div class="theorem animate-on-scroll">
-                <h4>🏆 Théorème de Carnot - Pompe à chaleur</h4>
-                <p>L’efficacité $e$ (souvent appelée COP, Coefficient Optimal de Performance) d’une pompe à chaleur ditherme qui fonctionne entre deux sources de températures $T_c$ et $T_f < T_c$ est maximale pour un cycle réversible et on a :</p>
-                <div class="formula">$e \le \frac{T_c}{T_c - T_f}$</div>
-                <p>L’efficacité augmente si les températures des deux sources sont proches.</p>
-                <div class="demo">
-                    <strong>Démonstration :</strong>
-                    La démonstration est identique à celle de l'application 6. Pour une pompe à chaleur, l'énergie utile est la chaleur cédée à la source chaude (valeur absolue de $Q_c$, soit $-Q_c$ car $Q_c < 0$) et l'énergie coûteuse est le travail $W$ (reçu). L'efficacité est donc $e = \frac{-Q_c}{W}$. En appliquant le premier principe et l'égalité de Clausius pour un cycle réversible, on déduit l'expression maximale.
-                </div>
-            </div>
-
-            <h2 class="animate-on-scroll">V. Bilan</h2>
-
-            <div class="card animate-on-scroll">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: var(--bg-secondary);">
-                            <th style="padding: 1rem; border: 1px solid var(--border);">Machine</th>
-                            <th style="padding: 1rem; border: 1px solid var(--border);">W</th>
-                            <th style="padding: 1rem; border: 1px solid var(--border);">Qc</th>
-                            <th style="padding: 1rem; border: 1px solid var(--border);">Qf</th>
-                            <th style="padding: 1rem; border: 1px solid var(--border);">$\eta$ ou $e$</th>
-                            <th style="padding: 1rem; border: 1px solid var(--border);">$\eta_{max}$ ou $e_{max}$ (Carnot)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 1rem; border: 1px solid var(--border); font-weight: bold;">Moteur</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--danger);">$< 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--success);">$> 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--danger);">$< 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border);">$\eta = -W/Q_c$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border);"> $1 - \frac{T_f}{T_c}$</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 1rem; border: 1px solid var(--border); font-weight: bold;">Réfrigérateur</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--success);">$> 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--danger);">$< 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--success);">$> 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border);"> $e = Q_f/W$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border);"> $\frac{T_f}{T_c-T_f}$</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 1rem; border: 1px solid var(--border); font-weight: bold;">Pompe à chaleur</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--success);">$> 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--danger);">$< 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border); color: var(--success);">$> 0$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border);"> $e = -Q_c/W$</td>
-                            <td style="padding: 1rem; border: 1px solid var(--border);"> $\frac{T_c}{T_c-T_f}$</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p style="margin-top: 1rem; font-style: italic; color: var(--text-secondary);">
-                    💡 Méthode : Ce tableau n’est pas à apprendre par cœur! Il faut savoir le compléter rapidement en partant du signe du transfert d’énergie voulu, puis en reconstruisant le reste avec les principes de la thermodynamique.
-                </p>
-            </div>
-
-            <div class="definition animate-on-scroll">
-                <h4>📚 Définition - Cogénération</h4>
-                <p>La <strong>cogénération</strong> consiste à coupler la production d'énergie électrique à la production de chaleur utile.</p>
-                <p>En notant $Q_c$ le transfert thermique reçu par la machine de la source chaude, $W_u = -W$ le travail électrique (ou mécanique) exploitable et $Q_u$ le transfert thermique utile récupéré pour la production d’eau chaude ou pour un procédé industriel ($0 < Q_u \le -Q_f$), le rendement global $\eta_g$ de l’installation devient :</p>
-                <div class="formula">$\eta_{global} = \frac{W_u + Q_u}{Q_c} > \frac{W_u}{Q_c}$</div>
-                <p>La cogénération permet donc une meilleure exploitation des ressources primaires, ce qui est un des enjeux actuels majeurs.</p>
-            </div>
-
-            <h2 class="animate-on-scroll">🔧 Applications résolues (Chapitre T5)</h2>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 1 - Machine monotherme</h4>
-                <p><strong>Énoncé :</strong> On considère une machine thermique monotherme en contact avec un thermostat à la température $T_c$. La machine a un comportement cyclique.</p>
-                
-                <p><strong>Solution :</strong> (Cette application résout la démonstration de la Propriété 3)</p>
-                <ol>
-                    <li><strong>Dans le cas d’un moteur :</strong> Le travail est fourni par la machine, donc le travail $W$ reçu par la machine est négatif ($W < 0$).</li>
-                    <li><strong>Application des principes de la thermodynamique sur un cycle :</strong>
-                        <ul>
-                            <li><strong>1er principe :</strong> Sur un cycle, la variation d'énergie interne est nulle : $\Delta U = W + Q_c = 0 \implies Q_c = -W$. Puisque $W < 0$, alors $Q_c > 0$.</li>
-                            <li><strong>2ème principe :</strong> Pour un cycle fonctionnant avec une seule source, la variation d'entropie du fluide est nulle ($\Delta S_{fluide} = 0$). La variation d'entropie de la source est $\Delta S_{source} = -Q_c/T_c$. L'entropie créée par le système isolé (machine + source) doit être positive ou nulle : $S_{créée} = \Delta S_{fluide} + \Delta S_{source} = 0 - Q_c/T_c \ge 0$. Puisque $T_c > 0$ (température absolue), l'inégalité $S_{créée} = -Q_c/T_c \ge 0$ implique $Q_c \le 0$.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Conclusion :</strong> Nous avons une contradiction. Le 1er principe impose $Q_c > 0$, tandis que le 2ème principe impose $Q_c \le 0$. La seule possibilité est $Q_c = 0$, ce qui impliquerait $W = 0$. Il est donc impossible pour une machine monotherme de produire du travail. Une telle machine ne peut fonctionner qu'en récepteur.</li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 2 - Cycle de Carnot</h4>
-                <p><strong>1. Rappeler le signe des échanges d’énergie pour un moteur ditherme et schéma :</strong></p>
-                <ul>
-                    <li>$W < 0$ (travail fourni par la machine)</li>
-                    <li>$Q_c > 0$ (chaleur reçue de la source chaude)</li>
-                    <li>$Q_f < 0$ (chaleur cédée à la source froide)</li>
-                </ul>
-                <p>[Schéma sens réel des échanges - Moteur (rappels)]</p>
-
-                <p><strong>2. Établir l’expression du rendement de Carnot :</strong></p>
-                <p>D'après le 1er principe : $W + Q_c + Q_f = 0 \implies -W = Q_c + Q_f$.</p>
-                <p>Le rendement est $\eta_C = \frac{-W}{Q_c} = \frac{Q_c + Q_f}{Q_c} = 1 + \frac{Q_f}{Q_c}$.</p>
-                <p>Pour un cycle réversible, l'inégalité de Clausius devient une égalité : $\frac{Q_c}{T_c} + \frac{Q_f}{T_f} = 0 \implies \frac{Q_f}{Q_c} = -\frac{T_f}{T_c}$.</p>
-                <p>En substituant, on obtient :</p>
-                <div class="formula">$\eta_C = 1 - \frac{T_f}{T_c}$</div>
-
-                <p><strong>3. Rappeler les expressions de $C_v, C_p$ et $\gamma$ pour un gaz parfait diatomique :</strong></p>
-                <ul>
-                    <li>Capacité thermique molaire à volume constant : $C_v = \frac{5}{2}nR$</li>
-                    <li>Capacité thermique molaire à pression constante : $C_p = \frac{7}{2}nR$</li>
-                    <li>Rapport des capacités thermiques : $\gamma = \frac{C_p}{C_v} = \frac{7}{5} = 1,4$</li>
-                </ul>
-
-                <p><strong>4. Montrer que, pour chaque étape du cycle, la pression suit une loi de la forme $P(v) = \text{cste} \times v^\alpha$ :</strong></p>
-                <ul>
-                    <li><strong>Isothermes :</strong> Pour un gaz parfait, $PV = nRT$. Si $T = \text{cste}$, alors $PV = \text{cste} \implies P = \text{cste} \times V^{-1}$ ($\alpha = -1$)</li>
-                    <li><strong>Adiabatiques :</strong> Pour une transformation adiabatique réversible d'un gaz parfait, $PV^\gamma = \text{cste} \implies P = \text{cste} \times V^{-\gamma}$ ($\alpha = -\gamma$)</li>
-                </ul>
-
-                <p><strong>5. Représenter ce cycle dans le diagramme de Clapeyron :</strong></p>
-                <p>[Diagramme de Clapeyron pour un cycle de Carnot]</p>
-                <p style="margin-top: 0.5rem; font-style: italic; color: var(--text-secondary);">
-                    Le cycle de Carnot, composé de deux isothermes et deux adiabatiques réversibles, est parcouru dans le sens horaire pour un moteur.
-                </p>
-
-                <p><strong>6. Exprimer les transferts d’énergie $W, Q_c$ et $Q_f$ reçus par le moteur sur un cycle et en déduire l’expression du rendement d’un tel moteur. Commenter.</strong></p>
-                <p>Pour un cycle de Carnot réversible, les chaleurs échangées sur les isothermes sont :</p>
-                <ul>
-                    <li>Chaleur reçue de la source chaude (isotherme $T_c$) : $Q_c = nRT_c \ln\left(\frac{V_{détente, fin}}{V_{détente, début}}\right) > 0$</li>
-                    <li>Chaleur cédée à la source froide (isotherme $T_f$) : $Q_f = nRT_f \ln\left(\frac{V_{compression, fin}}{V_{compression, début}}\right) < 0$</li>
-                </ul>
-                <p>Les transformations adiabatiques ne donnent pas d'échanges de chaleur. Le travail total $W$ est calculé par le premier principe $W = -(Q_c + Q_f)$.</p>
-                <p>Le rendement obtenu, pour un cycle réversible, confirme :</p>
-                <div class="formula">$\eta = 1 - \frac{T_f}{T_c}$</div>
-                <p><strong>Commentaire :</strong> Le rendement d’un moteur ditherme est plus élevé si les températures des deux sources sont très différentes. Cependant, un grand écart de température a tendance à augmenter l’irréversibilité du cycle en pratique.</p>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 3 - Moteur réel</h4>
-                <p><strong>Données :</strong> Un moteur réel fonctionne entre deux sources de chaleur, l’une à $T_f = 400 \text{ K}$, l’autre à $T_c = 650 \text{ K}$. Il produit $500 \text{ J}$ par cycle (donc travail reçu $W = -500 \text{ J}$), pour $1500 \text{ J}$ de transfert thermique fourni ($Q_c = 1500 \text{ J}$).</p>
-                
-                <p><strong>Solution :</strong></p>
-                <ol>
-                    <li><strong>Comparer son rendement à celui d’une machine de Carnot fonctionnant entre les deux mêmes sources :</strong>
-                        <ul>
-                            <li>Rendement réel : $\eta_{réel} = \frac{|W|}{Q_c} = \frac{500 \text{ J}}{1500 \text{ J}} = \frac{1}{3} \approx 33,3\%$</li>
-                            <li>Rendement de Carnot : $\eta_{Carnot} = 1 - \frac{T_f}{T_c} = 1 - \frac{400 \text{ K}}{650 \text{ K}} = 1 - \frac{8}{13} = \frac{5}{13} \approx 38,5\%$</li>
-                        </ul>
-                        Le rendement réel est bien inférieur au rendement de Carnot ($\eta_{réel} < \eta_{Carnot}$), ce qui est attendu pour une machine réelle irréversible.
-                    </li>
-                    <li><strong>Calculer l’entropie créée par cycle, notée $S_{créée}$ :</strong>
-                        <p>D'après le 1er principe : $W + Q_c + Q_f = 0 \implies Q_f = -W - Q_c = -(-500 \text{ J}) - 1500 \text{ J} = 500 \text{ J} - 1500 \text{ J} = -1000 \text{ J}$.</p>
-                        <p>L'entropie créée par le système isolé (machine + sources) est donnée par : $S_{créée} = -\left(\frac{Q_c}{T_c} + \frac{Q_f}{T_f}\right)$.</p>
-                        <p>$S_{créée} = -\left(\frac{1500 \text{ J}}{650 \text{ K}} + \frac{-1000 \text{ J}}{400 \text{ K}}\right) = -\left(\frac{150}{65} - \frac{100}{40}\right) = -\left(\frac{30}{13} - \frac{5}{2}\right) = -\left(\frac{60 - 65}{26}\right) = -\left(\frac{-5}{26}\right) = \frac{5}{26} \text{ J/K} \approx 0,192 \text{ J/K}$.</p>
-                        <p>L'entropie créée est positive, ce qui confirme l'irréversibilité du cycle réel.</p>
-                    </li>
-                    <li><strong>Montrer que la différence entre le travail fourni par la machine de Carnot et la machine réelle est égale à $T_f S_{créée}$, pour une dépense identique ($Q_c$):</strong>
-                        <p>Le travail fourni par la machine réelle est $|W_{réel}| = Q_c \eta_{réel}$.</p>
-                        <p>Le travail qu'aurait fourni une machine de Carnot pour la même $Q_c$ est $|W_{Carnot}| = Q_c \eta_{Carnot}$.</p>
-                        <p>La perte de travail utile due aux irréversibilités est $\Delta |W| = |W_{Carnot}| - |W_{réel}| = Q_c (\eta_{Carnot} - \eta_{réel})$.</p>
-                        <p>On sait que $\eta = \frac{-W}{Q_c}$.</p>
-                        <p>Et $S_{créée} = -\left(\frac{Q_c}{T_c} + \frac{Q_f}{T_f}\right)$.</p>
-                        <p>Du 1er principe : $Q_f = -W - Q_c$.</p>
-                        <p>Donc $S_{créée} = -\left(\frac{Q_c}{T_c} + \frac{-W - Q_c}{T_f}\right) = -\frac{Q_c}{T_c} + \frac{W}{T_f} + \frac{Q_c}{T_f}$.</p>
-                        <p>Multiplions par $T_f$ : $T_f S_{créée} = -Q_c \frac{T_f}{T_c} + W + Q_c$.</p>
-                        <p>$T_f S_{créée} = W + Q_c (1 - \frac{T_f}{T_c})$.</p>
-                        <p>$T_f S_{créée} = W + Q_c \eta_{Carnot}$.</p>
-                        <p>Puisque $W = -Q_c \eta_{réel}$ et $Q_c \eta_{Carnot}$ est le travail maximal que la machine pourrait fournir pour la même $Q_c$ (en valeur absolue), on a :</p>
-                        <p>$T_f S_{créée} = -Q_c \eta_{réel} + Q_c \eta_{Carnot} = Q_c (\eta_{Carnot} - \eta_{réel})$.</p>
-                        <p>Or, $Q_c (\eta_{Carnot} - \eta_{réel}) = Q_c \eta_{Carnot} - Q_c \eta_{réel} = |W_{Carnot}| - |W_{réel}| = \Delta |W|$.</p>
-                        <p>Donc, la perte de travail utile due aux irréversibilités est bien $T_f S_{créée}$.</p>
-                        <p>Numériquement : $T_f S_{créée} = 400 \text{ K} \times 0,192 \text{ J/K} = 76,8 \text{ J}$.</p>
-                    </li>
-                    <li><strong>Le transfert thermique vers la source froide est-il nécessairement perdu? Commenter.</strong>
-                        <p>Non, le transfert thermique vers la source froide ($Q_f$) n'est pas nécessairement perdu. Dans le cas des centrales électriques thermiques, la source froide est souvent l’atmosphère ou l’eau d’une rivière. Le transfert thermique $Q_f$ cédé par la machine ne fait alors que réchauffer le milieu. Cependant, cette énergie peut être récupérée et valorisée, c'est le principe de la <strong>cogénération</strong>.</p>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 4 - Machine frigorifique : sens réel des échanges d’énergie</h4>
-                <p><strong>Énoncé :</strong> On considère une machine frigorifique ditherme en contact avec deux sources aux températures $T_f$ et $T_c > T_f$. On utilisera les notations habituelles pour les transferts thermiques et le travail.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <ol>
-                    <li><strong>Représenter le schéma conventionnel d’une machine thermique ditherme et identifier chacun des éléments :</strong>
-                        <p>[Schéma conventionnel d’une machine thermique ditherme (rappels)]</p>
-                        <p style="margin-top: 1rem; font-style: italic; color: var(--text-secondary);">
-                            Convention égoïste : les transferts $W, Q_c, Q_f$ sont reçus par la machine.
-                        </p>
-                        <p>Pour une machine frigorifique : la <strong>source froide</strong> est l'intérieur du réfrigérateur/congélateur (où l'on veut extraire la chaleur), et la <strong>source chaude</strong> est l'environnement extérieur (où la chaleur est rejetée).</p>
-                    </li>
-                    <li><strong>Justifier que $Q_f > 0$, puis montrer que $Q_c < 0$ et $W > 0$ :</strong>
-                        <ul>
-                            <li><strong>$Q_f > 0$ :</strong> L'objectif d'un réfrigérateur est d'extraire de la chaleur du compartiment froid pour le refroidir. Selon la convention égoïste (chaleur reçue positive), la machine *reçoit* de la chaleur de la source froide, donc $Q_f > 0$.</li>
-                            <li><strong>D'après le 2ème principe (inégalité de Clausius) :</strong> $\frac{Q_c}{T_c} + \frac{Q_f}{T_f} \le 0$. Puisque $Q_f > 0$ et $T_f > 0$, alors $\frac{Q_c}{T_c} \le -\frac{Q_f}{T_f}$. Comme $T_c > 0$, cela implique $Q_c \le -Q_f \frac{T_c}{T_f}$. Puisque $Q_f > 0$ et $T_c, T_f > 0$, le terme de droite est négatif. Donc $Q_c$ est nécessairement négatif ($Q_c < 0$). La machine cède de la chaleur à la source chaude.</li>
-                            <li><strong>D'après le 1er principe :</strong> $\Delta U = W + Q_c + Q_f = 0 \implies W = -(Q_c + Q_f)$. Puisque $Q_c < 0$ et $Q_f > 0$, et que $|Q_c| > Q_f$ pour qu'il y ait un transfert net vers la source chaude, alors $Q_c + Q_f$ est négatif. Par conséquent, $W = -(\text{négatif}) > 0$. La machine reçoit du travail pour fonctionner.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Sur un nouveau schéma, représenter le sens réel des échanges d’énergie :</strong>
-                        <p>[Schéma sens réel des échanges - Réfrigérateur]</p>
-                        <p style="margin-top: 1rem; font-style: italic; color: var(--text-secondary);">
-                            La machine force le transfert thermique du froid vers le chaud moyennant un apport de travail.
-                        </p>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 5 - Machine frigorifique : efficacité</h4>
-                <p><strong>Estimer numériquement l’efficacité de Carnot d’un réfrigérateur, puis celle d’un congélateur.</strong></p>
-                <p><strong>Solution :</strong></p>
-                <ul>
-                    <li><strong>Réfrigérateur :</strong>
-                        <p>Température intérieure (source froide) : $T_f \approx 4^\circ\text{C} = 277 \text{ K}$.</p>
-                        <p>Température extérieure (source chaude) : $T_c \approx 20^\circ\text{C} = 293 \text{ K}$.</p>
-                        <div class="formula">$e_C = \frac{277}{293 - 277} = \frac{277}{16} \approx 17,3$</div>
-                        <p><em>Valeurs réelles : réfrigérateur $\approx 3-8$</em></p>
-                    </li>
-                    <li><strong>Congélateur :</strong>
-                        <p>Température intérieure (source froide) : $T_f \approx -18^\circ\text{C} = 255 \text{ K}$.</p>
-                        <p>Température extérieure (source chaude) : $T_c \approx 20^\circ\text{C} = 293 \text{ K}$.</p>
-                        <div class="formula">$e_C = \frac{255}{293 - 255} = \frac{255}{38} \approx 6,7$</div>
-                        <p><em>Valeurs réelles : congélateur $\approx 2-4$</em></p>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>🔧 Application 6 - Pompe à chaleur</h4>
-                <p><strong>1. Montrer que l’efficacité d’une pompe à chaleur qui fonctionne entre deux sources aux températures $T_c$ et $T_f < T_c$ est inférieure à une valeur maximale que l’on exprimera en fonction de $T_c$ et $T_f$. À quelle condition cette valeur est-elle atteinte?</strong></p>
-                <p>L'efficacité pour une pompe à chaleur est $e = \frac{\text{Énergie utile}}{\text{Énergie coûteuse}} = \frac{|Q_c|}{W} = \frac{-Q_c}{W}$ (car $Q_c < 0$ et $W > 0$).</p>
-                <p>D'après le premier principe, sur un cycle : $W + Q_c + Q_f = 0 \implies W = -(Q_c + Q_f)$.</p>
-                <p>Donc $e = \frac{-Q_c}{-(Q_c + Q_f)} = \frac{Q_c}{Q_c + Q_f}$.</p>
-                <p>Pour un cycle réversible, l'inégalité de Clausius devient une égalité : $\frac{Q_c}{T_c} + \frac{Q_f}{T_f} = 0$.</p>
-                <p>D'où $Q_f = -Q_c \frac{T_f}{T_c}$.</p>
-                <p>Substituons cette expression de $Q_f$ dans l'expression de l'efficacité :</p>
-                <div class="formula">$e = \frac{Q_c}{Q_c + \left(-Q_c \frac{T_f}{T_c}\right)} = \frac{Q_c}{Q_c \left(1 - \frac{T_f}{T_c}\right)}$.</div>
-                <p>Simplifiant par $Q_c$ (qui est négatif, donc on divise par sa valeur absolue et le signe s'inverse, ou on raisonne sur les valeurs absolues et les signes) :</p>
-                <div class="formula">$e = \frac{1}{1 - \frac{T_f}{T_c}} = \frac{1}{\frac{T_c - T_f}{T_c}} = \frac{T_c}{T_c - T_f}$</div>
-                <p>Cette valeur maximale est atteinte pour un <strong>cycle réversible</strong>.</p>
-
-                <p><strong>2. Faire l’application numérique pour $T_c = 20^\circ\text{C}$ et $T_f = 5^\circ\text{C}$.</strong></p>
-                <p>$T_c = 20^\circ\text{C} = 293 \text{ K}$</p>
-                <p>$T_f = 5^\circ\text{C} = 278 \text{ K}$</p>
-                <div class="formula">$e_{max} = \frac{293}{293 - 278} = \frac{293}{15} \approx 19,5$</div>
-
-                <p><strong>3. Quel sens physique donner à l’efficacité?</strong></p>
-                <p>Pour une pompe à chaleur, une efficacité de 19,5 signifie que pour chaque Joule de travail électrique (énergie coûteuse) fourni à la machine, on peut transférer jusqu'à 19,5 Joules de chaleur (énergie utile) à la source chaude (par exemple, l'intérieur de la maison). Une grande partie de cette énergie utile est prélevée de la source froide (l'extérieur en hiver), ce qui est l'intérêt d'une pompe à chaleur par rapport à un système de chauffage classique qui convertirait directement l'énergie électrique en chaleur avec un rendement de 1.</p>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>Application 7 - Centrale thermique avec cogénération</h4>
-                <p><strong>Énoncé :</strong> Une centrale thermique reçoit $1000 \text{ MW}$ de la source chaude, produit $350 \text{ MW}$ électriques et récupère $400 \text{ MW}$ pour le chauffage urbain.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <ol>
-                    <li><strong>Rendement électrique :</strong> $\eta_{élec} = \frac{350 \text{ MW}}{1000 \text{ MW}} = 35\%$</li>
-                    <li><strong>Rendement global :</strong> $\eta_{global} = \frac{350 \text{ MW} + 400 \text{ MW}}{1000 \text{ MW}} = \frac{750 \text{ MW}}{1000 \text{ MW}} = 75\%$</li>
-                    <li><strong>Gain :</strong> $\eta_{global} - \eta_{élec} = 75\% - 35\% = 40\%$ d'amélioration</li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>Application 8 - Comparaison chauffage électrique / pompe à chaleur</h4>
-                <p><strong>Énoncé :</strong> Comparer chauffage électrique direct et pompe à chaleur pour chauffer une maison (besoin : $10 \text{ kW}$, $T_{ext} = 5^\circ\text{C}$, $T_{int} = 20^\circ\text{C}$).</p>
-                
-                <p><strong>Solution :</strong></p>
-                <ol>
-                    <li><strong>Chauffage électrique direct :</strong>
-                        <p>Le chauffage électrique direct a un rendement de 100% (toute l'énergie électrique est convertie en chaleur).</p>
-                        <p>Puissance électrique consommée : $P_{élec} = 10 \text{ kW}$ (pour un besoin de $10 \text{ kW}$).</p>
-                    </li>
-                    <li><strong>Pompe à chaleur (PAC) :</strong>
-                        <p>Température intérieure (source chaude) : $T_c = 20^\circ\text{C} = 293 \text{ K}$.</p>
-                        <p>Température extérieure (source froide) : $T_f = 5^\circ\text{C} = 278 \text{ K}$.</p>
-                        <p>COP de Carnot (maximum théorique) : $COP_{max} = \frac{T_c}{T_c - T_f} = \frac{293}{293 - 278} = \frac{293}{15} \approx 19,5$.</p>
-                        <p>COP réel (en pratique) : $COP_{réel} \approx 4$.</p>
-                        <p>Puissance électrique consommée pour la PAC : $P_{élec} = \frac{\text{Puissance thermique utile}}{\text{COP}_{réel}} = \frac{10 \text{ kW}}{4} = 2,5 \text{ kW}$.</p>
-                    </li>
-                    <li><strong>Économie :</strong>
-                        <p>L'utilisation d'une pompe à chaleur permet une réduction de consommation électrique de $10 \text{ kW} - 2,5 \text{ kW} = 7,5 \text{ kW}$.</p>
-                        <p>Cela représente une économie de $\frac{7,5}{10} = 75\%$ de réduction de consommation électrique pour le même besoin de chauffage.</p>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="application animate-on-scroll">
-                <h4>Application 9 - Analyse d'un réfrigérateur</h4>
-                <p><strong>Énoncé :</strong> Un réfrigérateur fonctionne entre $4^\circ\text{C}$ (compartiment froid) et $25^\circ\text{C}$ (extérieur), consomme $150 \text{ W}$ de puissance électrique et extrait $450 \text{ W}$ du compartiment froid.</p>
-                
-                <p><strong>Solution :</strong></p>
-                <ol>
-                    <li><strong>Efficacité réelle :</strong> $e_{réel} = \frac{\text{Puissance thermique extraite (utile)}}{\text{Puissance électrique consommée (coûteuse)}} = \frac{450 \text{ W}}{150 \text{ W}} = 3$.</li>
-                    <li><strong>Efficacité de Carnot :</strong>
-                        <p>Température source froide : $T_f = 4^\circ\text{C} = 277 \text{ K}$.</p>
-                        <p>Température source chaude : $T_c = 25^\circ\text{C} = 298 \text{ K}$.</p>
-                        <div class="formula">$e_C = \frac{277}{298 - 277} = \frac{277}{21} \approx 13,19$</div>
-                    </li>
-                    <li><strong>Pourcentage du maximum :</strong> $\frac{e_{réel}}{e_C} = \frac{3}{13,19} \approx 0,227 \approx 23\%$. Cela indique des irréversibilités importantes dans le fonctionnement du réfrigérateur réel.</li>
-                    <li><strong>Chaleur rejetée à l'extérieur ($|Q_c|$ ou $-Q_c$) :</strong>
-                        <p>D'après le 1er principe, pour un cycle, la puissance électrique consommée $P_W = 150 \text{ W}$ (travail reçu $W = -P_W = -150 \text{ W}$) et la puissance extraite du froid $P_f = 450 \text{ W}$ (chaleur reçue $Q_f = P_f = 450 \text{ W}$). La puissance rejetée à l'extérieur est $P_c = -Q_c$.</p>
-                        <p>Sur un cycle : $W + Q_c + Q_f = 0 \implies Q_c = -W - Q_f = -(-150 \text{ W}) - 450 \text{ W} = 150 \text{ W} - 450 \text{ W} = -300 \text{ W}$.</p>
-                        <p>La chaleur rejetée à l'extérieur est donc $|Q_c| = 300 \text{ W}$.</p>
-                    </li>
-                </ol>
-            </div>
-
-            <h2 class="animate-on-scroll">📝 Méthodes et conseils</h2>
-
-            <div class="summary-grid">
-                <div class="summary-card animate-on-scroll">
-                    <h4>🎯 Méthode générale pour analyser une machine thermique</h4>
-                    <ol>
-                        <li>Identifier le <strong>type de machine</strong> (moteur, réfrigérateur, pompe à chaleur).</li>
-                        <li>Déterminer le <strong>sens réel des transferts d'énergie</strong> (travail $W$, chaleurs $Q_c$ et $Q_f$) en utilisant la convention égoïste (reçu positif).</li>
-                        <li>Appliquer les <strong>deux principes de la thermodynamique</strong> (1er principe : $\Delta U = 0 \implies W+Q_c+Q_f=0$; 2ème principe : $\Delta S = 0 \implies Q_c/T_c + Q_f/T_f \le 0$).</li>
-                        <li>Calculer le <strong>rendement $\eta$ ou l'efficacité $e$</strong> en identifiant l'énergie utile et l'énergie coûteuse.</li>
-                        <li>Comparer la performance réelle au <strong>maximum théorique de Carnot</strong>.</li>
-                    </ol>
-                </div>
-                
-                <div class="summary-card animate-on-scroll">
-                    <h4>⚠️ Pièges à éviter</h4>
-                    <ul>
-                        <li>Confondre le <strong>sens conventionnel</strong> (reçu positif) et le <strong>sens réel</strong> (flèches indiquant le flux d'énergie) des échanges.</li>
-                        <li>Oublier la <strong>convention de signe</strong> (W, Qc, Qf algébriques).</li>
-                        <li>Mélanger la définition et les bornes du <strong>rendement</strong> (toujours $\le 1$) et de l'<strong>efficacité</strong> (peut être $> 1$).</li>
-                        <li>Négliger les <strong>ordres de grandeur</strong> des machines réelles.</li>
-                    </ul>
-                </div>
-                
-                <div class="summary-card animate-on-scroll">
-                    <h4>💡 Points clés à retenir</h4>
-                    <ul>
-                        <li>Un <strong>moteur monotherme est impossible</strong>.</li>
-                        <li>Le rendement d'un moteur thermique est toujours <strong> inférieur à 1</strong> ($\eta < 1$).</li>
-                        <li>L'efficacité d'un récepteur thermique peut être <strong>supérieure à 1</strong> ($e > 1$).</li>
-                        <li>Le <strong>Théorème de Carnot</strong> fournit la limite théorique maximale de performance pour toute machine ditherme.</li>
-                        <li>Les <strong>irréversibilités</strong> (frottements, transferts thermiques non quasi-statiques, etc.) limitent toujours les performances réelles par rapport à la limite de Carnot.</li>
-                    </ul>
-                </div>
-                
-                <div class="summary-card animate-on-scroll">
-                    <h4>📊 Ordres de grandeur à retenir</h4>
-                    <ul>
-                        <li>Moteur thermique : 30-40%</li>
-                        <li>Moteur électrique : 95-98%</li>
-                        <li>Réfrigérateur : COP $\approx$ 3-8</li>
-                        <li>Pompe à chaleur : COP $\approx$ 3-5</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="theorem animate-on-scroll">
-                <h4>🔑 Formules essentielles</h4>
-                <div class="formula">
-                    <div><strong>Premier principe (cycle) :</strong> $\Delta U = W + Q = 0$</div>
-                    <div><strong>Deuxième principe (cycle) :</strong> $\Delta S = \sum \frac{Q_i}{T_i} + S_{créée} = 0 \implies \sum \frac{Q_i}{T_i} \le 0$</div>
-                    <div><strong>Inégalité de Clausius (ditherme) :</strong> $\frac{Q_c}{T_c} + \frac{Q_f}{T_f} \le 0$</div>
-                    <div><strong>Rendement de Carnot (Moteur) :</strong> $\eta_C = 1 - \frac{T_f}{T_c}$</div>
-                    <div><strong>Efficacité de Carnot (Réfrigérateur) :</strong> $e_f = \frac{T_f}{T_c - T_f}$</div>
-                    <div><strong>Efficacité de Carnot (Pompe à chaleur) :</strong> $e_{PAC} = \frac{T_c}{T_c - T_f}$</div>
-                </div>
-            </div>
-
-            <div class="important animate-on-scroll">
-                <h4>🚨 Points cruciaux pour l'examen</h4>
-                <ul>
-                    <li>Savoir justifier l'impossibilité du moteur monotherme.</li>
-                    <li>Maîtriser les sens des échanges énergétiques pour les différents types de machines.</li>
-                    <li>Connaître et savoir démontrer le théorème de Carnot pour moteurs et récepteurs.</li>
-                    <li>Interpréter physiquement les rendements et efficacités, et comprendre l'impact des irréversibilités.</li>
-                    <li>Connaître les ordres de grandeur des machines réelles actuelles.</li>
-                </ul>
-            </div>
-
-            <div class="card animate-on-scroll" style="background: linear-gradient(135deg, var(--text-accent), var(--bg-card)); color: white; text-align: center; margin-top: 2rem;">
-                <h3>🎓 Fiche de révision complète du Chapitre T5</h3>
-                <p>Toutes les propriétés, démonstrations et applications pour maîtriser les machines thermiques</p>
-                <div class="badge" style="margin-top: 1rem;">Prépa • Physique • Thermodynamique</div>
-            </div>
-        </section>
-
+    <div class="game-container">
+        <div class="header">
+            <h1>🐍 Snake Game</h1>
+            <div class="stats">
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="speed">Speed: <span id="speed">1</span>x</div>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="500" height="500"></canvas>
+        
+        <div class="controls">
+            <button id="startBtn">Start Game</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+        
+        <div class="mobile-controls">
+            <button class="mobile-btn up-btn">↑</button>
+            <button class="mobile-btn left-btn">←</button>
+            <button class="mobile-btn down-btn">↓</button>
+            <button class="mobile-btn right-btn">→</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to Play</h3>
+            <p>Use arrow keys to control the snake. Eat the red food to grow and earn points. Avoid hitting yourself or the walls. The game speeds up as your score increases!</p>
+        </div>
+        
+        <div class="game-over" id="gameOver">
+            <h2>GAME OVER</h2>
+            <div class="final-score">Your Score: <span id="finalScore">0</span></div>
+            <button id="restartBtn">Play Again</button>
+        </div>
     </div>
 
     <script>
-        // Function to toggle theme
-        function toggleTheme() {
-            const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', newTheme);
+        // Game elements
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const speedElement = document.getElementById('speed');
+        const finalScoreElement = document.getElementById('finalScore');
+        const gameOverScreen = document.getElementById('gameOver');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        // Mobile controls
+        const upBtn = document.querySelector('.up-btn');
+        const downBtn = document.querySelector('.down-btn');
+        const leftBtn = document.querySelector('.left-btn');
+        const rightBtn = document.querySelector('.right-btn');
+        
+        // Game settings
+        const gridSize = 20;
+        const gridWidth = canvas.width / gridSize;
+        const gridHeight = canvas.height / gridSize;
+        const initialSpeed = 120; // milliseconds per move
+        const speedIncrease = 2; // speed increase per food
+        
+        // Game state
+        let snake = [];
+        let food = {};
+        let direction = 'right';
+        let nextDirection = 'right';
+        let score = 0;
+        let gameSpeed = initialSpeed;
+        let gameInterval;
+        let gameRunning = false;
+        let gamePaused = false;
+        
+        // Initialize game
+        function initGame() {
+            // Create initial snake (3 segments)
+            snake = [
+                {x: 5, y: 10},
+                {x: 4, y: 10},
+                {x: 3, y: 10}
+            ];
             
-            // Save theme preference to localStorage
-            localStorage.setItem('theme', newTheme);
+            // Generate first food
+            generateFood();
+            
+            // Reset game state
+            direction = 'right';
+            nextDirection = 'right';
+            score = 0;
+            gameSpeed = initialSpeed;
+            updateScore();
+            
+            // Hide game over screen
+            gameOverScreen.style.display = 'none';
         }
-
-        // Burger menu functions
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-        }
-
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            if (sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-            }
-        }
-
-        // Function to show only the selected chapter and scroll to its top
-        function showChapter(chapterId) {
-            document.querySelectorAll('section').forEach(section => {
-                section.style.display = 'none'; // Hide all sections
-            });
-            document.getElementById(chapterId).style.display = 'block'; // Show the selected section
-
-            // Smooth scroll to the top of the selected chapter
-            document.getElementById(chapterId).scrollIntoView({
-                behavior: 'smooth',
-                block: 'start' // Scroll to the top of the block
-            });
-        }
-
-        // Handler for sidebar chapter links
-        function selectChapter(chapterId) {
-            showChapter(chapterId);
-            closeSidebar(); // Close sidebar after selection
-        }
-
-        // Load saved theme and initialize animations when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load theme preference
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-
-            // Show default chapter (e.g., T4) on initial load
-            showChapter('chapitre-t4');
-
-            // Options for the Intersection Observer
-            const observerOptions = {
-                threshold: 0.1, // Trigger when 10% of the element is visible
-                rootMargin: '0px 0px -50px 0px' // Offset the bottom trigger point by 50px
+        
+        // Generate food at random position
+        function generateFood() {
+            food = {
+                x: Math.floor(Math.random() * gridWidth),
+                y: Math.floor(Math.random() * gridHeight)
             };
-
-            // Create a new Intersection Observer instance
-            const observer = new IntersectionObserver(function(entries, observer) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // If the element is intersecting, add 'is-visible' class to trigger animation
-                        entry.target.classList.add('is-visible');
-                        // Stop observing the element once it has become visible
-                        observer.unobserve(entry.target); 
-                    }
-                });
-            }, observerOptions);
-
-            // Select all elements to be animated.
-            const animatedElements = document.querySelectorAll(
-                '.header, .card, .property, .definition, .theorem, .application, .summary-card, .ordres-grandeur, h2, h3, h4, .schema'
-            );
-
-            // Add the 'animate-on-scroll' class to all selected elements and observe them
-            animatedElements.forEach(el => {
-                el.classList.add('animate-on-scroll'); // Initially hide and prepare for animation
-                observer.observe(el); // Start observing
-            });
-        });
-
-        // Load MathJax for LaTeX rendering
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            },
-            svg: {
-                fontCache: 'global'
+            
+            // Make sure food doesn't appear on snake
+            for (let segment of snake) {
+                if (segment.x === food.x && segment.y === food.y) {
+                    return generateFood();
+                }
             }
-        };
-        var script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-        script.async = true;
-        document.head.appendChild(script);
+        }
+        
+        // Draw game elements
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#0d1b2a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#1b263b';
+            ctx.lineWidth = 0.5;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Draw snake
+            snake.forEach((segment, index) => {
+                if (index === 0) {
+                    // Draw head
+                    ctx.fillStyle = '#4ade80';
+                    ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+                    
+                    // Draw eyes
+                    ctx.fillStyle = '#000';
+                    if (direction === 'right') {
+                        ctx.fillRect((segment.x + 0.7) * gridSize, (segment.y + 0.2) * gridSize, 4, 4);
+                        ctx.fillRect((segment.x + 0.7) * gridSize, (segment.y + 0.6) * gridSize, 4, 4);
+                    } else if (direction === 'left') {
+                        ctx.fillRect((segment.x + 0.2) * gridSize, (segment.y + 0.2) * gridSize, 4, 4);
+                        ctx.fillRect((segment.x + 0.2) * gridSize, (segment.y + 0.6) * gridSize, 4, 4);
+                    } else if (direction === 'up') {
+                        ctx.fillRect((segment.x + 0.2) * gridSize, (segment.y + 0.2) * gridSize, 4, 4);
+                        ctx.fillRect((segment.x + 0.6) * gridSize, (segment.y + 0.2) * gridSize, 4, 4);
+                    } else if (direction === 'down') {
+                        ctx.fillRect((segment.x + 0.2) * gridSize, (segment.y + 0.7) * gridSize, 4, 4);
+                        ctx.fillRect((segment.x + 0.6) * gridSize, (segment.y + 0.7) * gridSize, 4, 4);
+                    }
+                } else {
+                    // Draw body
+                    const colorValue = 150 - (index % 5) * 10;
+                    ctx.fillStyle = `rgb(50, ${colorValue}, 50)`;
+                    ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+                    
+                    // Draw pattern on body
+                    if (index % 2 === 0) {
+                        ctx.fillStyle = `rgba(30, ${colorValue - 30}, 30, 0.7)`;
+                        ctx.fillRect(
+                            segment.x * gridSize + gridSize/4,
+                            segment.y * gridSize + gridSize/4,
+                            gridSize/2,
+                            gridSize/2
+                        );
+                    }
+                }
+            });
+            
+            // Draw food
+            ctx.fillStyle = '#ff6b6b';
+            ctx.beginPath();
+            ctx.arc(
+                food.x * gridSize + gridSize/2,
+                food.y * gridSize + gridSize/2,
+                gridSize/2 - 2,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+            
+            // Draw shine on food
+            ctx.fillStyle = '#ffcccc';
+            ctx.beginPath();
+            ctx.arc(
+                food.x * gridSize + gridSize/3,
+                food.y * gridSize + gridSize/3,
+                gridSize/6,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+        }
+        
+        // Update game state
+        function update() {
+            if (gamePaused) return;
+            
+            // Update direction
+            direction = nextDirection;
+            
+            // Calculate new head position
+            const head = {x: snake[0].x, y: snake[0].y};
+            
+            switch (direction) {
+                case 'up':
+                    head.y--;
+                    break;
+                case 'down':
+                    head.y++;
+                    break;
+                case 'left':
+                    head.x--;
+                    break;
+                case 'right':
+                    head.x++;
+                    break;
+            }
+            
+            // Check collision with walls
+            if (head.x < 0 || head.x >= gridWidth || head.y < 0 || head.y >= gridHeight) {
+                gameOver();
+                return;
+            }
+            
+            // Check collision with self
+            for (let i = 0; i < snake.length; i++) {
+                if (snake[i].x === head.x && snake[i].y === head.y) {
+                    gameOver();
+                    return;
+                }
+            }
+            
+            // Add new head
+            snake.unshift(head);
+            
+            // Check if food is eaten
+            if (head.x === food.x && head.y === food.y) {
+                // Increase score
+                score += 10;
+                updateScore();
+                
+                // Increase speed
+                gameSpeed = Math.max(50, gameSpeed - speedIncrease);
+                clearInterval(gameInterval);
+                gameInterval = setInterval(update, gameSpeed);
+                
+                // Generate new food
+                generateFood();
+            } else {
+                // Remove tail if no food eaten
+                snake.pop();
+            }
+            
+            // Draw updated game
+            draw();
+        }
+        
+        // Update score display
+        function updateScore() {
+            scoreElement.textContent = score;
+            speedElement.textContent = ((initialSpeed - gameSpeed + 50) / 50).toFixed(1);
+        }
+        
+        // Game over
+        function gameOver() {
+            clearInterval(gameInterval);
+            gameRunning = false;
+            finalScoreElement.textContent = score;
+            gameOverScreen.style.display = 'flex';
+        }
+        
+        // Start game
+        function startGame() {
+            if (gameRunning) return;
+            
+            initGame();
+            gameRunning = true;
+            gamePaused = false;
+            pauseBtn.textContent = "Pause";
+            draw();
+            gameInterval = setInterval(update, gameSpeed);
+        }
+        
+        // Pause/resume game
+        function togglePause() {
+            if (!gameRunning) return;
+            
+            gamePaused = !gamePaused;
+            pauseBtn.textContent = gamePaused ? "Resume" : "Pause";
+        }
+        
+        // Reset game
+        function resetGame() {
+            clearInterval(gameInterval);
+            gameRunning = false;
+            initGame();
+            draw();
+        }
+        
+        // Handle keyboard input
+        function handleKeydown(e) {
+            switch (e.key) {
+                case 'ArrowUp':
+                    if (direction !== 'down') nextDirection = 'up';
+                    break;
+                case 'ArrowDown':
+                    if (direction !== 'up') nextDirection = 'down';
+                    break;
+                case 'ArrowLeft':
+                    if (direction !== 'right') nextDirection = 'left';
+                    break;
+                case 'ArrowRight':
+                    if (direction !== 'left') nextDirection = 'right';
+                    break;
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('keydown', handleKeydown);
+        startBtn.addEventListener('click', startGame);
+        pauseBtn.addEventListener('click', togglePause);
+        resetBtn.addEventListener('click', resetGame);
+        restartBtn.addEventListener('click', startGame);
+        
+        // Mobile controls
+        upBtn.addEventListener('click', () => { if (direction !== 'down') nextDirection = 'up'; });
+        downBtn.addEventListener('click', () => { if (direction !== 'up') nextDirection = 'down'; });
+        leftBtn.addEventListener('click', () => { if (direction !== 'right') nextDirection = 'left'; });
+        rightBtn.addEventListener('click', () => { if (direction !== 'left') nextDirection = 'right'; });
+        
+        // Initialize and draw initial state
+        initGame();
+        draw();
     </script>
 </body>
 </html>
