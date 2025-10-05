@@ -1,1969 +1,545 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Cartes Mémoire Avancées</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;700&family=Orbitron:wght@400;700&family=Merienda:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --grid-color: rgba(100, 255, 218, 0.07);
-            --pastel-color-light-1: #E6E6FA;
-            --pastel-color-light-2: #D8BFD8;
-            --pastel-color-dark-1: #5F4B8B;
-            --pastel-color-dark-2: #9A7FB0;
-        }
-
-        .glassmorphism {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .light-mode-card-neutral {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            color: #374151;
-        }
-        .dark-mode-card-neutral {
-            background: rgba(55, 65, 81, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #f3f4f6;
-        }
-
-        .glassmorphism-menu {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-right: 1px solid;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        body.light-mode .glassmorphism-menu {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        body.dark-mode .glassmorphism-menu {
-            background: rgba(17, 24, 39, 0.92);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .card-translation { color: #2563eb; }
-        body.dark-mode .card-translation { color: #60a5fa; }
-
-        .search-results-container::-webkit-scrollbar-thumb {
-            background-color: rgba(156, 163, 175, 0.5);
-            border-radius: 10px;
-            border: 2px solid transparent;
-            background-clip: content-box;
-        }
-        body.dark-mode .search-results-container::-webkit-scrollbar-thumb {
-            background-color: rgba(75, 85, 99, 0.7);
-        }
-        .search-results-container {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-        }
-
-        .menu-slide-in { transform: translateX(0%); transition: transform 0.3s ease-out; }
-        .menu-slide-out { transform: translateX(-100%); transition: transform 0.3s ease-in; }
-        #sidebar-menu { will-change: transform; }
-
-        .chapter-button-active {
-            background-color: #F59E0B;
-            color: white !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transform: translateY(-1px);
-        }
-        body.dark-mode .chapter-button-active {
-            background-color: #FBBF24;
-            color: #1f2937 !important;
-        }
-
-        body { transition: background-color 0.5s, color 0.5s, background-image 0.5s, font-family 0.5s; touch-action: pan-y; }
-        body.light-mode { background-color: #f3f4f6; color: #111827; }
-        body.dark-mode { background-color: #111827; color: #f9fafb; }
-
-        body.light-mode input[type="text"],
-        body.light-mode select {
-            background-color: #ffffff;
-            color: #111827;
-            border-color: #d1d5db;
-        }
-        body.light-mode input[type="text"]::placeholder { color: #6b7280; }
-
-        body.dark-mode input[type="text"],
-        body.dark-mode select {
-            background-color: #1f2937;
-            color: #f9fafb;
-            border-color: #4b5563;
-        }
-        body.dark-mode input[type="text"]::placeholder { color: #9ca3af; }
-        body.dark-mode select option { background-color: #1f2937; color: #f9fafb; }
-        body.dark-mode select { color: #f9fafb !important; }
-        body.light-mode select { color: #111827 !important; }
-
-        body.light-mode #burger-button { background-color: rgba(255, 255, 255, 0.85); color: #374151; }
-        body.dark-mode #burger-button { background-color: rgba(30, 41, 59, 0.85); color: #e5e7eb; }
-
-        body.light-mode .chapter-button-default {
-            background-color: #ffffff;
-            color: #374151;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        body.dark-mode .chapter-button-default {
-            background-color: #374151;
-            color: #f3f4f6;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-
-        body.light-mode #card-score { background-color: rgba(0, 0, 0, 0.05); color: #374151; }
-        body.dark-mode #card-score { background-color: rgba(255, 255, 255, 0.1); color: #e5e7eb; }
-        body.light-mode .bg-white\/50 { background-color: rgba(255, 255, 255, 0.8); }
-        body.dark-mode .bg-white\/50 { background-color: rgba(30, 41, 59, 0.8); }
-        body.light-mode .bg-gray-300 { background-color: #e5e7eb; }
-        body.dark-mode .bg-gray-700 { background-color: #374151; }
-
-        .sci-fi-grid-overlay {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none; z-index: -1;
-            opacity: 0; transition: opacity 0.5s;
-        }
-
-        @keyframes pastelGradientFlowLight { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-        @keyframes pastelGradientFlowDark  { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-        body.theme-pastel.light-mode {
-            background: linear-gradient(to right, var(--pastel-color-light-1), var(--pastel-color-light-2), var(--pastel-color-light-1));
-            background-size: 200% 100%;
-            animation: pastelGradientFlowLight 20s linear infinite;
-        }
-        body.theme-pastel.dark-mode {
-            background: linear-gradient(to right, var(--pastel-color-dark-1), var(--pastel-color-dark-2), var(--pastel-color-dark-1));
-            background-size: 200% 100%;
-            animation: pastelGradientFlowDark 20s linear infinite;
-        }
-
-        @keyframes twinkling {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        .star {
-            position: absolute;
-            width: var(--star-size); height: var(--star-size);
-            background-color: var(--star-color);
-            border-radius: 50%;
-            opacity: 0.7;
-            z-index: -1;
-            transition: opacity 0.8s ease;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            body.theme-pastel { animation: none !important; }
-            .star { transition: none !important; }
-        }
-    </style>
-</head>
-<body class="flex flex-col items-center justify-start min-h-screen p-4 overflow-x-hidden pt-20">
-    <div id="animated-bg-elements" class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-        <div class="sci-fi-grid-overlay"></div>
-    </div>
-
-    <button id="burger-button" class="fixed top-4 left-4 z-30 p-2 backdrop-blur-sm rounded-md shadow-lg text-lg">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div id="sidebar-menu" class="fixed top-0 left-0 h-full w-72 sm:w-80 glassmorphism-menu shadow-2xl p-6 z-40 menu-slide-out overflow-y-auto">
-        <button id="close-menu-button" class="absolute top-4 right-4 text-xl p-1 hover:text-red-500 transition-colors">
-            <i class="fas fa-times"></i>
-        </button>
-        <h2 class="text-2xl font-semibold mb-6">Menu</h2>
-
-        <div class="mb-4">
-            <input type="text" id="search-bar" placeholder="Rechercher une carte..." class="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none text-sm sm:text-base">
-            <div id="search-results-container" class="search-results-container mt-2 max-h-32 overflow-y-auto text-sm"></div>
-        </div>
-
-        <div class="mb-4">
-            <h3 id="chapters-title" class="text-lg font-medium mb-2">Chapitres</h3>
-            <div id="menu-chapters" class="space-y-2"></div>
-        </div>
-
-        <div class="mb-4 flex items-center justify-between">
-            <label id="dark-mode-label" for="dark-mode-toggle" class="text-lg">Mode Sombre</label>
-            <button id="dark-mode-toggle" class="p-2 rounded-md"><i class="fas fa-moon"></i></button>
-        </div>
-
-        <!-- MODIFIED: Save/Load buttons now use localStorage -->
-        <div class="mb-4 space-y-2">
-            <button id="save-data-button" class="w-full p-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors"><i class="fas fa-save mr-2"></i>Sauvegarder</button>
-            <button id="load-data-button" class="w-full p-2 bg-sky-500 hover:bg-sky-600 text-white rounded-md transition-colors">
-                <i class="fas fa-upload mr-2"></i>Charger
-            </button>
-        </div>
-
-        <div>
-            <h3 id="reset-title" class="text-lg font-medium mb-2">Réinitialiser</h3>
-            <select id="reset-options" class="w-full p-2 border rounded-md mb-2"></select>
-            <button id="reset-data-button" class="w-full p-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors"><i class="fas fa-undo mr-2"></i>Réinitialiser Sélection</button>
-        </div>
-
-        <div class="mt-6">
-            <button id="reverse-mode-button" class="w-full p-2 bg-purple-500 hover:bg-purple-600 text-white rounded-md transition-colors">
-                <i class="fas fa-exchange-alt mr-2"></i>Inverser FR ↔ EN
-            </button>
-        </div>
-    </div>
-
-    <div class="w-full max-w-2xl mx-auto flex flex-col items-center space-y-3 sm:space-y-4 relative z-10">
-        <!-- Étiquette discrète du chapitre actuel -->
-        <div id="current-chapter-label"
-     class="text-[11px] sm:text-xs uppercase tracking-wide text-amber-600 dark:text-amber-600 opacity-100 select-none -mb-1">
-</div>
-        <div id="timer" class="font-mono text-xl sm:text-2xl p-2 bg-white/50 backdrop-blur-sm rounded-md shadow">00:00:00</div>
-
-        <div class="w-full p-1 bg-white/50 backdrop-blur-sm rounded-md shadow">
-            <div class="flex justify-between text-xs sm:text-sm mb-1 px-1">
-                <span id="progress-text">Cartes vues: 0 / 0</span>
-                <span id="progress-percentage">0%</span>
-            </div>
-            <div class="w-full bg-gray-300 rounded-full h-2.5 sm:h-3">
-                <div id="progress-bar-fill" class="bg-emerald-500 h-2.5 sm:h-3 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
-            </div>
-        </div>
-
-        <div id="flashcard-container" class="w-full min-h-[20rem] sm:min-h-[24rem] flex-grow p-6 rounded-xl shadow-xl flex flex-col justify-between items-center text-center cursor-pointer glassmorphism">
-            <div class="w-full flex justify-end">
-                <span id="card-score" class="text-lg sm:text-xl font-bold px-3 py-1 rounded-lg">50%</span>
-            </div>
-            <div id="card-content" class="flex-grow flex flex-col justify-center items-center">
-                <p id="card-french-word" class="text-2xl sm:text-3xl md:text-4xl font-semibold"></p>
-                <p id="card-english-word" class="text-xl sm:text-2xl md:text-3xl font-medium card-translation hidden"></p>
-            </div>
-            <div class="h-6"></div>
-        </div>
-
-        <div id="message-area" class="w-full text-center h-6 text-sm font-medium"></div>
-
-        <div class="w-full flex flex-col sm:flex-row items-center gap-2 p-3 bg-white/50 backdrop-blur-sm rounded-lg shadow">
-            <input type="text" id="answer-input" placeholder="Votre réponse en anglais..." class="flex-grow p-3 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none text-base" autocorrect="off" autocapitalize="off" spellcheck="false">
-            <button id="submit-answer-button" class="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-md transition-colors text-sm sm:text-base">
-                Valider
-            </button>
-        </div>
-    </div>
-
-    <script>
-        // --- APPLICATION STATE ---
-        let appState = {
-            allCards: [],
-            currentDeck: [],
-            currentIndex: 0,
-            currentChapter: 'Tout',
-            timerInterval: null,
-            elapsedSeconds: 0,
-            darkMode: false,
-            seenCountInSession: 0,
-            isCardRevealedByClick: false,
-            readyToAdvanceOnClick: false,
-            currentTheme: 'default',
-            searchIndex: null,
-            reverseMode: false,
-            uiLang: 'fr'
-        };
-        const i18n = {
-          fr: {
-            searchPlaceholder: 'Rechercher une carte...',
-            chapters: 'Chapitres',
-            darkMode: 'Mode Sombre',
-            save: 'Sauvegarder',
-            load: 'Charger',
-            reset: 'Réinitialiser',
-            resetSelection: 'Réinitialiser Sélection',
-            reverseButton: 'Inverser FR ↔ EN',
-            themes: 'Thèmes',
-            themeDefault: 'Défaut',
-            themePastel: 'Pastel (Évolutif)',
-            themeGalaxy: 'Galaxie (Étoiles)',
-            all: 'Tout',
-            cardsViewed: 'Cartes vues',
-            answerPlaceholder_en: 'Votre réponse en anglais...',
-            answerPlaceholder_fr: 'Votre réponse en français...',
-            noCard: 'Aucune carte à afficher.',
-            correct: 'Bonne réponse !',
-            incorrect: 'Incorrect.',
-            endOfDeck: 'Fin du paquet ! Réorganisation...',
-            noResult: 'Aucun résultat',
-            dataSaved: 'Données sauvegardées !',
-            dataLoaded: 'Données chargées !',
-            dataLoadError: 'Erreur lors du chargement des données.',
-            noDataFound: 'Aucune donnée sauvegardée.',
-            resetConfirm: 'Êtes-vous sûr de vouloir réinitialiser les scores pour "{chapter}" ? Cette action est irréversible.',
-            resetDone: 'Scores pour "{chapter}" réinitialisés.',
-            submit: 'Valider'
-          },
-          en: {
-            searchPlaceholder: 'Search for a card...',
-            chapters: 'Chapters',
-            darkMode: 'Dark mode',
-            save: 'Save',
-            load: 'Load',
-            reset: 'Reset',
-            resetSelection: 'Reset selection',
-            reverseButton: 'Reverse FR ↔ EN',
-            themes: 'Themes',
-            themeDefault: 'Default',
-            themePastel: 'Pastel (Animated)',
-            themeGalaxy: 'Galaxy (Stars)',
-            all: 'All',
-            cardsViewed: 'Cards viewed',
-            answerPlaceholder_en: 'Your answer in English...',
-            answerPlaceholder_fr: 'Your answer in French...',
-            noCard: 'No card to display.',
-            correct: 'Correct!',
-            incorrect: 'Incorrect.',
-            endOfDeck: 'End of deck! Reorganizing...',
-            noResult: 'No results',
-            dataSaved: 'Data saved!',
-            dataLoaded: 'Data loaded!',
-            dataLoadError: 'Error while loading data.',
-            noDataFound: 'No saved data found.',
-            resetConfirm: 'Are you sure you want to reset scores for "{chapter}"? This action is irreversible.',
-            resetDone: 'Scores for "{chapter}" reset.',
-            submit: 'Submit'
-          }
-        };
-        function t(key) {
-          const lang = appState.uiLang || 'fr';
-          return (i18n[lang] && i18n[lang][key]) || key;
-        }
-        function tr(key, vars = {}) {
-          let s = t(key);
-          Object.keys(vars).forEach(k => {
-            s = s.replace(new RegExp(`\\{${k}\\}`, 'g'), vars[k]);
-          });
-          return s;
-        }
-
-        // --- INITIAL DATA (Sample) ---
-        const initialCardsData = [
-          { id: '0', french: "monarchie", english: "monarchy", chapter: 'Democracy', score: 50 },
-          { id: '1', french: "monarque de droit divin", english: "a monarch by divine right", chapter: 'Democracy', score: 50 },
-          { id: '2', french: "souverain", english: "sovereign", chapter: 'Democracy', score: 50 },
-          { id: '3', french: "aristocratie", english: "aristocracy", chapter: 'Democracy', score: 50 },
-          { id: '4', french: "oligarchie", english: "oligarchy", chapter: 'Democracy', score: 50 },
-            { id: '5', french: "dictateur", english: "a dictator", chapter: 'Democracy', score: 50 },
-  { id: '6', french: "dictature", english: "dictatorship", chapter: 'Democracy', score: 50 },
-  { id: '7', french: "autoritaire", english: "authoritarian", chapter: 'Democracy', score: 50 },
-  { id: '8', french: "autoritarisme", english: "authoritarianism", chapter: 'Democracy', score: 50 },
-  { id: '9', french: "totalitaire", english: "totalitarian", chapter: 'Democracy', score: 50 },
-  { id: '10', french: "totalitarisme", english: "totalitarianism", chapter: 'Democracy', score: 50 },
-  { id: '11', french: "homme fort", english: "a strongman", chapter: 'Democracy', score: 50 },
-  { id: '12', french: "tyran", english: "a tyrant, an autocrat", chapter: 'Democracy', score: 50 },
-  { id: '13', french: "despote", english: "a despot", chapter: 'Democracy', score: 50 },
-  { id: '14', french: "despote éclairé", english: "an enlightened despot", chapter: 'Democracy', score: 50 },
-  { id: '15', french: "junte militaire", english: "a military junta", chapter: 'Democracy', score: 50 },
-  { id: '16', french: "coup d'État", english: "a coup, a coup d’état", chapter: 'Democracy', score: 50 },
-  { id: '17', french: "gouvernement autoritaire", english: "a regime", chapter: 'Democracy', score: 50 },
-  { id: '18', french: "régime de Vichy / de Pinochet", english: "the Vichy / Pinochet regime", chapter: 'Democracy', score: 50 },
-  { id: '19', french: "régime répressif", english: "a repressive regime", chapter: 'Democracy', score: 50 },
-  { id: '20', french: "régime politique", english: "a political system", chapter: 'Democracy', score: 50 },
-  { id: '21', french: "se démocratiser", english: "to become more democratic", chapter: 'Democracy', score: 50 },
-  { id: '22', french: "prendre le pouvoir", english: "to take, seize power", chapter: 'Democracy', score: 50 },
-  { id: '23', french: "arriver au pouvoir", english: "to come to power", chapter: 'Democracy', score: 50 },
-  { id: '24', french: "arriver au pouvoir (démocratiquement)", english: "to come into office", chapter: 'Democracy', score: 50 },
-  { id: '25', french: "être au pouvoir", english: "to be in power", chapter: 'Democracy', score: 50 },
-  { id: '26', french: "rester au pouvoir", english: "to remain, stay in power", chapter: 'Democracy', score: 50 },
-  { id: '27', french: "s'accrocher au pouvoir", english: "to cling to power", chapter: 'Democracy', score: 50 },
-  { id: '28', french: "bonne gouvernance", english: "good governance", chapter: 'Democracy', score: 50 },
-  { id: '29', french: "mal administrer, mal gérer", english: "to misrule, mismanage", chapter: 'Democracy', score: 50 },
-  { id: '30', french: "mauvaise administration", english: "misrule", chapter: 'Democracy', score: 50 },
-  { id: '31', french: "mauvaise gestion", english: "mismanagement", chapter: 'Democracy', score: 50 },
-  { id: '32', french: "tenir un dirigeant pour responsable", english: "to hold a leader to account", chapter: 'Democracy', score: 50 },
-  { id: '33', french: "être responsable devant les électeurs", english: "to be accountable to the electorate", chapter: 'Democracy', score: 50 },
-  { id: '34', french: "responsabilité", english: "accountability", chapter: 'Democracy', score: 50 },
-  { id: '35', french: "corruption", english: "corruption, sleaze, bribery", chapter: 'Democracy', score: 50 },
-  { id: '36', french: "corrompu", english: "corrupt", chapter: 'Democracy', score: 50 },
-  { id: '37', french: "pot-de-vin", english: "a bribe", chapter: 'Democracy', score: 50 },
-  { id: '38', french: "acheter, soudoyer qn", english: "to bribe sb", chapter: 'Democracy', score: 50 },
-  { id: '39', french: "état de droit, règne de la loi", english: "the rule of law", chapter: 'Democracy', score: 50 },
-  { id: '40', french: "multipartisme", english: "multi-party system", chapter: 'Democracy', score: 50 },
-  { id: '41', french: "système de parti unique", english: "single-party system", chapter: 'Democracy', score: 50 },
-  { id: '42', french: "élections libres et régulières", english: "free and fair elections", chapter: 'Democracy', score: 50 },
-  { id: '43', french: "fraude électorale", english: "vote rigging, ballot rigging, electoral fraud", chapter: 'Democracy', score: 50 },
-  { id: '44', french: "l'élection était truquée", english: "the election was rigged", chapter: 'Democracy', score: 50 },
-  { id: '45', french: "opposant politique", english: "a political opponent", chapter: 'Democracy', score: 50 },
-  { id: '46', french: "dissident", english: "a dissident", chapter: 'Democracy', score: 50 },
-  { id: '47', french: "bâillonner / museler la presse / l'opposition", english: "to gag / muzzle the press / the opposition", chapter: 'Democracy', score: 50 },
-  { id: '48', french: "déclarer l'état d'urgence", english: "to declare a state of emergency", chapter: 'Democracy', score: 50 },
-  { id: '49', french: "bafouer la constitution", english: "to trample the constitution", chapter: 'Democracy', score: 50 },
-  { id: '50', french: "censurer", english: "to censor", chapter: 'Democracy', score: 50 },
-  { id: '51', french: "censure", english: "censorship", chapter: 'Democracy', score: 50 },
-  { id: '52', french: "bloquer / restreindre l'accès à internet", english: "to block / restrict internet access", chapter: 'Democracy', score: 50 },
-  { id: '53', french: "contourner la censure", english: "to circumvent, bypass censorship", chapter: 'Democracy', score: 50 },
-  { id: '54', french: "droits de l'homme", english: "human rights", chapter: 'Democracy', score: 50 },
-  { id: '55', french: "atteintes aux droits de l'homme", english: "human rights abuses, violations", chapter: 'Democracy', score: 50 },
-  { id: '56', french: "crime contre l'humanité", english: "a crime against humanity", chapter: 'Democracy', score: 50 },
-  { id: '57', french: "devoir d'ingérence", english: "the duty to interfere, to intervene", chapter: 'Democracy', score: 50 },
-  { id: '58', french: "association de défense des droits de l'homme", english: "human Rights lobby", chapter: 'Democracy', score: 50 },
-  { id: '59', french: "passé de la Chine en matière de droits de l'homme", english: "China's human rights record", chapter: 'Democracy', score: 50 },
-  { id: '60', french: "mécontentement, malaise", english: "discontent", chapter: 'Democracy', score: 50 },
-  { id: '61', french: "provoquer des troubles", english: "to spark unrest", chapter: 'Democracy', score: 50 },
-  { id: '62', french: "agitation", english: "turmoil", chapter: 'Democracy', score: 50 },
-  { id: '63', french: "bouleversement", english: "an upheaval", chapter: 'Democracy', score: 50 },
-  { id: '64', french: "fomenter des troubles", english: "to stir up trouble", chapter: 'Democracy', score: 50 },
-  { id: '65', french: "insurgé", english: "an insurgent", chapter: 'Democracy', score: 50 },
-  { id: '66', french: "insurrection", english: "an insurgency", chapter: 'Democracy', score: 50 },
-  { id: '67', french: "manifestation", english: "a demonstration, a protest march", chapter: 'Democracy', score: 50 },
-  { id: '68', french: "manifestant", english: "a demonstrator, a protester", chapter: 'Democracy', score: 50 },
-  { id: '69', french: "organiser / participer à un rassemblement", english: "to hold / attend a rally", chapter: 'Democracy', score: 50 },
-  { id: '70', french: "émeute", english: "a riot", chapter: 'Democracy', score: 50 },
-  { id: '71', french: "émeutier, casseur", english: "a rioter", chapter: 'Democracy', score: 50 },
-  { id: '72', french: "des émeutes ont éclaté", english: "riots broke out", chapter: 'Democracy', score: 50 },
-  { id: '73', french: "CRS", english: "anti-riot police", chapter: 'Democracy', score: 50 },
-  { id: '74', french: "cocktail Molotov", english: "a petrol bomb, a Molotov cocktail", chapter: 'Democracy', score: 50 },
-  { id: '75', french: "gaz lacrymogène", english: "tear gas", chapter: 'Democracy', score: 50 },
-  { id: '76', french: "heurt, affrontement", english: "a clash", chapter: 'Democracy', score: 50 },
-  { id: '77', french: "échauffourée", english: "a skirmish", chapter: 'Democracy', score: 50 },
-  { id: '78', french: "complot", english: "a plot", chapter: 'Democracy', score: 50 },
-  { id: '79', french: "comploteur", english: "a plotter", chapter: 'Democracy', score: 50 },
-  { id: '80', french: "se révolter", english: "to revolt", chapter: 'Democracy', score: 50 },
-  { id: '81', french: "se rebeller", english: "to rebel", chapter: 'Democracy', score: 50 },
-  { id: '82', french: "rebelle", english: "a rebel", chapter: 'Democracy', score: 50 },
-  { id: '83', french: "rébellion, révolte", english: "a rebellion", chapter: 'Democracy', score: 50 },
-  { id: '84', french: "déjouer les autorités", english: "to defy the authorities", chapter: 'Democracy', score: 50 },
-  { id: '85', french: "soulèvement", english: "an uprising", chapter: 'Democracy', score: 50 },
-  { id: '86', french: "se soulever contre", english: "to rise up against", chapter: 'Democracy', score: 50 },
-  { id: '87', french: "renverser un dictateur", english: "to overthrow, to topple a dictator", chapter: 'Democracy', score: 50 },
-  { id: '88', french: "évincer un dictateur", english: "to oust a dictator", chapter: 'Democracy', score: 50 },
-  { id: '89', french: "renversement d'un dictateur", english: "the overthrow of a dictator", chapter: 'Democracy', score: 50 },
-  { id: '90', french: "déposer un dirigeant", english: "to depose a ruler", chapter: 'Democracy', score: 50 },
-  { id: '91', french: "s'effondrer", english: "to collapse", chapter: 'Democracy', score: 50 },
-  { id: '92', french: "restaurer la démocratie", english: "to restore democracy", chapter: 'Democracy', score: 50 },
-  { id: '93', french: "chute d'un gouvernement", english: "the downfall of a government", chapter: 'Democracy', score: 50 },
-  { id: '94', french: "répression brutale", english: "ruthless repression", chapter: 'Democracy', score: 50 },
-  { id: '95', french: "réprimer une rébellion", english: "to put down, to suppress a rebellion", chapter: 'Democracy', score: 50 },
-  { id: '96', french: "réprimer, étouffer la contestation", english: "to quell the protests", chapter: 'Democracy', score: 50 },
-  { id: '97', french: "mesures de répression", english: "crackdown, clampdown", chapter: 'Democracy', score: 50 },
-  { id: '98', french: "mettre les gens en prison", english: "to send people to prison", chapter: 'Democracy', score: 50 },
-  { id: '99', french: "passer qn à tabac", english: "to beat sb up", chapter: 'Democracy', score: 50 },
-
-  // Chapter 2: Genetics
-  { id: '100', french: "gène", english: "a gene", chapter: 'Genetics', score: 50 },
-  { id: '101', french: "cellule", english: "a cell", chapter: 'Genetics', score: 50 },
-  { id: '102', french: "cellules-souches", english: "stem cells", chapter: 'Genetics', score: 50 },
-  { id: '103', french: "recherche sur les cellules souches", english: "stem-cell research", chapter: 'Genetics', score: 50 },
-  { id: '104', french: "génome humain", english: "the human genome", chapter: 'Genetics', score: 50 },
-  { id: '105', french: "cartographie du génome", english: "genome mapping", chapter: 'Genetics', score: 50 },
-  { id: '106', french: "carte génétique", english: "gene map, genetic map", chapter: 'Genetics', score: 50 },
-  { id: '107', french: "séquence génétique", english: "gene sequence", chapter: 'Genetics', score: 50 },
-  { id: '108', french: "séquençage", english: "sequencing", chapter: 'Genetics', score: 50 },
-  { id: '109', french: "épissage du gène", english: "gene splicing", chapter: 'Genetics', score: 50 },
-  { id: '110', french: "patrimoine héréditaire", english: "gene pool", chapter: 'Genetics', score: 50 },
-  { id: '111', french: "généticien", english: "a geneticist", chapter: 'Genetics', score: 50 },
-  { id: '112', french: "eugénisme", english: "eugenics", chapter: 'Genetics', score: 50 },
-  { id: '113', french: "eugéniste, partisan de l'eugénisme", english: "a eugenicist", chapter: 'Genetics', score: 50 },
-  { id: '114', french: "ADN", english: "DNA", chapter: 'Genetics', score: 50 },
-  { id: '115', french: "test génétique", english: "a DNA test", chapter: 'Genetics', score: 50 },
-  { id: '116', french: "empreinte génétique", english: "a DNA print, genetic print", chapter: 'Genetics', score: 50 },
-  { id: '117', french: "analyse ADN", english: "DNA analysis", chapter: 'Genetics', score: 50 },
-  { id: '118', french: "prélèvement d'ADN", english: "a DNA sample", chapter: 'Genetics', score: 50 },
-  { id: '119', french: "profil génétique", english: "genetic make-up, genetic profile", chapter: 'Genetics', score: 50 },
-  { id: '120', french: "analyse de l'empreinte génétique", english: "genetic profiling, DNA fingerprinting", chapter: 'Genetics', score: 50 },
-  { id: '121', french: "dépistage génétique", english: "genetic screening", chapter: 'Genetics', score: 50 },
-  { id: '122', french: "subir un prélèvement d'ADN", english: "to be DNA-swabbed", chapter: 'Genetics', score: 50 },
-  { id: '123', french: "manipulations génétiques, génie génétique", english: "genetic engineering", chapter: 'Genetics', score: 50 },
-  { id: '124', french: "transgénique", english: "transgenic", chapter: 'Genetics', score: 50 },
-  { id: '125', french: "organisme génétiquement modifié", english: "a genetically modified organism", chapter: 'Genetics', score: 50 },
-  { id: '126', french: "OGM", english: "GMOs", chapter: 'Genetics', score: 50 },
-  { id: '127', french: "aliments contenant des OGM", english: "GM food", chapter: 'Genetics', score: 50 },
-  { id: '128', french: "pommes de terres génétiquement modifiées", english: "GM potatoes", chapter: 'Genetics', score: 50 },
-  { id: '129', french: "produits transgéniques", english: "biotech products", chapter: 'Genetics', score: 50 },
-  { id: '130', french: "semence, graines", english: "seed", chapter: 'Genetics', score: 50 },
-  { id: '131', french: "soja", english: "soyabeans", chapter: 'Genetics', score: 50 },
-  { id: '132', french: "colza", english: "rapeseed", chapter: 'Genetics', score: 50 },
-  { id: '133', french: "maïs", english: "maize (GB), corn (US)", chapter: 'Genetics', score: 50 },
-  { id: '134', french: "blé", english: "wheat", chapter: 'Genetics', score: 50 },
-  { id: '135', french: "culture, récolte", english: "a crop", chapter: 'Genetics', score: 50 },
-  { id: '136', french: "essais sur le terrain", english: "field trials, crop trials", chapter: 'Genetics', score: 50 },
-  { id: '137', french: "culture OGM", english: "a GM crop", chapter: 'Genetics', score: 50 },
-  { id: '138', french: "rendement", english: "yield", chapter: 'Genetics', score: 50 },
-  { id: '139', french: "filière agroalimentaire", english: "agribusiness", chapter: 'Genetics', score: 50 },
-  { id: '140', french: "augmenter, améliorer les rendements", english: "to improve yields", chapter: 'Genetics', score: 50 },
-  { id: '141', french: "résistant aux maladies", english: "resistant to disease", chapter: 'Genetics', score: 50 },
-  { id: '142', french: "insecticide / pesticide / herbicide", english: "insecticide / pesticide / herbicide", chapter: 'Genetics', score: 50 },
-  { id: '143', french: "polliniser", english: "to pollinate", chapter: 'Genetics', score: 50 },
-  { id: '144', french: "pollinisation croisée", english: "cross-pollination", chapter: 'Genetics', score: 50 },
-  { id: '145', french: "contaminer", english: "to contaminate", chapter: 'Genetics', score: 50 },
-  { id: '146', french: "contamination", english: "contamination", chapter: 'Genetics', score: 50 },
-  { id: '147', french: "maladie génétique", english: "a genetic disease", chapter: 'Genetics', score: 50 },
-  { id: '148', french: "gène défectueux", english: "a faulty gene", chapter: 'Genetics', score: 50 },
-  { id: '149', french: "gène manquant", english: "a missing gene", chapter: 'Genetics', score: 50 },
-  { id: '150', french: "héréditaire", english: "hereditary", chapter: 'Genetics', score: 50 },
-  { id: '151', french: "chromosome X / Y", english: "an X / Y chromosome", chapter: 'Genetics', score: 50 },
-  { id: '152', french: "clonage", english: "cloning", chapter: 'Genetics', score: 50 },
-  { id: '153', french: "conseil génétique", english: "genetic counselling", chapter: 'Genetics', score: 50 },
-  { id: '154', french: "entreprise pharmaceutique", english: "a pharmaceutical company", chapter: 'Genetics', score: 50 },
-  { id: '155', french: "thérapie génique", english: "gene therapy", chapter: 'Genetics', score: 50 },
-  { id: '156', french: "traitement génique", english: "genetic treatment", chapter: 'Genetics', score: 50 },
-  { id: '157', french: "à des fins thérapeutiques", english: "for therapeutic purposes", chapter: 'Genetics', score: 50 },
-  { id: '158', french: "agriculture au service de la médecine", english: "pharming", chapter: 'Genetics', score: 50 },
-  { id: '159', french: "jouer à l'apprenti-sorcier", english: "to play God", chapter: 'Genetics', score: 50 },
-  { id: '160', french: "toucher à la nature", english: "to tamper with nature", chapter: 'Genetics', score: 50 },
-  { id: '161', french: "principe de précaution", english: "the precautionary principle, the safety-first principle", chapter: 'Genetics', score: 50 },
-  { id: '162', french: "étiquette", english: "a label", chapter: 'Genetics', score: 50 },
-  { id: '163', french: "étiquetter", english: "to label", chapter: 'Genetics', score: 50 },
-  { id: '164', french: "étiquetage", english: "labelling", chapter: 'Genetics', score: 50 },
-  { id: '165', french: "avertir", english: "to warn", chapter: 'Genetics', score: 50 },
-  { id: '166', french: "avertissement", english: "a warning", chapter: 'Genetics', score: 50 },
-  { id: '167', french: "dont l'origine peut être établie", english: "traceable", chapter: 'Genetics', score: 50 },
-  { id: '168', french: "traçabilité", english: "traceability", chapter: 'Genetics', score: 50 },
-  { id: '169', french: "effets à long terme", english: "long-term effects", chapter: 'Genetics', score: 50 },
-  { id: '170', french: "chaîne alimentaire", english: "the food chain", chapter: 'Genetics', score: 50 },
-  { id: '171', french: "sécurité alimentaire", english: "food security", chapter: 'Genetics', score: 50 },
-  { id: '172', french: "lobby OGM", english: "the pro-GM lobby", chapter: 'Genetics', score: 50 },
-  { id: '173', french: "militants contre les OGM", english: "anti-GM activists", chapter: 'Genetics', score: 50 },
-  { id: '174', french: "campagne contre les OGM", english: "an anti-GM campaign", chapter: 'Genetics', score: 50 },
-
-  // Chapter 3: Immigration
-  { id: '175', french: "étranger", english: "a foreigner", chapter: 'Immigration', score: 50 },
-  { id: '176', french: "inconnu", english: "a stranger", chapter: 'Immigration', score: 50 },
-  { id: '177', french: "nationalité", english: "nationality", chapter: 'Immigration', score: 50 },
-  { id: '178', french: "ressortissant étranger", english: "a foreign national", chapter: 'Immigration', score: 50 },
-  { id: '179', french: "personnes de nationalité française", english: "French citizens", chapter: 'Immigration', score: 50 },
-  { id: '180', french: "émigrer en Nouvelle-Zélande", english: "to emigrate to New Zealand", chapter: 'Immigration', score: 50 },
-  { id: '181', french: "immigrer en France", english: "to immigrate to France", chapter: 'Immigration', score: 50 },
-  { id: '182', french: "vague d'immigration", english: "a wave of immigration", chapter: 'Immigration', score: 50 },
-  { id: '183', french: "immigration à grande échelle / de masse", english: "large-scale / mass immigration", chapter: 'Immigration', score: 50 },
-  { id: '184', french: "exode", english: "an exodus", chapter: 'Immigration', score: 50 },
-  { id: '185', french: "nouvel arrivant", english: "a newcomer", chapter: 'Immigration', score: 50 },
-  { id: '186', french: "pays natal, pays d'origine", english: "native country, home country", chapter: 'Immigration', score: 50 },
-  { id: '187', french: "patrie", english: "homeland", chapter: 'Immigration', score: 50 },
-  { id: '188', french: "pays d'accueil", english: "a host country", chapter: 'Immigration', score: 50 },
-  { id: '189', french: "pays d'adoption", english: "an adoptive country, a country of adoption", chapter: 'Immigration', score: 50 },
-  { id: '190', french: "accueillir", english: "to welcome", chapter: 'Immigration', score: 50 },
-  { id: '191', french: "accueillant", english: "welcoming", chapter: 'Immigration', score: 50 },
-  { id: '192', french: "politique migratoire", english: "immigration policy", chapter: 'Immigration', score: 50 },
-  { id: '193', french: "immigration choisie", english: "selective immigration, controlled immigration", chapter: 'Immigration', score: 50 },
-  { id: '194', french: "flux migratoires", english: "migration flows", chapter: 'Immigration', score: 50 },
-  { id: '195', french: "passager clandestin", english: "a stowaway", chapter: 'Immigration', score: 50 },
-  { id: '196', french: "immigration clandestine, irrégulière", english: "illegal immigration", chapter: 'Immigration', score: 50 },
-  { id: '197', french: "immigration sauvage", english: "uncontrolled immigration", chapter: 'Immigration', score: 50 },
-  { id: '198', french: "immigrant clandestin, sans-papiers", english: "an illegal immigrant, an illegal alien, an undocumented alien", chapter: 'Immigration', score: 50 },
-  { id: '199', french: "il est en situation irrégulière", english: "his papers are not in order", chapter: 'Immigration', score: 50 },
-  { id: '200', french: "frontière", english: "a border, a frontier", chapter: 'Immigration', score: 50 },
-  { id: '201', french: "fermer ses frontières", english: "to close one's borders", chapter: 'Immigration', score: 50 },
-  { id: '202', french: "contrôles aux frontières", english: "border controls", chapter: 'Immigration', score: 50 },
-  { id: '203', french: "contrôles d'identité", english: "identity checks", chapter: 'Immigration', score: 50 },
-  { id: '204', french: "centre de rétention (administrative)", english: "a holding centre, a detention facility", chapter: 'Immigration', score: 50 },
-  { id: '205', french: "passeport", english: "a passport", chapter: 'Immigration', score: 50 },
-  { id: '206', french: "carte d'identité", english: "an identity card", chapter: 'Immigration', score: 50 },
-  { id: '207', french: "visa", english: "a visa", chapter: 'Immigration', score: 50 },
-  { id: '208', french: "réfugié", english: "a refugee", chapter: 'Immigration', score: 50 },
-  { id: '209', french: "personne déplacée", english: "a displaced person", chapter: 'Immigration', score: 50 },
-  { id: '210', french: "apatride", english: "a stateless person", chapter: 'Immigration', score: 50 },
-  { id: '211', french: "se réfugier", english: "to take refuge, take shelter", chapter: 'Immigration', score: 50 },
-  { id: '212', french: "demander l'asile politique", english: "to seek political asylum", chapter: 'Immigration', score: 50 },
-  { id: '213', french: "demandeur d'asile", english: "an asylum-seeker", chapter: 'Immigration', score: 50 },
-  { id: '214', french: "fuir la persécution / la misère", english: "to flee persecution / destitution", chapter: 'Immigration', score: 50 },
-  { id: '215', french: "échapper à la pauvreté", english: "to escape poverty", chapter: 'Immigration', score: 50 },
-  { id: '216', french: "chercher de meilleures conditions de vie", english: "to be in search of better living conditions", chapter: 'Immigration', score: 50 },
-  { id: '217', french: "trafic des êtres humains", english: "human trafficking", chapter: 'Immigration', score: 50 },
-  { id: '218', french: "contrebandier, passeur", english: "a smuggler", chapter: 'Immigration', score: 50 },
-  { id: '219', french: "passeurs d'immigrants clandestins", english: "people-smugglers", chapter: 'Immigration', score: 50 },
-  { id: '220', french: "réseau de passeurs", english: "a smuggling ring", chapter: 'Immigration', score: 50 },
-  { id: '221', french: "faux passeport", english: "a fake passport", chapter: 'Immigration', score: 50 },
-  { id: '222', french: "reconduire qn à la frontière", english: "to escort sb back to the border", chapter: 'Immigration', score: 50 },
-  { id: '223', french: "renvoyer un immigrant dans son pays d'origine", english: "to send an immigrant back to his native country", chapter: 'Immigration', score: 50 },
-  { id: '224', french: "expulser qn", english: "to deport sb", chapter: 'Immigration', score: 50 },
-  { id: '225', french: "être refoulé à la frontière", english: "to be turned away at the border", chapter: 'Immigration', score: 50 },
-  { id: '226', french: "être expulsé", english: "to be ordered out of the country", chapter: 'Immigration', score: 50 },
-  { id: '227', french: "s'exiler", english: "to go into exile", chapter: 'Immigration', score: 50 },
-  { id: '228', french: "exilé", english: "an exile", chapter: 'Immigration', score: 50 },
-  { id: '229', french: "exiler, bannir qn", english: "to exile, banish sb", chapter: 'Immigration', score: 50 },
-  { id: '230', french: "s'expatrier", english: "to expatriate oneself", chapter: 'Immigration', score: 50 },
-  { id: '231', french: "expatrié", english: "an expatriate, an expat", chapter: 'Immigration', score: 50 },
-  { id: '232', french: "passer à l'Ouest / à l'ennemi", english: "to defect to the West / to the enemy", chapter: 'Immigration', score: 50 },
-  { id: '233', french: "fuite des cerveaux / afflux des cerveaux", english: "brain drain / brain gain", chapter: 'Immigration', score: 50 },
-  { id: '234', french: "partir de rien", english: "to start from scratch", chapter: 'Immigration', score: 50 },
-  { id: '235', french: "travail au noir", english: "moonlighting", chapter: 'Immigration', score: 50 },
-  { id: '236', french: "atelier clandestin", english: "a sweatshop", chapter: 'Immigration', score: 50 },
-  { id: '237', french: "exploiter les travailleurs immigrés", english: "to exploit migrant workers", chapter: 'Immigration', score: 50 },
-  { id: '238', french: "permis de travail, carte de travail", english: "a work permit", chapter: 'Immigration', score: 50 },
-  { id: '239', french: "permis de séjour, carte de séjour", english: "a residence permit, a resident permit", chapter: 'Immigration', score: 50 },
-  { id: '240', french: "travailleur migrant", english: "a migrant worker", chapter: 'Immigration', score: 50 },
-  { id: '241', french: "travailleur invité (disposant d'un visa temporaire)", english: "a guest worker", chapter: 'Immigration', score: 50 },
-  { id: '242', french: "s'intégrer", english: "to become integrated", chapter: 'Immigration', score: 50 },
-  { id: '243', french: "bien s'intégrer dans une société", english: "to integrate well into a society", chapter: 'Immigration', score: 50 },
-  { id: '244', french: "insertion sociale", english: "social integration", chapter: 'Immigration', score: 50 },
-  { id: '245', french: "régulariser la situation des clandestins", english: "to regularise the status of illegal immigrants", chapter: 'Immigration', score: 50 },
-  { id: '246', french: "régularisation", english: "regularisation", chapter: 'Immigration', score: 50 },
-  { id: '247', french: "se faire naturaliser britannique, être naturalisé britannique, obtenir la nationalité britannique", english: "to be granted British citizenship, to become a British citizen", chapter: 'Immigration', score: 50 },
-  { id: '248', french: "quota", english: "a quota", chapter: 'Immigration', score: 50 },
-  { id: '249', french: "regroupement familial", english: "family reunion, reunification", chapter: 'Immigration', score: 50 },
-  { id: '250', french: "qn qui abuse du système des prestations sociales", english: "a benefit cheat", chapter: 'Immigration', score: 50 },
-  { id: '251', french: "fraude aux prestations sociales", english: "benefit fraud", chapter: 'Immigration', score: 50 },
-  { id: '252', french: "parasite", english: "a freeloader", chapter: 'Immigration', score: 50 },
-  { id: '253', french: "mariage blanc", english: "a sham marriage, a marriage of convenience", chapter: 'Immigration', score: 50 },
-  { id: '254', french: "inonder", english: "to flood", chapter: 'Immigration', score: 50 },
-  { id: '255', french: "être envahi par les étrangers", english: "to be swamped with foreigners", chapter: 'Immigration', score: 50 },
-  { id: '256', french: "arrivée massive, afflux de travailleurs", english: "the influx of workers", chapter: 'Immigration', score: 50 },
-  { id: '257', french: "endiguer l'afflux d'immigrés", english: "to stem the flow of immigrants", chapter: 'Immigration', score: 50 },
-  { id: '258', french: "limiter / freiner l'immigration", english: "to restrict / curb immigration", chapter: 'Immigration', score: 50 },
-  { id: '259', french: "parti d'extrême-droite", english: "a far-right party", chapter: 'Immigration', score: 50 },
-  { id: '260', french: "faire fuir les immigrants", english: "to scare immigrants away", chapter: 'Immigration', score: 50 },
-  { id: '261', french: "empêcher les indésirables d'entrer", english: "to keep out undesirables", chapter: 'Immigration', score: 50 },
-  { id: '262', french: "xénophobie", english: "xenophobia", chapter: 'Immigration', score: 50 },
-  { id: '263', french: "xénophobe", english: "xenophobic", chapter: 'Immigration', score: 50 },
-  { id: '264', french: "avoir un grand-père né à l'étranger", english: "to have a foreign-born grandfather", chapter: 'Immigration', score: 50 },
-  { id: '265', french: "jeunes gens d'origine asiatique / portugaise", english: "young men of Asian / Portuguese descent", chapter: 'Immigration', score: 50 },
-  { id: '266', french: "Français de naissance", english: "a native of France", chapter: 'Immigration', score: 50 },
-  { id: '267', french: "New Yorkais de souche", english: "a born and bred New Yorker", chapter: 'Immigration', score: 50 },
-  { id: '268', french: "il est français de souche", english: "he's of French origin, of French extraction", chapter: 'Immigration', score: 50 },
-  { id: '269', french: "Maghreb", english: "North Africa", chapter: 'Immigration', score: 50 },
-  { id: '270', french: "Maghrébins", english: "North Africans", chapter: 'Immigration', score: 50 },
-  { id: '271', french: "pakistanais / du Bangladesh", english: "Pakistani / Bangladeshi", chapter: 'Immigration', score: 50 },
-  { id: '272', french: "hispanophone / parlant le Hindi", english: "Spanish-speaking / Hindi-speaking", chapter: 'Immigration', score: 50 },
-  { id: '273', french: "diaspora", english: "diaspora", chapter: 'Immigration', score: 50 },
-
-  // Chapter 4: International Tensions
-  { id: '274', french: "affaires étrangères", english: "foreign affairs", chapter: 'International Tensions', score: 50 },
-  { id: '275', french: "relations extérieures", english: "foreign relations", chapter: 'International Tensions', score: 50 },
-  { id: '276', french: "communauté internationale", english: "the international community", chapter: 'International Tensions', score: 50 },
-  { id: '277', french: "problème mondial, planétaire", english: "a global issue", chapter: 'International Tensions', score: 50 },
-  { id: '278', french: "État souverain", english: "a sovereign state", chapter: 'International Tensions', score: 50 },
-  { id: '279', french: "souveraineté", english: "sovereignty", chapter: 'International Tensions', score: 50 },
-  { id: '280', french: "État-nation", english: "a nation-state", chapter: 'International Tensions', score: 50 },
-  { id: '281', french: "frontière", english: "a border, a frontier", chapter: 'International Tensions', score: 50 },
-  { id: '282', french: "droit international", english: "international law", chapter: 'International Tensions', score: 50 },
-  { id: '283', french: "géopolitique", english: "geopolitics", chapter: 'International Tensions', score: 50 },
-  { id: '284', french: "scène internationale", english: "the international stage, the international scene, the world stage", chapter: 'International Tensions', score: 50 },
-  { id: '285', french: "jouer un rôle dans qch", english: "to play a role, a part in sth", chapter: 'International Tensions', score: 50 },
-  { id: '286', french: "occidental / oriental", english: "western / eastern", chapter: 'International Tensions', score: 50 },
-  { id: '287', french: "politique étrangère, extérieure", english: "foreign policy", chapter: 'International Tensions', score: 50 },
-  { id: '288', french: "ambassadeur", english: "an ambassador", chapter: 'International Tensions', score: 50 },
-  { id: '289', french: "ambassade", english: "an embassy", chapter: 'International Tensions', score: 50 },
-  { id: '290', french: "attaché culturel / commercial / militaire", english: "a cultural / commercial / military attaché", chapter: 'International Tensions', score: 50 },
-  { id: '291', french: "envoyé, émissaire", english: "an envoy, an emissary", chapter: 'International Tensions', score: 50 },
-  { id: '292', french: "diplomate", english: "a diplomat", chapter: 'International Tensions', score: 50 },
-  { id: '293', french: "diplomatie", english: "diplomacy", chapter: 'International Tensions', score: 50 },
-  { id: '294', french: "rompre / reprendre les relations", english: "to break off / resume diplomatic relations", chapter: 'International Tensions', score: 50 },
-  { id: '295', french: "relations tendues", english: "tense, strained relations", chapter: 'International Tensions', score: 50 },
-  { id: '296', french: "réchauffement", english: "a thaw", chapter: 'International Tensions', score: 50 },
-  { id: '297', french: "refroidissement", english: "a chill, a cooling off", chapter: 'International Tensions', score: 50 },
-  { id: '298', french: "rappeler un ambassadeur", english: "to recall an ambassador", chapter: 'International Tensions', score: 50 },
-  { id: '299', french: "normaliser les relations", english: "to normalize relations", chapter: 'International Tensions', score: 50 },
-  { id: '300', french: "grande puissance", english: "a great power", chapter: 'International Tensions', score: 50 },
-  { id: '301', french: "superpuissance / hyperpuissance", english: "a superpower / a hyperpower", chapter: 'International Tensions', score: 50 },
-  { id: '302', french: "hégémonie", english: "hegemony", chapter: 'International Tensions', score: 50 },
-  { id: '303', french: "impérialisme", english: "imperialism", chapter: 'International Tensions', score: 50 },
-  { id: '304', french: "impérialiste", english: "imperialistic", chapter: 'International Tensions', score: 50 },
-  { id: '305', french: "expansionisme", english: "expansionism", chapter: 'International Tensions', score: 50 },
-  { id: '306', french: "unilatéralisme / multilatéralisme", english: "unilateralism / multilateralism", chapter: 'International Tensions', score: 50 },
-  { id: '307', french: "bilatéral / multilatéral", english: "bilateral / multilateral", chapter: 'International Tensions', score: 50 },
-  { id: '308', french: "bipolaire / multipolaire", english: "bipolar / multipolar", chapter: 'International Tensions', score: 50 },
-  { id: '309', french: "bloc", english: "a bloc", chapter: 'International Tensions', score: 50 },
-  { id: '310', french: "équilibre des forces", english: "balance of power", chapter: 'International Tensions', score: 50 },
-  { id: '311', french: "système onusien", english: "the UN system", chapter: 'International Tensions', score: 50 },
-  { id: '312', french: "État-membre, pays membre", english: "a member state", chapter: 'International Tensions', score: 50 },
-  { id: '313', french: "membre fondateur", english: "a founding member, founder member", chapter: 'International Tensions', score: 50 },
-  { id: '314', french: "cotisation", english: "a contribution", chapter: 'International Tensions', score: 50 },
-  { id: '315', french: "discuter / voter une résolution", english: "to debate / to pass a resolution", chapter: 'International Tensions', score: 50 },
-  { id: '316', french: "appliquer une résolution", english: "to implement, enforce a resolution", chapter: 'International Tensions', score: 50 },
-  { id: '317', french: "autoriser l'usage de la force", english: "to authorize the use of force", chapter: 'International Tensions', score: 50 },
-  { id: '318', french: "embargo", english: "an embargo", chapter: 'International Tensions', score: 50 },
-  { id: '319', french: "majorité des deux-tiers", english: "a two-thirds majority", chapter: 'International Tensions', score: 50 },
-  { id: '320', french: "maintenir la paix", english: "to maintain peace", chapter: 'International Tensions', score: 50 },
-  { id: '321', french: "opération de maintien de la paix", english: "a peace-keeping operation", chapter: 'International Tensions', score: 50 },
-  { id: '322', french: "soldat de la paix", english: "a peacekeeper", chapter: 'International Tensions', score: 50 },
-  { id: '323', french: "casque bleu", english: "a blue helmet", chapter: 'International Tensions', score: 50 },
-  { id: '324', french: "devoir d'ingérence", english: "the duty to interfere, to intervene", chapter: 'International Tensions', score: 50 },
-  { id: '325', french: "intervention militaire", english: "military intervention", chapter: 'International Tensions', score: 50 },
-  { id: '326', french: "OTAN", english: "NATO, the North Atlantic Treaty Organization", chapter: 'International Tensions', score: 50 },
-  { id: '327', french: "négocier", english: "to negotiate", chapter: 'International Tensions', score: 50 },
-  { id: '328', french: "négociations, pourparlers, discussions", english: "negotiations, talks", chapter: 'International Tensions', score: 50 },
-  { id: '329', french: "table des négociations", english: "negotiating table", chapter: 'International Tensions', score: 50 },
-  { id: '330', french: "table ronde", english: "a round table", chapter: 'International Tensions', score: 50 },
-  { id: '331', french: "faire une déclaration", english: "to make, issue, deliver a statement", chapter: 'International Tensions', score: 50 },
-  { id: '332', french: "communiqué", english: "a communiqué", chapter: 'International Tensions', score: 50 },
-  { id: '333', french: "sous l'égide de", english: "under the aegis of", chapter: 'International Tensions', score: 50 },
-  { id: '334', french: "réunion au sommet, sommet", english: "a summit (meeting)", chapter: 'International Tensions', score: 50 },
-  { id: '335', french: "porte-parole", english: "a spokesman, spokeswoman, spokesperson", chapter: 'International Tensions', score: 50 },
-  { id: '336', french: "homologue", english: "a counterpart, an opposite number", chapter: 'International Tensions', score: 50 },
-  { id: '337', french: "impasse", english: "a stalemate, a deadlock, a standoff, an impasse", chapter: 'International Tensions', score: 50 },
-  { id: '338', french: "aboutir à une impasse", english: "to reach a stalemate", chapter: 'International Tensions', score: 50 },
-  { id: '339', french: "sortir d'une impasse", english: "to break a stalemate", chapter: 'International Tensions', score: 50 },
-  { id: '340', french: "ultimatum", english: "an ultimatum", chapter: 'International Tensions', score: 50 },
-  { id: '341', french: "médiateur", english: "a mediator", chapter: 'International Tensions', score: 50 },
-  { id: '342', french: "négocier un accord", english: "to broker an agreement", chapter: 'International Tensions', score: 50 },
-  { id: '343', french: "surmonter un obstacle", english: "to overcome an obstacle", chapter: 'International Tensions', score: 50 },
-  { id: '344', french: "volonté politique", english: "political will", chapter: 'International Tensions', score: 50 },
-  { id: '345', french: "compromis", english: "a compromise", chapter: 'International Tensions', score: 50 },
-  { id: '346', french: "transiger", english: "to compromise", chapter: 'International Tensions', score: 50 },
-  { id: '347', french: "faire une concession", english: "to make a concession", chapter: 'International Tensions', score: 50 },
-  { id: '348', french: "s'engager à faire qch", english: "to commit oneself to doing sth", chapter: 'International Tensions', score: 50 },
-  { id: '349', french: "promettre de faire, s'engager à faire qch", english: "to pledge to do sth", chapter: 'International Tensions', score: 50 },
-  { id: '350', french: "signer / ratifier un traité", english: "to sign / ratify a treaty", chapter: 'International Tensions', score: 50 },
-  { id: '351', french: "protocole", english: "a protocol", chapter: 'International Tensions', score: 50 },
-  { id: '352', french: "accord", english: "an agreement, an accord", chapter: 'International Tensions', score: 50 },
-  { id: '353', french: "conclure un accord", english: "to reach a settlement", chapter: 'International Tensions', score: 50 },
-  { id: '354', french: "stipuler", english: "to stipulate", chapter: 'International Tensions', score: 50 },
-  { id: '355', french: "parvenir à un consensus", english: "to reach a consensus", chapter: 'International Tensions', score: 50 },
-  { id: '356', french: "interdire", english: "to prohibit, to ban", chapter: 'International Tensions', score: 50 },
-  { id: '357', french: "mettre son véto à une décision", english: "to veto a decision", chapter: 'International Tensions', score: 50 },
-  { id: '358', french: "Union Européenne, l'UE", english: "the European Union, the EU", chapter: 'International Tensions', score: 50 },
-  { id: '359', french: "directive européenne", english: "an EU directive", chapter: 'International Tensions', score: 50 },
-  { id: '360', french: "adhérer à l'UE", english: "to join the EU", chapter: 'International Tensions', score: 50 },
-  { id: '361', french: "demander son adhésion à l'UE", english: "to apply to join the EU, to apply for EU membership", chapter: 'International Tensions', score: 50 },
-  { id: '362', french: "pourparlers d'adhésion", english: "membership negotiations", chapter: 'International Tensions', score: 50 },
-  { id: '363', french: "organisation non-gouvernementale, ONG", english: "a non-governmental organization, an NGO", chapter: 'International Tensions', score: 50 },
-  { id: '364', french: "droits de l'homme", english: "human rights", chapter: 'International Tensions', score: 50 },
-  { id: '365', french: "violations des droits de l'homme", english: "human rights abuses, violations", chapter: 'International Tensions', score: 50 },
-  { id: '366', french: "faire respecter un principe", english: "to uphold a principle", chapter: 'International Tensions', score: 50 },
-  { id: '367', french: "passé de la Chine en matière de droits de l'homme", english: "China's human Rights record", chapter: 'International Tensions', score: 50 },
-  { id: '368', french: "décolonisation", english: "decolonization", chapter: 'International Tensions', score: 50 },
-  { id: '369', french: "obtenir l'indépendance, devenir indépendant", english: "to achieve, gain, attain independence", chapter: 'International Tensions', score: 50 },
-  { id: '370', french: "ancienne colonie", english: "a former colony", chapter: 'International Tensions', score: 50 },
-  { id: '371', french: "puissance coloniale", english: "a colonial power", chapter: 'International Tensions', score: 50 },
-
-  // Chapter 5: Unemployment
-  { id: '372', french: "du travail", english: "work", chapter: 'Unemployment', score: 50 },
-  { id: '373', french: "un travail, un emploi", english: "a job", chapter: 'Unemployment', score: 50 },
-  { id: '374', french: "une profession, une activité professionnelle", english: "an occupation", chapter: 'Unemployment', score: 50 },
-  { id: '375', french: "les professions libérales", english: "the professions", chapter: 'Unemployment', score: 50 },
-  { id: '376', french: "une carrière", english: "a career", chapter: 'Unemployment', score: 50 },
-  { id: '377', french: "le monde du travail", english: "the world of work", chapter: 'Unemployment', score: 50 },
-  { id: '378', french: "être au travail", english: "to be at work", chapter: 'Unemployment', score: 50 },
-  { id: '379', french: "le lieu de travail", english: "the workplace", chapter: 'Unemployment', score: 50 },
-  { id: '380', french: "travailler chez soi", english: "to work from home", chapter: 'Unemployment', score: 50 },
-  { id: '381', french: "travailler à temps partiel OU à mi-temps", english: "to work part time", chapter: 'Unemployment', score: 50 },
-  { id: '382', french: "travailler à plein temps", english: "to work full time", chapter: 'Unemployment', score: 50 },
-  { id: '383', french: "la classe ouvrière", english: "the working class", chapter: 'Unemployment', score: 50 },
-  { id: '384', french: "la population active", english: "the working population", chapter: 'Unemployment', score: 50 },
-  { id: '385', french: "la vie active", english: "the working life", chapter: 'Unemployment', score: 50 },
-  { id: '386', french: "conditions de travail", english: "working conditions", chapter: 'Unemployment', score: 50 },
-  { id: '387', french: "atelier", english: "a workshop", chapter: 'Unemployment', score: 50 },
-  { id: '388', french: "usine", english: "a factory, a plant", chapter: 'Unemployment', score: 50 },
-  { id: '389', french: "atelier clandestin (où la main d'œuvre est exploitée)", english: "a sweatshop", chapter: 'Unemployment', score: 50 },
-  { id: '390', french: "travailler beaucoup", english: "to work hard", chapter: 'Unemployment', score: 50 },
-  { id: '391', french: "être travailleur", english: "to be hard-working", chapter: 'Unemployment', score: 50 },
-  { id: '392', french: "travailleur acharné, bourreau de travail", english: "a hard worker, a workaholic", chapter: 'Unemployment', score: 50 },
-  { id: '393', french: "permis de travail", english: "a work permit", chapter: 'Unemployment', score: 50 },
-  { id: '394', french: "être / ne pas être de service OU de garde", english: "to be on duty / off duty", chapter: 'Unemployment', score: 50 },
-  { id: '395', french: "chômage", english: "unemployment, joblessness", chapter: 'Unemployment', score: 50 },
-  { id: '396', french: "être au chômage", english: "to be unemployed, jobless, out of work", chapter: 'Unemployment', score: 50 },
-  { id: '397', french: "taux de chômage", english: "unemployment rate, jobless rate", chapter: 'Unemployment', score: 50 },
-  { id: '398', french: "chômeurs", english: "the unemployed, the jobless", chapter: 'Unemployment', score: 50 },
-  { id: '399', french: "chômage de longue durée", english: "long-term unemployment", chapter: 'Unemployment', score: 50 },
-  { id: '400', french: "chômage des jeunes", english: "youth unemployment", chapter: 'Unemployment', score: 50 },
-  { id: '401', french: "allocation chômage", english: "unemployment benefit", chapter: 'Unemployment', score: 50 },
-  { id: '402', french: "toucher le chômage", english: "to be on the dole (GB), to be on welfare (US)", chapter: 'Unemployment', score: 50 },
-  { id: '403', french: "marché du travail, de l'emploi", english: "job market, labour market", chapter: 'Unemployment', score: 50 },
-  { id: '404', french: "contrat à durée déterminée, CDD", english: "a fixed-term contract", chapter: 'Unemployment', score: 50 },
-  { id: '405', french: "contrat à durée indéterminée, CDI", english: "an open-ended contract", chapter: 'Unemployment', score: 50 },
-  { id: '406', french: "flexibilité de l'emploi", english: "job flexibility", chapter: 'Unemployment', score: 50 },
-  { id: '407', french: "avoir des horaires flexibles", english: "work flexitime (GB) flextime (US)", chapter: 'Unemployment', score: 50 },
-  { id: '408', french: "sécurité / précarité de l'emploi", english: "job security / insecurity", chapter: 'Unemployment', score: 50 },
-  { id: '409', french: "stage", english: "an internship, a work placement", chapter: 'Unemployment', score: 50 },
-  { id: '410', french: "stagiaire", english: "an intern, a trainee", chapter: 'Unemployment', score: 50 },
-  { id: '411', french: "travailleur précaire", english: "a casual worker", chapter: 'Unemployment', score: 50 },
-  { id: '412', french: "petit boulot", english: "an odd job, a casual job", chapter: 'Unemployment', score: 50 },
-  { id: '413', french: "boulot d'été", english: "a summer job", chapter: 'Unemployment', score: 50 },
-  { id: '414', french: "intérimaire", english: "a temporary worker", chapter: 'Unemployment', score: 50 },
-  { id: '415', french: "faire de l'intérim", english: "to temp, to work as a temp", chapter: 'Unemployment', score: 50 },
-  { id: '416', french: "employer", english: "to employ", chapter: 'Unemployment', score: 50 },
-  { id: '417', french: "employeur", english: "an employer", chapter: 'Unemployment', score: 50 },
-  { id: '418', french: "employé", english: "an employee", chapter: 'Unemployment', score: 50 },
-  { id: '419', french: "changer de travail", english: "to change jobs", chapter: 'Unemployment', score: 50 },
-  { id: '420', french: "embaucher un travailleur", english: "to hire, to take on a worker", chapter: 'Unemployment', score: 50 },
-  { id: '421', french: "recruter", english: "to recruit", chapter: 'Unemployment', score: 50 },
-  { id: '422', french: "période d'essai", english: "a trial period", chapter: 'Unemployment', score: 50 },
-  { id: '423', french: "poste", english: "a post, a position", chapter: 'Unemployment', score: 50 },
-  { id: '424', french: "nommer qn à un poste", english: "to appoint sb to a post", chapter: 'Unemployment', score: 50 },
-  { id: '425', french: "muter qn", english: "to transfer sb", chapter: 'Unemployment', score: 50 },
-  { id: '426', french: "poste à responsabilité(s)", english: "a responsible job", chapter: 'Unemployment', score: 50 },
-  { id: '427', french: "emploi subalterne", english: "a menial job", chapter: 'Unemployment', score: 50 },
-  { id: '428', french: "demandeur d'emploi", english: "a job-seeker", chapter: 'Unemployment', score: 50 },
-  { id: '429', french: "agence Pôle emploi", english: "a Jobcenter (GB)", chapter: 'Unemployment', score: 50 },
-  { id: '430', french: "CV, curriculum vitae", english: "a curriculum vitae, a CV, a résumé (US)", chapter: 'Unemployment', score: 50 },
-  { id: '431', french: "expérience professionnelle", english: "work experience", chapter: 'Unemployment', score: 50 },
-  { id: '432', french: "compétences", english: "skills", chapter: 'Unemployment', score: 50 },
-  { id: '433', french: "être candidat à un emploi, faire une demande d'emploi", english: "to apply for a job", chapter: 'Unemployment', score: 50 },
-  { id: '434', french: "candidat à un poste", english: "an applicant", chapter: 'Unemployment', score: 50 },
-  { id: '435', french: "entretien d'embauche", english: "a job interview", chapter: 'Unemployment', score: 50 },
-  { id: '436', french: "offre d'emploi", english: "a job offer, a job vacancy, a job opportunity", chapter: 'Unemployment', score: 50 },
-  { id: '437', french: "travail OU main d'œuvre", english: "labour", chapter: 'Unemployment', score: 50 },
-  { id: '438', french: "main d'œuvre féminine / travail des enfants", english: "female labour / child labour", chapter: 'Unemployment', score: 50 },
-  { id: '439', french: "normes en matière d'emploi", english: "labour standards", chapter: 'Unemployment', score: 50 },
-  { id: '440', french: "main d'œuvre", english: "manpower, workforce", chapter: 'Unemployment', score: 50 },
-  { id: '441', french: "personnel", english: "staff, personnel", chapter: 'Unemployment', score: 50 },
-  { id: '442', french: "collègue, camarade de travail", english: "a colleague, a co-worker, a workmate", chapter: 'Unemployment', score: 50 },
-  { id: '443', french: "ressources humaines", english: "human resources", chapter: 'Unemployment', score: 50 },
-  { id: '444', french: "travail qualifié / peu qualifié / non qualifié", english: "a skilled / low-skilled / an unskilled job", chapter: 'Unemployment', score: 50 },
-  { id: '445', french: "ouvrier spécialisé, OS", english: "an unskilled worker", chapter: 'Unemployment', score: 50 },
-  { id: '446', french: "ouvrier", english: "a blue-collar worker", chapter: 'Unemployment', score: 50 },
-  { id: '447', french: "employé de bureau", english: "a white-collar worker", chapter: 'Unemployment', score: 50 },
-  { id: '448', french: "fonctionnaire", english: "a state employee, a civil servant", chapter: 'Unemployment', score: 50 },
-  { id: '449', french: "salarié du secteur public", english: "a public-sector employee", chapter: 'Unemployment', score: 50 },
-  { id: '450', french: "haut fonctionnaire", english: "a high-ranking civil servant", chapter: 'Unemployment', score: 50 },
-  { id: '451', french: "être indépendant, travailler à son compte", english: "to be self-employed", chapter: 'Unemployment', score: 50 },
-  { id: '452', french: "travailleurs indépendants", english: "the self-employed", chapter: 'Unemployment', score: 50 },
-  { id: '453', french: "honoraires", english: "fees", chapter: 'Unemployment', score: 50 },
-  { id: '454', french: "paie, paye", english: "pay", chapter: 'Unemployment', score: 50 },
-  { id: '455', french: "salaire", english: "salary", chapter: 'Unemployment', score: 50 },
-  { id: '456', french: "salaire (d'ouvrier)", english: "wages", chapter: 'Unemployment', score: 50 },
-  { id: '457', french: "gagner de l'argent", english: "to earn money, to make money", chapter: 'Unemployment', score: 50 },
-  { id: '458', french: "gagner sa vie", english: "to earn a living, to earn one's living, to make a living", chapter: 'Unemployment', score: 50 },
-  { id: '459', french: "Que fait-il dans la vie ?", english: "What does he do for a living?", chapter: 'Unemployment', score: 50 },
-  { id: '460', french: "travail mal payé", english: "a badly-paid job, a low-paid job", chapter: 'Unemployment', score: 50 },
-  { id: '461', french: "travail bien payé", english: "a well-paid job, a highly-paid job", chapter: 'Unemployment', score: 50 },
-  { id: '462', french: "salarié", english: "a wage-earner", chapter: 'Unemployment', score: 50 },
-  { id: '463', french: "prime", english: "a bonus", chapter: 'Unemployment', score: 50 },
-  { id: '464', french: "avantage (en nature), avantage annexe", english: "a perk, a fringe benefit", chapter: 'Unemployment', score: 50 },
-  { id: '465', french: "voiture de fonction", english: "a company car", chapter: 'Unemployment', score: 50 },
-  { id: '466', french: "salaire au rendement", english: "performance-related pay", chapter: 'Unemployment', score: 50 },
-  { id: '467', french: "être employé par une entreprise", english: "to be on a company's payroll", chapter: 'Unemployment', score: 50 },
-  { id: '468', french: "vacances", english: "holiday, vacation (US)", chapter: 'Unemployment', score: 50 },
-  { id: '469', french: "congés payés", english: "paid holiday", chapter: 'Unemployment', score: 50 },
-  { id: '470', french: "être en vacances", english: "to be on holiday", chapter: 'Unemployment', score: 50 },
-  { id: '471', french: "jour férié", english: "a bank holiday", chapter: 'Unemployment', score: 50 },
-  { id: '472', french: "être en congé maladie", english: "to be on sick leave", chapter: 'Unemployment', score: 50 },
-  { id: '473', french: "prendre deux jours de congé", english: "to take two days off", chapter: 'Unemployment', score: 50 },
-  { id: '474', french: "réduction du temps de travail, RTT", english: "reduction of working hours", chapter: 'Unemployment', score: 50 },
-  { id: '475', french: "les 35 heures, la semaine de 35 heures", english: "the 35-hour working week", chapter: 'Unemployment', score: 50 },
-  { id: '476', french: "supprimer des emplois", english: "to cut jobs", chapter: 'Unemployment', score: 50 },
-  { id: '477', french: "faire des coupes sombres, claires dans la main d'œuvre", english: "to slash, to axe jobs", chapter: 'Unemployment', score: 50 },
-  { id: '478', french: "pertes d'emploi, suppressions d'emploi", english: "job losses", chapter: 'Unemployment', score: 50 },
-  { id: '479', french: "rationaliser", english: "to streamline", chapter: 'Unemployment', score: 50 },
-  { id: '480', french: "dégraisser ses effectifs", english: "to downsize", chapter: 'Unemployment', score: 50 },
-  { id: '481', french: "licencier des salariés", english: "to lay off workers, to make workers redundant", chapter: 'Unemployment', score: 50 },
-  { id: '482', french: "licenciement (économique)", english: "a redundancy", chapter: 'Unemployment', score: 50 },
-  { id: '483', french: "départ volontaire", english: "a voluntary redundancy", chapter: 'Unemployment', score: 50 },
-  { id: '484', french: "plan social", english: "a redundancy plan", chapter: 'Unemployment', score: 50 },
-  { id: '485', french: "indemnité de licenciement, prime de départ", english: "redundancy payment, severance pay, severance package", chapter: 'Unemployment', score: 50 },
-  { id: '486', french: "parachute doré", english: "a golden parachute, a golden handshake", chapter: 'Unemployment', score: 50 },
-  { id: '487', french: "renvoyer, licencier, congédier qn", english: "to dismiss sb", chapter: 'Unemployment', score: 50 },
-  { id: '488', french: "mettre à la porte, renvoyer, virer", english: "to fire, to sack, to give sb the sack", chapter: 'Unemployment', score: 50 },
-  { id: '489', french: "être renvoyé", english: "to get the sack", chapter: 'Unemployment', score: 50 },
-  { id: '490', french: "conflit social", english: "an industrial dispute", chapter: 'Unemployment', score: 50 },
-  { id: '491', french: "se mettre / être en grève", english: "to go on strike / be on strike", chapter: 'Unemployment', score: 50 },
-  { id: '492', french: "gréviste", english: "a striker", chapter: 'Unemployment', score: 50 },
-  { id: '493', french: "direction et les salariés", english: "management and workers", chapter: 'Unemployment', score: 50 },
-  { id: '494', french: "délégué syndical", english: "a shop steward", chapter: 'Unemployment', score: 50 },
-  { id: '495', french: "syndicat", english: "a (trade) union", chapter: 'Unemployment', score: 50 },
-  { id: '496', french: "revendication", english: "a claim", chapter: 'Unemployment', score: 50 },
-  { id: '497', french: "revendications salariales", english: "wage claims, wage demands", chapter: 'Unemployment', score: 50 },
-  { id: '498', french: "augmentation de salaire", english: "a payrise (GB), a payraise (US)", chapter: 'Unemployment', score: 50 },
-  { id: '499', french: "reprendre le travail", english: "to resume work", chapter: 'Unemployment', score: 50 },
-  { id: '500', french: "prendre sa retraite", english: "to retire", chapter: 'Unemployment', score: 50 },
-  { id: '501', french: "démissionner", english: "to resign, to step down", chapter: 'Unemployment', score: 50 },
-  { id: '502', french: "retraité", english: "a pensioner, an old age pensioner, a retiree (US)", chapter: 'Unemployment', score: 50 },
-  { id: '503', french: "retraite", english: "retirement", chapter: 'Unemployment', score: 50 },
-  { id: '504', french: "partir en pré-retraite", english: "to take early retirement", chapter: 'Unemployment', score: 50 },
-  { id: '505', french: "âge de la retraite", english: "retirement age", chapter: 'Unemployment', score: 50 },
-  { id: '506', french: "bien réussir à l'école", english: "to do well at school", chapter: 'Education', score: 50 },
-  { id: '507', french: "lire l'anglais couramment", english: "to read English fluently", chapter: 'Education', score: 50 },
-{ id: '508', french: "être bon en sport", english: "to be good at sports", chapter: 'Education', score: 50 },
-{ id: '509', french: "faire l'école buissonnière", english: "to play truant", chapter: 'Education', score: 50 },
-{ id: '510', french: "absentéisme", english: "truancy", chapter: 'Education', score: 50 },
-{ id: '511', french: "suivre un cours d'anglais", english: "to take a class in English", chapter: 'Education', score: 50 },
-{ id: '512', french: "donner du travail à la maison", english: "to set homework", chapter: 'Education', score: 50 },
-{ id: '513', french: "rendre un travail", english: "to hand in a piece of work", chapter: 'Education', score: 50 },
-{ id: '514', french: "les subtilités de la langue anglaise", english: "the intricacies of the English language", chapter: 'Education', score: 50 },
-{ id: '515', french: "se lancer", english: "to get started", chapter: 'Education', score: 50 },
-{ id: '516', french: "se conformer à une règle", english: "to obey a rule", chapter: 'Education', score: 50 },
-{ id: '517', french: "obéir à (qqn)", english: "to obey (sone)", chapter: 'Education', score: 50 },
-{ id: '518', french: "avoir des difficultés en maths", english: "to have difficulty with maths", chapter: 'Education', score: 50 },
-{ id: '519', french: "donner un coup de main à (qqn)", english: "to give (sone) a hand", chapter: 'Education', score: 50 },
-{ id: '520', french: "obtenir un diplôme", english: "to graduate", chapter: 'Education', score: 50 },
-{ id: '521', french: "une salle de classe", english: "a classroom", chapter: 'Education', score: 50 },
-{ id: '522', french: "une leçon", english: "a class", chapter: 'Education', score: 50 },
-{ id: '523', french: "rattraper un cours loupé", english: "to catch up a missed lesson", chapter: 'Education', score: 50 },
-{ id: '524', french: "évaluer", english: "to assess, appraise", chapter: 'Education', score: 50 },
-{ id: '525', french: "le programme scolaire", english: "the school curriculum", chapter: 'Education', score: 50 },
-{ id: '526', french: "étudiant de premier cycle", english: "undergraduate", chapter: 'Education', score: 50 },
-{ id: '527', french: "indiscipliné", english: "unruly", chapter: 'Education', score: 50 },
-{ id: '528', french: "incontrôlable", english: "unmanageable", chapter: 'Education', score: 50 },
-{ id: '529', french: "bâcler ses devoirs", english: "to dash off one's work", chapter: 'Education', score: 50 },
-{ id: '530', french: "obtenir une bonne note", english: "to get a good mark", chapter: 'Education', score: 50 },
-{ id: '531', french: "tricher sur son voisin", english: "to eye over one's neighbour's work", chapter: 'Education', score: 50 },
-{ id: '532', french: "principal, directeur (école)", english: "headmaster", chapter: 'Education', score: 50 },
-{ id: '533', french: "élève doué", english: "gifted pupil", chapter: 'Education', score: 50 },
-{ id: '534', french: "réussir un examen haut la main", english: "to pass a test with flying colors", chapter: 'Education', score: 50 },
-{ id: '535', french: "une matière (scolaire)", english: "a (school) subject", chapter: 'Education', score: 50 },
-{ id: '536', french: "une pause de 20 minutes", english: "a 20-minute break", chapter: 'Education', score: 50 },
-{ id: '537', french: "une heure de cours", english: "a teaching-hour", chapter: 'Education', score: 50 },
-{ id: '538', french: "passer dans la classe supérieure", english: "to pass the next grade", chapter: 'Education', score: 50 },
-{ id: '539', french: "travail de paperasse", english: "paperwork", chapter: 'Education', score: 50 },
-{ id: '540', french: "passer un examen", english: "to take an exam", chapter: 'Education', score: 50 },
-{ id: '541', french: "examen blanc", english: "mock exam", chapter: 'Education', score: 50 },
-{ id: '542', french: "se préparer à un examen", english: "to prepare for an exam", chapter: 'Education', score: 50 },
-{ id: '543', french: "échouer à un examen", english: "to flunk a test", chapter: 'Education', score: 50 },
-{ id: '544', french: "recaler (qqn)", english: "to flunk (sone)", chapter: 'Education', score: 50 },
-{ id: '545', french: "être reçu à un examen avec mention", english: "to pass a degree with distinction", chapter: 'Education', score: 50 },
-{ id: '546', french: "abandonner l'école", english: "to drop out of school", chapter: 'Education', score: 50 },
-{ id: '547', french: "un élève décrocheur", english: "a dropout", chapter: 'Education', score: 50 },
-{ id: '548', french: "obtenir une bourse", english: "to get a scholarship", chapter: 'Education', score: 50 },
-{ id: '549', french: "entrer en fac de médecine", english: "to go to a medical school", chapter: 'Education', score: 50 },
-{ id: '550', french: "faire des études de médecine", english: "to study medicine", chapter: 'Education', score: 50 },
-{ id: '551', french: "remettre un évènement à plus tard", english: "to put off an event", chapter: 'Education', score: 50 },
-{ id: '552', french: "sortie scolaire", english: "school trip", chapter: 'Education', score: 50 },
-{ id: '553', french: "faire des recherches sur (qqch)", english: "to do research on (sthg)", chapter: 'Education', score: 50 },
-{ id: '554', french: "cour d'école", english: "schoolyard", chapter: 'Education', score: 50 },
-{ id: '555', french: "un élève de terminale", english: "[UK] a sixth-former", chapter: 'Education', score: 50 },
-{ id: '556', french: "méticuleux", english: "painstaking", chapter: 'Education', score: 50 },
-{ id: '557', french: "sécher un cours", english: "to skip a lesson", chapter: 'Education', score: 50 },
-{ id: '558', french: "se voir accorder la possibilité de [...]", english: "to be provided with an opportunity to [...]", chapter: 'Education', score: 50 },
-{ id: '559', french: "tricher", english: "to cheat", chapter: 'Education', score: 50 },
-{ id: '560', french: "un tricheur", english: "a cheater", chapter: 'Education', score: 50 },
-{ id: '561', french: "être renvoyé", english: "to be expelled", chapter: 'Education', score: 50 },
-{ id: '562', french: "rouler sur un examen", english: "to sail through an exam", chapter: 'Education', score: 50 },
-{id: '563', french: 'sauce (tomate)', english: 'dressing', chapter: 'Thanksgiving', score: 50},
-{id: '564', french: 'chuckle', english: 'laughter', chapter: 'Thanksgiving', score: 50},
-{id: '565', french: 'to gather', english: 'to get together', chapter: 'Thanksgiving', score: 50},
-{id: '566', french: 'a feast', english: 'a banquet', chapter: 'Thanksgiving', score: 50},
-{id: '567', french: 'to reach accross', english: 'to make efforts to join', chapter: 'Thanksgiving', score: 50},
-{id: '568', french: 'one another', english: 'each other', chapter: 'Thanksgiving', score: 50},
-{id: '569', french: 'to winnow away', english: 'to filter out and remove', chapter: 'Thanksgiving', score: 50},
-{id: '570', french: 'widely viewed as', english: 'largely regarded as', chapter: 'Thanksgiving', score: 50},
-{id: '571', french: 'twice', english: 'two times', chapter: 'Thanksgiving', score: 50},
-{id: '572', french: 'to provide', english: 'to give', chapter: 'Thanksgiving', score: 50},
-{id: '573', french: 'the bulk of', english: 'the biggest part of', chapter: 'Thanksgiving', score: 50},
-{id: '574', french: 'to depict', english: 'to describe', chapter: 'Thanksgiving', score: 50},
-{id: '575', french: 'to feature', english: 'to represent, show', chapter: 'Thanksgiving', score: 50},
-{id: '576', french: 'subservient', english: 'submissive, docile', chapter: 'Thanksgiving', score: 50},
-{id: '577', french: 'pilgrims', english: 'migrants arriving in America from England in 17th', chapter: 'Thanksgiving', score: 50},
-{id: '578', french: 'to outnumber', english: 'to surpass in number', chapter: 'Thanksgiving', score: 50},
-{id: '579', french: 'to crouch', english: 'almost to sit on the floor', chapter: 'Thanksgiving', score: 50},
-{id: '580', french: 'a harvest', english: 'a crop', chapter: 'Thanksgiving', score: 50},
-{id: '581', french: 'likely', english: 'probably', chapter: 'Thanksgiving', score: 50},
-{id: '582', french: 'a deed', english: 'an [bad] action', chapter: 'Thanksgiving', score: 50},
-{id: '583', french: 'settlers', english: 'colons', chapter: 'Thanksgiving', score: 50},
-{id: '584', french: 'in retaliation for', english: 'in revenge for', chapter: 'Thanksgiving', score: 50},
-{id: '585', french: 'to broker', english: 'to organize, negotiate', chapter: 'Thanksgiving', score: 50},
-{id: '586', french: 'to grab', english: 'to seize', chapter: 'Thanksgiving', score: 50},
-{id: '587', french: 'gauzy', english: 'transparent', chapter: 'Thanksgiving', score: 50},
-{id: '588', french: 'willfully', english: 'deliberately', chapter: 'Thanksgiving', score: 50},
-{id: '589', french: 'How [s.one] would have it', english: 'What [s.one] would like to believe', chapter: 'Thanksgiving', score: 50},
-{id: '590', french: 'druthers', english: 'inclination, penchant', chapter: 'Thanksgiving', score: 50},
-{id: '591', french: 'blissfully', english: 'ecstatically', chapter: 'Thanksgiving', score: 50},
-{id: '592', french: 'bleached out', english: 'washed out', chapter: 'Thanksgiving', score: 50},
-{id: '593', french: 'to abid', english: 'to respect', chapter: 'Thanksgiving', score: 50},
-{id: '594', french: 'altérer', english: 'alter', chapter: 'Thanksgiving', score: 50},
-{id: '595', french: 'apprentissage en continu', english: 'lifelong learning', chapter: 'Thanksgiving', score: 50},
-{id: '596', french: 'malaise', english: 'general feeling of discomfort', chapter: 'Business', score: 50},
-{id: '597', french: 'stagflation', english: 'period of slow economic growth and high unemployment', chapter: 'Business', score: 50},
-{id: '598', french: 'aftermath', english: 'the consequences of a significant unpleasant event', chapter: 'Business', score: 50},
-{id: '599', french: 'hyperinflation', english: 'extremely high and accelerating inflation', chapter: 'Business', score: 50},
-{id: '600', french: 'third-world countries', english: 'countries with lower economic development', chapter: 'Business', score: 50},
-{id: '601', french: 'martial law', english: 'military control over civilian functions of government', chapter: 'Business', score: 50},
-{id: '602', french: 'gleaming', english: 'shining brightly, describe something polished or new', chapter: 'Business', score: 50},
-{id: '603', french: 'suburban area', english: 'residential area on the outskirts of the a city', chapter: 'Business', score: 50},
-{id: '604', french: 'stagnation', english: 'lack of activity, growth, and development', chapter: 'Business', score: 50},
-{id: '605', french: 'dispirited', english: 'having lost emthusiasm and hope', chapter: 'Business', score: 50},
-{id: '606', french: 'fatalistic', english: 'believing that events are inevitable', chapter: 'Business', score: 50},
-{id: '607', french: 'hollowed out', english: 'destroyed or weakened from within', chapter: 'Business', score: 50},
-{id: '608', french: 'brimming', english: 'filled to the point of overflowing (with positive emotions and energy)', chapter: 'Business', score: 50},
-{id: '609', french: 'rabais, ristourne', english: 'discount', chapter: 'Business', score: 50},
-{id: '610', french: 'chaîne de montage', english: 'assembly line', chapter: 'Business', score: 50},
-{id: '611', french: 'payer comptant', english: 'to pay cash', chapter: 'Business', score: 50},
-{id: '612', french: "pénurie de main d'oeuvre", 'english': 'labor shortage', chapter: 'Business', score: 50},
-{id: '613', french: 'productivité', english: 'productivity', chapter: 'Business', score: 50},
-{id: '614', french: 'soumettre sa candidature', english: 'to apply', chapter: 'Business', score: 50},
-{id: '615', french: 'racheter', english: 'to buy out', chapter: 'Business', score: 50},
-{id: '616', french: 'licencier', english: 'to lay off', chapter: 'Business', score: 50},
-{id: '617', french: 'se mettre en grève', english: 'to go on strike', chapter: 'Business', score: 50},
-{id: '618', french: 'service client', english: 'customer service', chapter: 'Business', score: 50},
-{id: '619', french: 'représentant syndical', english: 'union representative', chapter: 'Business', score: 50},
-{id: '620', french: 'commerćant', english: 'shopkeeper', chapter: 'Business', score: 50},
-{id: '621', french: 'virer, mettre à la porte', english: 'to fire', chapter: 'Business', score: 50},
-{id: '622', french: 'se mettre à son compte', english: "to set up one's business", 'chapter': 'Business', score: 50},
-{id: '623', french: 'démissionner', english: 'to resign', chapter: 'Business', score: 50},
-{id: '624', french: 'en sureffectif', english: 'overstaffed', chapter: 'Business', score: 50},
-{id: '625', french: 'contrat à durée indéterminée', english: 'permanent contract', chapter: 'Business', score: 50},
-{id: '626', french: 'équipe de nuit', english: 'night shift', chapter: 'Business', score: 50},
-{id: '627', french: 'service, département', english: 'department', chapter: 'Business', score: 50},
-{id: '628', french: 'refondre, réorganiser', english: 'to revamp', chapter: 'Business', score: 50},
-{id: '629', french: 'concurrent', english: 'competitor', chapter: 'Business', score: 50},
-{id: '630', french: 'fusion', english: 'merger', chapter: 'Business', score: 50},
-{id: '631', french: 'faire faillite', english: 'to go bankrupt, bust', chapter: 'Business', score: 50},
-{id: '632', french: 'embaucher', english: 'to hire, take on', chapter: 'Business', score: 50},
-{id: '633', french: 'fiche de paie', english: 'pay slip', chapter: 'Business', score: 50},
-{id: '634', french: 'faire des heures supplémentaires', english: 'work overtime', chapter: 'Business', score: 50},
-{id: '635', french: 'mettre la clé sous la porte', english: 'to go out of business, close up shop', chapter: 'Business', score: 50},
-{id: '636', french: 'fait main', english: 'handmade', chapter: 'Business', score: 50},
-{id: '637', french: 'artisan', english: 'craftsman', chapter: 'Business', score: 50},
-{id: '638', french: 'ouvrier qualifié', english: 'skilled worker', chapter: 'Business', score: 50},
-{id: '639', french: 'entreprise', english: 'business', chapter: 'Business', score: 50},
-{id: '640', french: 'plein emploi', english: 'full employment', chapter: 'Business', score: 50},
-{id: '641', french: 'un maire', english: 'a mayor', chapter: 'Politique', score: 50},
-{id: '642', french: 'homme politique', english: 'politician', chapter: 'Politique', score: 50},
-{id: '643', french: "s'assurer une majorité", 'english': 'to secure a majority', chapter: 'Politique', score: 50},
-{id: '644', french: 'déclencher des élections anticipées', english: 'to call an early election', chapter: 'Politique', score: 50},
-{id: '645', french: '(UK) les éléctions législatives', english: '(UK) the general election', chapter: 'Politique', score: 50},
-{id: '646', french: '(US) les éléctions présidentielles', english: '(US) the general election', chapter: 'Politique', score: 50},
-{id: '647', french: 'les grands partis', english: 'mainstream parties', chapter: 'Politique', score: 50},
-{id: '648', french: 'premier ministre', english: 'Prime Minister', chapter: 'Politique', score: 50},
-{id: '649', french: "le ministre de l'économie et des finances", 'english': '(UK) the Chancellor of the Exchequer', chapter: 'Politique', score: 50},
-{id: '650', french: 'remaniement ministériel', english: 'Cabinet reshuffle', chapter: 'Politique', score: 50},
-{id: '651', french: 'ministre des Affaires étrangères', english: 'Foreign minister', chapter: 'Politique', score: 50},
-{id: '652', french: 'pronncer un discours', english: 'to deliver a speech', chapter: 'Politique', score: 50},
-{id: '653', french: 'une dictature', english: 'a dictatorship', chapter: 'Politique', score: 50},
-{id: '654', french: 'museler, baîlloner', english: 'to gag, muzzle', chapter: 'Politique', score: 50},
-{id: '655', french: 'société civile', english: 'civil society', chapter: 'Politique', score: 50},
-{id: '656', french: '(UK) syndicats', english: '(UK) trade unions', chapter: 'Politique', score: 50},
-{id: '657', french: '(US) syndicats', english: '(US) labor unions', chapter: 'Politique', score: 50},
-{id: '658', french: 'élections de mi-mandat', english: 'mid-term elections', chapter: 'Politique', score: 50},
-{id: '659', french: '"minisre ""frondeur"""', english: 'rebellious minister', chapter: 'Politique', score: 50},
-{id: '660', french: 'démissionner', english: 'resign, step down', chapter: 'Politique', score: 50},
-{id: '661', french: 'officier en tant que', english: 'to serve as', chapter: 'Politique', score: 50},
-{id: '662', french: 'opposer son veto à (qqch)', english: 'to veto (sthg)', chapter: 'Politique', score: 50},
-{id: '663', french: 'un projet de loi', english: 'a bill', chapter: 'Politique', score: 50},
-{id: '664', french: 'un groupe de réflexion', english: 'a think-tank', chapter: 'Politique', score: 50},
-{id: '665', french: '(UK) un ministre', english: '(UK) a Cabinet member', chapter: 'Politique', score: 50},
-{id: '666', french: 'un directeur de cabinet', english: 'a chief of staff', chapter: 'Politique', score: 50},
-{id: '667', french: 'impôts locaux', english: 'local taxes', chapter: 'Politique', score: 50},
-{id: '668', french: 'cote de popularité', english: 'approval ratings', chapter: 'Politique', score: 50},
-{id: '669', french: 'se présenter à une éléction', english: 'to run for election [office]', chapter: 'Politique', score: 50},
-{id: '670', french: 'prêter serment', english: 'to take the oath, be sworn in', chapter: 'Politique', score: 50},
-{id: '671', french: 'rendre homage à (qqn)', english: 'to pay tribute to (sone)', chapter: 'Politique', score: 50},
-{id: '672', french: 'dirigeant', english: 'political leader', chapter: 'Politique', score: 50},
-{id: '673', french: 'élection truquée', english: 'rigged election', chapter: 'Politique', score: 50},
-{id: '674', french: 'les allocations', english: 'social benefits', chapter: 'Politique', score: 50},
-{id: '675', french: 'revaloriser', english: 'to scale up, raise, increase', chapter: 'Politique', score: 50},
-{id: '676', french: "l'allocation familliale", 'english': 'the family allowance', chapter: 'Politique', score: 50},
-{id: '677', french: 'le gel de la production', english: 'the production freeze', chapter: 'Politique', score: 50},
-{id: '678', french: 'un bras de fer', english: 'a tug of war', chapter: 'Politique', score: 50},
-{id: '679', french: 'chancelant', english: 'teetering, wavering', chapter: 'Politique', score: 50},
-{id: '680', french: 'tailored', english: 'customized', chapter: 'Politique', score: 50},
-{id: '681', french: 'rote memorisation', english: 'repetition-based learning', chapter: 'Politique', score: 50},
-{id: '682', french: 'impoverished', english: 'cash-strapped', chapter: 'Politique', score: 50},
-{id: '683', french: 'unencumbered', english: 'unburdened', chapter: 'Politique', score: 50},
-{id: '684', french: 'inquisitiveness', english: 'interest, curiosity', chapter: 'Politique', score: 50},
-{id: '685', french: 'substantially', english: 'notably, significatly', chapter: 'Politique', score: 50},
-{id: '686', french: 'authoritarian', english: 'dictatorial, strict', chapter: 'Politique', score: 50},
-{id: '687', french: 'minimally supervised', english: 'lightly monitored', chapter: 'Politique', 'score': 50}
-        
-        
-        ];
-
-        const chapters = [
-            { name: 'Democracy', emoji: '🏛️' },
-            { name: 'Genetics', emoji: '🧬' },
-            { name: 'Immigration', emoji: '✈️' },
-            { name: 'International Tensions', emoji: '🌍' },
-            { name: 'Unemployment', emoji: '📉' },
-            { name: 'Thanksgiving', emoji: '🦃' },
-            { name: 'Business', emoji: '💼' },
-            { name: 'Politique', emoji: '🗳️' },
-            { name: 'Education', emoji: '🎓' }
-        ];
-        const scoreLevels = [0, 16, 33, 50, 66, 84, 100];
-
-        // --- UI SELECTORS ---
-        const animatedBgElementsContainer = document.getElementById('animated-bg-elements');
-        const timerEl = document.getElementById('timer');
-        const progressTextEl = document.getElementById('progress-text');
-        const progressPercentageEl = document.getElementById('progress-percentage');
-        const progressBarFillEl = document.getElementById('progress-bar-fill');
-        const menuChaptersContainerEl = document.getElementById('menu-chapters');
-
-        const flashcardContainerEl = document.getElementById('flashcard-container');
-        const cardScoreEl = document.getElementById('card-score');
-        const cardFrenchWordEl = document.getElementById('card-french-word');
-        const cardEnglishWordEl = document.getElementById('card-english-word');
-
-        const messageAreaEl = document.getElementById('message-area');
-        const answerInputEl = document.getElementById('answer-input');
-        const submitAnswerButtonEl = document.getElementById('submit-answer-button');
-
-        const burgerButtonEl = document.getElementById('burger-button');
-        const sidebarMenuEl = document.getElementById('sidebar-menu');
-        const closeMenuButtonEl = document.getElementById('close-menu-button');
-        const searchBarEl = document.getElementById('search-bar');
-        const searchResultsContainerEl = document.getElementById('search-results-container');
-        const darkModeToggleEl = document.getElementById('dark-mode-toggle');
-        const saveDataButtonEl = document.getElementById('save-data-button');
-        const loadDataButtonEl = document.getElementById('load-data-button'); // MODIFIED
-        const resetOptionsEl = document.getElementById('reset-options');
-        const resetDataButtonEl = document.getElementById('reset-data-button');
-        const reverseModeButtonEl = document.getElementById('reverse-mode-button');
-        const currentChapterLabelEl = document.getElementById('current-chapter-label');
-        let themeSelectorEl;
-
-        // --- THEME APPLICATION ---
-        function applyCardThemeStyles() {
-            flashcardContainerEl.style.backgroundColor = '';
-            flashcardContainerEl.style.borderColor = '';
-            flashcardContainerEl.style.color = '';
-
-            let mainFont = "'Inter', sans-serif";
-            let cardFont = mainFont;
-            let timerFont = "'Roboto Mono', monospace";
-
-            document.body.style.fontFamily = mainFont;
-            cardFrenchWordEl.style.fontFamily = cardFont;
-            cardEnglishWordEl.style.fontFamily = cardFont;
-            timerEl.style.fontFamily = timerFont;
-        }
-
-        function updateUIForReverseMode() {
-            appState.uiLang = appState.reverseMode ? 'en' : 'fr';
-            const placeholderKey = appState.reverseMode ? 'answerPlaceholder_fr' : 'answerPlaceholder_en';
-            answerInputEl.placeholder = t(placeholderKey);
-
-            cardEnglishWordEl.classList.toggle('card-translation', !appState.reverseMode);
-            cardFrenchWordEl.classList.toggle('card-translation', appState.reverseMode);
-
-            if (reverseModeButtonEl) {
-                reverseModeButtonEl.innerHTML = `<i class="fas fa-exchange-alt mr-2"></i>${t('reverseButton')}`;
-            }
-
-            updateLocalizedStaticTexts();
-            renderProgressBar();
-        }
-
-        function applyTheme(themeName) {
-            const setCssVar = (varName, value) => document.documentElement.style.setProperty(varName, value);
-            appState.currentTheme = themeName;
-
-            document.body.classList.remove('theme-pastel');
-            if (themeName === 'pastel') document.body.classList.add('theme-pastel');
-
-            if (themeName === 'pastel') {
-                setCssVar('--pastel-color-light-1', '#E6E6FA');
-                setCssVar('--pastel-color-light-2', '#D8BFD8');
-                setCssVar('--pastel-color-dark-1', '#5F4B8B');
-                setCssVar('--pastel-color-dark-2', '#9A7FB0');
-            }
-
-            clearAnimatedParticles('star');
-            stopStarTwinkleLoop();
-            if (themeName === 'default' && appState.darkMode) {
-                createAnimatedParticles(100, 'star');
-                startStarTwinkleLoop();
-            }
-
-            applyCardThemeStyles();
-            localStorage.setItem('flashcardAppTheme', themeName);
-            renderCard(false);
-            updateActiveChapterButtonStates();
-        }
-
-        function createAnimatedParticles(count, type) {
-            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (reduce) return;
-
-            clearAnimatedParticles(type);
-            for (let i = 0; i < count; i++) {
-                const particle = document.createElement('div');
-                particle.style.position = 'absolute';
-                particle.style.pointerEvents = 'none';
-                particle.style.zIndex = '-1';
-                particle.style.opacity = '0.7';
-
-                if (type === 'star') {
-                    const size = Math.random() * 2 + 1;
-                    particle.style.setProperty('--star-size', `${size}px`);
-                    particle.style.top = `${Math.random() * 100}%`;
-                    particle.style.left = `${Math.random() * 100}%`;
-                    const starColors = appState.darkMode ? ['#E0E0FF', '#C4C4FF', '#A8A8FF'] : ['#CCCCFF', '#B0B0FF', '#9494FF'];
-                    particle.style.setProperty('--star-color', starColors[Math.floor(Math.random() * starColors.length)]);
-                    particle.style.borderRadius = '50%';
-                    particle.classList.add('star');
-                }
-                animatedBgElementsContainer.appendChild(particle);
-            }
-        }
-
-        let starTwinkleTimer = null;
-        function startStarTwinkleLoop() {
-            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (reduce) return;
-
-            stopStarTwinkleLoop();
-            const TICK_MIN = 600;
-            const TICK_VAR = 900;
-            const OPACITY_VISIBLE = 0.7;
-
-            const tick = () => {
-                const stars = animatedBgElementsContainer.querySelectorAll('.star');
-                if (!stars.length) {
-                    starTwinkleTimer = setTimeout(tick, 1000);
-                    return;
-                }
-                const perTick = Math.max(1, Math.floor(stars.length * 0.12));
-                for (let k = 0; k < perTick; k++) {
-                    const idx = Math.floor(Math.random() * stars.length);
-                    const star = stars[idx];
-                    if (!star) continue;
-
-                    star.style.opacity = '0';
-                    const delay = 150 + Math.random() * 300;
-                    setTimeout(() => {
-                        const size = Math.random() * 2 + 1;
-                        star.style.setProperty('--star-size', `${size}px`);
-                        star.style.top = `${Math.random() * 100}%`;
-                        star.style.left = `${Math.random() * 100}%`;
-                        const starColors = appState.darkMode ? ['#E0E0FF', '#C4C4FF', '#A8A8FF'] : ['#CCCCFF', '#B0B0FF', '#9494FF'];
-                        star.style.setProperty('--star-color', starColors[Math.floor(Math.random() * starColors.length)]);
-                        star.style.opacity = String(OPACITY_VISIBLE);
-                    }, delay);
-                }
-                starTwinkleTimer = setTimeout(tick, TICK_MIN + Math.random() * TICK_VAR);
-            };
-
-            tick();
-        }
-        function stopStarTwinkleLoop() {
-            if (starTwinkleTimer) {
-                clearTimeout(starTwinkleTimer);
-                starTwinkleTimer = null;
-            }
-        }
-        function clearAnimatedParticles(type = 'all') {
-            let selector = '.star';
-            if (type !== 'all') selector = `.${type}`;
-            const existingParticles = animatedBgElementsContainer.querySelectorAll(selector);
-            existingParticles.forEach(p => p.remove());
-
-            if (type === 'all' || type === 'star') {
-                stopStarTwinkleLoop();
-            }
-            if (type === 'all' || type === 'sci-fi-grid') {
-                const grid = animatedBgElementsContainer.querySelector('.sci-fi-grid-overlay');
-                if (grid) grid.style.opacity = '0';
-            }
-        }
-
-        function addThemesMenu() {
-            const themesSection = document.createElement('div');
-            themesSection.className = 'mb-4';
-            themesSection.innerHTML = `
-                <h3 id="themes-title" class="text-lg font-medium mb-2">${t('themes')}</h3>
-                <select id="theme-selector" class="w-full p-2 border rounded-md mb-2">
-                    <option value="default">${t('themeDefault')}</option>
-                    <option value="pastel">${t('themePastel')}</option>
-                </select>
-            `;
-            const darkModeToggleDiv = darkModeToggleEl.closest('div');
-            darkModeToggleDiv.parentNode.insertBefore(themesSection, darkModeToggleDiv.nextSibling);
-
-            themeSelectorEl = document.getElementById('theme-selector');
-            themeSelectorEl.addEventListener('change', (e) => {
-                applyTheme(e.target.value);
-            });
-        }
-
-        // --- RENDER FUNCTIONS ---
-        function renderCurrentChapterLabel() {
-            if (!currentChapterLabelEl) return;
-            const ch = appState.currentChapter;
-            const label = (ch === 'Tout') ? t('all') : ch;
-            currentChapterLabelEl.textContent = label;
-        }
-
-        function updateLocalizedStaticTexts() {
-          searchBarEl.placeholder = t('searchPlaceholder');
-          const chaptersTitleEl = document.getElementById('chapters-title');
-          if (chaptersTitleEl) chaptersTitleEl.textContent = t('chapters');
-          const darkModeLabelEl = document.getElementById('dark-mode-label');
-          if (darkModeLabelEl) darkModeLabelEl.textContent = t('darkMode');
-
-          if (saveDataButtonEl) saveDataButtonEl.innerHTML = `<i class="fas fa-save mr-2"></i>${t('save')}`;
-          if (loadDataButtonEl) {
-              const textSpan = loadDataButtonEl.querySelector('span');
-              if (textSpan) textSpan.textContent = t('load');
-              else loadDataButtonEl.innerHTML = `<i class="fas fa-upload mr-2"></i>${t('load')}`;
-          }
-
-          const resetTitleEl = document.getElementById('reset-title');
-          if (resetTitleEl) resetTitleEl.textContent = t('reset');
-          if (resetDataButtonEl) resetDataButtonEl.innerHTML = `<i class="fas fa-undo mr-2"></i>${t('resetSelection')}`;
-
-          if (reverseModeButtonEl) {
-            reverseModeButtonEl.innerHTML = `<i class="fas fa-exchange-alt mr-2"></i>${t('reverseButton')}`;
-          }
-
-          const themesTitleEl = document.getElementById('themes-title');
-          if (themesTitleEl) themesTitleEl.textContent = t('themes');
-          if (themeSelectorEl) {
-            Array.from(themeSelectorEl.options).forEach(opt => {
-              if (opt.value === 'default') opt.textContent = t('themeDefault');
-              if (opt.value === 'pastel') opt.textContent = t('themePastel');
-            });
-          }
-
-          submitAnswerButtonEl.textContent = t('submit');
-
-          renderChapterButtons();
-          renderResetOptions();
-          renderCurrentChapterLabel(); // MAJ label chapitre
-        }
-
-        function renderTimer() {
-            const hours = Math.floor(appState.elapsedSeconds / 3600).toString().padStart(2, '0');
-            const minutes = Math.floor((appState.elapsedSeconds % 3600) / 60).toString().padStart(2, '0');
-            const seconds = (appState.elapsedSeconds % 60).toString().padStart(2, '0');
-            timerEl.textContent = `${hours}:${minutes}:${seconds}`;
-        }
-
-        function renderProgressBar() {
-            const totalCardsInDeck = appState.currentDeck.length;
-            const viewedCount = Math.min(appState.currentIndex + 1, totalCardsInDeck);
-
-            if (totalCardsInDeck === 0) {
-                progressTextEl.textContent = `${t('cardsViewed')}: 0 / 0`;
-                progressPercentageEl.textContent = '0%';
-                progressBarFillEl.style.width = '0%';
-                return;
-            }
-
-            const percentage = Math.round((viewedCount / totalCardsInDeck) * 100);
-            progressTextEl.textContent = `${t('cardsViewed')}: ${viewedCount} / ${totalCardsInDeck}`;
-            progressPercentageEl.textContent = `${percentage}%`;
-            progressBarFillEl.style.width = `${percentage}%`;
-        }
-
-        function getCardColorClasses(score) {
-            if (score === 0) return 'bg-red-500/80 text-white dark:bg-red-800/70 dark:text-red-100';
-            if (score === 16) return 'bg-red-400/80 text-white dark:bg-red-700/70 dark:text-red-100';
-            if (score === 33) return 'bg-orange-400/80 text-neutral-800 dark:bg-orange-600/70 dark:text-orange-100';
-            if (score === 50) return appState.darkMode ? 'dark-mode-card-neutral' : 'light-mode-card-neutral';
-            if (score === 66) return 'bg-lime-400/80 text-neutral-800 dark:bg-lime-700/70 dark:text-lime-100';
-            if (score === 84) return 'bg-green-500/80 text-white dark:bg-green-600/70 dark:text-green-100';
-            if (score === 100) return 'bg-emerald-600/80 text-white dark:bg-emerald-700/70 dark:text-emerald-100';
-            return appState.darkMode ? 'dark-mode-card-neutral' : 'light-mode-card-neutral';
-        }
-
-        let lastCardColorClass = '';
-        function applyScoreClass(newCls) {
-            if (lastCardColorClass) {
-                flashcardContainerEl.classList.remove(...lastCardColorClass.split(' '));
-            }
-            flashcardContainerEl.classList.add(...newCls.split(' '));
-            lastCardColorClass = newCls;
-        }
-
-        function renderCard(focusOnInput = true) {
-            messageAreaEl.textContent = '';
-            answerInputEl.value = '';
-            appState.isCardRevealedByClick = false;
-            appState.readyToAdvanceOnClick = false;
-
-            if (appState.currentDeck.length === 0 || appState.currentIndex >= appState.currentDeck.length) {
-                applyScoreClass(appState.darkMode ? 'dark-mode-card-neutral' : 'light-mode-card-neutral');
-                cardFrenchWordEl.textContent = t('noCard');
-                cardEnglishWordEl.textContent = '';
-                cardEnglishWordEl.classList.add('hidden');
-                cardScoreEl.textContent = 'N/A';
-                answerInputEl.disabled = true;
-                submitAnswerButtonEl.disabled = true;
-                submitAnswerButtonEl.classList.add('hidden');
-                return;
-            }
-
-            const card = appState.currentDeck[appState.currentIndex];
-            cardFrenchWordEl.textContent = card.french;
-            cardEnglishWordEl.textContent = card.english;
-
-            const promptEl = appState.reverseMode ? cardEnglishWordEl : cardFrenchWordEl;
-            const translationEl = appState.reverseMode ? cardFrenchWordEl : cardEnglishWordEl;
-
-            promptEl.classList.remove('hidden');
-            translationEl.classList.add('hidden');
-            cardScoreEl.textContent = `${card.score}%`;
-
-            const colorCls = getCardColorClasses(card.score);
-            applyScoreClass(colorCls);
-
-            answerInputEl.disabled = false;
-            submitAnswerButtonEl.disabled = false;
-            submitAnswerButtonEl.classList.remove('hidden');
-            submitAnswerButtonEl.textContent = t('submit');
-            if (focusOnInput) answerInputEl.focus({ preventScroll: true });
-
-            renderProgressBar();
-        }
-
-        function renderChapterButtons() {
-            menuChaptersContainerEl.innerHTML = '';
-            const frag = document.createDocumentFragment();
-
-            const createButton = (chapter, isMenuButton = false, isAllButton = false) => {
-                const button = document.createElement('button');
-                const chapterIdentifier = isAllButton ? 'Tout' : chapter.name;
-                button.dataset.chapter = chapterIdentifier;
-                button.innerHTML = isAllButton ? `📚 ${t('all')}` : `${chapter.emoji} ${chapter.name}`;
-                button.classList.add(
-                    'p-2', 'sm:p-3', 'rounded-lg', 'shadow', 'font-medium',
-                    'text-xs', 'sm:text-sm', 'transition-all', 'duration-200',
-                    'ease-in-out', 'hover:opacity-80', 'w-full', 'truncate'
-                );
-
-                button.addEventListener('click', () => {
-                    appState.currentChapter = chapterIdentifier;
-                    loadDeckForChapter(chapterIdentifier);
-                    renderCurrentChapterLabel();
-                    if (isMenuButton) toggleMenu(false);
-                    updateActiveChapterButtonStates();
-                });
-                return button;
-            };
-
-            const allButtonMenu = createButton(null, true, true);
-            frag.appendChild(allButtonMenu);
-            chapters.forEach(chapter => frag.appendChild(createButton(chapter, true)));
-            menuChaptersContainerEl.appendChild(frag);
-
-            updateActiveChapterButtonStates();
-        }
-
-        function updateActiveChapterButtonStates() {
-            const updateButtons = (container) => {
-                Array.from(container.children).forEach(button => {
-                    const buttonChapterName = button.dataset.chapter;
-                    button.classList.remove('chapter-button-active', 'chapter-button-default');
-
-                    if (buttonChapterName === appState.currentChapter) {
-                        button.classList.add('chapter-button-active');
-                    } else {
-                        button.classList.add('chapter-button-default');
-                    }
-
-                    const buttonFontFamily = getComputedStyle(document.body).fontFamily;
-                    button.style.fontFamily = buttonFontFamily;
-                });
-            };
-            updateButtons(menuChaptersContainerEl);
-        }
-
-        function renderResetOptions() {
-            resetOptionsEl.innerHTML = `<option value="Tout">${t('all')}</option>`;
-            chapters.forEach(chapter => {
-                const option = document.createElement('option');
-                option.value = chapter.name;
-                option.textContent = chapter.name;
-                resetOptionsEl.appendChild(option);
-            });
-        }
-
-        // --- LOGIC FUNCTIONS ---
-        function startTimer() {
-            if (appState.timerInterval) clearInterval(appState.timerInterval);
-            appState.timerInterval = setInterval(() => {
-                appState.elapsedSeconds++;
-                renderTimer();
-            }, 1000);
-        }
-
-        function loadDeckForChapter(chapterName) {
-            appState.currentChapter = chapterName;
-            if (chapterName === 'Tout') {
-                appState.currentDeck = [...appState.allCards];
-            } else {
-                appState.currentDeck = appState.allCards.filter(card => card.chapter === chapterName);
-            }
-            appState.currentIndex = 0;
-            appState.seenCountInSession = 0;
-            shuffleAndSortDeck();
-            renderCurrentChapterLabel();
-            updateActiveChapterButtonStates();
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        function shuffleAndSortDeck() {
-            let cardsToProcess;
-            if (appState.currentChapter === 'Tout') {
-                cardsToProcess = [...appState.allCards];
-            } else {
-                cardsToProcess = appState.allCards.filter(card => card.chapter === appState.currentChapter);
-            }
-
-            shuffleArray(cardsToProcess);
-            cardsToProcess.sort((a, b) => a.score - b.score);
-
-            appState.currentDeck = cardsToProcess;
-            appState.currentIndex = 0;
-            appState.seenCountInSession = 0;
-            renderCard(false);
-            renderProgressBar();
-        }
-
-        function handleAnswer(isCorrect) {
-            if (appState.currentDeck.length === 0) return;
-            const card = appState.currentDeck[appState.currentIndex];
-            appState.isCardRevealedByClick = false;
-
-            let currentScoreIndex = scoreLevels.indexOf(card.score);
-            if (currentScoreIndex === -1) {
-                card.score = 50;
-                currentScoreIndex = scoreLevels.indexOf(50);
-            }
-
-            if (isCorrect) {
-                messageAreaEl.textContent = t('correct');
-                messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-emerald-500 dark:text-emerald-400';
-                if (currentScoreIndex < scoreLevels.length - 1) {
-                    card.score = scoreLevels[currentScoreIndex + 1];
-                }
-            } else {
-                messageAreaEl.textContent = t('incorrect');
-                messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-red-500 dark:text-red-400';
-                if (currentScoreIndex > 0) {
-                    card.score = scoreLevels[currentScoreIndex - 1];
-                }
-                const translationEl = appState.reverseMode ? cardFrenchWordEl : cardEnglishWordEl;
-                translationEl.classList.remove('hidden');
-            }
-
-            const masterCardIndex = appState.allCards.findIndex(c => c.id === card.id);
-            if (masterCardIndex !== -1) {
-                appState.allCards[masterCardIndex].score = card.score;
-            }
-
-            cardScoreEl.textContent = `${card.score}%`;
-            const colorCls = getCardColorClasses(card.score);
-            applyScoreClass(colorCls);
-
-            answerInputEl.disabled = true;
-            submitAnswerButtonEl.classList.add('hidden');
-            appState.readyToAdvanceOnClick = true;
-        }
-
-        function nextCard() {
-            appState.currentIndex++;
-            appState.seenCountInSession++;
-            messageAreaEl.textContent = '';
-
-            if (appState.currentIndex >= appState.currentDeck.length) {
-                messageAreaEl.textContent = t('endOfDeck');
-                messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-sky-500 dark:text-sky-400';
-                requestAnimationFrame(() => shuffleAndSortDeck());
-            } else {
-                renderCard();
-            }
-            renderProgressBar();
-        }
-
-        function toggleMenu(forceOpen) {
-            if (forceOpen === true || !sidebarMenuEl.classList.contains('menu-slide-in')) {
-                sidebarMenuEl.classList.remove('menu-slide-out');
-                sidebarMenuEl.classList.add('menu-slide-in');
-            } else {
-                sidebarMenuEl.classList.remove('menu-slide-in');
-                sidebarMenuEl.classList.add('menu-slide-out');
-            }
-        }
-
-        function toggleDarkMode() {
-            appState.darkMode = !appState.darkMode;
-            document.documentElement.classList.toggle('dark', appState.darkMode);
-            document.body.classList.toggle('dark-mode', appState.darkMode);
-            document.body.classList.toggle('light-mode', !appState.darkMode);
-            darkModeToggleEl.innerHTML = appState.darkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            localStorage.setItem('flashcardAppDarkMode', String(appState.darkMode));
-            applyTheme(appState.currentTheme);
-        }
-
-        // --- NEW SAVE/LOAD FUNCTIONS using localStorage ---
-
-        function saveData() {
-            try {
-                const dataToSave = {
-                    allCards: appState.allCards,
-                    elapsedSeconds: appState.elapsedSeconds,
-                    currentChapter: appState.currentChapter,
-                    darkMode: appState.darkMode,
-                    currentTheme: appState.currentTheme,
-                    reverseMode: appState.reverseMode
-                };
-                const jsonData = JSON.stringify(dataToSave);
-                localStorage.setItem('flashcardAppData', jsonData);
-                messageAreaEl.textContent = t('dataSaved');
-                messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-green-500 dark:text-green-400';
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
-                messageAreaEl.textContent = 'Erreur de sauvegarde.';
-                messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-red-500 dark:text-red-400';
-            }
-            setTimeout(() => messageAreaEl.textContent = '', 2000);
-        }
-
-        function loadData(isSilent = false) {
-            const savedDataString = localStorage.getItem('flashcardAppData');
-            if (!savedDataString) {
-                if (!isSilent) {
-                    messageAreaEl.textContent = t('noDataFound');
-                    messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-orange-500 dark:text-orange-400';
-                    setTimeout(() => messageAreaEl.textContent = '', 2000);
-                }
-                return false;
-            }
-
-            try {
-                const loadedData = JSON.parse(savedDataString);
-                
-                appState.allCards = (loadedData.allCards || initialCardsData).map(c => {
-                    const score = scoreLevels.includes(c.score) ? c.score : 50;
-                    return { ...c, score };
-                });
-                appState.elapsedSeconds = loadedData.elapsedSeconds || 0;
-                appState.currentChapter = loadedData.currentChapter || 'Tout';
-
-                if (typeof loadedData.darkMode === 'boolean') {
-                    appState.darkMode = loadedData.darkMode;
-                }
-                document.documentElement.classList.toggle('dark', appState.darkMode);
-                document.body.classList.toggle('dark-mode', appState.darkMode);
-                document.body.classList.toggle('light-mode', !appState.darkMode);
-                darkModeToggleEl.innerHTML = appState.darkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-                
-                appState.currentTheme = loadedData.currentTheme || 'default';
-                if (themeSelectorEl) themeSelectorEl.value = appState.currentTheme;
-                applyTheme(appState.currentTheme);
-
-                appState.reverseMode = !!loadedData.reverseMode;
-                updateUIForReverseMode();
-
-                buildSearchIndex();
-                renderTimer();
-                loadDeckForChapter(appState.currentChapter);
-                renderChapterButtons();
-                renderResetOptions();
-                renderCurrentChapterLabel();
-
-                if (!isSilent) {
-                    messageAreaEl.textContent = t('dataLoaded');
-                    messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-green-500 dark:text-green-400';
-                    setTimeout(() => messageAreaEl.textContent = '', 2000);
-                }
-                return true;
-            } catch (error) {
-                console.error('Error loading data from localStorage:', error);
-                if (!isSilent) {
-                    messageAreaEl.textContent = t('dataLoadError');
-                    messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-red-500 dark:text-red-400';
-                    setTimeout(() => messageAreaEl.textContent = '', 2000);
-                }
-                return false;
-            }
-        }
-
-
-        function resetData() {
-            const chapterToReset = resetOptionsEl.value;
-            const confirmReset = confirm(tr('resetConfirm', { chapter: chapterToReset }));
-            if (!confirmReset) return;
-
-            appState.allCards.forEach(card => {
-                if (chapterToReset === 'Tout' || card.chapter === chapterToReset) {
-                    card.score = 50;
-                }
-            });
-
-            if (chapterToReset === 'Tout' || chapterToReset === appState.currentChapter) {
-                loadDeckForChapter(appState.currentChapter);
-            } else {
-                if (appState.currentDeck.length > 0 && appState.currentIndex < appState.currentDeck.length) {
-                    const currentCardInNewDeck = appState.currentDeck[appState.currentIndex];
-                    const masterCardIndex = appState.allCards.findIndex(c => c.id === currentCardInNewDeck.id);
-                    if (masterCardIndex !== -1) {
-                        appState.currentDeck[appState.currentIndex].score = appState.allCards[masterCardIndex].score;
-                        renderCard();
-                    }
-                }
-            }
-            messageAreaEl.textContent = tr('resetDone', { chapter: chapterToReset });
-            messageAreaEl.className = 'w-full text-center h-6 text-sm font-medium text-orange-500 dark:text-yellow-400';
-            setTimeout(() => messageAreaEl.textContent = '', 3000);
-        }
-
-        // --- RECHERCHE: index + debounce ---
-        function buildSearchIndex() {
-            appState.searchIndex = appState.allCards.map(c => ({
-                id: c.id,
-                french_lc: c.french.toLowerCase(),
-                english_lc: c.english.toLowerCase(),
-                chapter: c.chapter,
-                ref: c
-            }));
-        }
-
-        function filterCardsForSearch(query) {
-            searchResultsContainerEl.innerHTML = '';
-            const q = query.trim().toLowerCase();
-            if (!q) return;
-
-            const results = [];
-            const idx = appState.searchIndex || [];
-            for (let i = 0; i < idx.length && results.length < 5; i++) {
-                const c = idx[i];
-                if (c.french_lc.includes(q) || c.english_lc.includes(q)) {
-                    results.push(c.ref);
-                }
-            }
-
-            if (results.length === 0) {
-                searchResultsContainerEl.innerHTML = `<p class="p-2">${t('noResult')}</p>`;
-                return;
-            }
-
-            const frag = document.createDocumentFragment();
-            for (const card of results) {
-                const item = document.createElement('div');
-                item.className = `p-2 cursor-pointer rounded ${appState.darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`;
-                item.textContent = `${card.french} - ${card.english} (${card.chapter})`;
-                item.addEventListener('click', () => {
-                    appState.currentChapter = card.chapter;
-                    loadDeckForChapter(card.chapter);
-                    const idxInDeck = appState.currentDeck.findIndex(c => c.id === card.id);
-                    appState.currentIndex = idxInDeck !== -1 ? idxInDeck : 0;
-                    renderCard(false);
-                    renderProgressBar();
-                    toggleMenu(false);
-                    searchBarEl.value = '';
-                    searchResultsContainerEl.innerHTML = '';
-                    updateActiveChapterButtonStates();
-                    renderCurrentChapterLabel();
-                });
-                frag.appendChild(item);
-            }
-            searchResultsContainerEl.appendChild(frag);
-        }
-
-        // --- EVENT LISTENERS ---
-        flashcardContainerEl.addEventListener('click', () => {
-            if (appState.currentDeck.length === 0) return;
-            if (appState.readyToAdvanceOnClick) {
-                nextCard();
-                return;
-            }
-            const translationEl = appState.reverseMode ? cardFrenchWordEl : cardEnglishWordEl;
-            if (translationEl.classList.contains('hidden')) {
-                translationEl.classList.remove('hidden');
-                appState.isCardRevealedByClick = true;
-                appState.readyToAdvanceOnClick = true;
-                answerInputEl.disabled = true;
-                submitAnswerButtonEl.classList.add('hidden');
-            }
-        });
-
-        submitAnswerButtonEl.addEventListener('click', () => {
-            if (answerInputEl.disabled) return;
-            const userAnswer = answerInputEl.value.trim().toLowerCase();
-            if (!userAnswer) return;
-
-            function validateAnswer(userAnswer, correctAnswerFull) {
-                const userNormalized = userAnswer.replace(/\s+/g, ' ').trim().toLowerCase();
-                const correctNormalized = correctAnswerFull.replace(/\s+/g, ' ').trim().toLowerCase();
-
-                if (userNormalized === correctNormalized) return true;
-
-                if (correctNormalized.includes('/')) {
-                    const alternatives = correctNormalized.split('/').map(alt => alt.trim());
-                    if (alternatives.includes(userNormalized)) return true;
-                }
-
-                const articlesToIgnore = ['a', 'an', 'the', 'un', 'une', 'des', 'le', 'la', 'les', "l'"];
-                const userMainWords = userNormalized.split(/\s+/).filter(word => !articlesToIgnore.includes(word)).join(' ');
-                const correctMainWords = correctNormalized.split(/\s+/).filter(word => !articlesToIgnore.includes(word)).join(' ');
-                if (userMainWords === correctMainWords && userMainWords.length > 0) return true;
-
-                const userNoHyphen = userNormalized.replace(/-/g, ' ');
-                const correctNoHyphen = correctNormalized.replace(/-/g, ' ');
-                if (userNoHyphen === correctNoHyphen) return true;
-
-                const lenDiff = Math.abs(userNormalized.length - correctNormalized.length);
-                if (userNormalized.length < 4 || lenDiff > 3) {
-                    return false;
-                }
-
-                function calculateSimilarity(str1, str2) {
-                    if (!str1 || !str2) return 0;
-                    const matrix = Array(str1.length + 1).fill(null).map(() =>
-                        Array(str2.length + 1).fill(null)
-                    );
-                    for (let i = 0; i <= str1.length; i += 1) matrix[i][0] = i;
-                    for (let j = 0; j <= str2.length; j += 1) matrix[0][j] = j;
-                    for (let i = 1; i <= str1.length; i += 1) {
-                        for (let j = 1; j <= str2.length; j += 1) {
-                            const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
-                            matrix[i][j] = Math.min(
-                                matrix[i - 1][j] + 1,
-                                matrix[i][j - 1] + 1,
-                                matrix[i - 1][j - 1] + cost
-                            );
-                        }
-                    }
-                    const maxLen = Math.max(str1.length, str2.length);
-                    return maxLen === 0 ? 1 : 1 - (matrix[str1.length][str2.length] / maxLen);
-                }
-                const similarity = calculateSimilarity(userNormalized, correctNormalized);
-                return similarity > 0.85;
-            }
-
-            const correctAnswerFull = (appState.reverseMode
-                ? appState.currentDeck[appState.currentIndex].french
-                : appState.currentDeck[appState.currentIndex].english).trim();
-            const isCorrect = validateAnswer(userAnswer, correctAnswerFull.toLowerCase());
-            handleAnswer(isCorrect);
-        });
-
-        answerInputEl.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                e.stopPropagation();
-                if (!answerInputEl.disabled) {
-                    submitAnswerButtonEl.click();
-                }
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && document.activeElement !== answerInputEl && document.activeElement !== searchBarEl) {
-                e.preventDefault();
-                if (appState.readyToAdvanceOnClick) {
-                    nextCard();
-                } else if (appState.currentDeck.length > 0) {
-                    const translationEl = appState.reverseMode ? cardFrenchWordEl : cardEnglishWordEl;
-                    if (translationEl.classList.contains('hidden')) {
-                        translationEl.classList.remove('hidden');
-                        appState.isCardRevealedByClick = true;
-                        appState.readyToAdvanceOnClick = true;
-                        answerInputEl.disabled = true;
-                        submitAnswerButtonEl.classList.add('hidden');
-                    }
-                }
-            }
-        });
-
-        reverseModeButtonEl.addEventListener('click', () => {
-            appState.reverseMode = !appState.reverseMode;
-            updateUIForReverseMode();
-            renderCard(false);
-            renderCurrentChapterLabel();
-        });
-
-        burgerButtonEl.addEventListener('click', () => toggleMenu(true));
-        closeMenuButtonEl.addEventListener('click', () => toggleMenu(false));
-        darkModeToggleEl.addEventListener('click', toggleDarkMode);
-        saveDataButtonEl.addEventListener('click', saveData);
-        loadDataButtonEl.addEventListener('click', () => loadData(false)); // MODIFIED
-        resetDataButtonEl.addEventListener('click', resetData);
-
-        // Debounce pour la recherche
-        let searchDebounceId;
-        searchBarEl.addEventListener('input', (e) => {
-            const q = e.target.value;
-            clearTimeout(searchDebounceId);
-            searchDebounceId = setTimeout(() => filterCardsForSearch(q), 150);
-        });
-
-        // Ferme le menu si clic à l'extérieur
-        document.addEventListener('click', (e) => {
-            const isMenuOpen = sidebarMenuEl.classList.contains('menu-slide-in');
-            const isClickInsideMenu = sidebarMenuEl.contains(e.target);
-            const isClickOnBurgerButton = burgerButtonEl.contains(e.target);
-            if (isMenuOpen && !isClickInsideMenu && !isClickOnBurgerButton) {
-                toggleMenu(false);
-            }
-        });
-
-        // --- SWIPE MOBILE: ouvrir/fermer le menu ---
-let touchStartX = null;
-let touchStartY = null;
-
-const SWIPE_OPEN_MIN = 90;  // px à parcourir vers la droite pour ouvrir
-const SWIPE_CLOSE_MIN = 70; // px à parcourir vers la gauche pour fermer
-
-function isSmallScreen() {
-  return window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
-}
-
-function onTouchStart(e) {
-  if (!isSmallScreen() || e.touches.length !== 1) return;
-  const t = e.touches[0];
-  touchStartX = t.clientX;
-  touchStartY = t.clientY;
-}
-
-function onTouchEnd(e) {
-  if (!isSmallScreen() || touchStartX === null || e.changedTouches.length !== 1) {
-    touchStartX = touchStartY = null;
-    return;
-  }
-  const t = e.changedTouches[0];
-  const dx = t.clientX - touchStartX;
-  const dy = t.clientY - touchStartY;
-  const absDx = Math.abs(dx);
-  const absDy = Math.abs(dy);
-  const isHorizontal = absDx > absDy && absDx > 50;
-  const isMenuOpen = sidebarMenuEl.classList.contains('menu-slide-in');
-
-  if (isHorizontal) {
-    if (dx > 0 && absDx >= SWIPE_OPEN_MIN && !isMenuOpen) {
-      // Swipe droite: ouvrir
-      toggleMenu(true);
-    } else if (dx < 0 && absDx >= SWIPE_CLOSE_MIN && isMenuOpen) {
-      // Swipe gauche: fermer
-      toggleMenu(false);
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Éditeur — D/A/M (Entrée pour appliquer) • Auto-sauvegarde</title>
+  <style>
+    :root{
+      --bg:#0f1115; --panel:#141822; --text:#e7eaf0; --muted:#aab2c0; --accent:#6aa4ff;
+      --ok:#2ecc71; --border:#283042; --warn:#f39c12;
     }
-  }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font:14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial,
+      Noto Sans, Ubuntu, Cantarell, sans-serif; background:var(--bg); color:var(--text);
+      display:flex; flex-direction:column;
+    }
+    header{
+      padding:14px 16px; border-bottom:1px solid var(--border); display:flex; gap:14px;
+      align-items:center; flex-wrap:wrap;
+    }
+    header h1{font-size:16px; margin:0; font-weight:600}
+    header .hint{color:var(--muted)}
+    .grid{ flex:1; display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:12px; min-height:0; }
+    .pane{ background:var(--panel); border:1px solid var(--border); border-radius:10px; display:flex; min-height:0; }
+    .pane .head{
+      padding:10px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center;
+      justify-content:space-between; gap:8px;
+    }
+    .pane .title{font-weight:600}
+    .pane .controls{display:flex; align-items:center; gap:8px; color:var(--muted)}
+    .pane textarea{
+      width:100%; height:100%; flex:1; resize:none; border:0; background:transparent; color:var(--text);
+      font:13px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      padding:12px; outline:none; tab-size:2;
+    }
+    .row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+    button, .btn{
+      background:#1b2230; color:var(--text); border:1px solid var(--border); padding:8px 10px;
+      border-radius:8px; cursor:pointer; font-weight:600;
+    }
+    button:hover{border-color:#38507a}
+    label.inline{display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px}
+    input[type="checkbox"]{width:16px; height:16px}
+    .statusbar{
+      min-height:36px; display:flex; align-items:center; justify-content:space-between;
+      padding:0 12px; border-top:1px solid var(--border); color:var(--muted);
+    }
+    .statusbar .ok{color:var(--ok)}
+    .statusbar .accent{color:var(--accent)}
+    .statusbar .warn{color:var(--warn)}
+    .hint-sm{font-size:12px; color:var(--muted); padding:6px 12px 12px}
+    @media (max-width: 920px){ .grid{grid-template-columns:1fr} }
+    code.k{background:#101520; border:1px solid var(--border); padding:0 6px; border-radius:6px}
+    .log{ padding:6px 12px; font-size:12px; color:var(--muted); max-height:120px; overflow:auto; border-top:1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Éditeur D/A/M — Entrée pour appliquer</h1>
+    <div class="hint">Entrée = appliquer • Shift+Entrée = nouvelle ligne • Auto-sauvegarde</div>
+  </header>
 
-  touchStartX = touchStartY = null;
-}
+  <div class="grid">
+    <!-- Panneau gauche: HTML source -->
+    <section class="pane" aria-label="Texte HTML">
+      <div style="display:flex; flex-direction:column; width:100%; min-height:0;">
+        <div class="head">
+          <div class="title">Texte de gauche (HTML ou texte brut)</div>
+          <div class="controls row">
+            <button id="btnClearLeft" title="Vider le texte de gauche">Vider</button>
+          </div>
+        </div>
+        <textarea id="source" placeholder="Collez ici votre HTML / texte."></textarea>
+      </div>
+    </section>
 
-document.addEventListener('touchstart', onTouchStart, { passive: true });
-document.addEventListener('touchend', onTouchEnd, { passive: true });
+    <!-- Panneau droit: règles D/A/M -->
+    <section class="pane" aria-label="Règles D/A/M">
+      <div style="display:flex; flex-direction:column; width:100%; min-height:0;">
+        <div class="head">
+          <div class="title">Règles (D = supprimer • A = ajouter • M = modifier)</div>
+          <div class="controls row">
+            <label class="inline" title="Si coché: appliquer à toutes les occurrences (D et M)">
+              <input type="checkbox" id="replaceAll" checked />
+              <span>Tout remplacer/supprimer</span>
+            </label>
+            <button id="btnApply" title="Appliquer (Entrée)">Appliquer</button>
+            <button id="btnUndo" title="Annuler la dernière application (Ctrl+Z)">↩️ Retour</button>
+            <button id="btnClearRight" title="Vider les règles">Vider règles</button>
+          </div>
+        </div>
 
-        // --- INITIALIZATION ---
-        function initializeApp() {
-            addThemesMenu(); // Must be called early to create the element
+        <textarea id="mapping" placeholder="FORMAT STRICT (accepte les chaînes multi-lignes entre quotes):
+1) SUPPRESSION
+D: &quot;code exact à supprimer (peut être multi-ligne)&quot;
 
-            // Try to auto-load data silently.
-            const loaded = loadData(true);
+2) AJOUT
+A: &quot;nouveau code (multi-ligne autorisé)&quot;
+Après: &quot;ancre exacte existante dans le code (peut être multi-ligne)&quot;
+OU
+A: &quot;nouveau code (multi-ligne autorisé)&quot;
+Avant: &quot;ancre exacte existante dans le code (peut être multi-ligne)&quot;
 
-            if (!loaded) {
-                // If nothing was loaded, initialize with defaults
-                const savedDarkModePreference = localStorage.getItem('flashcardAppDarkMode');
-                appState.darkMode = savedDarkModePreference === 'true';
+3) MODIFICATION
+M: &quot;code actuel à remplacer (multi-ligne autorisé)&quot;
+&quot;nouveau code qui le remplace (multi-ligne autorisé)&quot;
 
-                let savedTheme = localStorage.getItem('flashcardAppTheme') || 'default';
-                if (savedTheme === 'galaxy') savedTheme = 'default';
-                appState.currentTheme = savedTheme;
-                
-                appState.allCards = initialCardsData.map(c => ({ ...c }));
-            }
-            
-            // Common setup that runs regardless of load success
-            document.documentElement.classList.toggle('dark', appState.darkMode);
-            document.body.classList.toggle('dark-mode', appState.darkMode);
-            document.body.classList.toggle('light-mode', !appState.darkMode);
-            darkModeToggleEl.innerHTML = appState.darkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            if (themeSelectorEl) themeSelectorEl.value = appState.currentTheme;
+Règles:
+• Les guillemets '...' ou &quot;...&quot; sont obligatoires autour du code/texte.
+• Les correspondances sont littérales: ESPACES, TAB, RETOURS LIGNE doivent correspondre exactement.
+• A (Ajout) n'est pas affecté par l'option « Tout remplacer/supprimer ».
+• Si l’ancre de A n’est pas trouvée: insertion en fin de texte (avec alerte).
+• Si l’ancre apparaît plusieurs fois: la première occurrence est utilisée.
+• Vous pouvez mettre des commentaires/libres: toute ligne ne commençant pas par D:, A:, M:, Avant:, Après: est ignorée.
 
-            buildSearchIndex();
-            applyTheme(appState.currentTheme);
-            updateUIForReverseMode();
-            updateLocalizedStaticTexts();
-            renderChapterButtons();
-            renderResetOptions();
-            loadDeckForChapter(appState.currentChapter);
-            renderCurrentChapterLabel();
+Exemples:
+D: &quot;let volumeSeries = null;&quot;
 
-            startTimer();
-            renderTimer();
+A: &quot;&lt;button class='action-btn' id='reset'&gt;🗑️ Reset&lt;/button&gt;&quot;
+Après: &quot;&lt;button class='action-btn' id='refresh'&gt;🔄 Actualiser&lt;/button&gt;&quot;
+
+M: &quot;📊 BTC/EUR Trading Chart&quot;
+&quot;📊 BTC/USD Trading Chart&quot;"></textarea>
+
+        <div class="hint-sm">
+          Notes:
+          <br>— Les opérations s’appliquent dans l’ordre d’écriture.
+          <br>— « Tout remplacer/supprimer » impacte D et M uniquement (A n’est pas concerné).
+          <br>— Les séquences \n, \t, \r et les guillemets échappés (\", ') sont prises en charge.
+        </div>
+        <div id="log" class="log" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="statusbar">
+    <div id="status">Prêt. Tapez vos règles, puis Entrée pour appliquer.</div>
+    <div><span>Auto-sauvegarde: </span><span id="saved" class="ok">✓</span></div>
+  </div>
+
+  <script>
+    (function(){
+      const LS = {
+        source: 'fr.dam.html.source.v3',
+        mapping: 'fr.dam.html.mapping.v3',
+        replaceAll: 'fr.dam.html.replaceAll.v3',
+      };
+
+      const $ = (sel)=>document.querySelector(sel);
+      const sourceEl = $('#source');
+      const mappingEl = $('#mapping');
+      const replaceAllEl = $('#replaceAll');
+      const statusEl = $('#status');
+      const savedEl = $('#saved');
+      const btnApply = $('#btnApply');
+      const btnUndo = $('#btnUndo');
+      const btnClearLeft = $('#btnClearLeft');
+      const btnClearRight = $('#btnClearRight');
+      const logEl = $('#log');
+
+      // Undo stack (dernier état avant Apply)
+      const history = [];
+      const HISTORY_LIMIT = 30;
+
+      // Restore
+      try {
+        const s = localStorage.getItem(LS.source);
+        if (s !== null) sourceEl.value = s;
+        const m = localStorage.getItem(LS.mapping);
+        if (m !== null) mappingEl.value = m;
+        const ra = localStorage.getItem(LS.replaceAll);
+        if (ra !== null) replaceAllEl.checked = ra === '1';
+      } catch(e){
+        console.warn('LocalStorage restore error', e);
+      }
+
+      // Debounce
+      function debounce(fn, ms){
+        let t;
+        return (...args)=>{
+          clearTimeout(t);
+          t = setTimeout(()=>fn(...args), ms);
+        };
+      }
+
+      function saveAll(){
+        try {
+          localStorage.setItem(LS.source, sourceEl.value);
+          localStorage.setItem(LS.mapping, mappingEl.value);
+          localStorage.setItem(LS.replaceAll, replaceAllEl.checked ? '1' : '0');
+          savedEl.textContent = '✓';
+          savedEl.className = 'ok';
+        } catch(e){
+          savedEl.textContent = '⚠';
+          savedEl.className = 'warn';
+          console.warn('LocalStorage save error', e);
+        }
+      }
+      const saveAllDebounced = debounce(saveAll, 200);
+
+      sourceEl.addEventListener('input', saveAllDebounced);
+      mappingEl.addEventListener('input', saveAllDebounced);
+      replaceAllEl.addEventListener('change', saveAll);
+
+      // Entrée (appliquer) vs Shift+Entrée (newline)
+      mappingEl.addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey){
+          e.preventDefault();
+          applyRules();
+        }
+      });
+      btnApply.addEventListener('click', applyRules);
+
+      btnUndo.addEventListener('click', undoLast);
+      // Ctrl/Cmd+Z global (n'interfère pas avec les textareas)
+      document.addEventListener('keydown', (e)=>{
+        const isCtrlZ = (e.key.toLowerCase() === 'z' && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey);
+        const active = document.activeElement;
+        const isTextarea = active && active.tagName === 'TEXTAREA';
+        if (isCtrlZ && !isTextarea){
+          e.preventDefault();
+          undoLast();
+        }
+      });
+
+      btnClearLeft.addEventListener('click', ()=>{
+        if (sourceEl.value && !confirm('Vider le texte de gauche ?')) return;
+        sourceEl.value = '';
+        saveAll();
+        flash('Texte de gauche vidé.');
+      });
+      btnClearRight.addEventListener('click', ()=>{
+        if (mappingEl.value && !confirm('Vider les règles ?')) return;
+        mappingEl.value = '';
+        saveAll();
+        flash('Règles vidées.');
+      });
+
+      function flash(msg){ statusEl.textContent = msg; }
+      function logLine(s){ logEl.textContent += (logEl.textContent ? '\n' : '') + s; logEl.scrollTop = logEl.scrollHeight; }
+      function clearLog(){ logEl.textContent = ''; }
+
+      function detectEOL(s){ return /\r\n/.test(s) ? '\r\n' : '\n'; }
+
+      function decodeEscapes(s){
+        return String(s || '')
+          .replace(/\\n/g, '\n')
+          .replace(/\\r/g, '\r')
+          .replace(/\\t/g, '\t')
+          .replace(/\\"/g, '"')
+          .replace(/\\'/g, "'");
+      }
+
+      // Lecture d'une chaîne entre quotes, potentiellement multi-ligne.
+      // Retourne { value, endLineIndex, endOffset, consumedLines }
+      function readQuoted(lines, startLineIndex, startOffset){
+        let line = lines[startLineIndex];
+        if (line == null) return null;
+
+        // sauter espaces
+        let i = startOffset | 0;
+        while (i < line.length && /\s/.test(line[i])) i++;
+        const ch = line[i];
+        if (ch !== '"' && ch !== "'"){
+          // Non quoted: lire le reste de la ligne (fallback)
+          const rest = line.slice(i).trim();
+          return { value: decodeEscapes(rest), endLineIndex: startLineIndex, endOffset: line.length, consumedLines: 1 };
         }
 
-        initializeApp();
-    </script>
+        const quote = ch;
+        let val = '';
+        let escaped = false;
+        let li = startLineIndex;
+        let pos = i + 1;
+
+        for (; li < lines.length; li++){
+          const cur = lines[li];
+          for (let j = pos; j < cur.length; j++){
+            const c = cur[j];
+            if (escaped){
+              val += c;
+              escaped = false;
+            } else if (c === '\\'){
+              escaped = true;
+            } else if (c === quote){
+              // fin de la chaîne
+              return {
+                value: decodeEscapes(val),
+                endLineIndex: li,
+                endOffset: j + 1,
+                consumedLines: li - startLineIndex + 1
+              };
+            } else {
+              val += c;
+            }
+          }
+          // fin de ligne sans fermeture: ajouter un \n
+          val += '\n';
+          pos = 0;
+        }
+        // pas de fermeture -> prend tout
+        return {
+          value: decodeEscapes(val),
+          endLineIndex: lines.length - 1,
+          endOffset: (lines[lines.length - 1] || '').length,
+          consumedLines: lines.length - startLineIndex
+        };
+      }
+
+      function parseRules(text){
+        const lines = String(text || '').replace(/\r\n/g, '\n').split('\n');
+        const rules = [];
+        let i = 0;
+
+        function peek(idx){ return (lines[idx] || '').trim(); }
+
+        while (i < lines.length){
+          const raw = lines[i];
+          const line = raw.trim();
+          if (!line || line.startsWith('#')){ i++; continue; }
+
+          // D:
+          let m = line.match(/^D\s*:\s*(.*)$/i);
+          if (m){
+            const rq = readQuoted(lines, i, raw.indexOf(m[1]));
+            if (rq && rq.value !== undefined){
+              rules.push({ type:'D', value: rq.value });
+              i = rq.endLineIndex + 1;
+              continue;
+            } else { i++; continue; }
+          }
+
+          // M:
+          m = line.match(/^M\s*:\s*(.*)$/i);
+          if (m){
+            const rFind = readQuoted(lines, i, raw.indexOf(m[1]));
+            let replaceVal = '';
+            let endIndex = rFind ? rFind.endLineIndex : i;
+
+            // Cherche ligne suivante valable comme remplaçant
+            let j = (rFind ? rFind.endLineIndex : i) + 1;
+            while (j < lines.length){
+              const nextRaw = lines[j];
+              const next = nextRaw.trim();
+              if (!next){ j++; continue; }
+              // Stop si c'est le début d'une nouvelle règle
+              if (/^(D|A|M)\s*:/i.test(next) || /^Avant\s*:/i.test(next) || /^Apr(?:e|è)s\s*:/i.test(next)) break;
+              const rRep = readQuoted(lines, j, nextRaw.indexOf(next));
+              if (rRep){
+                replaceVal = rRep.value ?? '';
+                endIndex = rRep.endLineIndex;
+              }
+              j = endIndex + 1;
+              break;
+            }
+
+            rules.push({
+              type:'M',
+              find: rFind ? rFind.value || '' : '',
+              replace: replaceVal
+            });
+            i = endIndex + 1;
+            continue;
+          }
+
+          // A:
+          m = line.match(/^A\s*:\s*(.*)$/i);
+          if (m){
+            const rContent = readQuoted(lines, i, raw.indexOf(m[1]));
+            let afterText = null, beforeText = null;
+            let endIndex = rContent ? rContent.endLineIndex : i;
+
+            let j = endIndex + 1;
+            while (j < lines.length){
+              const nextRaw = lines[j];
+              const next = nextRaw.trim();
+              if (!next){ j++; continue; }
+
+              let ma = next.match(/^Apr(?:e|è)s\s*:\s*(.*)$/i);
+              if (ma){
+                const rA = readQuoted(lines, j, nextRaw.indexOf(ma[1]));
+                if (rA && rA.value) afterText = rA.value;
+                endIndex = rA ? rA.endLineIndex : j;
+                j = endIndex + 1;
+                continue;
+              }
+              let mb = next.match(/^Avant\s*:\s*(.*)$/i);
+              if (mb){
+                const rB = readQuoted(lines, j, nextRaw.indexOf(mb[1]));
+                if (rB && rB.value) beforeText = rB.value;
+                endIndex = rB ? rB.endLineIndex : j;
+                j = endIndex + 1;
+                continue;
+              }
+              // autre chose => stop
+              break;
+            }
+            rules.push({
+              type:'A',
+              value: rContent ? rContent.value ?? '' : '',
+              afterText,
+              beforeText
+            });
+            i = endIndex + 1;
+            continue;
+          }
+
+          // Lignes libres ignorées
+          i++;
+        }
+
+        return rules;
+      }
+
+      function findLineBoundariesAfter(txt, idxEnd, eol){
+        // insert après la fin de la ligne contenant l'ancre
+        const nextEol = txt.indexOf(eol, idxEnd);
+        return nextEol === -1 ? txt.length : nextEol + eol.length;
+      }
+      function findLineBoundariesBefore(txt, idxStart, eol){
+        // insert au début de la ligne contenant l'ancre
+        const prevEol = txt.lastIndexOf(eol, idxStart - 1);
+        return prevEol === -1 ? 0 : prevEol + eol.length;
+      }
+
+      function undoLast(){
+        if (!history.length){
+          flash('Rien à annuler.');
+          return;
+        }
+        const last = history.pop();
+        sourceEl.value = last;
+        saveAll();
+        flash('Annulé (retour à l’état précédent).');
+      }
+
+      function applyRules(){
+        const rules = parseRules(mappingEl.value);
+        if (!rules.length){
+          flash('Aucune règle D/A/M détectée.');
+          return;
+        }
+
+        // Sauvegarde dans l'historique (Undo)
+        if (history.length >= HISTORY_LIMIT) history.shift();
+        history.push(sourceEl.value);
+
+        let txt = sourceEl.value;
+        const eol = detectEOL(txt);
+        const replaceAll = replaceAllEl.checked;
+
+        let countD = 0, countM = 0;
+        let countABlocks = 0, countALines = 0;
+        const warnings = [];
+
+        for (const r of rules){
+          if (r.type === 'D'){
+            const find = r.value ?? '';
+            if (!find) continue;
+            if (replaceAll){
+              const parts = txt.split(find);
+              const c = parts.length - 1;
+              if (c > 0){
+                txt = parts.join('');
+                countD += c;
+              }
+            } else {
+              const idx = txt.indexOf(find);
+              if (idx !== -1){
+                txt = txt.slice(0, idx) + txt.slice(idx + find.length);
+                countD += 1;
+              }
+            }
+          } else if (r.type === 'M'){
+            const find = r.find || '';
+            const repl = r.replace || '';
+            if (!find) continue;
+            if (replaceAll){
+              const parts = txt.split(find);
+              const c = parts.length - 1;
+              if (c > 0){
+                txt = parts.join(repl);
+                countM += c;
+              }
+            } else {
+              const idx = txt.indexOf(find);
+              if (idx !== -1){
+                txt = txt.slice(0, idx) + repl + txt.slice(idx + find.length);
+                countM += 1;
+              }
+            }
+          } else if (r.type === 'A'){
+            const content = r.value ?? '';
+            if (content === '') continue;
+
+            let insertAt = txt.length; // défaut: fin
+            let anchorFound = false;
+
+            if (r.afterText){
+              const idx = txt.indexOf(r.afterText);
+              if (idx !== -1){
+                insertAt = findLineBoundariesAfter(txt, idx + r.afterText.length, eol);
+                anchorFound = true;
+              }
+            } else if (r.beforeText){
+              const idx = txt.indexOf(r.beforeText);
+              if (idx !== -1){
+                insertAt = findLineBoundariesBefore(txt, idx, eol);
+                anchorFound = true;
+              }
+            }
+
+            if (!anchorFound && (r.afterText || r.beforeText)){
+              warnings.push('Ancre introuvable pour un ajout — insertion en fin de texte.');
+            }
+
+            // Insérer en respectant l'EOL
+            const contentNormalized = String(content).replace(/\r\n/g, '\n').split('\n').join(eol);
+            const linesInserted = contentNormalized.split(eol).length;
+            txt = txt.slice(0, insertAt) + contentNormalized + eol + txt.slice(insertAt);
+            countABlocks += 1;
+            countALines += linesInserted;
+          }
+        }
+
+        sourceEl.value = txt;
+        saveAll();
+
+        clearLog();
+        warnings.forEach(w=>logLine('⚠ ' + w));
+
+        const parts = [];
+        parts.push(`D: ${countD} suppression(s)`);
+        parts.push(`M: ${countM} remplacement(s)`);
+        parts.push(`A: ${countABlocks} bloc(s), ${countALines} ligne(s) insérées`);
+        flash('Fait — ' + parts.join(' • '));
+      }
+
+      flash('Prêt. Tapez vos règles, puis Entrée pour appliquer.');
+    })();
+  </script>
 </body>
 </html>
