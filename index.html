@@ -3,543 +3,268 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Éditeur — D/A/M (Entrée pour appliquer) • Auto-sauvegarde</title>
+  <title>Diff → Code</title>
   <style>
     :root{
-      --bg:#0f1115; --panel:#141822; --text:#e7eaf0; --muted:#aab2c0; --accent:#6aa4ff;
-      --ok:#2ecc71; --border:#283042; --warn:#f39c12;
+      --bg:#0f1226; --panel:#141735; --text:#eef1ff; --muted:#98a2ff;
+      --accent:#7c91ff; --ok:#00d28a; --err:#ff6b6b; --border:#242953;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font:14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial,
-      Noto Sans, Ubuntu, Cantarell, sans-serif; background:var(--bg); color:var(--text);
-      display:flex; flex-direction:column;
+    body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+         background:var(--bg); color:var(--text)}
+    header{padding:12px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px}
+    h1{margin:0; font-size:16px}
+    .dot{width:8px; height:8px; border-radius:50%; background:var(--ok); opacity:.8}
+    .wrap{display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:12px}
+    .panel{display:flex; flex-direction:column; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; min-height: 280px;}
+    .panel header{display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-bottom:1px solid var(--border)}
+    .panel h2{font-size:13px; margin:0}
+    textarea{
+      width:100%; height:300px; flex:1; background:transparent; color:var(--text);
+      border:0; padding:10px; resize:vertical; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      outline:none; tab-size:2; caret-color:var(--accent);
     }
-    header{
-      padding:14px 16px; border-bottom:1px solid var(--border); display:flex; gap:14px;
-      align-items:center; flex-wrap:wrap;
+    .controls{display:flex; gap:8px; padding:0 12px 12px; justify-content:flex-end}
+    button{
+      appearance:none; border:1px solid var(--border); background:#1a1f4a; color:#e8eaff;
+      padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px;
     }
-    header h1{font-size:16px; margin:0; font-weight:600}
-    header .hint{color:var(--muted)}
-    .grid{ flex:1; display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:12px; min-height:0; }
-    .pane{ background:var(--panel); border:1px solid var(--border); border-radius:10px; display:flex; min-height:0; }
-    .pane .head{
-      padding:10px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center;
-      justify-content:space-between; gap:8px;
-    }
-    .pane .title{font-weight:600}
-    .pane .controls{display:flex; align-items:center; gap:8px; color:var(--muted)}
-    .pane textarea{
-      width:100%; height:100%; flex:1; resize:none; border:0; background:transparent; color:var(--text);
-      font:13px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      padding:12px; outline:none; tab-size:2;
-    }
-    .row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-    button, .btn{
-      background:#1b2230; color:var(--text); border:1px solid var(--border); padding:8px 10px;
-      border-radius:8px; cursor:pointer; font-weight:600;
-    }
-    button:hover{border-color:#38507a}
-    label.inline{display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px}
-    input[type="checkbox"]{width:16px; height:16px}
-    .statusbar{
-      min-height:36px; display:flex; align-items:center; justify-content:space-between;
-      padding:0 12px; border-top:1px solid var(--border); color:var(--muted);
-    }
-    .statusbar .ok{color:var(--ok)}
-    .statusbar .accent{color:var(--accent)}
-    .statusbar .warn{color:var(--warn)}
-    .hint-sm{font-size:12px; color:var(--muted); padding:6px 12px 12px}
-    @media (max-width: 920px){ .grid{grid-template-columns:1fr} }
-    code.k{background:#101520; border:1px solid var(--border); padding:0 6px; border-radius:6px}
-    .log{ padding:6px 12px; font-size:12px; color:var(--muted); max-height:120px; overflow:auto; border-top:1px solid var(--border); }
+    button.primary{background:linear-gradient(135deg,#6f86ff,#8f6fff); border:0}
+    button:disabled{opacity:0.5; cursor:not-allowed}
+    .status{padding:8px 12px; font-size:12px; border-top:1px solid var(--border); color:var(--muted)}
+    .status.ok{color:var(--ok)}
+    .status.err{color:var(--err)}
+    .result{margin:0 12px 12px; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden}
+    .result header{padding:8px 10px; border-bottom:1px solid var(--border)}
+    .badge{background:#21265a; color:#cbd1ff; padding:2px 8px; border-radius:999px; font-size:11px}
   </style>
 </head>
 <body>
   <header>
-    <h1>Éditeur D/A/M — Entrée pour appliquer</h1>
-    <div class="hint">Entrée = appliquer • Shift+Entrée = nouvelle ligne • Auto-sauvegarde</div>
+    <div class="dot" title="Autosauvegarde active"></div>
+    <h1>Diff → Code</h1>
   </header>
 
-  <div class="grid">
-    <!-- Panneau gauche: HTML source -->
-    <section class="pane" aria-label="Texte HTML">
-      <div style="display:flex; flex-direction:column; width:100%; min-height:0;">
-        <div class="head">
-          <div class="title">Texte de gauche (HTML ou texte brut)</div>
-          <div class="controls row">
-            <button id="btnClearLeft" title="Vider le texte de gauche">Vider</button>
-          </div>
-        </div>
-        <textarea id="source" placeholder="Collez ici votre HTML / texte."></textarea>
-      </div>
+  <div class="wrap">
+    <section class="panel">
+      <header><h2>Code</h2><span class="badge">Entrée</span></header>
+      <textarea id="code" placeholder="Collez votre code…"></textarea>
     </section>
 
-    <!-- Panneau droit: règles D/A/M -->
-    <section class="pane" aria-label="Règles D/A/M">
-      <div style="display:flex; flex-direction:column; width:100%; min-height:0;">
-        <div class="head">
-          <div class="title">Règles (D = supprimer • A = ajouter • M = modifier)</div>
-          <div class="controls row">
-            <label class="inline" title="Si coché: appliquer à toutes les occurrences (D et M)">
-              <input type="checkbox" id="replaceAll" checked />
-              <span>Tout remplacer/supprimer</span>
-            </label>
-            <button id="btnApply" title="Appliquer (Entrée)">Appliquer</button>
-            <button id="btnUndo" title="Annuler la dernière application (Ctrl+Z)">↩️ Retour</button>
-            <button id="btnClearRight" title="Vider les règles">Vider règles</button>
-          </div>
-        </div>
-
-        <textarea id="mapping" placeholder="FORMAT STRICT (accepte les chaînes multi-lignes entre quotes):
-1) SUPPRESSION
-D: &quot;code exact à supprimer (peut être multi-ligne)&quot;
-
-2) AJOUT
-A: &quot;nouveau code (multi-ligne autorisé)&quot;
-Après: &quot;ancre exacte existante dans le code (peut être multi-ligne)&quot;
-OU
-A: &quot;nouveau code (multi-ligne autorisé)&quot;
-Avant: &quot;ancre exacte existante dans le code (peut être multi-ligne)&quot;
-
-3) MODIFICATION
-M: &quot;code actuel à remplacer (multi-ligne autorisé)&quot;
-&quot;nouveau code qui le remplace (multi-ligne autorisé)&quot;
-
-Règles:
-• Les guillemets '...' ou &quot;...&quot; sont obligatoires autour du code/texte.
-• Les correspondances sont littérales: ESPACES, TAB, RETOURS LIGNE doivent correspondre exactement.
-• A (Ajout) n'est pas affecté par l'option « Tout remplacer/supprimer ».
-• Si l’ancre de A n’est pas trouvée: insertion en fin de texte (avec alerte).
-• Si l’ancre apparaît plusieurs fois: la première occurrence est utilisée.
-• Vous pouvez mettre des commentaires/libres: toute ligne ne commençant pas par D:, A:, M:, Avant:, Après: est ignorée.
-
-Exemples:
-D: &quot;let volumeSeries = null;&quot;
-
-A: &quot;&lt;button class='action-btn' id='reset'&gt;🗑️ Reset&lt;/button&gt;&quot;
-Après: &quot;&lt;button class='action-btn' id='refresh'&gt;🔄 Actualiser&lt;/button&gt;&quot;
-
-M: &quot;📊 BTC/EUR Trading Chart&quot;
-&quot;📊 BTC/USD Trading Chart&quot;"></textarea>
-
-        <div class="hint-sm">
-          Notes:
-          <br>— Les opérations s’appliquent dans l’ordre d’écriture.
-          <br>— « Tout remplacer/supprimer » impacte D et M uniquement (A n’est pas concerné).
-          <br>— Les séquences \n, \t, \r et les guillemets échappés (\", ') sont prises en charge.
-        </div>
-        <div id="log" class="log" aria-live="polite"></div>
-      </div>
+    <section class="panel">
+      <header><h2>Diff</h2><span class="badge">+/-</span></header>
+      <textarea id="diff" placeholder="Collez un diff unifié (git)…"></textarea>
     </section>
   </div>
 
-  <div class="statusbar">
-    <div id="status">Prêt. Tapez vos règles, puis Entrée pour appliquer.</div>
-    <div><span>Auto-sauvegarde: </span><span id="saved" class="ok">✓</span></div>
+  <div class="controls">
+    <button id="example" type="button">Exemple</button>
+    <button id="apply" class="primary" type="button">Appliquer + Copier</button>
   </div>
 
-  <script>
-    (function(){
-      const LS = {
-        source: 'fr.dam.html.source.v3',
-        mapping: 'fr.dam.html.mapping.v3',
-        replaceAll: 'fr.dam.html.replaceAll.v3',
-      };
+  <section class="result">
+    <header><strong>Résultat</strong></header>
+    <textarea id="result" placeholder="Code modifié…" readonly></textarea>
+    <div id="status" class="status">Prêt</div>
+  </section>
 
-      const $ = (sel)=>document.querySelector(sel);
-      const sourceEl = $('#source');
-      const mappingEl = $('#mapping');
-      const replaceAllEl = $('#replaceAll');
-      const statusEl = $('#status');
-      const savedEl = $('#saved');
-      const btnApply = $('#btnApply');
-      const btnUndo = $('#btnUndo');
-      const btnClearLeft = $('#btnClearLeft');
-      const btnClearRight = $('#btnClearRight');
-      const logEl = $('#log');
+  <script type="module">
+    import { applyPatch } from 'https://esm.sh/diff@5?bundle';
 
-      // Undo stack (dernier état avant Apply)
-      const history = [];
-      const HISTORY_LIMIT = 30;
+    const codeEl = document.getElementById('code');
+    const diffEl = document.getElementById('diff');
+    const outEl  = document.getElementById('result');
+    const statusEl = document.getElementById('status');
+    const applyBtn = document.getElementById('apply');
+    const exampleBtn = document.getElementById('example');
 
-      // Restore
+    const LS_STATE = 'diff-lite:v1:state';
+    const LS_HISTORY = 'diff-lite:v1:history';
+    const MAX_HISTORY = 20;
+
+    const now = () => new Date().toISOString();
+
+    function setStatus(msg, kind='') {
+      statusEl.className = 'status ' + (kind || '');
+      statusEl.textContent = msg;
+    }
+
+    function cleanupPatch(raw) {
+      if (!raw) return '';
+      let s = raw.trim();
+      if (s.startsWith('```')) {
+        s = s.replace(/^```(?:diff|patch)?\s*/i, '');
+        s = s.replace(/\s*```$/i, '');
+      }
+      return s;
+    }
+
+    function saveState(extra={}) {
       try {
-        const s = localStorage.getItem(LS.source);
-        if (s !== null) sourceEl.value = s;
-        const m = localStorage.getItem(LS.mapping);
-        if (m !== null) mappingEl.value = m;
-        const ra = localStorage.getItem(LS.replaceAll);
-        if (ra !== null) replaceAllEl.checked = ra === '1';
-      } catch(e){
-        console.warn('LocalStorage restore error', e);
-      }
-
-      // Debounce
-      function debounce(fn, ms){
-        let t;
-        return (...args)=>{
-          clearTimeout(t);
-          t = setTimeout(()=>fn(...args), ms);
+        const state = {
+          code: codeEl.value ?? '',
+          diff: diffEl.value ?? '',
+          result: outEl.value ?? '',
+          ts: Date.now(),
+          ...extra
         };
+        localStorage.setItem(LS_STATE, JSON.stringify(state));
+        return state;
+      } catch (e) {
+        console.warn('Save error:', e);
       }
+    }
 
-      function saveAll(){
-        try {
-          localStorage.setItem(LS.source, sourceEl.value);
-          localStorage.setItem(LS.mapping, mappingEl.value);
-          localStorage.setItem(LS.replaceAll, replaceAllEl.checked ? '1' : '0');
-          savedEl.textContent = '✓';
-          savedEl.className = 'ok';
-        } catch(e){
-          savedEl.textContent = '⚠';
-          savedEl.className = 'warn';
-          console.warn('LocalStorage save error', e);
-        }
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(LS_STATE);
+        if (!raw) return false;
+        const s = JSON.parse(raw);
+        codeEl.value = s.code ?? '';
+        diffEl.value = s.diff ?? '';
+        outEl.value  = s.result ?? '';
+        setStatus('Rechargé', 'ok');
+        return true;
+      } catch (e) {
+        console.warn('Load error:', e);
+        return false;
       }
-      const saveAllDebounced = debounce(saveAll, 200);
+    }
 
-      sourceEl.addEventListener('input', saveAllDebounced);
-      mappingEl.addEventListener('input', saveAllDebounced);
-      replaceAllEl.addEventListener('change', saveAll);
-
-      // Entrée (appliquer) vs Shift+Entrée (newline)
-      mappingEl.addEventListener('keydown', (e)=>{
-        if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey){
-          e.preventDefault();
-          applyRules();
-        }
-      });
-      btnApply.addEventListener('click', applyRules);
-
-      btnUndo.addEventListener('click', undoLast);
-      // Ctrl/Cmd+Z global (n'interfère pas avec les textareas)
-      document.addEventListener('keydown', (e)=>{
-        const isCtrlZ = (e.key.toLowerCase() === 'z' && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey);
-        const active = document.activeElement;
-        const isTextarea = active && active.tagName === 'TEXTAREA';
-        if (isCtrlZ && !isTextarea){
-          e.preventDefault();
-          undoLast();
-        }
-      });
-
-      btnClearLeft.addEventListener('click', ()=>{
-        if (sourceEl.value && !confirm('Vider le texte de gauche ?')) return;
-        sourceEl.value = '';
-        saveAll();
-        flash('Texte de gauche vidé.');
-      });
-      btnClearRight.addEventListener('click', ()=>{
-        if (mappingEl.value && !confirm('Vider les règles ?')) return;
-        mappingEl.value = '';
-        saveAll();
-        flash('Règles vidées.');
-      });
-
-      function flash(msg){ statusEl.textContent = msg; }
-      function logLine(s){ logEl.textContent += (logEl.textContent ? '\n' : '') + s; logEl.scrollTop = logEl.scrollHeight; }
-      function clearLog(){ logEl.textContent = ''; }
-
-      function detectEOL(s){ return /\r\n/.test(s) ? '\r\n' : '\n'; }
-
-      function decodeEscapes(s){
-        return String(s || '')
-          .replace(/\\n/g, '\n')
-          .replace(/\\r/g, '\r')
-          .replace(/\\t/g, '\t')
-          .replace(/\\"/g, '"')
-          .replace(/\\'/g, "'");
-      }
-
-      // Lecture d'une chaîne entre quotes, potentiellement multi-ligne.
-      // Retourne { value, endLineIndex, endOffset, consumedLines }
-      function readQuoted(lines, startLineIndex, startOffset){
-        let line = lines[startLineIndex];
-        if (line == null) return null;
-
-        // sauter espaces
-        let i = startOffset | 0;
-        while (i < line.length && /\s/.test(line[i])) i++;
-        const ch = line[i];
-        if (ch !== '"' && ch !== "'"){
-          // Non quoted: lire le reste de la ligne (fallback)
-          const rest = line.slice(i).trim();
-          return { value: decodeEscapes(rest), endLineIndex: startLineIndex, endOffset: line.length, consumedLines: 1 };
-        }
-
-        const quote = ch;
-        let val = '';
-        let escaped = false;
-        let li = startLineIndex;
-        let pos = i + 1;
-
-        for (; li < lines.length; li++){
-          const cur = lines[li];
-          for (let j = pos; j < cur.length; j++){
-            const c = cur[j];
-            if (escaped){
-              val += c;
-              escaped = false;
-            } else if (c === '\\'){
-              escaped = true;
-            } else if (c === quote){
-              // fin de la chaîne
-              return {
-                value: decodeEscapes(val),
-                endLineIndex: li,
-                endOffset: j + 1,
-                consumedLines: li - startLineIndex + 1
-              };
-            } else {
-              val += c;
-            }
-          }
-          // fin de ligne sans fermeture: ajouter un \n
-          val += '\n';
-          pos = 0;
-        }
-        // pas de fermeture -> prend tout
-        return {
-          value: decodeEscapes(val),
-          endLineIndex: lines.length - 1,
-          endOffset: (lines[lines.length - 1] || '').length,
-          consumedLines: lines.length - startLineIndex
+    function backupSnapshot(reason='auto') {
+      try {
+        const snap = {
+          code: codeEl.value ?? '',
+          diff: diffEl.value ?? '',
+          result: outEl.value ?? '',
+          at: now(),
+          reason
         };
+        const list = JSON.parse(localStorage.getItem(LS_HISTORY) || '[]');
+        list.push(snap);
+        while (list.length > MAX_HISTORY) list.shift();
+        localStorage.setItem(LS_HISTORY, JSON.stringify(list));
+      } catch (e) {
+        console.warn('Backup error:', e);
       }
+    }
 
-      function parseRules(text){
-        const lines = String(text || '').replace(/\r\n/g, '\n').split('\n');
-        const rules = [];
-        let i = 0;
+    let saveTimer = null;
+    function scheduleSave(reason='typing') {
+      if (saveTimer) clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        saveState({ reason });
+        // backup léger (toutes les 5s max)
+      }, 400);
+    }
 
-        function peek(idx){ return (lines[idx] || '').trim(); }
+    // Throttle backups à ~5s pour éviter d’inonder
+    let lastBackup = 0;
+    function maybeBackup(reason='typing') {
+      const t = Date.now();
+      if (t - lastBackup > 5000) {
+        lastBackup = t;
+        backupSnapshot(reason);
+      }
+    }
 
-        while (i < lines.length){
-          const raw = lines[i];
-          const line = raw.trim();
-          if (!line || line.startsWith('#')){ i++; continue; }
-
-          // D:
-          let m = line.match(/^D\s*:\s*(.*)$/i);
-          if (m){
-            const rq = readQuoted(lines, i, raw.indexOf(m[1]));
-            if (rq && rq.value !== undefined){
-              rules.push({ type:'D', value: rq.value });
-              i = rq.endLineIndex + 1;
-              continue;
-            } else { i++; continue; }
-          }
-
-          // M:
-          m = line.match(/^M\s*:\s*(.*)$/i);
-          if (m){
-            const rFind = readQuoted(lines, i, raw.indexOf(m[1]));
-            let replaceVal = '';
-            let endIndex = rFind ? rFind.endLineIndex : i;
-
-            // Cherche ligne suivante valable comme remplaçant
-            let j = (rFind ? rFind.endLineIndex : i) + 1;
-            while (j < lines.length){
-              const nextRaw = lines[j];
-              const next = nextRaw.trim();
-              if (!next){ j++; continue; }
-              // Stop si c'est le début d'une nouvelle règle
-              if (/^(D|A|M)\s*:/i.test(next) || /^Avant\s*:/i.test(next) || /^Apr(?:e|è)s\s*:/i.test(next)) break;
-              const rRep = readQuoted(lines, j, nextRaw.indexOf(next));
-              if (rRep){
-                replaceVal = rRep.value ?? '';
-                endIndex = rRep.endLineIndex;
-              }
-              j = endIndex + 1;
-              break;
-            }
-
-            rules.push({
-              type:'M',
-              find: rFind ? rFind.value || '' : '',
-              replace: replaceVal
-            });
-            i = endIndex + 1;
-            continue;
-          }
-
-          // A:
-          m = line.match(/^A\s*:\s*(.*)$/i);
-          if (m){
-            const rContent = readQuoted(lines, i, raw.indexOf(m[1]));
-            let afterText = null, beforeText = null;
-            let endIndex = rContent ? rContent.endLineIndex : i;
-
-            let j = endIndex + 1;
-            while (j < lines.length){
-              const nextRaw = lines[j];
-              const next = nextRaw.trim();
-              if (!next){ j++; continue; }
-
-              let ma = next.match(/^Apr(?:e|è)s\s*:\s*(.*)$/i);
-              if (ma){
-                const rA = readQuoted(lines, j, nextRaw.indexOf(ma[1]));
-                if (rA && rA.value) afterText = rA.value;
-                endIndex = rA ? rA.endLineIndex : j;
-                j = endIndex + 1;
-                continue;
-              }
-              let mb = next.match(/^Avant\s*:\s*(.*)$/i);
-              if (mb){
-                const rB = readQuoted(lines, j, nextRaw.indexOf(mb[1]));
-                if (rB && rB.value) beforeText = rB.value;
-                endIndex = rB ? rB.endLineIndex : j;
-                j = endIndex + 1;
-                continue;
-              }
-              // autre chose => stop
-              break;
-            }
-            rules.push({
-              type:'A',
-              value: rContent ? rContent.value ?? '' : '',
-              afterText,
-              beforeText
-            });
-            i = endIndex + 1;
-            continue;
-          }
-
-          // Lignes libres ignorées
-          i++;
+    async function copyToClipboard(text) {
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          outEl.removeAttribute('readonly');
+          outEl.focus();
+          outEl.select();
+          document.execCommand('copy');
+          outEl.setAttribute('readonly', 'readonly');
         }
+        return true;
+      } catch (e) {
+        console.warn('Clipboard error:', e);
+        return false;
+      }
+    }
 
-        return rules;
+    async function applyDiff() {
+      const original = codeEl.value ?? '';
+      let patch = cleanupPatch(diffEl.value ?? '');
+
+      if (!original.trim()) {
+        setStatus('Code manquant', 'err'); codeEl.focus(); return;
+      }
+      if (!patch.trim()) {
+        setStatus('Diff manquant', 'err'); diffEl.focus(); return;
       }
 
-      function findLineBoundariesAfter(txt, idxEnd, eol){
-        // insert après la fin de la ligne contenant l'ancre
-        const nextEol = txt.indexOf(eol, idxEnd);
-        return nextEol === -1 ? txt.length : nextEol + eol.length;
-      }
-      function findLineBoundariesBefore(txt, idxStart, eol){
-        // insert au début de la ligne contenant l'ancre
-        const prevEol = txt.lastIndexOf(eol, idxStart - 1);
-        return prevEol === -1 ? 0 : prevEol + eol.length;
-      }
-
-      function undoLast(){
-        if (!history.length){
-          flash('Rien à annuler.');
-          return;
+      try {
+        const patched = applyPatch(original, patch);
+        if (patched === false || typeof patched !== 'string') {
+          setStatus('Diff invalide', 'err'); return;
         }
-        const last = history.pop();
-        sourceEl.value = last;
-        saveAll();
-        flash('Annulé (retour à l’état précédent).');
+        outEl.value = patched;
+
+        // Sauvegarde + backup
+        saveState({ reason: 'apply' });
+        backupSnapshot('apply');
+
+        const ok = await copyToClipboard(patched);
+        setStatus(ok ? 'Copié ✓' : 'Appliqué (copie refusée)', ok ? 'ok' : 'err');
+      } catch (err) {
+        console.error(err);
+        setStatus('Erreur patch', 'err');
       }
+    }
 
-      function applyRules(){
-        const rules = parseRules(mappingEl.value);
-        if (!rules.length){
-          flash('Aucune règle D/A/M détectée.');
-          return;
-        }
+    // Listeners
+    applyBtn.addEventListener('click', applyDiff);
 
-        // Sauvegarde dans l'historique (Undo)
-        if (history.length >= HISTORY_LIMIT) history.shift();
-        history.push(sourceEl.value);
-
-        let txt = sourceEl.value;
-        const eol = detectEOL(txt);
-        const replaceAll = replaceAllEl.checked;
-
-        let countD = 0, countM = 0;
-        let countABlocks = 0, countALines = 0;
-        const warnings = [];
-
-        for (const r of rules){
-          if (r.type === 'D'){
-            const find = r.value ?? '';
-            if (!find) continue;
-            if (replaceAll){
-              const parts = txt.split(find);
-              const c = parts.length - 1;
-              if (c > 0){
-                txt = parts.join('');
-                countD += c;
-              }
-            } else {
-              const idx = txt.indexOf(find);
-              if (idx !== -1){
-                txt = txt.slice(0, idx) + txt.slice(idx + find.length);
-                countD += 1;
-              }
-            }
-          } else if (r.type === 'M'){
-            const find = r.find || '';
-            const repl = r.replace || '';
-            if (!find) continue;
-            if (replaceAll){
-              const parts = txt.split(find);
-              const c = parts.length - 1;
-              if (c > 0){
-                txt = parts.join(repl);
-                countM += c;
-              }
-            } else {
-              const idx = txt.indexOf(find);
-              if (idx !== -1){
-                txt = txt.slice(0, idx) + repl + txt.slice(idx + find.length);
-                countM += 1;
-              }
-            }
-          } else if (r.type === 'A'){
-            const content = r.value ?? '';
-            if (content === '') continue;
-
-            let insertAt = txt.length; // défaut: fin
-            let anchorFound = false;
-
-            if (r.afterText){
-              const idx = txt.indexOf(r.afterText);
-              if (idx !== -1){
-                insertAt = findLineBoundariesAfter(txt, idx + r.afterText.length, eol);
-                anchorFound = true;
-              }
-            } else if (r.beforeText){
-              const idx = txt.indexOf(r.beforeText);
-              if (idx !== -1){
-                insertAt = findLineBoundariesBefore(txt, idx, eol);
-                anchorFound = true;
-              }
-            }
-
-            if (!anchorFound && (r.afterText || r.beforeText)){
-              warnings.push('Ancre introuvable pour un ajout — insertion en fin de texte.');
-            }
-
-            // Insérer en respectant l'EOL
-            const contentNormalized = String(content).replace(/\r\n/g, '\n').split('\n').join(eol);
-            const linesInserted = contentNormalized.split(eol).length;
-            txt = txt.slice(0, insertAt) + contentNormalized + eol + txt.slice(insertAt);
-            countABlocks += 1;
-            countALines += linesInserted;
-          }
-        }
-
-        sourceEl.value = txt;
-        saveAll();
-
-        clearLog();
-        warnings.forEach(w=>logLine('⚠ ' + w));
-
-        const parts = [];
-        parts.push(`D: ${countD} suppression(s)`);
-        parts.push(`M: ${countM} remplacement(s)`);
-        parts.push(`A: ${countABlocks} bloc(s), ${countALines} ligne(s) insérées`);
-        flash('Fait — ' + parts.join(' • '));
+    document.addEventListener('keydown', (e) => {
+      const isEnterCombo = (e.key === 'Enter' && (e.ctrlKey || e.metaKey));
+      if (isEnterCombo) {
+        e.preventDefault();
+        applyDiff();
       }
+    });
 
-      flash('Prêt. Tapez vos règles, puis Entrée pour appliquer.');
-    })();
+    codeEl.addEventListener('input', () => { scheduleSave('typing-code'); maybeBackup('typing-code'); });
+    diffEl.addEventListener('input', () => { scheduleSave('typing-diff'); maybeBackup('typing-diff'); });
+
+    exampleBtn.addEventListener('click', () => {
+      const sampleCode =
+`function greet(name) {
+  return "Hello, " + name + "!";
+}
+`;
+      const samplePatch =
+`--- a/file.js
++++ b/file.js
+@@ -1,3 +1,3 @@
+-function greet(name) {
+-  return "Hello, " + name + "!";
+-}
++function greet(name = "le monde") {
++  return "Bonjour, " + name + "!";
++}
+`;
+      codeEl.value = sampleCode;
+      diffEl.value = samplePatch;
+      outEl.value = '';
+      setStatus('Exemple', 'ok');
+      saveState({ reason: 'example' });
+      backupSnapshot('example');
+    });
+
+    // Sauvegarde à la fermeture
+    window.addEventListener('beforeunload', () => {
+      saveState({ reason: 'unload' });
+      backupSnapshot('unload');
+    });
+
+    // Chargement initial
+    const hadState = loadState();
+    if (!hadState) setStatus('Prêt');
+
   </script>
 </body>
 </html>
