@@ -89,7 +89,7 @@
   <div class="controls">
     <button id="example" type="button">Exemple</button>
     <button id="undo" type="button" disabled>↶ Retour (Ctrl+Z)</button>
-    <button id="execute" type="button">▶ Exécuter le résultat</button>
+    <button id="execute" type="button">▶ Exécuter le code</button>
     <button id="apply" class="primary" type="button">Appliquer + Copier</button>
   </div>
 
@@ -349,10 +349,11 @@
     }
 
     function executeCode() {
-      const code = outEl.value?.trim();
+      const code = codeEl.value?.trim();
       
       if (!code) {
-        setStatus('Aucun résultat à exécuter', 'err');
+        setStatus('Aucun code à exécuter', 'err');
+        codeEl.focus();
         return;
       }
 
@@ -429,7 +430,7 @@
         iframeDoc.open();
         iframeDoc.write(code);
         iframeDoc.close();
-        
+        setStatus('Code HTML exécuté ✓', 'ok');
         setStatus('HTML exécuté et rendu ✓', 'ok');
       } catch (err) {
         console.error(err);
