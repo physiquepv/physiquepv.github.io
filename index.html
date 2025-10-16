@@ -104,8 +104,10 @@
       <strong>Prévisualisation / Exécution</strong>
       <button id="clear-preview" type="button" style="padding:4px 8px;font-size:11px">✕ Fermer</button>
     </header>
-    <div style="padding:12px; max-height:400px; overflow:auto">
+    <div id="preview-container" style="padding:12px; max-height:400px; overflow:auto">
       <pre id="preview" style="margin:0;color:var(--text);font-size:13px;line-height:1.6;white-space:pre-wrap"></pre>
+      <iframe id="preview-iframe" style="display:none; width:100%; min-height:400px; border:1px solid var(--border); 
+        border-radius:6px; background:white"></iframe>
     </div>
   </section>
 
@@ -125,10 +127,12 @@
     const executeBtn = document.getElementById('execute');
     const previewSection = document.getElementById('preview-section');
     const previewEl = document.getElementById('preview');
+    const previewIframe = document.getElementById('preview-iframe');
     const exampleBtn = document.getElementById('example');
 
     const LS_STATE = 'diff-lite:v1:state';
     const LS_UNDO_STACK = 'diff-lite:v1:undoStack';
+    const LS_HISTORY = 'diff-lite:v1:history';
     const MAX_UNDO = 50;
     const MAX_HISTORY = 20;
 
@@ -249,7 +253,7 @@
           at: now(),
           reason
         };
-        const list = [];  // Optionnel : garder l'ancien système ou le supprimer
+        const list = [];
         list.push(snap);
         while (list.length > MAX_HISTORY) list.shift();
         localStorage.setItem(LS_HISTORY, JSON.stringify(list));
@@ -263,11 +267,10 @@
       if (saveTimer) clearTimeout(saveTimer);
       saveTimer = setTimeout(() => {
         saveState({ reason });
-        // backup léger (toutes les 5s max)
       }, 400);
     }
 
-    // Throttle backups à ~5s pour éviter d’inonder
+    // Throttle backups à ~5s pour éviter d'inonder
     let lastBackup = 0;
     function maybeBackup(reason='typing') {
       const t = Date.now();
@@ -316,7 +319,7 @@
         }
         outEl.value = patched;
 
-        // **NOUVEAU : Remplacer le code original par le code modifié**
+        // **Remplacer le code original par le code modifié**
         codeEl.value = patched;
 
         // Sauvegarde + backup
@@ -331,6 +334,20 @@
       }
     }
 
+    function detectCodeType(code) {
+      const trimmed = code.trim().toLowerCase();
+      
+      // Détection HTML
+      if (trimmed.includes('<!doctype') || trimmed.includes('<html') || 
+          trimmed.includes('<body') || trimmed.includes('<head') ||
+          (trimmed.includes('<') && trimmed.includes('>'))) {
+        return 'html';
+      }
+      
+      // Sinon JavaScript
+      return 'javascript';
+    }
+
     function executeCode() {
       const code = outEl.value?.trim();
       
@@ -339,17 +356,28 @@
         return;
       }
 
+      const codeType = detectCodeType(code);
+      
       previewSection.style.display = 'block';
-      previewEl.textContent = '⏳ Exécution...\n';
 
-      // Petit délai pour l'affichage
+      if (codeType === 'html') {
+        executeHTML(code);
+      } else {
+        executeJavaScript(code);
+      }
+    }
+
+    function executeJavaScript(code) {
+      previewEl.style.display = 'block';
+      previewIframe.style.display = 'none';
+      previewEl.textContent = '⏳ Exécution JavaScript...\n';
+
       setTimeout(() => {
         const logs = [];
         const originalLog = console.log;
         const originalError = console.error;
         const originalWarn = console.warn;
 
-        // Intercepter console.log
         console.log = (...args) => {
           logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
           originalLog(...args);
@@ -369,9 +397,49 @@
             logs.push('→ ' + (typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)));
           }
           previewEl.textContent = logs.length > 0 ? logs.join('\n') : '✓ Exécution réussie (aucune sortie)';
-          setStatus('Code exécuté ✓', 'ok');
+          setStatus('Code JavaScript exécuté ✓', 'ok');
         } catch (err) {
           logs.push('\n❌ ERREUR:\n' + err.toString());
+          if (err.stack) logs.push('\n' + err.stack);
+          previewEl.textContent = logs.join('\n');
+          setStatus('Erreur d\'exécution JavaScript', 'err');
+        } finally {
+          console.log = originalLog;
+          console.error = originalError;
+          console.warn = originalWarn;
+        }
+      }, 50);
+    }
+
+    function executeHTML(code) {
+      previewEl.style.display = 'none';
+      previewIframe.style.display = 'block';
+      
+      try {
+        // Créer un nouveau iframe à chaque exécution pour éviter les conflits
+        const newIframe = previewIframe.cloneNode(false);
+        previewIframe.parentNode.replaceChild(newIframe, previewIframe);
+        
+        // Mettre à jour la référence
+        const iframe = document.getElementById('preview-iframe');
+        iframe.style.display = 'block';
+        
+        // Injecter le code HTML dans l'iframe
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(code);
+        iframeDoc.close();
+        
+        setStatus('HTML exécuté et rendu ✓', 'ok');
+      } catch (err) {
+        console.error(err);
+        previewEl.style.display = 'block';
+        previewIframe.style.display = 'none';
+        previewEl.textContent = '❌ Erreur lors du rendu HTML:\n' + err.toString();
+        setStatus('Erreur de rendu HTML', 'err');
+      }
+    }
+
     // === Theme ===
     function loadTheme() {
       try {
@@ -400,27 +468,28 @@
       applyTheme(isLight ? 'dark' : 'light');
     }
 
-    function clearCode() { pushUndo(); codeEl.value = ''; scheduleSave('clear-code'); setStatus('Code effacé', 'ok'); }
-    function clearDiff() { pushUndo(); diffEl.value = ''; scheduleSave('clear-diff'); setStatus('Diff effacé', 'ok'); }
-
-          if (err.stack) logs.push('\n' + err.stack);
-          previewEl.textContent = logs.join('\n');
-          setStatus('Erreur d\'exécution', 'err');
-        } finally {
-    themeToggle.addEventListener('click', toggleTheme);
-    clearCodeBtn.addEventListener('click', clearCode);
-    clearDiffBtn.addEventListener('click', clearDiff);
-          console.log = originalLog;
-          console.error = originalError;
-          console.warn = originalWarn;
-        }
-      }, 50);
+    // === Clear functions ===
+    function clearCode() { 
+      pushUndo(); 
+      codeEl.value = ''; 
+      scheduleSave('clear-code'); 
+      setStatus('Code effacé', 'ok'); 
+    }
+    
+    function clearDiff() { 
+      pushUndo(); 
+      diffEl.value = ''; 
+      scheduleSave('clear-diff'); 
+      setStatus('Diff effacé', 'ok'); 
     }
 
-    // Listeners
+    // === Event Listeners ===
     applyBtn.addEventListener('click', applyDiff);
     undoBtn.addEventListener('click', performUndo);
     executeBtn.addEventListener('click', executeCode);
+    themeToggle.addEventListener('click', toggleTheme);
+    clearCodeBtn.addEventListener('click', clearCode);
+    clearDiffBtn.addEventListener('click', clearDiff);
 
     document.getElementById('clear-preview').addEventListener('click', () => {
       previewSection.style.display = 'none';
@@ -476,7 +545,6 @@
       setStatus('Exemple', 'ok');
       pushUndo();
       saveState({ reason: 'example' });
-    loadTheme();
       backupSnapshot('example');
     });
 
@@ -487,6 +555,7 @@
     });
 
     // Chargement initial
+    loadTheme();
     const hadState = loadState();
     if (!hadState) setStatus('Prêt');
     loadUndoStack();
