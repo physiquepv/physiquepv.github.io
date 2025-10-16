@@ -59,6 +59,7 @@
 
   <div class="controls">
     <button id="example" type="button">Exemple</button>
+    <button id="undo" type="button" disabled>↶ Retour (Ctrl+Z)</button>
     <button id="apply" class="primary" type="button">Appliquer + Copier</button>
   </div>
 
@@ -76,10 +77,12 @@
     const outEl  = document.getElementById('result');
     const statusEl = document.getElementById('status');
     const applyBtn = document.getElementById('apply');
+    const undoBtn = document.getElementById('undo');
     const exampleBtn = document.getElementById('example');
 
     const LS_STATE = 'diff-lite:v1:state';
-    const LS_HISTORY = 'diff-lite:v1:history';
+    const LS_UNDO_STACK = 'diff-lite:v1:undoStack';
+    const MAX_UNDO = 50;
     const MAX_HISTORY = 20;
 
     const now = () => new Date().toISOString();
@@ -99,6 +102,45 @@
       return s;
     }
 
+    // === UNDO Stack ===
+    let undoStack = [];
+
+    function loadUndoStack() {
+      try {
+        const raw = localStorage.getItem(LS_UNDO_STACK);
+        undoStack = raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        undoStack = [];
+      }
+      updateUndoButton();
+    }
+
+    function saveUndoStack() {
+      try {
+        localStorage.setItem(LS_UNDO_STACK, JSON.stringify(undoStack));
+      } catch (e) {
+        console.warn('Undo stack save error:', e);
+      }
+    }
+
+    function pushUndo() {
+      const snapshot = {
+        code: codeEl.value ?? '',
+        diff: diffEl.value ?? '',
+        result: outEl.value ?? '',
+        ts: Date.now()
+      };
+      undoStack.push(snapshot);
+      while (undoStack.length > MAX_UNDO) undoStack.shift();
+      saveUndoStack();
+      updateUndoButton();
+    }
+
+    function updateUndoButton() {
+      undoBtn.disabled = undoStack.length === 0;
+    }
+
+    // === State persistence ===
     function saveState(extra={}) {
       try {
         const state = {
@@ -131,6 +173,26 @@
       }
     }
 
+    function performUndo() {
+      if (undoStack.length === 0) {
+        setStatus('Aucun historique', 'err');
+        return;
+      }
+      
+      const snapshot = undoStack.pop();
+      codeEl.value = snapshot.code ?? '';
+      diffEl.value = snapshot.diff ?? '';
+      outEl.value = snapshot.result ?? '';
+      
+      saveState({ reason: 'undo' });
+      saveUndoStack();
+      updateUndoButton();
+      
+      const count = undoStack.length;
+      setStatus(`Annulé (${count} dans l'historique)`, 'ok');
+    }
+
+    // === Backup system ===
     function backupSnapshot(reason='auto') {
       try {
         const snap = {
@@ -140,7 +202,7 @@
           at: now(),
           reason
         };
-        const list = JSON.parse(localStorage.getItem(LS_HISTORY) || '[]');
+        const list = [];  // Optionnel : garder l'ancien système ou le supprimer
         list.push(snap);
         while (list.length > MAX_HISTORY) list.shift();
         localStorage.setItem(LS_HISTORY, JSON.stringify(list));
@@ -190,6 +252,9 @@
       const original = codeEl.value ?? '';
       let patch = cleanupPatch(diffEl.value ?? '');
 
+      // Sauvegarder l'état actuel avant d'appliquer
+      pushUndo();
+
       if (!original.trim()) {
         setStatus('Code manquant', 'err'); codeEl.focus(); return;
       }
@@ -218,9 +283,18 @@
 
     // Listeners
     applyBtn.addEventListener('click', applyDiff);
+    undoBtn.addEventListener('click', performUndo);
 
     document.addEventListener('keydown', (e) => {
       const isEnterCombo = (e.key === 'Enter' && (e.ctrlKey || e.metaKey));
+      const isUndo = (e.key === 'z' || e.key === 'Z') && (e.ctrlKey || e.metaKey) && !e.shiftKey;
+      
+      if (isUndo) {
+        e.preventDefault();
+        performUndo();
+        return;
+      }
+      
       if (isEnterCombo) {
         e.preventDefault();
         applyDiff();
@@ -251,6 +325,7 @@
       diffEl.value = samplePatch;
       outEl.value = '';
       setStatus('Exemple', 'ok');
+      pushUndo();
       saveState({ reason: 'example' });
       backupSnapshot('example');
     });
@@ -264,6 +339,7 @@
     // Chargement initial
     const hadState = loadState();
     if (!hadState) setStatus('Prêt');
+    loadUndoStack();
 
   </script>
 </body>
