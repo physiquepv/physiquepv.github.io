@@ -9,6 +9,12 @@
       --bg:#0f1226; --panel:#141735; --text:#eef1ff; --muted:#98a2ff;
       --accent:#7c91ff; --ok:#00d28a; --err:#ff6b6b; --border:#242953;
     }
+    body.light{
+      --bg:#f5f7fa; --panel:#ffffff; --text:#1a1f36; --muted:#6b7280;
+      --accent:#5b6fff; --ok:#059669; --err:#dc2626; --border:#e5e7eb;
+    }
+    body.light button{background:#f3f4f6; color:#1f2937}
+    body.light button.primary{background:linear-gradient(135deg,#5b6fff,#7c3aed)}
     *{box-sizing:border-box}
     body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
          background:var(--bg); color:var(--text)}
@@ -17,6 +23,16 @@
     .dot{width:8px; height:8px; border-radius:50%; background:var(--ok); opacity:.8}
     .wrap{display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:12px}
     .panel{display:flex; flex-direction:column; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; min-height: 280px;}
+    .clear-btn{
+      appearance:none; background:transparent; border:0; color:var(--muted); 
+      cursor:pointer; font-size:16px; padding:4px 8px; border-radius:4px;
+      display:flex; align-items:center; justify-content:center; width:28px; height:28px;
+    }
+    .clear-btn:hover{background:var(--border); color:var(--text)}
+    .theme-toggle{
+      margin-left:auto; padding:6px 12px; font-size:18px;
+      background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    }
     .panel header{display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-bottom:1px solid var(--border)}
     .panel h2{font-size:13px; margin:0}
     textarea{
@@ -43,16 +59,29 @@
   <header>
     <div class="dot" title="Autosauvegarde active"></div>
     <h1>Diff → Code</h1>
+    <button id="theme-toggle" class="theme-toggle" title="Changer de thème">🌙</button>
   </header>
 
   <div class="wrap">
     <section class="panel">
-      <header><h2>Code</h2><span class="badge">Entrée</span></header>
+      <header>
+        <h2>Code</h2>
+        <div style="display:flex; gap:8px; align-items:center">
+          <span class="badge">Entrée</span>
+          <button class="clear-btn" id="clear-code" title="Effacer le code">✕</button>
+        </div>
+      </header>
       <textarea id="code" placeholder="Collez votre code…"></textarea>
     </section>
 
     <section class="panel">
-      <header><h2>Diff</h2><span class="badge">+/-</span></header>
+      <header>
+        <h2>Diff</h2>
+        <div style="display:flex; gap:8px; align-items:center">
+          <span class="badge">+/-</span>
+          <button class="clear-btn" id="clear-diff" title="Effacer le diff">✕</button>
+        </div>
+      </header>
       <textarea id="diff" placeholder="Collez un diff unifié (git)…"></textarea>
     </section>
   </div>
@@ -84,9 +113,13 @@
     import { applyPatch } from 'https://esm.sh/diff@5?bundle';
 
     const codeEl = document.getElementById('code');
+    const themeToggle = document.getElementById('theme-toggle');
+    const clearCodeBtn = document.getElementById('clear-code');
+    const clearDiffBtn = document.getElementById('clear-diff');
     const diffEl = document.getElementById('diff');
     const outEl  = document.getElementById('result');
     const statusEl = document.getElementById('status');
+    const LS_THEME = 'diff-lite:v1:theme';
     const applyBtn = document.getElementById('apply');
     const undoBtn = document.getElementById('undo');
     const executeBtn = document.getElementById('execute');
@@ -339,10 +372,44 @@
           setStatus('Code exécuté ✓', 'ok');
         } catch (err) {
           logs.push('\n❌ ERREUR:\n' + err.toString());
+    // === Theme ===
+    function loadTheme() {
+      try {
+        const theme = localStorage.getItem(LS_THEME) || 'dark';
+        applyTheme(theme);
+      } catch (e) {
+        applyTheme('dark');
+      }
+    }
+
+    function applyTheme(theme) {
+      if (theme === 'light') {
+        document.body.classList.add('light');
+        themeToggle.textContent = '☀️';
+      } else {
+        document.body.classList.remove('light');
+        themeToggle.textContent = '🌙';
+      }
+      try {
+        localStorage.setItem(LS_THEME, theme);
+      } catch (e) {}
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.contains('light');
+      applyTheme(isLight ? 'dark' : 'light');
+    }
+
+    function clearCode() { pushUndo(); codeEl.value = ''; scheduleSave('clear-code'); setStatus('Code effacé', 'ok'); }
+    function clearDiff() { pushUndo(); diffEl.value = ''; scheduleSave('clear-diff'); setStatus('Diff effacé', 'ok'); }
+
           if (err.stack) logs.push('\n' + err.stack);
           previewEl.textContent = logs.join('\n');
           setStatus('Erreur d\'exécution', 'err');
         } finally {
+    themeToggle.addEventListener('click', toggleTheme);
+    clearCodeBtn.addEventListener('click', clearCode);
+    clearDiffBtn.addEventListener('click', clearDiff);
           console.log = originalLog;
           console.error = originalError;
           console.warn = originalWarn;
@@ -409,6 +476,7 @@
       setStatus('Exemple', 'ok');
       pushUndo();
       saveState({ reason: 'example' });
+    loadTheme();
       backupSnapshot('example');
     });
 
