@@ -60,6 +60,7 @@
   <div class="controls">
     <button id="example" type="button">Exemple</button>
     <button id="undo" type="button" disabled>↶ Retour (Ctrl+Z)</button>
+    <button id="execute" type="button">▶ Exécuter le résultat</button>
     <button id="apply" class="primary" type="button">Appliquer + Copier</button>
   </div>
 
@@ -67,6 +68,16 @@
     <header><strong>Résultat</strong></header>
     <textarea id="result" placeholder="Code modifié…" readonly></textarea>
     <div id="status" class="status">Prêt</div>
+  </section>
+
+  <section class="result" id="preview-section" style="display:none">
+    <header>
+      <strong>Prévisualisation / Exécution</strong>
+      <button id="clear-preview" type="button" style="padding:4px 8px;font-size:11px">✕ Fermer</button>
+    </header>
+    <div style="padding:12px; max-height:400px; overflow:auto">
+      <pre id="preview" style="margin:0;color:var(--text);font-size:13px;line-height:1.6;white-space:pre-wrap"></pre>
+    </div>
   </section>
 
   <script type="module">
@@ -78,6 +89,9 @@
     const statusEl = document.getElementById('status');
     const applyBtn = document.getElementById('apply');
     const undoBtn = document.getElementById('undo');
+    const executeBtn = document.getElementById('execute');
+    const previewSection = document.getElementById('preview-section');
+    const previewEl = document.getElementById('preview');
     const exampleBtn = document.getElementById('example');
 
     const LS_STATE = 'diff-lite:v1:state';
@@ -269,6 +283,9 @@
         }
         outEl.value = patched;
 
+        // **NOUVEAU : Remplacer le code original par le code modifié**
+        codeEl.value = patched;
+
         // Sauvegarde + backup
         saveState({ reason: 'apply' });
         backupSnapshot('apply');
@@ -281,17 +298,82 @@
       }
     }
 
+    function executeCode() {
+      const code = outEl.value?.trim();
+      
+      if (!code) {
+        setStatus('Aucun résultat à exécuter', 'err');
+        return;
+      }
+
+      previewSection.style.display = 'block';
+      previewEl.textContent = '⏳ Exécution...\n';
+
+      // Petit délai pour l'affichage
+      setTimeout(() => {
+        const logs = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        // Intercepter console.log
+        console.log = (...args) => {
+          logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
+          originalLog(...args);
+        };
+        console.error = (...args) => {
+          logs.push('❌ ' + args.map(a => String(a)).join(' '));
+          originalError(...args);
+        };
+        console.warn = (...args) => {
+          logs.push('⚠️ ' + args.map(a => String(a)).join(' '));
+          originalWarn(...args);
+        };
+
+        try {
+          const result = eval(code);
+          if (result !== undefined) {
+            logs.push('→ ' + (typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)));
+          }
+          previewEl.textContent = logs.length > 0 ? logs.join('\n') : '✓ Exécution réussie (aucune sortie)';
+          setStatus('Code exécuté ✓', 'ok');
+        } catch (err) {
+          logs.push('\n❌ ERREUR:\n' + err.toString());
+          if (err.stack) logs.push('\n' + err.stack);
+          previewEl.textContent = logs.join('\n');
+          setStatus('Erreur d\'exécution', 'err');
+        } finally {
+          console.log = originalLog;
+          console.error = originalError;
+          console.warn = originalWarn;
+        }
+      }, 50);
+    }
+
     // Listeners
     applyBtn.addEventListener('click', applyDiff);
     undoBtn.addEventListener('click', performUndo);
+    executeBtn.addEventListener('click', executeCode);
+
+    document.getElementById('clear-preview').addEventListener('click', () => {
+      previewSection.style.display = 'none';
+      previewEl.textContent = '';
+    });
 
     document.addEventListener('keydown', (e) => {
       const isEnterCombo = (e.key === 'Enter' && (e.ctrlKey || e.metaKey));
       const isUndo = (e.key === 'z' || e.key === 'Z') && (e.ctrlKey || e.metaKey) && !e.shiftKey;
+      const isExecute = (e.key === 'e' || e.key === 'E') && (e.ctrlKey || e.metaKey) && e.shiftKey;
       
       if (isUndo) {
         e.preventDefault();
         performUndo();
+        return;
+      }
+
+      if (isExecute) {
+        e.preventDefault();
+        executeCode();
         return;
       }
       
