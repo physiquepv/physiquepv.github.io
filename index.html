@@ -144,14 +144,25 @@
     }
 
     function cleanupPatch(raw) {
-      if (!raw) return '';
-      let s = raw.trim();
-      if (s.startsWith('```')) {
-        s = s.replace(/^```(?:diff|patch)?\s*/i, '');
-        s = s.replace(/\s*```$/i, '');
-      }
-      return s;
-    }
+  if (!raw) return '';
+  let s = raw.trim();
+
+  // Nettoyage des éventuels blocs markdown ```diff
+  if (s.startsWith('```')) {
+    s = s.replace(/^```(?:diff|patch)?\s*/i, '');
+    s = s.replace(/\s*```$/i, '');
+  }
+
+  // Validation stricte du format "diff -u"
+  // Le pattern attendu: lignes "---" puis "+++" puis blocs @@ ... @@
+  const unifiedDiffPattern = /^(?:---[^\n]*\n\+\+\+[^\n]*\n(?:@@[^\n]*\n(?:[ \+\-].*\n)+)+)+$/m;
+  if (!unifiedDiffPattern.test(s)) {
+    throw new Error("Format non conforme : seul le diff unifié (diff -u) est accepté.\nLe diff doit commencer par --- suivi de +++ et contenir des blocs @@ ... @@.");
+  }
+
+  return s;
+}
+
 
     // === UNDO Stack ===
     let undoStack = [];
@@ -299,40 +310,45 @@
     }
 
     async function applyDiff() {
-      const original = codeEl.value ?? '';
-      let patch = cleanupPatch(diffEl.value ?? '');
+  const original = codeEl.value ?? '';
+  let patchRaw = diffEl.value ?? '';
 
-      // Sauvegarder l'état actuel avant d'appliquer
-      pushUndo();
+  pushUndo();
 
-      if (!original.trim()) {
-        setStatus('Code manquant', 'err'); codeEl.focus(); return;
-      }
-      if (!patch.trim()) {
-        setStatus('Diff manquant', 'err'); diffEl.focus(); return;
-      }
+  if (!original.trim()) {
+    setStatus('Code manquant', 'err'); codeEl.focus(); return;
+  }
+  if (!patchRaw.trim()) {
+    setStatus('Diff manquant', 'err'); diffEl.focus(); return;
+  }
 
-      try {
-        const patched = applyPatch(original, patch);
-        if (patched === false || typeof patched !== 'string') {
-          setStatus('Diff invalide', 'err'); return;
-        }
-        outEl.value = patched;
+  let patch = '';
+  try {
+    patch = cleanupPatch(patchRaw);
+  } catch (validationErr) {
+    console.warn(validationErr);
+    setStatus(validationErr.message, 'err');
+    return;
+  }
 
-        // **Remplacer le code original par le code modifié**
-        codeEl.value = patched;
-
-        // Sauvegarde + backup
-        saveState({ reason: 'apply' });
-        backupSnapshot('apply');
-
-        const ok = await copyToClipboard(patched);
-        setStatus(ok ? 'Copié ✓' : 'Appliqué (copie refusée)', ok ? 'ok' : 'err');
-      } catch (err) {
-        console.error(err);
-        setStatus('Erreur patch', 'err');
-      }
+  try {
+    const patched = applyPatch(original, patch);
+    if (patched === false || typeof patched !== 'string') {
+      setStatus('Échec d’application du diff', 'err');
+      return;
     }
+    outEl.value = patched;
+    codeEl.value = patched;
+    saveState({ reason: 'apply' });
+    backupSnapshot('apply');
+
+    const ok = await copyToClipboard(patched);
+    setStatus(ok ? 'Copié ✓' : 'Appliqué (copie refusée)', ok ? 'ok' : 'err');
+  } catch (err) {
+    console.error(err);
+    setStatus('Erreur lors de l’application du patch', 'err');
+  }
+}
 
     function detectCodeType(code) {
       const trimmed = code.trim().toLowerCase();
