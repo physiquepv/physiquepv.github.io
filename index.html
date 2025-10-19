@@ -1,582 +1,343 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Diff → Code</title>
-  <style>
-    :root{
-      --bg:#0f1226; --panel:#141735; --text:#eef1ff; --muted:#98a2ff;
-      --accent:#7c91ff; --ok:#00d28a; --err:#ff6b6b; --border:#242953;
-    }
-    body.light{
-      --bg:#f5f7fa; --panel:#ffffff; --text:#1a1f36; --muted:#6b7280;
-      --accent:#5b6fff; --ok:#059669; --err:#dc2626; --border:#e5e7eb;
-    }
-    body.light button{background:#f3f4f6; color:#1f2937}
-    body.light button.primary{background:linear-gradient(135deg,#5b6fff,#7c3aed)}
-    *{box-sizing:border-box}
-    body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-         background:var(--bg); color:var(--text)}
-    header{padding:12px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px}
-    h1{margin:0; font-size:16px}
-    .dot{width:8px; height:8px; border-radius:50%; background:var(--ok); opacity:.8}
-    .wrap{display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:12px}
-    .panel{display:flex; flex-direction:column; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; min-height: 280px;}
-    .clear-btn{
-      appearance:none; background:transparent; border:0; color:var(--muted); 
-      cursor:pointer; font-size:16px; padding:4px 8px; border-radius:4px;
-      display:flex; align-items:center; justify-content:center; width:28px; height:28px;
-    }
-    .clear-btn:hover{background:var(--border); color:var(--text)}
-    .theme-toggle{
-      margin-left:auto; padding:6px 12px; font-size:18px;
-      background:var(--panel); border:1px solid var(--border); border-radius:8px;
-    }
-    .panel header{display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-bottom:1px solid var(--border)}
-    .panel h2{font-size:13px; margin:0}
-    textarea{
-      width:100%; height:300px; flex:1; background:transparent; color:var(--text);
-      border:0; padding:10px; resize:vertical; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      outline:none; tab-size:2; caret-color:var(--accent);
-    }
-    .controls{display:flex; gap:8px; padding:0 12px 12px; justify-content:flex-end}
-    button{
-      appearance:none; border:1px solid var(--border); background:#1a1f4a; color:#e8eaff;
-      padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px;
-    }
-    button.primary{background:linear-gradient(135deg,#6f86ff,#8f6fff); border:0}
-    button:disabled{opacity:0.5; cursor:not-allowed}
-    .status{padding:8px 12px; font-size:12px; border-top:1px solid var(--border); color:var(--muted)}
-    .status.ok{color:var(--ok)}
-    .status.err{color:var(--err)}
-    .result{margin:0 12px 12px; background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden}
-    .result header{padding:8px 10px; border-bottom:1px solid var(--border)}
-    .badge{background:#21265a; color:#cbd1ff; padding:2px 8px; border-radius:999px; font-size:11px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Patcher IA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #4ec9b0;
+            font-size: 24px;
+        }
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .panel {
+            background: #252526;
+            border-radius: 6px;
+            padding: 8px;
+            border: 1px solid #3e3e42;
+        }
+        .panel h2 {
+            color: #569cd6;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            resize: vertical;
+        }
+        .result-panel {
+            grid-column: 1 / -1;
+        }
+        #result {
+            height: 150px;
+            background: #0e0e0e;
+            border: 2px solid #4ec9b0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            max-width: 250px;
+            margin: 8px auto;
+            padding: 10px 20px;
+            background: #4ec9b0;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #6ee7d2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 201, 176, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 5px 0;
+        }
+        .undo-btn {
+            background: #ce9178;
+            max-width: 200px;
+        }
+        .undo-btn:hover {
+            background: #dea485;
+        }
+        .undo-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .preview-btn {
+            background: #569cd6;
+            max-width: 200px;
+        }
+        .preview-btn:hover {
+            background: #7bb3e6;
+        }
+        .preview-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .preview-container.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .preview-header h3 {
+            color: #4ec9b0;
+            margin: 0;
+        }
+        .close-preview {
+            background: #f44242;
+            padding: 10px 20px;
+            max-width: 150px;
+            margin: 0;
+        }
+        .close-preview:hover {
+            background: #ff5555;
+        }
+        .preview-frame {
+            flex: 1;
+            background: white;
+            border: 3px solid #4ec9b0;
+            border-radius: 8px;
+            overflow: auto;
+        }
+        .status {
+            text-align: center;
+            padding: 6px;
+            margin: 5px 0;
+            border-radius: 4px;
+            display: none;
+            font-size: 13px;
+        }
+        .status.success {
+            background: #4ec9b033;
+            border: 1px solid #4ec9b0;
+            color: #4ec9b0;
+            display: block;
+        }
+        .status.error {
+            background: #f4424233;
+            border: 1px solid #f44242;
+            color: #f44242;
+            display: block;
+        }
+        .copy-btn {
+            background: #569cd6;
+            max-width: 150px;
+            padding: 6px 12px;
+            font-size: 12px;
+            margin: 5px auto;
+        }
+        .copy-btn:hover {
+            background: #7bb3e6;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="dot" title="Autosauvegarde active"></div>
-    <h1>Diff → Code</h1>
-    <button id="theme-toggle" class="theme-toggle" title="Changer de thème">🌙</button>
-  </header>
+    <div class="container">
+        <h1>🤖 Auto-Patcher IA</h1>
+        
+        <div class="panels">
+            <div class="panel">
+                <h2>📄 Ton code HTML actuel</h2>
+                <textarea id="originalCode" placeholder="Colle ton code HTML ici..."></textarea>
+            </div>
+            
+            <div class="panel">
+                <h2>🤖 Instructions JSON de l'IA</h2>
+                <textarea id="aiInstructions" placeholder='Colle la réponse JSON de l\'IA ici...
 
-  <div class="wrap">
-    <section class="panel">
-      <header>
-        <h2>Code</h2>
-        <div style="display:flex; gap:8px; align-items:center">
-          <span class="badge">Entrée</span>
-          <button class="clear-btn" id="clear-code" title="Effacer le code">✕</button>
+Exemple :
+{
+  "changes": [
+    {
+      "action": "replace",
+      "search": "<h1>Ancien</h1>",
+      "replace": "<h1>Nouveau</h1>"
+    }
+  ]
+}'></textarea>
+            </div>
         </div>
-      </header>
-      <textarea id="code" placeholder="Collez votre code…"></textarea>
-    </section>
 
-    <section class="panel">
-      <header>
-        <h2>Diff</h2>
-        <div style="display:flex; gap:8px; align-items:center">
-          <span class="badge">+/-</span>
-          <button class="clear-btn" id="clear-diff" title="Effacer le diff">✕</button>
+        <button onclick="applyChanges()">✨ Appliquer les changements</button>
+        
+        <div class="button-group">
+            <button class="undo-btn" id="undoBtn" onclick="undo()" disabled>↶ Annuler (Ctrl+Z)</button>
+            <button class="preview-btn" onclick="openPreview()">👁️ Prévisualiser</button>
         </div>
-      </header>
-      <textarea id="diff" placeholder="Collez un diff unifié (git)…"></textarea>
-    </section>
-  </div>
+        
+        <div id="status" class="status"></div>
 
-  <div class="controls">
-    <button id="example" type="button">Exemple</button>
-    <button id="undo" type="button" disabled>↶ Retour (Ctrl+Z)</button>
-    <button id="execute" type="button">▶ Exécuter le code</button>
-    <button id="apply" class="primary" type="button">Appliquer + Copier</button>
-  </div>
-
-  <section class="result">
-    <header><strong>Résultat</strong></header>
-    <textarea id="result" placeholder="Code modifié…" readonly></textarea>
-    <div id="status" class="status">Prêt</div>
-  </section>
-
-  <section class="result" id="preview-section" style="display:none">
-    <header>
-      <strong>Prévisualisation / Exécution</strong>
-      <button id="clear-preview" type="button" style="padding:4px 8px;font-size:11px">✕ Fermer</button>
-    </header>
-    <div id="preview-container" style="padding:12px; max-height:400px; overflow:auto">
-      <pre id="preview" style="margin:0;color:var(--text);font-size:13px;line-height:1.6;white-space:pre-wrap"></pre>
-      <iframe id="preview-iframe" style="display:none; width:100%; min-height:400px; border:1px solid var(--border); 
-        border-radius:6px; background:white"></iframe>
+        <div class="panels">
+            <div class="panel result-panel">
+                <h2>✅ Résultat (code modifié)</h2>
+                <textarea id="result" readonly></textarea>
+                <button class="copy-btn" onclick="copyResult()">📋 Copier le résultat</button>
+            </div>
+        </div>
     </div>
-  </section>
 
-  <script type="module">
-    import { applyPatch } from 'https://esm.sh/diff@5?bundle';
+    <div class="preview-container" id="previewContainer">
+        <div class="preview-header">
+            <h3>👁️ Prévisualisation du code modifié</h3>
+            <button class="close-preview" onclick="closePreview()">✕ Fermer</button>
+        </div>
+        <iframe class="preview-frame" id="previewFrame"></iframe>
+    </div>
 
-    const codeEl = document.getElementById('code');
-    const themeToggle = document.getElementById('theme-toggle');
-    const clearCodeBtn = document.getElementById('clear-code');
-    const clearDiffBtn = document.getElementById('clear-diff');
-    const diffEl = document.getElementById('diff');
-    const outEl  = document.getElementById('result');
-    const statusEl = document.getElementById('status');
-    const LS_THEME = 'diff-lite:v1:theme';
-    const applyBtn = document.getElementById('apply');
-    const undoBtn = document.getElementById('undo');
-    const executeBtn = document.getElementById('execute');
-    const previewSection = document.getElementById('preview-section');
-    const previewEl = document.getElementById('preview');
-    const previewIframe = document.getElementById('preview-iframe');
-    const exampleBtn = document.getElementById('example');
-
-    const LS_STATE = 'diff-lite:v1:state';
-    const LS_UNDO_STACK = 'diff-lite:v1:undoStack';
-    const LS_HISTORY = 'diff-lite:v1:history';
-    const MAX_UNDO = 50;
-    const MAX_HISTORY = 20;
-
-    const now = () => new Date().toISOString();
-
-    function setStatus(msg, kind='') {
-      statusEl.className = 'status ' + (kind || '');
-      statusEl.textContent = msg;
-    }
-
-    function cleanupPatch(raw) {
-  if (!raw) return '';
-  let s = raw.trim();
-
-  // Nettoyage des éventuels blocs markdown ```diff
-  if (s.startsWith('```')) {
-    s = s.replace(/^```(?:diff|patch)?\s*/i, '');
-    s = s.replace(/\s*```$/i, '');
-  }
-
-  // Validation stricte du format "diff -u"
-  // Le pattern attendu: lignes "---" puis "+++" puis blocs @@ ... @@
-  const unifiedDiffPattern = /^(?:---[^\n]*\n\+\+\+[^\n]*\n(?:@@[^\n]*\n(?:[ \+\-].*\n)+)+)+$/m;
-  if (!unifiedDiffPattern.test(s)) {
-    throw new Error("Format non conforme : seul le diff unifié (diff -u) est accepté.\nLe diff doit commencer par --- suivi de +++ et contenir des blocs @@ ... @@.");
-  }
-
-  return s;
-}
-
-
-    // === UNDO Stack ===
-    let undoStack = [];
-
-    function loadUndoStack() {
-      try {
-        const raw = localStorage.getItem(LS_UNDO_STACK);
-        undoStack = raw ? JSON.parse(raw) : [];
-      } catch (e) {
-        undoStack = [];
-      }
-      updateUndoButton();
-    }
-
-    function saveUndoStack() {
-      try {
-        localStorage.setItem(LS_UNDO_STACK, JSON.stringify(undoStack));
-      } catch (e) {
-        console.warn('Undo stack save error:', e);
-      }
-    }
-
-    function pushUndo() {
-      const snapshot = {
-        code: codeEl.value ?? '',
-        diff: diffEl.value ?? '',
-        result: outEl.value ?? '',
-        ts: Date.now()
-      };
-      undoStack.push(snapshot);
-      while (undoStack.length > MAX_UNDO) undoStack.shift();
-      saveUndoStack();
-      updateUndoButton();
-    }
-
-    function updateUndoButton() {
-      undoBtn.disabled = undoStack.length === 0;
-    }
-
-    // === State persistence ===
-    function saveState(extra={}) {
-      try {
-        const state = {
-          code: codeEl.value ?? '',
-          diff: diffEl.value ?? '',
-          result: outEl.value ?? '',
-          ts: Date.now(),
-          ...extra
-        };
-        localStorage.setItem(LS_STATE, JSON.stringify(state));
-        return state;
-      } catch (e) {
-        console.warn('Save error:', e);
-      }
-    }
-
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(LS_STATE);
-        if (!raw) return false;
-        const s = JSON.parse(raw);
-        codeEl.value = s.code ?? '';
-        diffEl.value = s.diff ?? '';
-        outEl.value  = s.result ?? '';
-        setStatus('Rechargé', 'ok');
-        return true;
-      } catch (e) {
-        console.warn('Load error:', e);
-        return false;
-      }
-    }
-
-    function performUndo() {
-      if (undoStack.length === 0) {
-        setStatus('Aucun historique', 'err');
-        return;
-      }
-      
-      const snapshot = undoStack.pop();
-      codeEl.value = snapshot.code ?? '';
-      diffEl.value = snapshot.diff ?? '';
-      outEl.value = snapshot.result ?? '';
-      
-      saveState({ reason: 'undo' });
-      saveUndoStack();
-      updateUndoButton();
-      
-      const count = undoStack.length;
-      setStatus(`Annulé (${count} dans l'historique)`, 'ok');
-    }
-
-    // === Backup system ===
-    function backupSnapshot(reason='auto') {
-      try {
-        const snap = {
-          code: codeEl.value ?? '',
-          diff: diffEl.value ?? '',
-          result: outEl.value ?? '',
-          at: now(),
-          reason
-        };
-        const list = [];
-        list.push(snap);
-        while (list.length > MAX_HISTORY) list.shift();
-        localStorage.setItem(LS_HISTORY, JSON.stringify(list));
-      } catch (e) {
-        console.warn('Backup error:', e);
-      }
-    }
-
-    let saveTimer = null;
-    function scheduleSave(reason='typing') {
-      if (saveTimer) clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => {
-        saveState({ reason });
-      }, 400);
-    }
-
-    // Throttle backups à ~5s pour éviter d'inonder
-    let lastBackup = 0;
-    function maybeBackup(reason='typing') {
-      const t = Date.now();
-      if (t - lastBackup > 5000) {
-        lastBackup = t;
-        backupSnapshot(reason);
-      }
-    }
-
-    async function copyToClipboard(text) {
-      try {
-        if (navigator.clipboard?.writeText) {
-          await navigator.clipboard.writeText(text);
-        } else {
-          outEl.removeAttribute('readonly');
-          outEl.focus();
-          outEl.select();
-          document.execCommand('copy');
-          outEl.setAttribute('readonly', 'readonly');
-        }
-        return true;
-      } catch (e) {
-        console.warn('Clipboard error:', e);
-        return false;
-      }
-    }
-
-    async function applyDiff() {
-  const original = codeEl.value ?? '';
-  let patchRaw = diffEl.value ?? '';
-
-  pushUndo();
-
-  if (!original.trim()) {
-    setStatus('Code manquant', 'err'); codeEl.focus(); return;
-  }
-  if (!patchRaw.trim()) {
-    setStatus('Diff manquant', 'err'); diffEl.focus(); return;
-  }
-
-  let patch = '';
-  try {
-    patch = cleanupPatch(patchRaw);
-  } catch (validationErr) {
-    console.warn(validationErr);
-    setStatus(validationErr.message, 'err');
-    return;
-  }
-
-  try {
-    const patched = applyPatch(original, patch);
-    if (patched === false || typeof patched !== 'string') {
-      setStatus('Échec d’application du diff', 'err');
-      return;
-    }
-    outEl.value = patched;
-    codeEl.value = patched;
-    saveState({ reason: 'apply' });
-    backupSnapshot('apply');
-
-    const ok = await copyToClipboard(patched);
-    setStatus(ok ? 'Copié ✓' : 'Appliqué (copie refusée)', ok ? 'ok' : 'err');
-  } catch (err) {
-    console.error(err);
-    setStatus('Erreur lors de l’application du patch', 'err');
-  }
-}
-
-    function detectCodeType(code) {
-      const trimmed = code.trim().toLowerCase();
-      
-      // Détection HTML
-      if (trimmed.includes('<!doctype') || trimmed.includes('<html') || 
-          trimmed.includes('<body') || trimmed.includes('<head') ||
-          (trimmed.includes('<') && trimmed.includes('>'))) {
-        return 'html';
-      }
-      
-      // Sinon JavaScript
-      return 'javascript';
-    }
-
-    function executeCode() {
-      const code = codeEl.value?.trim();
-      
-      if (!code) {
-        setStatus('Aucun code à exécuter', 'err');
-        codeEl.focus();
-        return;
-      }
-
-      const codeType = detectCodeType(code);
-      
-      previewSection.style.display = 'block';
-
-      if (codeType === 'html') {
-        executeHTML(code);
-      } else {
-        executeJavaScript(code);
-      }
-    }
-
-    function executeJavaScript(code) {
-      previewEl.style.display = 'block';
-      previewIframe.style.display = 'none';
-      previewEl.textContent = '⏳ Exécution JavaScript...\n';
-
-      setTimeout(() => {
-        const logs = [];
-        const originalLog = console.log;
-        const originalError = console.error;
-        const originalWarn = console.warn;
-
-        console.log = (...args) => {
-          logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
-          originalLog(...args);
-        };
-        console.error = (...args) => {
-          logs.push('❌ ' + args.map(a => String(a)).join(' '));
-          originalError(...args);
-        };
-        console.warn = (...args) => {
-          logs.push('⚠️ ' + args.map(a => String(a)).join(' '));
-          originalWarn(...args);
-        };
-
-        try {
-          const result = eval(code);
-          if (result !== undefined) {
-            logs.push('→ ' + (typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)));
-          }
-          previewEl.textContent = logs.length > 0 ? logs.join('\n') : '✓ Exécution réussie (aucune sortie)';
-          setStatus('Code JavaScript exécuté ✓', 'ok');
-        } catch (err) {
-          logs.push('\n❌ ERREUR:\n' + err.toString());
-          if (err.stack) logs.push('\n' + err.stack);
-          previewEl.textContent = logs.join('\n');
-          setStatus('Erreur d\'exécution JavaScript', 'err');
-        } finally {
-          console.log = originalLog;
-          console.error = originalError;
-          console.warn = originalWarn;
-        }
-      }, 50);
-    }
-
-    function executeHTML(code) {
-      previewEl.style.display = 'none';
-      previewIframe.style.display = 'block';
-      
-      try {
-        // Créer un nouveau iframe à chaque exécution pour éviter les conflits
-        const newIframe = previewIframe.cloneNode(false);
-        previewIframe.parentNode.replaceChild(newIframe, previewIframe);
+    <script>
+        const $ = id => document.getElementById(id);
+        const history = [];
+        const cache = {};
         
-        // Mettre à jour la référence
-        const iframe = document.getElementById('preview-iframe');
-        iframe.style.display = 'block';
+        window.addEventListener('load', () => {
+            cache.originalCode = $('originalCode');
+            cache.aiInstructions = $('aiInstructions');
+            cache.result = $('result');
+            cache.status = $('status');
+            cache.undoBtn = $('undoBtn');
+            cache.previewContainer = $('previewContainer');
+            cache.previewFrame = $('previewFrame');
+            
+            cache.originalCode.value = `<!DOCTYPE html>\n<html>\n<head>\n    <title>Mon Site</title>\n</head>\n<body>\n    <h1>Ancien Titre</h1>\n    <p>Contenu de test</p>\n</body>\n</html>`;
+            cache.aiInstructions.value = `{\n  "changes": [\n    {\n      "action": "replace",\n      "search": "<h1>Ancien Titre</h1>",\n      "replace": "<h1>Nouveau Titre Modifié ✨</h1>"\n    },\n    {\n      "action": "insert_after",\n      "search": "<p>Contenu de test</p>",\n      "insert": "\\n    <p>Paragraphe ajouté par l'IA !</p>"\n    }\n  ]\n}`;
+        });
         
-        // Injecter le code HTML dans l'iframe
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        iframeDoc.open();
-        iframeDoc.write(code);
-        iframeDoc.close();
-        setStatus('Code HTML exécuté ✓', 'ok');
-        setStatus('HTML exécuté et rendu ✓', 'ok');
-      } catch (err) {
-        console.error(err);
-        previewEl.style.display = 'block';
-        previewIframe.style.display = 'none';
-        previewEl.textContent = '❌ Erreur lors du rendu HTML:\n' + err.toString();
-        setStatus('Erreur de rendu HTML', 'err');
-      }
-    }
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && e.key === 'z') {
+                e.preventDefault();
+                undo();
+            } else if (e.key === 'Escape') {
+                closePreview();
+            }
+        });
 
-    // === Theme ===
-    function loadTheme() {
-      try {
-        const theme = localStorage.getItem(LS_THEME) || 'dark';
-        applyTheme(theme);
-      } catch (e) {
-        applyTheme('dark');
-      }
-    }
+        function applyChanges() {
+            cache.status.className = 'status';
+            
+            const original = cache.originalCode.value;
+            const instructions = cache.aiInstructions.value;
 
-    function applyTheme(theme) {
-      if (theme === 'light') {
-        document.body.classList.add('light');
-        themeToggle.textContent = '☀️';
-      } else {
-        document.body.classList.remove('light');
-        themeToggle.textContent = '🌙';
-      }
-      try {
-        localStorage.setItem(LS_THEME, theme);
-      } catch (e) {}
-    }
+            if (!original.trim()) return showStatus('error', '❌ Veuillez entrer du code HTML');
+            if (!instructions.trim()) return showStatus('error', '❌ Veuillez entrer les instructions de l\'IA');
 
-    function toggleTheme() {
-      const isLight = document.body.classList.contains('light');
-      applyTheme(isLight ? 'dark' : 'light');
-    }
+            if (cache.result.value || original) {
+                history.push(cache.result.value || original);
+                cache.undoBtn.disabled = false;
+            }
 
-    // === Clear functions ===
-    function clearCode() { 
-      pushUndo(); 
-      codeEl.value = ''; 
-      scheduleSave('clear-code'); 
-      setStatus('Code effacé', 'ok'); 
-    }
-    
-    function clearDiff() { 
-      pushUndo(); 
-      diffEl.value = ''; 
-      scheduleSave('clear-diff'); 
-      setStatus('Diff effacé', 'ok'); 
-    }
+            try {
+                const { changes } = JSON.parse(instructions);
+                if (!Array.isArray(changes)) throw new Error('Format JSON invalide');
 
-    // === Event Listeners ===
-    applyBtn.addEventListener('click', applyDiff);
-    undoBtn.addEventListener('click', performUndo);
-    executeBtn.addEventListener('click', executeCode);
-    themeToggle.addEventListener('click', toggleTheme);
-    clearCodeBtn.addEventListener('click', clearCode);
-    clearDiffBtn.addEventListener('click', clearDiff);
+                let code = original;
+                let count = 0;
 
-    document.getElementById('clear-preview').addEventListener('click', () => {
-      previewSection.style.display = 'none';
-      previewEl.textContent = '';
-    });
+                changes.forEach(({ action, search, replace, insert }) => {
+                    if (!action || search === undefined) throw new Error('action et search requis');
+                    if (!code.includes(search)) return;
+                    
+                    count++;
+                    switch (action) {
+                        case 'replace': code = code.replace(search, replace ?? ''); break;
+                        case 'insert_after': code = code.replace(search, search + (insert ?? '')); break;
+                        case 'insert_before': code = code.replace(search, (insert ?? '') + search); break;
+                        case 'delete': code = code.replace(search, ''); break;
+                    }
+                });
 
-    document.addEventListener('keydown', (e) => {
-      const isEnterCombo = (e.key === 'Enter' && (e.ctrlKey || e.metaKey));
-      const isUndo = (e.key === 'z' || e.key === 'Z') && (e.ctrlKey || e.metaKey) && !e.shiftKey;
-      const isExecute = (e.key === 'e' || e.key === 'E') && (e.ctrlKey || e.metaKey) && e.shiftKey;
-      
-      if (isUndo) {
-        e.preventDefault();
-        performUndo();
-        return;
-      }
+                cache.result.value = code;
+                showStatus('success', `✅ ${count} changement(s) appliqué(s)`);
+            } catch (error) {
+                showStatus('error', `❌ ${error.message}`);
+            }
+        }
 
-      if (isExecute) {
-        e.preventDefault();
-        executeCode();
-        return;
-      }
-      
-      if (isEnterCombo) {
-        e.preventDefault();
-        applyDiff();
-      }
-    });
+        function undo() {
+            if (!history.length) return;
+            cache.result.value = history.pop();
+            cache.undoBtn.disabled = !history.length;
+            showStatus('success', '↶ Changement annulé');
+        }
 
-    codeEl.addEventListener('input', () => { scheduleSave('typing-code'); maybeBackup('typing-code'); });
-    diffEl.addEventListener('input', () => { scheduleSave('typing-diff'); maybeBackup('typing-diff'); });
+        function openPreview() {
+            const code = cache.result.value;
+            if (!code.trim()) return showStatus('error', '❌ Aucun code à prévisualiser');
+            
+            cache.previewContainer.classList.add('active');
+            cache.previewFrame.src = URL.createObjectURL(new Blob([code], { type: 'text/html' }));
+        }
 
-    exampleBtn.addEventListener('click', () => {
-      const sampleCode =
-`function greet(name) {
-  return "Hello, " + name + "!";
-}
-`;
-      const samplePatch =
-`--- a/file.js
-+++ b/file.js
-@@ -1,3 +1,3 @@
--function greet(name) {
--  return "Hello, " + name + "!";
--}
-+function greet(name = "le monde") {
-+  return "Bonjour, " + name + "!";
-+}
-`;
-      codeEl.value = sampleCode;
-      diffEl.value = samplePatch;
-      outEl.value = '';
-      setStatus('Exemple', 'ok');
-      pushUndo();
-      saveState({ reason: 'example' });
-      backupSnapshot('example');
-    });
+        function closePreview() {
+            cache.previewContainer.classList.remove('active');
+            cache.previewFrame.src = '';
+        }
 
-    // Sauvegarde à la fermeture
-    window.addEventListener('beforeunload', () => {
-      saveState({ reason: 'unload' });
-      backupSnapshot('unload');
-    });
 
-    // Chargement initial
-    loadTheme();
-    const hadState = loadState();
-    if (!hadState) setStatus('Prêt');
-    loadUndoStack();
 
-  </script>
+        function showStatus(type, msg) {
+            cache.status.className = `status ${type}`;
+            cache.status.textContent = msg;
+        }
+
+        function copyResult() {
+            cache.result.select();
+            document.execCommand('copy');
+            const btn = event.target;
+            const txt = btn.textContent;
+            btn.textContent = '✅ Copié !';
+            setTimeout(() => btn.textContent = txt, 2000);
+        }
+
+    </script>
 </body>
 </html>
