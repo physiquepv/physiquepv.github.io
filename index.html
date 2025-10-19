@@ -52,14 +52,6 @@
             font-size: 12px;
             resize: vertical;
         }
-        .result-panel {
-            grid-column: 1 / -1;
-        }
-        #result {
-            height: 150px;
-            background: #0e0e0e;
-            border: 2px solid #4ec9b0;
-        }
         button {
             display: block;
             width: 100%;
@@ -169,16 +161,6 @@
             color: #f44242;
             display: block;
         }
-        .copy-btn {
-            background: #569cd6;
-            max-width: 150px;
-            padding: 6px 12px;
-            font-size: 12px;
-            margin: 5px auto;
-        }
-        .copy-btn:hover {
-            background: #7bb3e6;
-        }
     </style>
 </head>
 <body>
@@ -217,13 +199,6 @@ Exemple :
         
         <div id="status" class="status"></div>
 
-        <div class="panels">
-            <div class="panel result-panel">
-                <h2>✅ Résultat (code modifié)</h2>
-                <textarea id="result" readonly></textarea>
-                <button class="copy-btn" onclick="copyResult()">📋 Copier le résultat</button>
-            </div>
-        </div>
     </div>
 
     <div class="preview-container" id="previewContainer">
@@ -239,17 +214,34 @@ Exemple :
         const history = [];
         const cache = {};
         
+        // Sauvegarder dans localStorage
+        function saveToStorage() {
+            localStorage.setItem('originalCode', cache.originalCode.value);
+            localStorage.setItem('aiInstructions', cache.aiInstructions.value);
+        }
+        
+        // Charger depuis localStorage
+        function loadFromStorage() {
+            const savedCode = localStorage.getItem('originalCode');
+            const savedInstructions = localStorage.getItem('aiInstructions');
+            
+            cache.originalCode.value = savedCode || `<!DOCTYPE html>\n<html>\n<head>\n    <title>Mon Site</title>\n</head>\n<body>\n    <h1>Ancien Titre</h1>\n    <p>Contenu de test</p>\n</body>\n</html>`;
+            cache.aiInstructions.value = savedInstructions || `{\n  "changes": [\n    {\n      "action": "replace",\n      "search": "<h1>Ancien Titre</h1>",\n      "replace": "<h1>Nouveau Titre Modifié ✨</h1>"\n    }\n  ]\n}`;
+        }
+        
         window.addEventListener('load', () => {
             cache.originalCode = $('originalCode');
             cache.aiInstructions = $('aiInstructions');
-            cache.result = $('result');
             cache.status = $('status');
             cache.undoBtn = $('undoBtn');
             cache.previewContainer = $('previewContainer');
             cache.previewFrame = $('previewFrame');
             
-            cache.originalCode.value = `<!DOCTYPE html>\n<html>\n<head>\n    <title>Mon Site</title>\n</head>\n<body>\n    <h1>Ancien Titre</h1>\n    <p>Contenu de test</p>\n</body>\n</html>`;
-            cache.aiInstructions.value = `{\n  "changes": [\n    {\n      "action": "replace",\n      "search": "<h1>Ancien Titre</h1>",\n      "replace": "<h1>Nouveau Titre Modifié ✨</h1>"\n    },\n    {\n      "action": "insert_after",\n      "search": "<p>Contenu de test</p>",\n      "insert": "\\n    <p>Paragraphe ajouté par l'IA !</p>"\n    }\n  ]\n}`;
+            loadFromStorage();
+            
+            // Auto-save au changement
+            cache.originalCode.addEventListener('input', saveToStorage);
+            cache.aiInstructions.addEventListener('input', saveToStorage);
         });
         
         document.addEventListener('keydown', e => {
@@ -270,10 +262,8 @@ Exemple :
             if (!original.trim()) return showStatus('error', '❌ Veuillez entrer du code HTML');
             if (!instructions.trim()) return showStatus('error', '❌ Veuillez entrer les instructions de l\'IA');
 
-            if (cache.result.value || original) {
-                history.push(cache.result.value || original);
-                cache.undoBtn.disabled = false;
-            }
+            history.push(original);
+            cache.undoBtn.disabled = false;
 
             try {
                 const { changes } = JSON.parse(instructions);
@@ -295,7 +285,8 @@ Exemple :
                     }
                 });
 
-                cache.result.value = code;
+                cache.originalCode.value = code;
+                saveToStorage();
                 showStatus('success', `✅ ${count} changement(s) appliqué(s)`);
             } catch (error) {
                 showStatus('error', `❌ ${error.message}`);
@@ -304,13 +295,14 @@ Exemple :
 
         function undo() {
             if (!history.length) return;
-            cache.result.value = history.pop();
+            cache.originalCode.value = history.pop();
+            saveToStorage();
             cache.undoBtn.disabled = !history.length;
             showStatus('success', '↶ Changement annulé');
         }
 
         function openPreview() {
-            const code = cache.result.value;
+            const code = cache.originalCode.value;
             if (!code.trim()) return showStatus('error', '❌ Aucun code à prévisualiser');
             
             cache.previewContainer.classList.add('active');
@@ -329,14 +321,6 @@ Exemple :
             cache.status.textContent = msg;
         }
 
-        function copyResult() {
-            cache.result.select();
-            document.execCommand('copy');
-            const btn = event.target;
-            const txt = btn.textContent;
-            btn.textContent = '✅ Copié !';
-            setTimeout(() => btn.textContent = txt, 2000);
-        }
 
     </script>
 </body>
