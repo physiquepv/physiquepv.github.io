@@ -34,11 +34,18 @@
             border-radius: 6px;
             padding: 8px;
             border: 1px solid #3e3e42;
+            display: flex;
+            flex-direction: column;
         }
         .panel h2 {
             color: #569cd6;
             margin-bottom: 5px;
             font-size: 14px;
+        }
+        .textarea-wrapper {
+            position: relative;
+            flex-grow: 1;
+            display: flex;
         }
         textarea {
             width: 100%;
@@ -51,6 +58,39 @@
             font-family: 'Courier New', monospace;
             font-size: 12px;
             resize: vertical;
+        }
+        .panel-buttons {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+        .textarea-wrapper:hover .panel-buttons {
+            opacity: 1;
+        }
+        .panel-btn {
+            background: rgba(86, 156, 214, 0.2);
+            border: 1px solid #3e3e42;
+            color: #d4d4d4;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: sans-serif;
+            line-height: 1.2;
+            width: auto;
+            margin: 0;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .panel-btn:hover {
+            background: rgba(86, 156, 214, 0.4);
+            transform: none;
+            box-shadow: none;
         }
         button {
             display: block;
@@ -170,12 +210,19 @@
         <div class="panels">
             <div class="panel">
                 <h2>📄 Ton code HTML actuel</h2>
-                <textarea id="originalCode" placeholder="Colle ton code HTML ici..."></textarea>
+                <div class="textarea-wrapper">
+                    <textarea id="originalCode" placeholder="Colle ton code HTML ici..."></textarea>
+                    <div class="panel-buttons">
+                        <button class="panel-btn" id="copyCodeBtn" title="Copier le code">📋</button>
+                        <button class="panel-btn" id="clearCodeBtn" title="Effacer le code">✕</button>
+                    </div>
+                </div>
             </div>
             
             <div class="panel">
                 <h2>🤖 Instructions JSON de l'IA</h2>
-                <textarea id="aiInstructions" placeholder='Colle la réponse JSON de l\'IA ici...
+                <div class="textarea-wrapper">
+                    <textarea id="aiInstructions" placeholder='Colle la réponse JSON de l\'IA ici...
 
 Exemple :
 {
@@ -187,6 +234,11 @@ Exemple :
     }
   ]
 }'></textarea>
+                    <div class="panel-buttons">
+                        <button class="panel-btn" id="copyInstructionsBtn" title="Copier les instructions">📋</button>
+                        <button class="panel-btn" id="clearInstructionsBtn" title="Effacer les instructions">✕</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -242,6 +294,18 @@ Exemple :
             // Auto-save au changement
             cache.originalCode.addEventListener('input', saveToStorage);
             cache.aiInstructions.addEventListener('input', saveToStorage);
+
+            // Listeners pour les nouveaux boutons
+            const copyCodeBtn = $('copyCodeBtn');
+            const clearCodeBtn = $('clearCodeBtn');
+            const copyInstructionsBtn = $('copyInstructionsBtn');
+            const clearInstructionsBtn = $('clearInstructionsBtn');
+
+            copyCodeBtn.addEventListener('click', () => copyToClipboard(cache.originalCode, copyCodeBtn));
+            clearCodeBtn.addEventListener('click', () => clearTextarea(cache.originalCode));
+
+            copyInstructionsBtn.addEventListener('click', () => copyToClipboard(cache.aiInstructions, copyInstructionsBtn));
+            clearInstructionsBtn.addEventListener('click', () => clearTextarea(cache.aiInstructions));
         });
         
         document.addEventListener('keydown', e => {
@@ -252,6 +316,27 @@ Exemple :
                 closePreview();
             }
         });
+
+        function copyToClipboard(textarea, btn) {
+            if (!textarea.value.trim()) return;
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = 'Copié!';
+                btn.style.background = '#4ec9b0';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 1500);
+            }).catch(err => {
+                console.error('Échec de la copie: ', err);
+                showStatus('error', 'La copie a échoué');
+            });
+        }
+
+        function clearTextarea(textarea) {
+            textarea.value = '';
+            saveToStorage();
+        }
 
         function applyChanges() {
             cache.status.className = 'status';
