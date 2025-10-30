@@ -432,25 +432,26 @@ Exemple :
         }
 
         function extractCodeFromSegment(seg) {
-            if (!seg) return '';
+    if (typeof seg !== 'string') return '';
 
-            // 1) Bloc de code “```” prioritaire
-            const fence = seg.match(/```(?:[a-z-]+)?\s*([\s\S]*?)```/i);
-            if (fence) return fence.trim();
+    // 1) Bloc de code “```” prioritaire
+    const fence = seg.match(/```(?:[a-z-]+)?\s*([\s\S]*?)```/i);
+    if (fence) return String(fence[1]).trim();
 
-            // 2) Supprime les lignes "code", "html", "javascript", etc.
-            let lines = seg.split(/\r?\n/).filter(l => {
-                const t = l.trim();
-                return !/^(code|html|xml|javascript|js|css|php|csharp|ts|typescript|json)$/i.test(t);
-            });
+    // 2) Supprime les lignes "code", "html", "javascript", etc.
+    const rows = seg.split(/\r?\n/).filter(l => {
+        const t = String(l).trim();
+        return !/^(code|html|xml|javascript|js|css|php|csharp|ts|typescript|json)$/i.test(t);
+    });
 
-            // 3) Retire les lignes vides en tête/queue
-            while (lines.length && !lines.trim()) lines.shift();
-            while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+    // 3) Retire les lignes vides en tête/queue
+    let start = 0, end = rows.length;
+    while (start < end && !String(rows[start]).trim()) start++;
+    while (end > start && !String(rows[end - 1]).trim()) end--;
 
-            // 4) Retourne tout le bloc tel quel
-            return lines.join('\n');
-        }
+    // 4) Retourne tout le bloc tel quel
+    return rows.slice(start, end).join('\n');
+}
 
         function buildFlexibleRegexFrom(search) {
             const normalized = String(search).replace(/\r\n/g, '\n');
