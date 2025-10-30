@@ -266,7 +266,6 @@ Exemple :
             cache.undoBtn.disabled = false;
 
             try {
-                // NEW: on parse JSON ou format Avant/Après automatiquement
                 const changes = parseInstructions(instructions);
                 if (!Array.isArray(changes) || !changes.length) {
                     throw new Error('Aucun changement détecté');
@@ -275,43 +274,65 @@ Exemple :
                 let code = original;
                 let count = 0;
 
-                changes.forEach(({ action, search, replace, insert }) => {
-                    if (!action) action = 'replace';
+                for (const change of changes) {
+                    const act = change.action || 'replace';
+                    const s = change.search;
+                    const r = change.replace;
+                    const ins = change.insert;
 
-                    if (action === 'replace') {
-                        if (typeof search !== 'string') throw new Error('search doit être une chaîne');
+                    if (act === 'replace') {
+                        if (typeof s !== 'string') throw new Error('search doit être une chaîne');
 
                         const before = code;
 
-                        if (code.includes(search)) {
-                            code = code.replace(search, replace ?? '');
+                        // 1) essai strict
+                        if (code.includes(s)) {
+                            code = code.replace(s, r ?? '');
                         } else {
-                            // fallback: remplacement “souple” (espaces/quotes)
-                            const re = buildFlexibleRegexFrom(search);
+                            // 2) essai souple multi-ligne
+                            const re = buildFlexibleRegexFrom(s);
                             if (re && re.test(code)) {
-                                code = code.replace(re, () => replace ?? '');
+                                code = code.replace(re, () => r ?? '');
                             }
                         }
 
                         if (code !== before) count++;
 
-                    } else if (action === 'insert_after' && search !== undefined) {
-                        if (code.includes(search)) {
-                            code = code.replace(search, search + (insert ?? ''));
+                    } else if (act === 'insert_after' && s !== undefined) {
+                        if (code.includes(s)) {
+                            code = code.replace(s, s + (ins ?? ''));
                             count++;
+                        } else {
+                            const re = buildFlexibleRegexFrom(s);
+                            if (re && re.test(code)) {
+                                code = code.replace(re, (m) => m + (ins ?? ''));
+                                count++;
+                            }
                         }
-                    } else if (action === 'insert_before' && search !== undefined) {
-                        if (code.includes(search)) {
-                            code = code.replace(search, (insert ?? '') + search);
+                    } else if (act === 'insert_before' && s !== undefined) {
+                        if (code.includes(s)) {
+                            code = code.replace(s, (ins ?? '') + s);
                             count++;
+                        } else {
+                            const re = buildFlexibleRegexFrom(s);
+                            if (re && re.test(code)) {
+                                code = code.replace(re, (m) => (ins ?? '') + m);
+                                count++;
+                            }
                         }
-                    } else if (action === 'delete' && search !== undefined) {
-                        if (code.includes(search)) {
-                            code = code.replace(search, '');
+                    } else if (act === 'delete' && s !== undefined) {
+                        if (code.includes(s)) {
+                            code = code.replace(s, '');
                             count++;
+                        } else {
+                            const re = buildFlexibleRegexFrom(s);
+                            if (re && re.test(code)) {
+                                code = code.replace(re, '');
+                                count++;
+                            }
                         }
                     }
-                });
+                }
 
                 cache.originalCode.value = code;
                 saveToStorage();
@@ -410,7 +431,6 @@ Exemple :
             return nl === -1 ? text.length : nl + 1;
         }
 
-        // Extrait un snippet de code “pertinent” d’un segment
         function extractCodeFromSegment(seg) {
             if (!seg) return '';
 
@@ -418,32 +438,28 @@ Exemple :
             const fence = seg.match(/```(?:[a-z-]+)?\s*([\s\S]*?)```/i);
             if (fence) return fence.trim();
 
-            // 2) Ignore les lignes “code”, “html”, etc.
-            const cleaned = seg
-                .split(/\r?\n/)
-                .filter(l => !/^\s*(code|html|xml|javascript|js|css|php|csharp|ts|typescript|json)\s*$/i.test(l.trim()))
-                .join('\n');
+            // 2) Supprime les lignes "code", "html", "javascript", etc.
+            let lines = seg.split(/\r?\n/).filter(l => {
+                const t = l.trim();
+                return !/^(code|html|xml|javascript|js|css|php|csharp|ts|typescript|json)$/i.test(t);
+            });
 
-            // 3) Récupère toutes les balises HTML présentes
-            const tags = Array.from(cleaned.matchAll(/<[^>]+>/g)).map(m => m).join('\n').trim();
-            if (tags) return tags;
+            // 3) Retire les lignes vides en tête/queue
+            while (lines.length && !lines.trim()) lines.shift();
+            while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
 
-            // 4) Secours: première ligne qui “ressemble à du code”
-            const line = cleaned
-                .split(/\r?\n/)
-                .map(l => l.trim())
-                .find(l => l && /[<>{}()[\]=;:'"`]/.test(l));
-            return line ? line.trim() : '';
+            // 4) Retourne tout le bloc tel quel
+            return lines.join('\n');
         }
 
-        // Construis un RegExp souple à partir du “search” (espaces/quotes flexibles)
         function buildFlexibleRegexFrom(search) {
-            const escaped = search
-                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // escape regex
-                .replace(/\s+/g, '\\s+')                // espaces flexibles
-                .replace(/["']/g, '["\']');             // ' ou "
+            const normalized = String(search).replace(/\r\n/g, '\n');
+            const escaped = normalized
+                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // échappe regex
+                .replace(/\s+/g, '\\s+')                // espaces/newlines flexibles
+                .replace(/["']/g, '["\']');             // tolère ' ou "
             try {
-                return new RegExp(escaped, 'm');
+                return new RegExp(escaped, 'msu'); // m: multi-ligne, s: . traverse \n (sécurité), u: unicode
             } catch {
                 return null;
             }
