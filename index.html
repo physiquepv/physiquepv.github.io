@@ -266,22 +266,50 @@ Exemple :
             cache.undoBtn.disabled = false;
 
             try {
-                const { changes } = JSON.parse(instructions);
-                if (!Array.isArray(changes)) throw new Error('Format JSON invalide');
+                // NEW: on parse JSON ou format Avant/Après automatiquement
+                const changes = parseInstructions(instructions);
+                if (!Array.isArray(changes) || !changes.length) {
+                    throw new Error('Aucun changement détecté');
+                }
 
                 let code = original;
                 let count = 0;
 
                 changes.forEach(({ action, search, replace, insert }) => {
-                    if (!action || search === undefined) throw new Error('action et search requis');
-                    if (!code.includes(search)) return;
-                    
-                    count++;
-                    switch (action) {
-                        case 'replace': code = code.replace(search, replace ?? ''); break;
-                        case 'insert_after': code = code.replace(search, search + (insert ?? '')); break;
-                        case 'insert_before': code = code.replace(search, (insert ?? '') + search); break;
-                        case 'delete': code = code.replace(search, ''); break;
+                    if (!action) action = 'replace';
+
+                    if (action === 'replace') {
+                        if (typeof search !== 'string') throw new Error('search doit être une chaîne');
+
+                        const before = code;
+
+                        if (code.includes(search)) {
+                            code = code.replace(search, replace ?? '');
+                        } else {
+                            // fallback: remplacement “souple” (espaces/quotes)
+                            const re = buildFlexibleRegexFrom(search);
+                            if (re && re.test(code)) {
+                                code = code.replace(re, () => replace ?? '');
+                            }
+                        }
+
+                        if (code !== before) count++;
+
+                    } else if (action === 'insert_after' && search !== undefined) {
+                        if (code.includes(search)) {
+                            code = code.replace(search, search + (insert ?? ''));
+                            count++;
+                        }
+                    } else if (action === 'insert_before' && search !== undefined) {
+                        if (code.includes(search)) {
+                            code = code.replace(search, (insert ?? '') + search);
+                            count++;
+                        }
+                    } else if (action === 'delete' && search !== undefined) {
+                        if (code.includes(search)) {
+                            code = code.replace(search, '');
+                            count++;
+                        }
                     }
                 });
 
@@ -314,13 +342,117 @@ Exemple :
             cache.previewFrame.src = '';
         }
 
+        // --- Parsing Instr. ---
 
+        function parseInstructions(instructionsText) {
+            // 1) Essaye le JSON d’abord
+            try {
+                const obj = JSON.parse(instructionsText);
+                if (obj && Array.isArray(obj.changes)) return obj.changes;
+            } catch (e) {
+                // pas du JSON, on tente Avant/Après
+            }
+
+            // 2) Sinon, essaye le format Avant/Après
+            const pairs = parseAvantApresFormat(instructionsText);
+            if (!pairs.length) {
+                throw new Error("Format d’instructions non reconnu. Fournis un JSON valide ou un bloc “Avant/Après”.");
+            }
+            // Convertit en “changes” pour l’exécuteur existant
+            return pairs.map(({ before, after }) => ({
+                action: 'replace',
+                search: before,
+                replace: after
+            }));
+        }
+
+        function parseAvantApresFormat(text) {
+            const res = [];
+            const avantRe = /^[ \t]*Avant(?:\s*[:\-—])?\s*$/mi;
+            const apresRe = /^[ \t]*Apr(?:e|è)s(?:\s*[:\-—])?\s*$/mi;
+
+            let pos = 0;
+            while (true) {
+                const avantPos = findMarkerIndex(text, avantRe, pos);
+                if (avantPos === -1) break;
+
+                const avantStartCode = nextLineStart(text, avantPos);
+                const apresPos = findMarkerIndex(text, apresRe, avantStartCode);
+                if (apresPos === -1) break;
+
+                const apresStartCode = nextLineStart(text, apresPos);
+                const nextAvantPos = findMarkerIndex(text, avantRe, apresStartCode);
+
+                const avantSeg = text.slice(avantStartCode, apresPos);
+                const apresSeg = text.slice(apresStartCode, nextAvantPos === -1 ? text.length : nextAvantPos);
+
+                const before = extractCodeFromSegment(avantSeg);
+                const after = extractCodeFromSegment(apresSeg);
+
+                if (before && after) {
+                    res.push({ before, after });
+                }
+
+                pos = nextAvantPos === -1 ? text.length : nextAvantPos;
+            }
+            return res;
+        }
+
+        function findMarkerIndex(text, regex, fromIndex) {
+            const sub = text.slice(fromIndex);
+            const re = new RegExp(regex.source, regex.flags);
+            const m = re.exec(sub);
+            return m ? fromIndex + m.index : -1;
+        }
+
+        function nextLineStart(text, index) {
+            const nl = text.indexOf('\n', index);
+            return nl === -1 ? text.length : nl + 1;
+        }
+
+        // Extrait un snippet de code “pertinent” d’un segment
+        function extractCodeFromSegment(seg) {
+            if (!seg) return '';
+
+            // 1) Bloc de code “```” prioritaire
+            const fence = seg.match(/```(?:[a-z-]+)?\s*([\s\S]*?)```/i);
+            if (fence) return fence.trim();
+
+            // 2) Ignore les lignes “code”, “html”, etc.
+            const cleaned = seg
+                .split(/\r?\n/)
+                .filter(l => !/^\s*(code|html|xml|javascript|js|css|php|csharp|ts|typescript|json)\s*$/i.test(l.trim()))
+                .join('\n');
+
+            // 3) Récupère toutes les balises HTML présentes
+            const tags = Array.from(cleaned.matchAll(/<[^>]+>/g)).map(m => m).join('\n').trim();
+            if (tags) return tags;
+
+            // 4) Secours: première ligne qui “ressemble à du code”
+            const line = cleaned
+                .split(/\r?\n/)
+                .map(l => l.trim())
+                .find(l => l && /[<>{}()[\]=;:'"`]/.test(l));
+            return line ? line.trim() : '';
+        }
+
+        // Construis un RegExp souple à partir du “search” (espaces/quotes flexibles)
+        function buildFlexibleRegexFrom(search) {
+            const escaped = search
+                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // escape regex
+                .replace(/\s+/g, '\\s+')                // espaces flexibles
+                .replace(/["']/g, '["\']');             // ' ou "
+            try {
+                return new RegExp(escaped, 'm');
+            } catch {
+                return null;
+            }
+        }
 
         function showStatus(type, msg) {
             cache.status.className = `status ${type}`;
             cache.status.textContent = msg;
         }
-
 
     </script>
 </body>
