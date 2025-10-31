@@ -351,69 +351,62 @@ Exemple :
             cache.undoBtn.disabled = false;
 
             try {
+                // ... à l’intérieur de try { ... } dans applyChanges()
                 const changes = parseInstructions(instructions);
                 if (!Array.isArray(changes) || !changes.length) {
                     throw new Error('Aucun changement détecté');
                 }
 
                 let code = original;
-                let count = 0;
+                let applied = 0;
 
                 for (const change of changes) {
-                    const act = change.action || 'replace';
-                    const s = change.search;
-                    const r = change.replace;
-                    const ins = change.insert;
+                    let { action, search: s, replace: r, insert: ins } = change;
+                    action = action || 'replace';
 
-                    if (act === 'replace') {
+                    if (action === 'replace') {
                         if (typeof s !== 'string') throw new Error('search doit être une chaîne');
-
                         const before = code;
 
-                        // 1) essai strict
                         if (code.includes(s)) {
                             code = code.replace(s, r ?? '');
                         } else {
-                            // 2) essai souple multi-ligne
                             const re = buildFlexibleRegexFrom(s);
-                            if (re && re.test(code)) {
-                                code = code.replace(re, () => r ?? '');
-                            }
+                            if (re && re.test(code)) code = code.replace(re, () => r ?? '');
                         }
+                        if (code !== before) applied++;
 
-                        if (code !== before) count++;
-
-                    } else if (act === 'insert_after' && s !== undefined) {
+                    } else if (action === 'insert_after' && s !== undefined) {
                         if (code.includes(s)) {
                             code = code.replace(s, s + (ins ?? ''));
-                            count++;
+                            applied++;
                         } else {
                             const re = buildFlexibleRegexFrom(s);
                             if (re && re.test(code)) {
                                 code = code.replace(re, (m) => m + (ins ?? ''));
-                                count++;
+                                applied++;
                             }
                         }
-                    } else if (act === 'insert_before' && s !== undefined) {
+                    } else if (action === 'insert_before' && s !== undefined) {
                         if (code.includes(s)) {
                             code = code.replace(s, (ins ?? '') + s);
-                            count++;
+                            applied++;
                         } else {
                             const re = buildFlexibleRegexFrom(s);
                             if (re && re.test(code)) {
                                 code = code.replace(re, (m) => (ins ?? '') + m);
-                                count++;
+                                applied++;
                             }
                         }
-                    } else if (act === 'delete' && s !== undefined) {
+                    } else if (action === 'delete' && s !== undefined) {
                         if (code.includes(s)) {
                             code = code.replace(s, '');
-                            count++;
+                            applied++;
                         } else {
                             const re = buildFlexibleRegexFrom(s);
                             if (re && re.test(code)) {
                                 code = code.replace(re, '');
-                                count++;
+                                applied++;
                             }
                         }
                     }
@@ -421,7 +414,8 @@ Exemple :
 
                 cache.originalCode.value = code;
                 saveToStorage();
-                showStatus('success', `✅ ${count} changement(s) appliqué(s)`);
+                showStatus(applied ? 'success' : 'error', applied ? `✅ ${applied}/${changes.length} modification(s) appliquée(s)` : '❌ Aucune modification appliquée');
+
             } catch (error) {
                 showStatus('error', `❌ ${error.message}`);
             }
@@ -474,8 +468,9 @@ Exemple :
 
         function parseAvantApresFormat(text) {
             const res = [];
-            const avantRe = /^[ \t]*Avant(?:\s*[:\-—])?\s*$/mi;
-            const apresRe = /^[ \t]*Apr(?:e|è)s(?:\s*[:\-—])?\s*$/mi;
+            // Tolère "Avant" / "AVANT" avec description après, idem pour "Après" / "APRÈS"
+            const avantRe = /^[ \t]*avant\b[^\n]*$/mi;
+            const apresRe = /^[ \t]*apr(?:e|è)s\b[^\n]*$/mi;
 
             let pos = 0;
             while (true) {
@@ -495,9 +490,7 @@ Exemple :
                 const before = extractCodeFromSegment(avantSeg);
                 const after = extractCodeFromSegment(apresSeg);
 
-                if (before && after) {
-                    res.push({ before, after });
-                }
+                if (before && after) res.push({ before, after });
 
                 pos = nextAvantPos === -1 ? text.length : nextAvantPos;
             }
@@ -517,26 +510,30 @@ Exemple :
         }
 
         function extractCodeFromSegment(seg) {
-    if (typeof seg !== 'string') return '';
+            if (typeof seg !== 'string') return '';
 
-    // 1) Bloc de code “```” prioritaire
-    const fence = seg.match(/```(?:[a-z-]+)?\s*([\s\S]*?)```/i);
-    if (fence) return String(fence[1]).trim();
+            // 1) Bloc ``` prioritaire
+            const fence = seg.match(/`{3}(?:[a-z-]+)?\s*([\s\S]*?)`{3}/i);
+            if (fence) return String(fence).trim();
 
-    // 2) Supprime les lignes "code", "html", "javascript", etc.
-    const rows = seg.split(/\r?\n/).filter(l => {
-        const t = String(l).trim();
-        return !/^(code|html|xml|javascript|js|css|php|csharp|ts|typescript|json)$/i.test(t);
-    });
+            // 2) Nettoie les lignes "code", "css", "javascript", "html", etc.
+            const rows = seg.split(/\r?\n/).filter(l => {
+                const t = String(l).trim();
+                return !/^(code|html|xml|javascript|js|css|php|csharp|ts|typescript|json)$/i.test(t);
+            });
 
-    // 3) Retire les lignes vides en tête/queue
-    let start = 0, end = rows.length;
-    while (start < end && !String(rows[start]).trim()) start++;
-    while (end > start && !String(rows[end - 1]).trim()) end--;
+            // 3) Heuristique: ne garder que les lignes qui ressemblent à du code
+            // - balises, accolades, propriétés CSS, variables CSS, commentaires code, JS/TS tokens, etc.
+            const CODE_LINE_RE = /[<>{}()[\];]|=>|^\s*[@.#a-zA-Z0-9_-]+\s*\{|^\s*(?:\/\*|\*|\/\/)|^\s*--[a-zA-Z-]+:|^\s*[a-zA-Z_-]+\s*:/;
 
-    // 4) Retourne tout le bloc tel quel
-    return rows.slice(start, end).join('\n');
-}
+            const kept = rows.filter(l => {
+                const t = l.trim();
+                if (!t) return false;             // on retire les lignes vides "isolées"
+                return CODE_LINE_RE.test(t);
+            });
+
+            return kept.join('\n').trim();
+        }
 
         function buildFlexibleRegexFrom(search) {
             const normalized = String(search).replace(/\r\n/g, '\n');
