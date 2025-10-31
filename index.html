@@ -4,202 +4,261 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto-Patcher IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 10px;
-            overflow: hidden;
+        :root {
+            --bg-color: #1a1b1e;
+            --panel-bg: #2a2b2f;
+            --border-color: #404248;
+            --text-color: #e2e2e4;
+            --text-muted: #9a9ca3;
+            --primary-color: #3b82f6;
+            --secondary-color: #14b8a6;
+            --error-color: #ef4444;
+            --success-color: #22c55e;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'Fira Code', 'Courier New', monospace;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+
         .container {
+            width: 100%;
             max-width: 1600px;
             margin: 0 auto;
         }
+
         h1 {
             text-align: center;
-            margin-bottom: 10px;
-            color: #4ec9b0;
-            font-size: 24px;
+            margin-bottom: 25px;
+            color: white;
+            font-size: 2.25rem;
+            font-weight: 600;
+            letter-spacing: -1px;
         }
+
         .panels {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 20px;
+            margin-bottom: 20px;
         }
+
         .panel {
-            background: #252526;
-            border-radius: 6px;
-            padding: 8px;
-            border: 1px solid #3e3e42;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
         }
+        
+        .panel:focus-within {
+             border-color: var(--primary-color);
+             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
         .panel h2 {
-            color: #569cd6;
-            margin-bottom: 5px;
-            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-size: 1rem;
+            font-weight: 500;
         }
+
         .textarea-wrapper {
             position: relative;
             flex-grow: 1;
             display: flex;
         }
+
         textarea {
             width: 100%;
-            height: 180px;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            border: 1px solid #3e3e42;
-            border-radius: 4px;
-            padding: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
+            height: 300px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
             resize: vertical;
+            transition: border-color 0.2s, background-color 0.2s;
         }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #1f2023;
+        }
+
         .panel-buttons {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 10px;
+            right: 10px;
             display: flex;
-            gap: 5px;
+            gap: 8px;
             z-index: 10;
             opacity: 0;
-            transition: opacity 0.2s ease-in-out;
+            transform: translateY(-5px);
+            transition: opacity 0.2s, transform 0.2s;
         }
-        .textarea-wrapper:hover .panel-buttons {
+
+        .textarea-wrapper:hover .panel-buttons,
+        textarea:focus + .panel-buttons {
             opacity: 1;
-        }
-        .panel-btn {
-            background: rgba(86, 156, 214, 0.2);
-            border: 1px solid #3e3e42;
-            color: #d4d4d4;
-            padding: 2px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-family: sans-serif;
-            line-height: 1.2;
-            width: auto;
-            margin: 0;
-            display: inline-block;
-            transition: all 0.2s;
-        }
-        .panel-btn:hover {
-            background: rgba(86, 156, 214, 0.4);
-            transform: none;
-            box-shadow: none;
-        }
-        button {
-            display: block;
-            width: 100%;
-            max-width: 250px;
-            margin: 8px auto;
-            padding: 10px 20px;
-            background: #4ec9b0;
-            color: #000;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        button:hover {
-            background: #6ee7d2;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 201, 176, 0.3);
-        }
-        button:active {
             transform: translateY(0);
         }
+
+        .panel-btn {
+            background: #3a3b3f;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+
+        .panel-btn:hover {
+            color: var(--text-color);
+            background-color: #4a4b4f;
+        }
+        
+        .panel-btn.copied {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+        
+        .main-action-btn {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 20px auto;
+            padding: 14px 28px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .main-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2), 0 8px 25px rgba(20, 184, 166, 0.2);
+        }
+
+        .main-action-btn:active {
+            transform: translateY(0);
+        }
+
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
-            margin: 5px 0;
+            margin: 10px 0;
         }
-        .undo-btn {
-            background: #ce9178;
-            max-width: 200px;
+        
+        .button-group button {
+            background: var(--panel-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.1s;
         }
-        .undo-btn:hover {
-            background: #dea485;
+
+        .button-group button:hover:not(:disabled) {
+            background-color: var(--border-color);
+            border-color: #555;
         }
-        .undo-btn:disabled {
-            background: #555;
+
+        .button-group button:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .button-group button:disabled {
+            background: #222326;
+            border-color: #2f3034;
+            color: #666;
             cursor: not-allowed;
-            opacity: 0.5;
         }
-        .preview-btn {
-            background: #569cd6;
-            max-width: 200px;
-        }
-        .preview-btn:hover {
-            background: #7bb3e6;
-        }
+
         .preview-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            z-index: 1000;
-            padding: 20px;
-        }
-        .preview-container.active {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
             display: flex;
             flex-direction: column;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
         }
+
+        .preview-container.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
         .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: white;
         }
-        .preview-header h3 {
-            color: #4ec9b0;
-            margin: 0;
-        }
+        
         .close-preview {
-            background: #f44242;
-            padding: 10px 20px;
-            max-width: 150px;
-            margin: 0;
+            background: #3a3b3f; border: 1px solid var(--border-color); color: var(--text-muted);
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;
         }
-        .close-preview:hover {
-            background: #ff5555;
-        }
+        .close-preview:hover { color: white; background-color: var(--error-color); border-color: var(--error-color); }
+
         .preview-frame {
-            flex: 1;
-            background: white;
-            border: 3px solid #4ec9b0;
-            border-radius: 8px;
-            overflow: auto;
+            flex: 1; background: white; border: 2px solid var(--border-color); border-radius: 8px; overflow: auto;
         }
+
         .status {
-            text-align: center;
-            padding: 6px;
-            margin: 5px 0;
-            border-radius: 4px;
-            display: none;
-            font-size: 13px;
+            text-align: center; padding: 12px; margin: 20px auto 0; border-radius: 8px;
+            font-size: 0.9rem; font-weight: 500; max-width: 800px;
+            opacity: 0; transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            visibility: hidden;
         }
+
+        .status.active {
+            opacity: 1; transform: translateY(0); visibility: visible;
+        }
+        
         .status.success {
-            background: #4ec9b033;
-            border: 1px solid #4ec9b0;
-            color: #4ec9b0;
-            display: block;
+            background: rgba(34, 197, 94, 0.1); border: 1px solid var(--success-color); color: var(--success-color);
         }
+
         .status.error {
-            background: #f4424233;
-            border: 1px solid #f44242;
-            color: #f44242;
-            display: block;
+            background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error-color); color: var(--error-color);
         }
     </style>
 </head>
@@ -209,9 +268,9 @@
         
         <div class="panels">
             <div class="panel">
-                <h2>📄 Ton code HTML actuel</h2>
+                <h2>📄 Code Source</h2>
                 <div class="textarea-wrapper">
-                    <textarea id="originalCode" placeholder="Colle ton code HTML ici..."></textarea>
+                    <textarea id="originalCode" placeholder="Colle ton code HTML, CSS ou JS ici..."></textarea>
                     <div class="panel-buttons">
                         <button class="panel-btn" id="copyCodeBtn" title="Copier le code">📋</button>
                         <button class="panel-btn" id="clearCodeBtn" title="Effacer le code">✕</button>
@@ -220,20 +279,9 @@
             </div>
             
             <div class="panel">
-                <h2>🤖 Instructions JSON de l'IA</h2>
+                <h2>✨ Instructions de l'IA</h2>
                 <div class="textarea-wrapper">
-                    <textarea id="aiInstructions" placeholder='Colle la réponse JSON de l\'IA ici...
-
-Exemple :
-{
-  "changes": [
-    {
-      "action": "replace",
-      "search": "<h1>Ancien</h1>",
-      "replace": "<h1>Nouveau</h1>"
-    }
-  ]
-}'></textarea>
+                    <textarea id="aiInstructions" placeholder='Colle la réponse JSON ou "Avant/Après" de l\'IA ici...'></textarea>
                     <div class="panel-buttons">
                         <button class="panel-btn" id="copyInstructionsBtn" title="Copier les instructions">📋</button>
                         <button class="panel-btn" id="clearInstructionsBtn" title="Effacer les instructions">✕</button>
@@ -242,15 +290,14 @@ Exemple :
             </div>
         </div>
 
-        <button onclick="applyChanges()">✨ Appliquer les changements</button>
+        <button class="main-action-btn" onclick="applyChanges()">✨ Appliquer les changements</button>
         
         <div class="button-group">
-            <button class="undo-btn" id="undoBtn" onclick="undo()" disabled>↶ Annuler (Ctrl+Z)</button>
-            <button class="preview-btn" onclick="openPreview()">👁️ Prévisualiser</button>
+            <button id="undoBtn" onclick="undo()" disabled>↶ Annuler (Ctrl+Z)</button>
+            <button onclick="openPreview()">👁️ Prévisualiser</button>
         </div>
         
         <div id="status" class="status"></div>
-
     </div>
 
     <div class="preview-container" id="previewContainer">
@@ -265,70 +312,47 @@ Exemple :
         const $ = id => document.getElementById(id);
         const history = [];
         const cache = {};
+        let statusTimeout;
         
-        // Sauvegarder dans localStorage
         function saveToStorage() {
-            localStorage.setItem('originalCode', cache.originalCode.value);
-            localStorage.setItem('aiInstructions', cache.aiInstructions.value);
+            localStorage.setItem('autoPatcher_originalCode', cache.originalCode.value);
+            localStorage.setItem('autoPatcher_aiInstructions', cache.aiInstructions.value);
         }
         
-        // Charger depuis localStorage
         function loadFromStorage() {
-            const savedCode = localStorage.getItem('originalCode');
-            const savedInstructions = localStorage.getItem('aiInstructions');
-            
-            cache.originalCode.value = savedCode || `<!DOCTYPE html>\n<html>\n<head>\n    <title>Mon Site</title>\n</head>\n<body>\n    <h1>Ancien Titre</h1>\n    <p>Contenu de test</p>\n</body>\n</html>`;
-            cache.aiInstructions.value = savedInstructions || `{\n  "changes": [\n    {\n      "action": "replace",\n      "search": "<h1>Ancien Titre</h1>",\n      "replace": "<h1>Nouveau Titre Modifié ✨</h1>"\n    }\n  ]\n}`;
+            cache.originalCode.value = localStorage.getItem('autoPatcher_originalCode') || `<!DOCTYPE html>\n<html>\n<body>\n    <h1>Titre Original</h1>\n</body>\n</html>`;
+            cache.aiInstructions.value = localStorage.getItem('autoPatcher_aiInstructions') || `AVANT:\n<h1>Titre Original</h1>\n\nAPRÈS:\n<h1>Nouveau Titre Fantastique ✨</h1>`;
         }
         
         window.addEventListener('load', () => {
-            cache.originalCode = $('originalCode');
-            cache.aiInstructions = $('aiInstructions');
-            cache.status = $('status');
-            cache.undoBtn = $('undoBtn');
-            cache.previewContainer = $('previewContainer');
-            cache.previewFrame = $('previewFrame');
-            
+            ['originalCode', 'aiInstructions', 'status', 'undoBtn', 'previewContainer', 'previewFrame'].forEach(id => cache[id] = $(id));
             loadFromStorage();
             
-            // Auto-save au changement
             cache.originalCode.addEventListener('input', saveToStorage);
             cache.aiInstructions.addEventListener('input', saveToStorage);
 
-            // Listeners pour les nouveaux boutons
-            const copyCodeBtn = $('copyCodeBtn');
-            const clearCodeBtn = $('clearCodeBtn');
-            const copyInstructionsBtn = $('copyInstructionsBtn');
-            const clearInstructionsBtn = $('clearInstructionsBtn');
-
-            copyCodeBtn.addEventListener('click', () => copyToClipboard(cache.originalCode, copyCodeBtn));
-            clearCodeBtn.addEventListener('click', () => clearTextarea(cache.originalCode));
-
-            copyInstructionsBtn.addEventListener('click', () => copyToClipboard(cache.aiInstructions, copyInstructionsBtn));
-            clearInstructionsBtn.addEventListener('click', () => clearTextarea(cache.aiInstructions));
+            $('copyCodeBtn').addEventListener('click', () => copyToClipboard(cache.originalCode, $('copyCodeBtn')));
+            $('clearCodeBtn').addEventListener('click', () => clearTextarea(cache.originalCode));
+            $('copyInstructionsBtn').addEventListener('click', () => copyToClipboard(cache.aiInstructions, $('copyInstructionsBtn')));
+            $('clearInstructionsBtn').addEventListener('click', () => clearTextarea(cache.aiInstructions));
         });
         
         document.addEventListener('keydown', e => {
-            if (e.ctrlKey && e.key === 'z') {
-                e.preventDefault();
-                undo();
-            } else if (e.key === 'Escape') {
-                closePreview();
-            }
+            if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undo(); }
+            if (e.key === 'Escape') { closePreview(); }
         });
 
         function copyToClipboard(textarea, btn) {
             if (!textarea.value.trim()) return;
             navigator.clipboard.writeText(textarea.value).then(() => {
                 const originalText = btn.textContent;
-                btn.textContent = 'Copié!';
-                btn.style.background = '#4ec9b0';
+                btn.textContent = '✓';
+                btn.classList.add('copied');
                 setTimeout(() => {
                     btn.textContent = originalText;
-                    btn.style.background = '';
+                    btn.classList.remove('copied');
                 }, 1500);
             }).catch(err => {
-                console.error('Échec de la copie: ', err);
                 showStatus('error', 'La copie a échoué');
             });
         }
@@ -339,84 +363,59 @@ Exemple :
         }
 
         function applyChanges() {
-            cache.status.className = 'status';
-            
             const original = cache.originalCode.value;
             const instructions = cache.aiInstructions.value;
 
-            if (!original.trim()) return showStatus('error', '❌ Veuillez entrer du code HTML');
-            if (!instructions.trim()) return showStatus('error', '❌ Veuillez entrer les instructions de l\'IA');
+            if (!original.trim()) return showStatus('error', '❌ Le code source est vide.');
+            if (!instructions.trim()) return showStatus('error', '❌ Les instructions sont vides.');
 
             history.push(original);
             cache.undoBtn.disabled = false;
 
             try {
-                // ... à l’intérieur de try { ... } dans applyChanges()
                 const changes = parseInstructions(instructions);
-                if (!Array.isArray(changes) || !changes.length) {
-                    throw new Error('Aucun changement détecté');
-                }
+                if (!changes?.length) throw new Error('Aucun changement valide trouvé dans les instructions.');
 
                 let code = original;
-                let applied = 0;
+                let appliedCount = 0;
 
                 for (const change of changes) {
-                    let { action, search: s, replace: r, insert: ins } = change;
-                    action = action || 'replace';
-
-                    if (action === 'replace') {
-                        if (typeof s !== 'string') throw new Error('search doit être une chaîne');
-                        const before = code;
-
-                        if (code.includes(s)) {
-                            code = code.replace(s, r ?? '');
-                        } else {
-                            const re = buildFlexibleRegexFrom(s);
-                            if (re && re.test(code)) code = code.replace(re, () => r ?? '');
-                        }
-                        if (code !== before) applied++;
-
-                    } else if (action === 'insert_after' && s !== undefined) {
-                        if (code.includes(s)) {
-                            code = code.replace(s, s + (ins ?? ''));
-                            applied++;
-                        } else {
-                            const re = buildFlexibleRegexFrom(s);
-                            if (re && re.test(code)) {
-                                code = code.replace(re, (m) => m + (ins ?? ''));
-                                applied++;
-                            }
-                        }
-                    } else if (action === 'insert_before' && s !== undefined) {
-                        if (code.includes(s)) {
-                            code = code.replace(s, (ins ?? '') + s);
-                            applied++;
-                        } else {
-                            const re = buildFlexibleRegexFrom(s);
-                            if (re && re.test(code)) {
-                                code = code.replace(re, (m) => (ins ?? '') + m);
-                                applied++;
-                            }
-                        }
-                    } else if (action === 'delete' && s !== undefined) {
-                        if (code.includes(s)) {
-                            code = code.replace(s, '');
-                            applied++;
-                        } else {
-                            const re = buildFlexibleRegexFrom(s);
-                            if (re && re.test(code)) {
-                                code = code.replace(re, '');
-                                applied++;
-                            }
+                    const { action = 'replace', search, replace, insert } = change;
+                    let operationPerformed = false;
+                    
+                    if (search !== undefined) {
+                        const regex = buildFlexibleRegexFrom(search);
+                        if (regex && regex.test(code)) {
+                             let replacement;
+                             if (action === 'replace') replacement = replace ?? '';
+                             else if (action === 'insert_after') replacement = (match) => match + (insert ?? '');
+                             else if (action === 'insert_before') replacement = (match) => (insert ?? '') + match;
+                             else if (action === 'delete') replacement = '';
+                             
+                             if (replacement !== undefined) {
+                                const newCode = code.replace(regex, replacement);
+                                if (newCode !== code) {
+                                    code = newCode;
+                                    operationPerformed = true;
+                                }
+                             }
                         }
                     }
+                    if (operationPerformed) appliedCount++;
                 }
 
                 cache.originalCode.value = code;
                 saveToStorage();
-                showStatus(applied ? 'success' : 'error', applied ? `✅ ${applied}/${changes.length} modification(s) appliquée(s)` : '❌ Aucune modification appliquée');
+                
+                if (appliedCount > 0) {
+                    showStatus('success', `✅ ${appliedCount}/${changes.length} changement(s) appliqué(s).`);
+                } else {
+                    showStatus('error', '❌ Aucune modification n\'a pu être appliquée. Vérifiez les instructions.');
+                }
 
             } catch (error) {
+                history.pop(); // Annuler l'ajout à l'historique si erreur
+                cache.undoBtn.disabled = history.length === 0;
                 showStatus('error', `❌ ${error.message}`);
             }
         }
@@ -426,133 +425,91 @@ Exemple :
             cache.originalCode.value = history.pop();
             saveToStorage();
             cache.undoBtn.disabled = !history.length;
-            showStatus('success', '↶ Changement annulé');
+            showStatus('success', '↶ Changement annulé.');
         }
 
         function openPreview() {
             const code = cache.originalCode.value;
-            if (!code.trim()) return showStatus('error', '❌ Aucun code à prévisualiser');
-            
+            if (!code.trim()) return showStatus('error', '❌ Aucun code à prévisualiser.');
             cache.previewContainer.classList.add('active');
-            cache.previewFrame.src = URL.createObjectURL(new Blob([code], { type: 'text/html' }));
+            cache.previewFrame.srcdoc = code;
         }
 
         function closePreview() {
             cache.previewContainer.classList.remove('active');
-            cache.previewFrame.src = '';
+            cache.previewFrame.srcdoc = '';
         }
 
-        // --- Parsing Instr. ---
+        function showStatus(type, msg) {
+            clearTimeout(statusTimeout);
+            cache.status.className = `status ${type} active`;
+            cache.status.textContent = msg;
+            statusTimeout = setTimeout(() => {
+                cache.status.classList.remove('active');
+            }, 4000);
+        }
 
-        function parseInstructions(instructionsText) {
-            // 1) Essaye le JSON d’abord
+        function parseInstructions(text) {
             try {
-                const obj = JSON.parse(instructionsText);
+                const obj = JSON.parse(text);
                 if (obj && Array.isArray(obj.changes)) return obj.changes;
-            } catch (e) {
-                // pas du JSON, on tente Avant/Après
-            }
+            } catch (e) { /* Fallback to Avant/Après */ }
 
-            // 2) Sinon, essaye le format Avant/Après
-            const pairs = parseAvantApresFormat(instructionsText);
+            const pairs = parseAvantApresFormat(text);
             if (!pairs.length) {
-                throw new Error("Format d’instructions non reconnu. Fournis un JSON valide ou un bloc “Avant/Après”.");
+                throw new Error("Format d'instructions non reconnu. Utilisez JSON ou Avant/Après.");
             }
-            // Convertit en “changes” pour l’exécuteur existant
             return pairs.map(({ before, after }) => ({
-                action: 'replace',
-                search: before,
-                replace: after
+                action: 'replace', search: before, replace: after
             }));
         }
 
         function parseAvantApresFormat(text) {
-            const res = [];
-            // Tolère "Avant" / "AVANT" avec description après, idem pour "Après" / "APRÈS"
-            const avantRe = /^[ \t]*avant\b[^\n]*$/mi;
-            const apresRe = /^[ \t]*apr(?:e|è)s\b[^\n]*$/mi;
+            const results = [];
+            const avantRegex = /^[ \t]*avant\b[^\n]*$/mi;
+            const apresRegex = /^[ \t]*apr(?:e|è)s\b[^\n]*$/mi;
+            let lastIndex = 0;
 
-            let pos = 0;
             while (true) {
-                const avantPos = findMarkerIndex(text, avantRe, pos);
-                if (avantPos === -1) break;
+                const avantMatch = avantRegex.exec(text.substring(lastIndex));
+                if (!avantMatch) break;
+                const avantStartIndex = lastIndex + avantMatch.index + avantMatch.length;
+                
+                const apresMatch = apresRegex.exec(text.substring(avantStartIndex));
+                if (!apresMatch) break;
+                const apresStartIndex = avantStartIndex + apresMatch.index + apresMatch.length;
 
-                const avantStartCode = nextLineStart(text, avantPos);
-                const apresPos = findMarkerIndex(text, apresRe, avantStartCode);
-                if (apresPos === -1) break;
+                const avantContentEnd = avantStartIndex + apresMatch.index;
+                
+                const nextAvantMatch = avantRegex.exec(text.substring(apresStartIndex));
+                const apresContentEnd = nextAvantMatch ? apresStartIndex + nextAvantMatch.index : text.length;
+                
+                const before = extractCodeFromSegment(text.substring(avantStartIndex, avantContentEnd));
+                const after = extractCodeFromSegment(text.substring(apresStartIndex, apresContentEnd));
 
-                const apresStartCode = nextLineStart(text, apresPos);
-                const nextAvantPos = findMarkerIndex(text, avantRe, apresStartCode);
-
-                const avantSeg = text.slice(avantStartCode, apresPos);
-                const apresSeg = text.slice(apresStartCode, nextAvantPos === -1 ? text.length : nextAvantPos);
-
-                const before = extractCodeFromSegment(avantSeg);
-                const after = extractCodeFromSegment(apresSeg);
-
-                if (before && after) res.push({ before, after });
-
-                pos = nextAvantPos === -1 ? text.length : nextAvantPos;
+                if (before && after) results.push({ before, after });
+                lastIndex = apresStartIndex;
             }
-            return res;
-        }
-
-        function findMarkerIndex(text, regex, fromIndex) {
-            const sub = text.slice(fromIndex);
-            const re = new RegExp(regex.source, regex.flags);
-            const m = re.exec(sub);
-            return m ? fromIndex + m.index : -1;
-        }
-
-        function nextLineStart(text, index) {
-            const nl = text.indexOf('\n', index);
-            return nl === -1 ? text.length : nl + 1;
+            return results;
         }
 
         function extractCodeFromSegment(seg) {
-            if (typeof seg !== 'string') return '';
-
-            // 1) Bloc ``` prioritaire
-            const fence = seg.match(/`{3}(?:[a-z-]+)?\s*([\s\S]*?)`{3}/i);
-            if (fence) return String(fence).trim();
-
-            // 2) Nettoie les lignes "code", "css", "javascript", "html", etc.
-            const rows = seg.split(/\r?\n/).filter(l => {
-                const t = String(l).trim();
-                return !/^(code|html|xml|javascript|js|css|php|csharp|ts|typescript|json)$/i.test(t);
-            });
-
-            // 3) Heuristique: ne garder que les lignes qui ressemblent à du code
-            // - balises, accolades, propriétés CSS, variables CSS, commentaires code, JS/TS tokens, etc.
-            const CODE_LINE_RE = /[<>{}()[\];]|=>|^\s*[@.#a-zA-Z0-9_-]+\s*\{|^\s*(?:\/\*|\*|\/\/)|^\s*--[a-zA-Z-]+:|^\s*[a-zA-Z_-]+\s*:/;
-
-            const kept = rows.filter(l => {
-                const t = l.trim();
-                if (!t) return false;             // on retire les lignes vides "isolées"
-                return CODE_LINE_RE.test(t);
-            });
-
-            return kept.join('\n').trim();
+            const fencedMatch = seg.match(/`{3}(?:[a-z]+)?\s*([\s\S]*?)\s*`{3}/i);
+            if (fencedMatch) return fencedMatch.trim();
+            return seg.trim();
         }
 
         function buildFlexibleRegexFrom(search) {
-            const normalized = String(search).replace(/\r\n/g, '\n');
+            const normalized = String(search).trim().replace(/\r\n/g, '\n');
+            if (!normalized) return null;
             const escaped = normalized
-                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // échappe regex
-                .replace(/\s+/g, '\\s+')                // espaces/newlines flexibles
-                .replace(/["']/g, '["\']');             // tolère ' ou "
+                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                .replace(/\s+/g, '\\s+')
+                .replace(/["']/g, '["\']');
             try {
-                return new RegExp(escaped, 'msu'); // m: multi-ligne, s: . traverse \n (sécurité), u: unicode
-            } catch {
-                return null;
-            }
+                return new RegExp(escaped, 'msu');
+            } catch { return null; }
         }
-
-        function showStatus(type, msg) {
-            cache.status.className = `status ${type}`;
-            cache.status.textContent = msg;
-        }
-
     </script>
 </body>
 </html>
