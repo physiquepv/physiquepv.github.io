@@ -3,93 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Sequence Memory Test</title>
+    <title>Human Benchmark</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-    /* Thème Dark (Défaut) */
-    --bg: #1a1a1a;
-    --surface: #222222;
-    --tile: #333333;
-    --tile-active: #ffffff;
-    --tile-wrong: #d9534f;
-    --text: #e8e8e8;
-    --text-muted: #777777;
-    --accent: #5cb85c;
-    --speed-on: #f0ad4e;
-}
+            /* Thème Dark (Défaut) */
+            --bg: #1a1a1a;
+            --surface: #222222;
+            --tile: #333333;
+            --tile-active: #ffffff;
+            --tile-wrong: #d9534f;
+            --text: #e8e8e8;
+            --text-muted: #777777;
+            --accent: #5cb85c;
+            --speed-on: #f0ad4e;
+            --tile-chimp: #444444;
+            --tile-chimp-hidden: #888888;
+        }
 
-/* Thème Bleu Océan */
-body.theme-blue {
-    --bg: #0f172a;
-    --surface: #1e293b;
-    --tile: #334155;
-    --tile-active: #38bdf8;
-    --tile-wrong: #ef4444;
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --accent: #3b82f6;
-    --speed-on: #f59e0b;
-}
+        /* Thème Bleu Océan */
+        body.theme-blue {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --tile: #334155;
+            --tile-active: #38bdf8;
+            --tile-wrong: #ef4444;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --speed-on: #f59e0b;
+            --tile-chimp: #3b4963;
+            --tile-chimp-hidden: #7da3c7;
+        }
 
-/* Thème Cyberpunk */
-body.theme-cyber {
-    --bg: #0a0a12;
-    --surface: #1a0a2e;
-    --tile: #2d1b4e;
-    --tile-active: #ff00ff;
-    --tile-wrong: #ff2222;
-    --text: #e0e0ff;
-    --text-muted: #a0a0cc;
-    --accent: #00ffff;
-    --speed-on: #ffff00;
-}
+        /* Thème Cyberpunk */
+        body.theme-cyber {
+            --bg: #0a0a12;
+            --surface: #1a0a2e;
+            --tile: #2d1b4e;
+            --tile-active: #ff00ff;
+            --tile-wrong: #ff2222;
+            --text: #e0e0ff;
+            --text-muted: #a0a0cc;
+            --accent: #00ffff;
+            --speed-on: #ffff00;
+            --tile-chimp: #3d1b6e;
+            --tile-chimp-hidden: #a0a0cc;
+        }
 
-/* Thème Forêt */
-body.theme-forest {
-    --bg: #0f1a0f;
-    --surface: #1a2e1a;
-    --tile: #2b4a2b;
-    --tile-active: #a3e635;
-    --tile-wrong: #ef4444;
-    --text: #e8f5e8;
-    --text-muted: #7aa07a;
-    --accent: #22c55e;
-    --speed-on: #f59e0b;
-}
-
-/* Style du sélecteur de thèmes */
-.theme-selector {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 4px;
-}
-
-.theme-dot {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.theme-dot:hover {
-    transform: scale(1.2);
-}
-
-.theme-dot.active {
-    border-color: var(--text);
-    transform: scale(1.1);
-    box-shadow: 0 0 8px rgba(255,255,255,0.2);
-}
-
-.theme-dot[data-theme=""] { background: #333; }
-.theme-dot[data-theme="theme-blue"] { background: #334155; }
-.theme-dot[data-theme="theme-cyber"] { background: #2d1b4e; }
-.theme-dot[data-theme="theme-forest"] { background: #2b4a2b; }
+        /* Thème Forêt */
+        body.theme-forest {
+            --bg: #0f1a0f;
+            --surface: #1a2e1a;
+            --tile: #2b4a2b;
+            --tile-active: #a3e635;
+            --tile-wrong: #ef4444;
+            --text: #e8f5e8;
+            --text-muted: #7aa07a;
+            --accent: #22c55e;
+            --speed-on: #f59e0b;
+            --tile-chimp: #3b6b3b;
+            --tile-chimp-hidden: #7aa07a;
+        }
 
         * {
             margin: 0;
@@ -106,14 +82,12 @@ body.theme-forest {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             padding: 16px;
             user-select: none;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
         }
 
-        /* Subtil fond animé */
         body::before {
             content: '';
             position: fixed;
@@ -121,9 +95,8 @@ body.theme-forest {
             left: -50%;
             width: 200%;
             height: 200%;
-            background:
-                radial-gradient(circle at 30% 35%, rgba(92,184,92,0.025) 0%, transparent 50%),
-                radial-gradient(circle at 70% 65%, rgba(240,173,78,0.015) 0%, transparent 50%);
+            background: radial-gradient(circle at 30% 35%, rgba(92,184,92,0.02) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 65%, rgba(240,173,78,0.01) 0%, transparent 50%);
             animation: bgFloat 25s ease-in-out infinite;
             pointer-events: none;
             z-index: 0;
@@ -134,7 +107,7 @@ body.theme-forest {
             50% { transform: translate(2%, 1%); }
         }
 
-        .container {
+        .app-container {
             position: relative;
             z-index: 1;
             width: 100%;
@@ -142,72 +115,111 @@ body.theme-forest {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 18px;
         }
 
-        /* En-tête */
-        .header {
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 4px;
-        }
-
-        .header p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 300;
-        }
-
-        /* Scores */
-        .scores {
+        /* Onglets */
+        .tabs {
             display: flex;
-            gap: 40px;
-            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--tile);
         }
 
-        .score-box {
-            text-align: center;
-        }
-
-        .score-box .label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
             color: var(--text-muted);
-            margin-bottom: 2px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .score-box .value {
-            font-size: 2rem;
-            font-weight: 700;
-            transition: transform 0.2s ease;
+        .tab-btn.active {
+            background: var(--tile);
+            color: var(--text);
         }
 
-        .score-box .value.accent {
-            color: var(--accent);
+        .tab-btn:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        .game-section {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
 
-        .value.pulse {
-            animation: pulse 0.3s ease;
+        .game-section.active {
+            display: flex;
         }
 
-        /* Grille */
+        /* Thème sélecteur */
+        .theme-selector {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .theme-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-dot:hover { transform: scale(1.2); }
+        .theme-dot.active { border-color: var(--text); transform: scale(1.1); }
+
+        .theme-dot[data-theme=""] { background: #333; }
+        .theme-dot[data-theme="theme-blue"] { background: #334155; }
+        .theme-dot[data-theme="theme-cyber"] { background: #2d1b4e; }
+        .theme-dot[data-theme="theme-forest"] { background: #2b4a2b; }
+
+        /* En-tête & Scores */
+        .header { text-align: center; }
+        .header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; }
+        .header p { font-size: 0.75rem; color: var(--text-muted); font-weight: 300; margin-top: 4px; }
+
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-box { text-align: center; }
+        .stat-box .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 2px; }
+        .stat-box .value { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+        .stat-box .value.secondary { color: var(--text); }
+
+        .lives-display {
+            display: flex;
+            gap: 6px;
+            font-size: 1.2rem;
+            color: var(--tile-wrong);
+        }
+
+        .lives-display .life { transition: opacity 0.3s, transform 0.3s; }
+        .lives-display .life.lost { opacity: 0.2; transform: scale(0.8); }
+
+        /* Grille Sequence */
         .grid-wrapper {
-            position: relative;
             width: 100%;
             aspect-ratio: 1 / 1;
-            max-width: 340px;
+            max-width: 320px;
         }
 
         .grid {
@@ -225,73 +237,70 @@ body.theme-forest {
             cursor: pointer;
             transition: background-color 0.12s ease, transform 0.1s ease, box-shadow 0.12s ease;
             position: relative;
-            overflow: hidden;
         }
 
-        .tile::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 12px;
-            opacity: 0;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 70%);
-            transition: opacity 0.12s ease;
-        }
-
-        .tile:hover:not(.active):not(.locked) {
-            background: #3d3d3d;
-        }
-
-        .tile:active:not(.locked) {
-            transform: scale(0.95);
-        }
+        .tile:hover:not(.active):not(.locked) { background: color-mix(in srgb, var(--tile) 80%, white); }
+        .tile:active:not(.locked) { transform: scale(0.95); }
 
         .tile.active {
-    background: var(--tile-active);
-    box-shadow: 0 0 20px color-mix(in srgb, var(--tile-active) 40%, transparent);
-}
-
-        .tile.active::after {
-            opacity: 1;
+            background: var(--tile-active);
+            box-shadow: 0 0 20px color-mix(in srgb, var(--tile-active) 40%, transparent);
         }
 
         .tile.wrong {
             background: var(--tile-wrong);
-            box-shadow: 0 0 24px rgba(217,83,79,0.35);
+            box-shadow: 0 0 20px rgba(217,83,79,0.4);
         }
 
-        .tile.locked {
-            cursor: default;
-        }
+        .tile.locked { cursor: default; }
 
-        /* Animation shake */
-        .grid.shake {
-            animation: shake 0.45s ease-in-out;
-        }
+        .grid.shake { animation: shake 0.4s ease-in-out; }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            10%, 50%, 90% { transform: translateX(-5px); }
-            30%, 70% { transform: translateX(5px); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
         }
 
-        /* Apparition des tuiles */
-        @keyframes tileIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+        /* Zone Chimp */
+        .chimp-area {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 320px;
+            background: var(--surface);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--tile);
         }
 
-        .tile.entering {
-            animation: tileIn 0.35s ease backwards;
+        .chimp-tile {
+            position: absolute;
+            width: 16%;
+            aspect-ratio: 1 / 1;
+            background: var(--tile-chimp);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            transition: transform 0.1s ease, background-color 0.2s ease, opacity 0.3s ease;
         }
 
-        /* Contrôles */
+        .chimp-tile:active { transform: scale(0.9); }
+        .chimp-tile.hidden-num { background: var(--tile-chimp-hidden); color: transparent; }
+        .chimp-tile.correct { background: var(--accent); color: white; transform: scale(0.95); }
+        .chimp-tile.wrong { background: var(--tile-wrong); color: white; }
+
+        /* Contrôles communs */
         .controls {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
-            width: 100%;
         }
 
         .speed-toggle {
@@ -299,589 +308,554 @@ body.theme-forest {
             align-items: center;
             gap: 10px;
             cursor: pointer;
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 30px;
             background: var(--surface);
-            border: 1px solid #3a3a3a;
+            border: 1px solid var(--tile);
             transition: all 0.25s ease;
         }
 
-        .speed-toggle:hover {
-            border-color: #555;
-        }
+        .speed-toggle.active { border-color: var(--speed-on); background: rgba(240,173,78,0.08); }
+        .speed-toggle .icon { font-size: 0.8rem; color: var(--text-muted); transition: color 0.25s; }
+        .speed-toggle.active .icon { color: var(--speed-on); }
+        .speed-toggle .text { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); transition: color 0.25s; }
+        .speed-toggle.active .text { color: var(--speed-on); }
 
-        .speed-toggle.active {
-            border-color: var(--speed-on);
-            background: rgba(240,173,78,0.08);
+        .toggle-track {
+            width: 32px; height: 16px; border-radius: 8px; background: #444; position: relative; transition: background 0.25s;
         }
-
-        .speed-toggle .icon {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            transition: color 0.25s ease;
+        .speed-toggle.active .toggle-track { background: var(--speed-on); }
+        .toggle-track::after {
+            content: ''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.25s;
         }
+        .speed-toggle.active .toggle-track::after { transform: translateX(16px); }
 
-        .speed-toggle.active .icon {
-            color: var(--speed-on);
-        }
-
-        .speed-toggle .text {
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: color 0.25s ease;
-        }
-
-        .speed-toggle.active .text {
-            color: var(--speed-on);
-        }
-
-        .speed-toggle .indicator {
-            width: 34px;
-            height: 18px;
-            border-radius: 9px;
-            background: #444;
-            position: relative;
-            transition: background 0.25s ease;
-        }
-
-        .speed-toggle.active .indicator {
-            background: var(--speed-on);
-        }
-
-        .speed-toggle .indicator::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #fff;
-            transition: transform 0.25s ease;
-        }
-
-        .speed-toggle.active .indicator::after {
-            transform: translateX(16px);
-        }
-
-        .speed-hint {
-            font-size: 0.65rem;
-            color: var(--speed-on);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            height: 0.9em;
-            overflow: hidden;
-        }
-
-        .speed-hint.visible {
-            opacity: 0.8;
-        }
-
-        .btn-start {
-            padding: 14px 48px;
+        .btn {
+            padding: 14px 40px;
             border: none;
             border-radius: 10px;
             background: var(--accent);
             color: #fff;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            letter-spacing: 0.3px;
         }
 
-        .btn-start:hover {
-            background: #4ca64c;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 24px rgba(92,184,92,0.25);
-        }
+        .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn.hidden { display: none; }
 
-        .btn-start:active {
-            transform: translateY(0);
-            box-shadow: none;
-        }
-
-        .btn-start:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
-        }
-
-        .btn-start.hidden {
-            display: none;
-        }
-
-        /* Statut */
         .status {
             font-size: 0.85rem;
             color: var(--text-muted);
-            font-weight: 400;
             min-height: 1.3em;
             text-align: center;
-            transition: color 0.2s ease;
+            transition: color 0.2s;
         }
+        .status.error { color: var(--tile-wrong); font-weight: 600; }
+        .status.success { color: var(--accent); font-weight: 500; }
 
-        .status.gameover {
-            color: var(--tile-wrong);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .status.success {
-            color: var(--accent);
-        }
-
-        /* Nouveau record */
-        .new-best {
-            font-size: 0.75rem;
-            color: var(--speed-on);
-            font-weight: 600;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            height: 1em;
-        }
-
-        .new-best.visible {
-            opacity: 1;
-            animation: pulse 0.6s ease;
-        }
-
-        /* ===== Responsive Desktop ===== */
+        /* Responsive Desktop */
         @media (min-width: 768px) {
-            .container {
-                gap: 24px;
-                max-width: 460px;
-            }
-
-            .header h1 {
-                font-size: 1.8rem;
-            }
-
-            .header p {
-                font-size: 0.9rem;
-            }
-
-            .score-box .value {
-                font-size: 2.5rem;
-            }
-
-            .grid-wrapper {
-                max-width: 380px;
-            }
-
-            .grid {
-                gap: 14px;
-            }
-
-            .tile {
-                border-radius: 14px;
-            }
-
-            .btn-start {
-                padding: 16px 60px;
-                font-size: 1.05rem;
-            }
+            .app-container { max-width: 480px; }
+            .header h1 { font-size: 1.6rem; }
+            .grid-wrapper, .chimp-area { max-width: 360px; }
+            .grid { gap: 14px; }
+            .stat-box .value { font-size: 2.2rem; }
+            .chimp-tile { font-size: 1.4rem; }
         }
 
-        /* Petits écrans (hauteur réduite) */
-        @media (max-height: 620px) {
-            .container {
-                gap: 10px;
-            }
-
-            .header h1 {
-                font-size: 1.1rem;
-            }
-
-            .header p {
-                display: none;
-            }
-
-            .score-box .value {
-                font-size: 1.5rem;
-            }
-
-            .grid-wrapper {
-                max-width: 260px;
-            }
-
-            .grid {
-                gap: 8px;
-            }
+        /* Petits téléphones */
+        @media (max-height: 680px) {
+            .app-container { gap: 10px; }
+            .header h1 { font-size: 1.1rem; }
+            .header p { display: none; }
+            .grid-wrapper, .chimp-area { max-width: 260px; }
+            .stat-box .value { font-size: 1.5rem; }
+            .tabs { margin-bottom: 12px; }
         }
 
-        /* Très petits téléphones */
-        @media (max-width: 340px) {
-            .grid-wrapper {
-                max-width: 280px;
-            }
-
-            .grid {
-                gap: 8px;
-            }
-
-            .tile {
-                border-radius: 10px;
-            }
-
-            .scores {
-                gap: 28px;
-            }
-
-            .btn-start {
-                padding: 12px 36px;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Mouvement réduit */
         @media (prefers-reduced-motion: reduce) {
-            .tile,
-            .speed-toggle,
-            .speed-toggle .indicator,
-            .speed-toggle .indicator::after,
-            .speed-toggle .icon,
-            .speed-toggle .text,
-            .btn-start,
-            .status,
-            .speed-hint,
-            .new-best {
-                transition: none;
-            }
-
-            .grid.shake {
-                animation: none;
-            }
-
-            .tile.entering {
-                animation: none;
-            }
-
-            body::before {
-                animation: none;
-            }
-
-            .value.pulse {
-                animation: none;
-            }
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>Sequence Memory Test</h1>
-            <p>Memorise la séquence des cases qui s'allument</p>
-        </header>
 
-                <div class="theme-selector" id="themeSelector">
-            <div class="theme-dot active" data-theme="" title="Dark"></div>
-            <div class="theme-dot" data-theme="theme-blue" title="Bleu"></div>
-            <div class="theme-dot" data-theme="theme-cyber" title="Cyberpunk"></div>
-            <div class="theme-dot" data-theme="theme-forest" title="Forêt"></div>
+<div class="app-container">
+    <!-- Onglets -->
+    <div class="tabs">
+        <button class="tab-btn active" data-target="seq-section">Sequence Memory</button>
+        <button class="tab-btn" data-target="chimp-section">Chimp Test</button>
+    </div>
+
+    <!-- Thèmes -->
+    <div class="theme-selector">
+        <div class="theme-dot active" data-theme="" title="Dark"></div>
+        <div class="theme-dot" data-theme="theme-blue" title="Bleu"></div>
+        <div class="theme-dot" data-theme="theme-cyber" title="Cyberpunk"></div>
+        <div class="theme-dot" data-theme="theme-forest" title="Forêt"></div>
+    </div>
+
+    <!-- ==================== SEQUENCE MEMORY ==================== -->
+    <section id="seq-section" class="game-section active">
+        <div class="header">
+            <h1>Sequence Memory</h1>
+            <p>Memorise l'ordre des cases qui s'allument</p>
         </div>
 
-        <div class="scores">
-            <div class="score-box">
-                <div class="label">Score</div>
-                <div class="value accent" id="scoreDisplay">0</div>
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="label">Niveau</div>
+                <div class="value" id="seq-score">0</div>
             </div>
-            <div class="score-box">
+            <div class="stat-box">
                 <div class="label">Best</div>
-                <div class="value" id="bestDisplay">0</div>
+                <div class="value secondary" id="seq-best">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">Vies</div>
+                <div class="lives-display" id="seq-lives">
+                    <i class="fa-solid fa-heart life"></i>
+                    <i class="fa-solid fa-heart life"></i>
+                    <i class="fa-solid fa-heart life"></i>
+                </div>
             </div>
         </div>
-
-        <div class="new-best" id="newBestLabel">Nouveau record !</div>
 
         <div class="grid-wrapper">
-            <div class="grid" id="grid" role="grid" aria-label="Grille de jeu 3x3"></div>
+            <div class="grid" id="seq-grid"></div>
         </div>
 
         <div class="controls">
-            <div class="speed-toggle" id="speedToggle" role="button" tabindex="0" aria-label="Activer le mode Speed">
+            <div class="speed-toggle" id="speed-toggle" role="button" tabindex="0" aria-label="Mode Speed">
                 <i class="fa-solid fa-bolt icon"></i>
                 <span class="text">Speed</span>
-                <div class="indicator"></div>
+                <div class="toggle-track"></div>
             </div>
-            <div class="speed-hint" id="speedHint">Seul le nouveau carré est affiché</div>
-            <button class="btn-start" id="startBtn">Commencer</button>
+            <button class="btn" id="seq-start">Commencer</button>
+        </div>
+        
+        <div class="status" id="seq-status">Appuie sur Commencer</div>
+    </section>
+
+    <!-- ==================== CHIMP TEST ==================== -->
+    <section id="chimp-section" class="game-section">
+        <div class="header">
+            <h1>Chimp Test</h1>
+            <p>Clique les nombres dans l'ordre croissant</p>
         </div>
 
-        <div class="status" id="status">Appuie sur Commencer pour jouer</div>
-    </div>
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="label">Niveau</div>
+                <div class="value" id="chimp-score">4</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">Best</div>
+                <div class="value secondary" id="chimp-best">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">Strikes</div>
+                <div class="lives-display" id="chimp-strikes">
+                    <i class="fa-solid fa-xmark life"></i>
+                    <i class="fa-solid fa-xmark life"></i>
+                    <i class="fa-solid fa-xmark life"></i>
+                </div>
+            </div>
+        </div>
 
-    <script>
-        /* ============================================
-           Sequence Memory Test — Logique de jeu
-           ============================================ */
+        <div class="chimp-area" id="chimp-area"></div>
 
-        // --- État ---
-        let sequence = [];
-        let userStep = 0;
-        let gameState = 'IDLE'; // IDLE | PLAYBACK | USER_INPUT | GAME_OVER
-        let score = 0;
-        let bestScore = parseInt(localStorage.getItem('sequenceBest')) || 0;
-        let speedMode = false;
-        let gameId = 0; // Pour annuler les séquences en cours
+        <div class="controls">
+            <button class="btn" id="chimp-start">Commencer</button>
+        </div>
 
-        // --- DOM ---
-        const grid = document.getElementById('grid');
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const bestDisplay = document.getElementById('bestDisplay');
-        const statusEl = document.getElementById('status');
-        const startBtn = document.getElementById('startBtn');
-        const speedToggle = document.getElementById('speedToggle');
-        const speedHint = document.getElementById('speedHint');
-        const newBestLabel = document.getElementById('newBestLabel');
+        <div class="status" id="chimp-status">Appuie sur Commencer</div>
+    </section>
+</div>
 
-        // --- Initialisation grille ---
-        function initGrid() {
-            grid.innerHTML = '';
-            for (let i = 0; i < 9; i++) {
-                const tile = document.createElement('div');
-                tile.className = 'tile entering';
-                tile.dataset.id = i;
-                tile.setAttribute('role', 'gridcell');
-                tile.setAttribute('aria-label', `Case ${i + 1}`);
-                tile.style.animationDelay = `${i * 0.04}s`;
-                tile.addEventListener('click', () => handleTileClick(i));
-                grid.appendChild(tile);
-            }
-            // Retirer la classe d'entrée après l'animation
-            setTimeout(() => {
-                grid.querySelectorAll('.tile').forEach(t => t.classList.remove('entering'));
-            }, 600);
+<script>
+    /* ============================================================
+       COMMUN : Onglets & Thèmes
+       ============================================================ */
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.game-section');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById(btn.dataset.target).classList.add('active');
+        });
+    });
+
+    // Thèmes
+    const themeDots = document.querySelectorAll('.theme-dot');
+    function applyTheme(themeName) {
+        document.body.className = '';
+        if (themeName) document.body.classList.add(themeName);
+        themeDots.forEach(d => d.classList.toggle('active', d.dataset.theme === themeName));
+        localStorage.setItem('hbTheme', themeName);
+    }
+    themeDots.forEach(d => d.addEventListener('click', () => applyTheme(d.dataset.theme)));
+    applyTheme(localStorage.getItem('hbTheme') || '');
+
+    /* ============================================================
+       JEU 1 : SEQUENCE MEMORY
+       ============================================================ */
+    const seqGrid = document.getElementById('seq-grid');
+    const seqScoreEl = document.getElementById('seq-score');
+    const seqBestEl = document.getElementById('seq-best');
+    const seqLivesEl = document.getElementById('seq-lives');
+    const seqStatusEl = document.getElementById('seq-status');
+    const seqStartBtn = document.getElementById('seq-start');
+    const speedToggle = document.getElementById('speed-toggle');
+
+    let seqSequence = [];
+    let seqUserStep = 0;
+    let seqState = 'IDLE'; // IDLE, PLAYBACK, USER_INPUT, GAME_OVER
+    let seqScore = 0;
+    let seqBest = parseInt(localStorage.getItem('seqBest')) || 0;
+    let seqLives = 3;
+    let seqGameId = 0;
+    let seqSpeedMode = false;
+
+    // Initialiser grille 3x3
+    function initSeqGrid() {
+        seqGrid.innerHTML = '';
+        for (let i = 0; i < 9; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.dataset.id = i;
+            tile.addEventListener('click', () => seqHandleClick(i));
+            seqGrid.appendChild(tile);
+        }
+    }
+
+    function updateSeqUI() {
+        seqScoreEl.textContent = seqScore;
+        seqBestEl.textContent = seqBest;
+        const hearts = seqLivesEl.querySelectorAll('.life');
+        hearts.forEach((h, i) => h.classList.toggle('lost', i >= seqLives));
+    }
+
+    function setSeqStatus(text, type = '') {
+        seqStatusEl.textContent = text;
+        seqStatusEl.className = 'status' + (type ? ' ' + type : '');
+    }
+
+    function getSeqTile(id) { return seqGrid.querySelector(`[data-id="${id}"]`); }
+
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function highlightSeqTile(id, duration) {
+        return new Promise(resolve => {
+            const tile = getSeqTile(id);
+            tile.classList.add('active');
+            setTimeout(() => { tile.classList.remove('active'); resolve(); }, duration);
+        });
+    }
+
+    function getSeqDuration() { return Math.max(200, 600 - (seqSequence.length * 15)); }
+    function getSeqGap() { return Math.max(120, 400 - (seqSequence.length * 10)); }
+
+    async function playSequence(gId) {
+        seqState = 'PLAYBACK';
+        setSeqStatus('Regarde bien...');
+        seqGrid.querySelectorAll('.tile').forEach(t => t.classList.add('locked'));
+
+        await delay(400);
+
+        const items = seqSpeedMode ? [seqSequence[seqSequence.length - 1]] : seqSequence;
+
+        for (let i = 0; i < items.length; i++) {
+            if (seqGameId !== gId) return;
+            await highlightSeqTile(items[i], getSeqDuration());
+            if (seqGameId !== gId) return;
+            if (i < items.length - 1) await delay(getSeqGap());
         }
 
-        // --- Affichage ---
-        function updateScore() {
-            scoreDisplay.textContent = score;
-            bestDisplay.textContent = bestScore;
-        }
+        if (seqGameId !== gId) return;
 
-        function pulseElement(el) {
-            el.classList.remove('pulse');
-            void el.offsetWidth; // Force le reflow pour relancer l'animation
-            el.classList.add('pulse');
-        }
+        seqGrid.querySelectorAll('.tile').forEach(t => t.classList.remove('locked'));
+        seqState = 'USER_INPUT';
+        seqUserStep = 0;
+        setSeqStatus('À toi !');
+    }
 
-        function updateStatus(text, type = '') {
-            statusEl.textContent = text;
-            statusEl.className = 'status' + (type ? ' ' + type : '');
-        }
+    function seqHandleClick(id) {
+        if (seqState !== 'USER_INPUT') return;
 
-        function getTile(id) {
-            return grid.querySelector(`[data-id="${id}"]`);
-        }
+        const tile = getSeqTile(id);
 
-        // --- Utilitaires de timing ---
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
+        if (id === seqSequence[seqUserStep]) {
+            // Bon
+            tile.classList.add('active');
+            setTimeout(() => tile.classList.remove('active'), 150);
+            seqUserStep++;
 
-        function highlightTile(id, duration) {
-            return new Promise(resolve => {
-                const tile = getTile(id);
-                tile.classList.add('active');
-                setTimeout(() => {
-                    tile.classList.remove('active');
-                    resolve();
-                }, duration);
-            });
-        }
-
-        // --- Timing progressif ---
-        function getDuration() {
-            // Diminue de 15ms par élément, minimum 200ms
-            return Math.max(200, 600 - (sequence.length * 15));
-        }
-
-        function getGap() {
-            // Diminue de 10ms par élément, minimum 120ms
-            return Math.max(120, 400 - (sequence.length * 10));
-        }
-
-        // --- Génération ---
-        function nextStep() {
-            const tile = Math.floor(Math.random() * 9);
-            sequence.push(tile);
-        }
-
-        // --- Lecture de la séquence ---
-        async function playSequence(currentGameId) {
-            gameState = 'PLAYBACK';
-            updateStatus('Regarde bien...');
-
-            // Verrouiller les tuiles pendant l'affichage
-            grid.querySelectorAll('.tile').forEach(t => t.classList.add('locked'));
-
-            await delay(350);
-
-            // En mode Speed, on ne montre que le dernier carré ajouté
-            const items = speedMode ? [sequence[sequence.length - 1]] : sequence;
-
-            for (let i = 0; i < items.length; i++) {
-                // Vérifier que la partie n'a pas été relancée
-                if (gameId !== currentGameId) return;
-
-                await highlightTile(items[i], getDuration());
-
-                if (gameId !== currentGameId) return;
-
-                // Pas de délai après le dernier élément
-                if (i < items.length - 1) {
-                    await delay(getGap());
+            if (seqUserStep === seqSequence.length) {
+                // Niveau réussi
+                seqScore++;
+                if (seqScore > seqBest) {
+                    seqBest = seqScore;
+                    localStorage.setItem('seqBest', seqBest);
                 }
+                updateSeqUI();
+                seqState = 'PLAYBACK';
+                setSeqStatus('Bien joué !', 'success');
+                setTimeout(() => seqNextRound(), 700);
             }
-
-            if (gameId !== currentGameId) return;
-
-            // Déverrouiller les tuiles
-            grid.querySelectorAll('.tile').forEach(t => t.classList.remove('locked'));
-
-            gameState = 'USER_INPUT';
-            userStep = 0;
-            updateStatus('À toi !');
-        }
-
-        // --- Clic sur une tuile ---
-        function handleTileClick(id) {
-            if (gameState !== 'USER_INPUT') return;
-
-            if (id === sequence[userStep]) {
-                // Bonne réponse — flash blanc rapide
-                const tile = getTile(id);
-                tile.classList.add('active');
-                setTimeout(() => tile.classList.remove('active'), 150);
-
-                userStep++;
-
-                if (userStep === sequence.length) {
-                    // Manche réussie
-                    score++;
-                    updateScore();
-                    pulseElement(scoreDisplay);
-
-                    gameState = 'PLAYBACK'; // Verrouiller temporairement
-                    updateStatus('Bien joué !', 'success');
-
-                    setTimeout(() => startRound(), 700);
-                }
-            } else {
-                // Mauvaise réponse
-                gameOver(id);
-            }
-        }
-
-        // --- Game Over ---
-        function gameOver(wrongId) {
-            gameState = 'GAME_OVER';
-
-            // Flash rouge sur la mauvaise tuile
-            const tile = getTile(wrongId);
+        } else {
+            // Mauvais
             tile.classList.add('wrong');
             setTimeout(() => tile.classList.remove('wrong'), 600);
+            seqGrid.classList.add('shake');
+            setTimeout(() => seqGrid.classList.remove('shake'), 400);
 
-            // Secouer la grille
-            grid.classList.add('shake');
-            setTimeout(() => grid.classList.remove('shake'), 500);
+            seqLives--;
+            updateSeqUI();
 
-            // Vérifier le meilleur score
-            let isNewBest = false;
-            if (score > bestScore) {
-                bestScore = score;
-                localStorage.setItem('sequenceBest', bestScore);
-                isNewBest = true;
+            if (seqLives <= 0) {
+                seqGameOver();
+            } else {
+                setSeqStatus(`Faux ! Il te reste ${seqLives} vie${seqLives > 1 ? 's' : ''}`, 'error');
+                seqState = 'PLAYBACK';
+                // Rejouer le même niveau
+                setTimeout(() => playSequence(seqGameId), 1200);
             }
+        }
+    }
 
-            updateScore();
+    function seqNextRound() {
+        const nextTile = Math.floor(Math.random() * 9);
+        seqSequence.push(nextTile);
+        playSequence(seqGameId);
+    }
 
-            if (isNewBest) {
-                pulseElement(bestDisplay);
-                newBestLabel.classList.add('visible');
+    function seqGameOver() {
+        seqState = 'GAME_OVER';
+        setSeqStatus(`Game Over ! Niveau atteint : ${seqScore}`, 'error');
+        seqStartBtn.textContent = 'Recommencer';
+        seqStartBtn.classList.remove('hidden');
+    }
+
+    function startSeqGame() {
+        seqGameId++;
+        seqSequence = [];
+        seqScore = 0;
+        seqLives = 3;
+        seqUserStep = 0;
+        updateSeqUI();
+        setSeqStatus('');
+        seqStartBtn.classList.add('hidden');
+        seqNextRound();
+    }
+
+    seqStartBtn.addEventListener('click', startSeqGame);
+
+    speedToggle.addEventListener('click', () => {
+        if (seqState === 'PLAYBACK') return;
+        seqSpeedMode = !seqSpeedMode;
+        speedToggle.classList.toggle('active', seqSpeedMode);
+    });
+
+    initSeqGrid();
+    updateSeqUI();
+
+    /* ============================================================
+       JEU 2 : CHIMP TEST
+       ============================================================ */
+    const chimpArea = document.getElementById('chimp-area');
+    const chimpScoreEl = document.getElementById('chimp-score');
+    const chimpBestEl = document.getElementById('chimp-best');
+    const chimpStrikesEl = document.getElementById('chimp-strikes');
+    const chimpStatusEl = document.getElementById('chimp-status');
+    const chimpStartBtn = document.getElementById('chimp-start');
+
+    let chimpLevel = 4;
+    let chimpScore = 4;
+    let chimpBest = parseInt(localStorage.getItem('chimpBest')) || 0;
+    let chimpStrikes = 0;
+    let chimpState = 'IDLE'; // IDLE, MEMORIZE, PLAYING, GAME_OVER
+    let chimpNextExpected = 1;
+    let chimpTiles = [];
+
+    function updateChimpUI() {
+        chimpScoreEl.textContent = chimpLevel;
+        chimpBestEl.textContent = chimpBest;
+        const marks = chimpStrikesEl.querySelectorAll('.life');
+        marks.forEach((m, i) => m.classList.toggle('lost', i < (3 - chimpStrikes))); // 3-x pour afficher les strikes restants, inversé logique
+        // En fait on veut montrer les strikes utilisés. Mettons 3 coches, qui se "grisent" si utilisés.
+        // Pour faire simple : tout en opaque, et on compte les utilisés.
+        marks.forEach((m, i) => m.classList.toggle('lost', i >= chimpStrikes)); // Les premiers sont rouges (utilisés), les autres gris
+    }
+
+    function setChimpStatus(text, type = '') {
+        chimpStatusEl.textContent = text;
+        chimpStatusEl.className = 'status' + (type ? ' ' + type : '');
+    }
+
+    function generateChimpPositions(count) {
+        const positions = [];
+        const margin = 4; // %
+        const tileSize = 16; // %
+        const maxPos = 100 - tileSize - margin;
+
+        for (let i = 0; i < count; i++) {
+            let placed = false;
+            let attempts = 0;
+            while (!placed && attempts < 200) {
+                const x = margin + Math.random() * (maxPos - margin);
+                const y = margin + Math.random() * (maxPos - margin);
+                
+                // Vérifier chevauchement
+                let overlaps = false;
+                for (const p of positions) {
+                    if (Math.abs(p.x - x) < (tileSize + 2) && Math.abs(p.y - y) < (tileSize + 2)) {
+                        overlaps = true;
+                        break;
+                    }
+                }
+
+                if (!overlaps) {
+                    positions.push({ x, y });
+                    placed = true;
+                }
+                attempts++;
             }
-
-            updateStatus(`Game Over ! Niveau atteint : ${score}`, 'gameover');
-
-            startBtn.textContent = 'Recommencer';
-            startBtn.classList.remove('hidden');
-        }
-
-        // --- Nouvelle manche ---
-        function startRound() {
-            nextStep();
-            const currentGameId = gameId;
-            playSequence(currentGameId);
-        }
-
-        // --- Démarrer le jeu ---
-        function startGame() {
-            gameId++; // Invalide toute séquence en cours
-            sequence = [];
-            score = 0;
-            userStep = 0;
-
-            newBestLabel.classList.remove('visible');
-            updateScore();
-            updateStatus('');
-            startBtn.classList.add('hidden');
-
-            startRound();
-        }
-
-        // --- Toggle Speed ---
-        function toggleSpeed() {
-            if (gameState === 'PLAYBACK') return; // Pas de changement pendant l'affichage
-            speedMode = !speedMode;
-            speedToggle.classList.toggle('active', speedMode);
-            speedHint.classList.toggle('visible', speedMode);
-        }
-
-        speedToggle.addEventListener('click', toggleSpeed);
-        speedToggle.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleSpeed();
+            if (!placed) {
+                // Fallback au cas où (très rare)
+                positions.push({ x: margin + Math.random() * maxPos, y: margin + Math.random() * maxPos });
             }
+        }
+        return positions;
+    }
+
+    function renderChimpTiles(hideAll = false) {
+        chimpArea.innerHTML = '';
+        chimpTiles.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'chimp-tile';
+            if (hideAll && t.value !== 1) div.classList.add('hidden-num');
+            div.style.left = t.x + '%';
+            div.style.top = t.y + '%';
+            div.textContent = t.value;
+            div.addEventListener('click', () => chimpHandleClick(t.value, div));
+            chimpArea.appendChild(div);
         });
+    }
 
-        // --- Bouton Start ---
-        startBtn.addEventListener('click', startGame);
+    function startChimpRound() {
+        chimpNextExpected = 1;
+        const positions = generateChimpPositions(chimpLevel);
+        // Mélanger les nombres 1 à chimpLevel
+        const numbers = Array.from({ length: chimpLevel }, (_, i) => i + 1);
+        // Pas besoin de mélanger, les positions sont déjà aléatoires
+        chimpTiles = positions.map((pos, i) => ({
+            value: numbers[i],
+            x: pos.x,
+            y: pos.y
+        }));
 
-        // --- Initialisation ---
-                // --- Thèmes ---
-        const themeSelector = document.getElementById('themeSelector');
-        const themeDots = document.querySelectorAll('.theme-dot');
+        chimpState = 'MEMORIZE';
+        setChimpStatus('Memorise les positions...');
+        renderChimpTiles(false);
+    }
 
-        function applyTheme(themeName) {
-            // Retire toutes les classes de thème du body
-            document.body.className = '';
-            if (themeName) {
-                document.body.classList.add(themeName);
-            }
-            // Met à jour le point actif
-            themeDots.forEach(dot => {
-                dot.classList.toggle('active', dot.dataset.theme === themeName);
+    function chimpHandleClick(value, divEl) {
+        if (chimpState === 'MEMORIZE' && value === 1) {
+            // Premier clic : on cache le reste
+            chimpState = 'PLAYING';
+            chimpNextExpected = 2;
+            divEl.classList.add('correct');
+            // Cacher les autres
+            chimpArea.querySelectorAll('.chimp-tile').forEach(el => {
+                if (el !== divEl) el.classList.add('hidden-num');
             });
-            // Sauvegarde le choix
-            localStorage.setItem('sequenceTheme', themeName);
+            setChimpStatus('Trouve les autres dans l\'ordre !');
+            return;
         }
 
-        themeDots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                applyTheme(dot.dataset.theme);
-            });
-        });
+        if (chimpState !== 'PLAYING') return;
 
-        // Charge le thème sauvegardé au lancement
-        const savedTheme = localStorage.getItem('sequenceTheme') || '';
-        applyTheme(savedTheme);
+        if (value === chimpNextExpected) {
+            // Bon
+            divEl.classList.remove('hidden-num');
+            divEl.classList.add('correct');
+            chimpNextExpected++;
 
-        // --- Initialisation ---
-        initGrid();
-        updateScore();
-    </script>
+            if (chimpNextExpected > chimpLevel) {
+                // Niveau réussi
+                chimpScore = chimpLevel;
+                if (chimpLevel >= 41) {
+                    // Score max atteint
+                    chimpBest = 41;
+                    localStorage.setItem('chimpBest', 41);
+                    updateChimpUI();
+                    setChimpStatus('Parfait ! Score maximum atteint (41) !', 'success');
+                    chimpState = 'GAME_OVER';
+                    chimpStartBtn.textContent = 'Recommencer';
+                    chimpStartBtn.classList.remove('hidden');
+                    return;
+                }
+
+                if (chimpLevel > chimpBest) {
+                    chimpBest = chimpLevel;
+                    localStorage.setItem('chimpBest', chimpBest);
+                }
+                updateChimpUI();
+                setChimpStatus('Bien joué !', 'success');
+                chimpState = 'IDLE';
+                setTimeout(() => {
+                    chimpLevel++;
+                    updateChimpUI();
+                    startChimpRound();
+                }, 1000);
+            }
+        } else {
+            // Mauvais
+            divEl.classList.remove('hidden-num');
+            divEl.classList.add('wrong');
+            chimpStrikes++;
+            updateChimpUI();
+
+            if (chimpStrikes >= 3) {
+                chimpGameOver();
+            } else {
+                setChimpStatus(`Faux ! Strike ${chimpStrikes}/3`, 'error');
+                chimpState = 'IDLE';
+                // Rejouer le même niveau
+                setTimeout(() => startChimpRound(), 1200);
+            }
+        }
+    }
+
+    function chimpGameOver() {
+        chimpState = 'GAME_OVER';
+        // Révéler les numéros restants
+        chimpArea.querySelectorAll('.chimp-tile').forEach(el => el.classList.remove('hidden-num'));
+        setChimpStatus(`Game Over ! Niveau atteint : ${chimpScore}`, 'error');
+        chimpStartBtn.textContent = 'Recommencer';
+        chimpStartBtn.classList.remove('hidden');
+    }
+
+    function startChimpGame() {
+        chimpLevel = 4;
+        chimpScore = 4;
+        chimpStrikes = 0;
+        updateChimpUI();
+        chimpStartBtn.classList.add('hidden');
+        startChimpRound();
+    }
+
+    chimpStartBtn.addEventListener('click', startChimpGame);
+
+    updateChimpUI();
+</script>
 </body>
 </html>
