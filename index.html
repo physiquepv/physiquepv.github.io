@@ -1,763 +1,587 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="obsidian">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Human Benchmark</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
-:root{
-  --bg:#2b87d1;--bg-dark:#1e6ea8;--bg-darker:#17507e;--bg-light:#4a9fe0;
-  --text:#fff;--text-muted:rgba(255,255,255,.55);--card:rgba(255,255,255,.1);
-  --card-hover:rgba(255,255,255,.18);--red:#e74c3c;--green:#27ae60;
-  --orange:#f39c12;--border:rgba(255,255,255,.12);--radius:14px;--radius-sm:10px;
-  --font:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
+/* ===== THÈMES ===== */
+[data-theme="obsidian"]{
+  --bg:#08090e;--surface:#10121a;--card:#181a24;--card-h:#22242f;
+  --border:rgba(255,255,255,.06);--accent:#e8a838;--accent-d:rgba(232,168,56,.14);
+  --success:#34d399;--danger:#f87171;--warn:#fbbf24;
+  --txt:#e4e4f0;--txt2:#a0a0b8;--txt3:#5a5a70;--sh:rgba(0,0,0,.5);
+  --flash:#e8a838;--cell-wrong:#f87171;--rp-result:#10121a;
 }
+[data-theme="slate"]{
+  --bg:#0e1018;--surface:#171920;--card:#1f222e;--card-h:#282b3a;
+  --border:rgba(255,255,255,.07);--accent:#38bdf8;--accent-d:rgba(56,189,248,.12);
+  --success:#4ade80;--danger:#fb7185;--warn:#fbbf24;
+  --txt:#d4d4e8;--txt2:#9090b0;--txt3:#5c5c78;--sh:rgba(0,0,0,.45);
+  --flash:#38bdf8;--cell-wrong:#fb7185;--rp-result:#171920;
+}
+[data-theme="paper"]{
+  --bg:#f0eeea;--surface:#faf9f7;--card:#e5e3de;--card-h:#d8d5cf;
+  --border:rgba(0,0,0,.09);--accent:#5b5bd6;--accent-d:rgba(91,91,214,.1);
+  --success:#16a34a;--danger:#dc2626;--warn:#d97706;
+  --txt:#1a1a2e;--txt2:#5a5a72;--txt3:#9a9ab0;--sh:rgba(0,0,0,.07);
+  --flash:#5b5bd6;--cell-wrong:#dc2626;--rp-result:#faf9f7;
+}
+
+/* ===== BASE ===== */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden}
-body{font-family:var(--font);background:var(--bg);color:var(--text);
-  -webkit-tap-highlight-color:transparent;user-select:none}
-
-/* ===== App Shell ===== */
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt);
+  -webkit-tap-highlight-color:transparent;user-select:none;transition:background .35s,color .35s}
 #app{width:100%;height:100%;max-width:100%;margin:0 auto;position:relative;overflow:hidden}
-@media(min-width:768px){#app{max-width:520px;border-left:1px solid var(--border);border-right:1px solid var(--border)}}
-@media(min-width:1024px){#app{max-width:580px}}
+@media(min-width:768px){#app{max-width:500px;border-left:1px solid var(--border);border-right:1px solid var(--border)}}
+@media(min-width:1024px){#app{max-width:560px}}
 
-.view{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden}
-.view.active{display:flex}
+/* ===== VUES ===== */
+.view{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden;opacity:0;transition:opacity .22s ease}
+.view.active,.view.entering{display:flex}
+.view.entering{opacity:0}
+.view.active{opacity:1}
 
-/* ===== Header ===== */
-.hdr{display:flex;align-items:center;padding:16px 20px;gap:12px;flex-shrink:0;
-  background:var(--bg-dark);border-bottom:1px solid var(--border);min-height:56px}
-.hdr-back{width:36px;height:36px;border-radius:50%;border:none;background:var(--card);
-  color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:background .2s}
-.hdr-back:hover{background:var(--card-hover)}
-.hdr-title{font-size:17px;font-weight:600;letter-spacing:-.3px;flex:1}
-.hdr-badge{font-size:12px;font-weight:500;background:var(--green);padding:3px 10px;border-radius:20px}
+/* ===== HEADER ===== */
+.hdr{display:flex;align-items:center;padding:14px 18px;gap:10px;flex-shrink:0;
+  background:var(--surface);border-bottom:1px solid var(--border);min-height:54px;transition:background .35s}
+.hdr-back{width:34px;height:34px;border-radius:50%;border:none;background:var(--card);color:var(--txt);
+  font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.hdr-back:hover{background:var(--card-h)}
+.hdr-title{font-size:16px;font-weight:600;letter-spacing:-.3px;flex:1}
 
-/* ===== Home ===== */
-.home-hero{padding:36px 24px 20px;text-align:center;
-  background:linear-gradient(180deg,var(--bg-dark) 0%,var(--bg) 100%)}
-.home-hero h1{font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
-.home-hero p{font-size:13px;color:var(--text-muted);line-height:1.5}
-.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 16px 24px}
-@media(min-width:768px){.home-grid{grid-template-columns:1fr 1fr;gap:14px;padding:20px 20px 32px}}
+/* ===== ACCUEIL ===== */
+.home-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
+.home-hdr h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
+.theme-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:var(--card);
+  color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-size:18px;transition:all .25s}
+.theme-btn:hover{background:var(--card-h);color:var(--accent)}
+.home-sub{padding:6px 20px 18px;font-size:12px;color:var(--txt3);line-height:1.5}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 24px}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 13px;
+  cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden}
+.tc:hover{background:var(--card-h);transform:translateY(-2px);box-shadow:0 6px 20px var(--sh)}
+.tc:active{transform:scale(.97)}
+.tc .ic{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:19px;flex-shrink:0;transition:background .35s}
+.tc .nm{font-size:13.5px;font-weight:600;letter-spacing:-.2px}
+.tc .ds{font-size:10.5px;color:var(--txt3);line-height:1.35}
+.tc .sc{font-size:10.5px;font-weight:600;margin-top:auto;padding-top:3px}
+.prof-card{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px}
+.prof-card:hover{background:var(--card-h);transform:translateY(-2px)}
+.prof-card canvas{width:64px;height:64px;flex-shrink:0}
+.prof-card h3{font-size:14px;font-weight:600;margin-bottom:3px}
+.prof-card p{font-size:11px;color:var(--txt3);line-height:1.4}
 
-.test-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
-  padding:18px 14px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;
-  gap:8px;position:relative;overflow:hidden}
-.test-card:hover{background:var(--card-hover);transform:translateY(-2px)}
-.test-card:active{transform:scale(.97)}
-.test-card .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;
-  justify-content:center;font-size:18px;flex-shrink:0}
-.test-card .nm{font-size:14px;font-weight:600;letter-spacing:-.2px}
-.test-card .ds{font-size:11px;color:var(--text-muted);line-height:1.4}
-.test-card .sc{font-size:11px;font-weight:500;color:var(--green);margin-top:auto;padding-top:4px}
+/* ===== TEST COMMON ===== */
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;transition:background .35s}
+.tb.padded{padding:14px}
+.ts{font-size:12px;color:var(--txt3);margin-bottom:10px;text-align:center}
+.t-big{font-size:52px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:-2px;line-height:1}
+.t-label{font-size:13px;color:var(--txt3);margin-top:6px}
+.t-btn{padding:13px 36px;border:none;border-radius:11px;font-family:'Space Grotesk',sans-serif;
+  font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;color:#fff}
+.t-btn:active{transform:scale(.95)}
+.t-btn.primary{background:var(--accent);color:var(--bg)}
+.t-btn.primary:hover{filter:brightness(1.1)}
 
-.profile-card{grid-column:1/-1;background:linear-gradient(135deg,var(--bg-dark),var(--bg-darker));
-  border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;
-  transition:all .2s;display:flex;align-items:center;gap:16px}
-.profile-card:hover{background:linear-gradient(135deg,var(--bg-darker),#0f3a5c);transform:translateY(-2px)}
-.profile-card canvas{width:70px;height:70px;flex-shrink:0}
-.profile-card .pr-info h3{font-size:15px;font-weight:600;margin-bottom:4px}
-.profile-card .pr-info p{font-size:12px;color:var(--text-muted);line-height:1.4}
+/* ===== RÉSULTAT ===== */
+.res-grade{font-size:14px;font-weight:600;margin-bottom:6px;letter-spacing:.3px}
+.res-score{font-size:52px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:-2px;line-height:1}
+.res-unit{font-size:18px;font-weight:400;margin-left:4px;opacity:.6}
+.res-pct{font-size:13px;color:var(--txt2);margin-top:8px}
+.res-pct strong{color:var(--accent)}
+.res-new{font-size:12px;color:var(--warn);margin-top:6px;font-weight:600}
+.res-extra{font-size:11px;color:var(--txt3);margin-top:4px}
 
-/* ===== Test Common ===== */
-.test-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:24px;position:relative}
-.test-body.padded{padding:16px}
-.test-status{font-size:13px;color:var(--text-muted);margin-bottom:12px;text-align:center}
-.test-big{font-size:56px;font-weight:700;font-family:var(--mono);letter-spacing:-2px;line-height:1}
-.test-label{font-size:14px;color:var(--text-muted);margin-top:8px}
-.test-btn{padding:14px 40px;border:none;border-radius:var(--radius-sm);font-family:var(--font);
-  font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;color:#fff}
-.test-btn:active{transform:scale(.95)}
-.test-btn.primary{background:var(--bg-light)}
-.test-btn.primary:hover{background:#5aaff0}
-.test-btn.success{background:var(--green)}
-.test-btn.danger{background:var(--red)}
+/* ===== BARRE COMPARAISON ===== */
+.cmp{margin:16px 0 8px;width:100%;max-width:320px}
+.cmp-lbl{font-size:11px;color:var(--txt2);text-align:center;margin-bottom:8px}
+.cmp-track{position:relative;height:8px;background:var(--card);border-radius:4px;overflow:visible}
+.cmp-fill{position:absolute;left:0;top:0;height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--danger),var(--warn),var(--success));opacity:.35;transition:width .4s}
+.cmp-median{position:absolute;top:-2px;width:2px;height:12px;background:var(--txt3);border-radius:1px;opacity:.5}
+.cmp-marker{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--accent);
+  transform:translate(-50%,-50%);box-shadow:0 0 8px var(--accent-d);border:2px solid var(--surface);z-index:2}
+.cmp-row{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--txt3)}
 
-/* ===== Reaction ===== */
-.reaction-panel{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;cursor:pointer;transition:background .05s;z-index:2}
-.reaction-panel.wait{background:var(--red)}
-.reaction-panel.go{background:var(--green)}
-.reaction-panel.early{background:#c0392b}
-.reaction-panel.result{background:var(--bg)}
-.reaction-panel .rp-text{font-size:28px;font-weight:700;text-align:center;padding:0 30px}
-.reaction-panel .rp-sub{font-size:14px;color:rgba(255,255,255,.7);margin-top:10px;text-align:center}
+/* ===== REACTION ===== */
+.rp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;z-index:2;transition:background .05s}
+.rp.wait{background:#dc2626}.rp.go{background:#16a34a}.rp.early{background:#b91c1c}
+.rp.result-bg{background:var(--rp-result)}
+.rp-text{font-size:26px;font-weight:700;text-align:center;padding:0 28px;color:#fff}
+.rp.result-bg .rp-text{color:var(--txt)}
+.rp-sub{font-size:13px;color:rgba(255,255,255,.65);margin-top:8px;text-align:center}
+.rp.result-bg .rp-sub{color:var(--txt3)}
 
-/* ===== Sequence / Visual Grid ===== */
-.sq-grid{display:grid;gap:8px;margin:16px auto}
-.sq-cell{aspect-ratio:1;background:var(--bg-darker);border-radius:var(--radius-sm);cursor:pointer;
-  transition:background .15s;min-width:0}
-.sq-cell.flash,.sq-cell.selected{background:#fff!important}
-.sq-cell.wrong{background:var(--red)!important}
-.sq-cell:hover{background:var(--bg-dark)}
+/* ===== GRILLES ===== */
+.sq-grid{display:grid;gap:7px;margin:12px auto}
+.sq-cell{aspect-ratio:1;background:var(--card);border-radius:10px;cursor:pointer;transition:background .15s;min-width:0}
+.sq-cell.flash{background:var(--flash)!important}
+.sq-cell.wrong{background:var(--cell-wrong)!important}
+.sq-cell:hover{background:var(--card-h)}
 
-/* ===== Aim ===== */
-.aim-zone{position:relative;width:100%;flex:1;background:var(--bg-darker);border-radius:var(--radius);
-  overflow:hidden;min-height:300px;cursor:crosshair}
-.aim-target{position:absolute;width:50px;height:50px;border-radius:50%;cursor:pointer;
-  transform:translate(-50%,-50%);pointer-events:all;
-  background:radial-gradient(circle,#fff 20%,var(--bg-light) 21%,var(--bg-light) 45%,transparent 46%,
-  transparent 55%,var(--bg-light) 56%,var(--bg-light) 70%,transparent 71%)}
+/* ===== AIM ===== */
+.aim-zone{position:relative;width:100%;flex:1;background:var(--surface);border-radius:12px;
+  overflow:hidden;min-height:280px;cursor:crosshair;transition:background .35s}
+.aim-target{position:absolute;width:46px;height:46px;border-radius:50%;cursor:pointer;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,var(--accent) 18%,transparent 19%,transparent 44%,var(--accent) 45%,var(--accent) 68%,transparent 69%)}
+.hdr-badge{font-size:11px;font-weight:600;background:var(--accent);color:var(--bg);padding:3px 10px;border-radius:20px}
 
-/* ===== Number Memory ===== */
-.num-display{font-size:48px;font-weight:700;font-family:var(--mono);letter-spacing:4px;
-  text-align:center;min-height:60px}
-.num-bar{width:80%;max-width:300px;height:6px;background:var(--bg-darker);border-radius:3px;
-  margin:16px auto;overflow:hidden}
-.num-bar-fill{height:100%;background:#fff;border-radius:3px;transition:width .1s linear}
-.num-input{background:var(--bg-darker);border:2px solid var(--border);border-radius:var(--radius-sm);
-  color:#fff;font-family:var(--mono);font-size:28px;text-align:center;padding:12px 16px;
-  width:80%;max-width:300px;outline:none;letter-spacing:4px}
-.num-input:focus{border-color:var(--bg-light)}
+/* ===== NUMBER ===== */
+.num-display{font-size:44px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:4px;
+  text-align:center;min-height:56px}
+.num-bar{width:80%;max-width:280px;height:5px;background:var(--card);border-radius:3px;margin:14px auto;overflow:hidden}
+.num-bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .1s linear}
+.num-input{background:var(--card);border:2px solid var(--border);border-radius:10px;
+  color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:26px;text-align:center;
+  padding:11px 14px;width:80%;max-width:280px;outline:none;letter-spacing:4px;transition:all .2s}
+.num-input:focus{border-color:var(--accent)}
 
-/* ===== Verbal ===== */
-.verbal-word{font-size:32px;font-weight:600;margin:20px 0;letter-spacing:-.5px;text-align:center}
-.verbal-btns{display:flex;gap:16px;margin-top:12px}
-.verbal-btns button{flex:1;padding:16px;border:none;border-radius:var(--radius-sm);
-  font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;
-  color:#fff;letter-spacing:.5px}
-.verbal-btns button:active{transform:scale(.95)}
-.verbal-btns .vb-new{background:var(--bg-light)}
-.verbal-btns .vb-new:hover{background:#5aaff0}
-.verbal-btns .vb-seen{background:var(--bg-darker)}
-.verbal-btns .vb-seen:hover{background:var(--bg-dark)}
-.strikes{display:flex;gap:6px;margin-top:16px}
-.strikes .dot{width:12px;height:12px;border-radius:50%;background:var(--green);transition:background .3s}
-.strikes .dot.lost{background:var(--red)}
+/* ===== VERBAL ===== */
+.vb-word{font-size:30px;font-weight:600;margin:18px 0;letter-spacing:-.4px;text-align:center}
+.vb-btns{display:flex;gap:14px;margin-top:10px}
+.vb-btns button{flex:1;padding:14px;border:none;border-radius:10px;font-family:'Space Grotesk',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;color:#fff;letter-spacing:.4px}
+.vb-btns button:active{transform:scale(.95)}
+.vb-new{background:var(--accent)!important;color:var(--bg)!important}
+.vb-new:hover{filter:brightness(1.1)}
+.vb-seen{background:var(--card)!important;color:var(--txt)!important}
+.vb-seen:hover{background:var(--card-h)!important}
+.dots{display:flex;gap:6px;margin-top:14px}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--success);transition:background .3s}
+.dot.lost{background:var(--danger)}
 
-/* ===== Chimp ===== */
-.chimp-grid{display:grid;gap:8px;margin:16px auto;width:100%;max-width:360px}
-.chimp-cell{aspect-ratio:1;background:var(--bg-darker);border-radius:var(--radius-sm);
-  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;
-  font-family:var(--mono);cursor:pointer;transition:all .15s}
-.chimp-cell:hover{background:var(--bg-dark)}
-.chimp-cell.hidden-num{color:transparent}
-.chimp-cell.correct{background:var(--green)!important;color:#fff!important}
-.chimp-cell.wrong{background:var(--red)!important;color:#fff!important}
+/* ===== CHIMP ===== */
+.ch-grid{display:grid;gap:7px;margin:12px auto;width:100%;max-width:340px}
+.ch-cell{aspect-ratio:1;background:var(--card);border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;
+  cursor:pointer;transition:all .15s;color:var(--txt)}
+.ch-cell:hover{background:var(--card-h)}
+.ch-cell.hidden-num{color:transparent}
+.ch-cell.correct{background:var(--success)!important;color:#fff!important}
+.ch-cell.wrong{background:var(--cell-wrong)!important;color:#fff!important}
 
-/* ===== Typing ===== */
-.type-text{font-size:16px;line-height:1.8;letter-spacing:.3px;max-width:100%;
-  white-space:pre-wrap;word-break:break-all;font-family:var(--mono)}
-.type-text .correct{color:#fff}
-.type-text .wrong{color:var(--red);text-decoration:underline}
-.type-text .pending{color:var(--text-muted)}
-.type-text .cursor{border-left:2px solid #fff;margin-left:-1px;padding-left:1px;animation:blink 1s step-end infinite}
+/* ===== TYPING ===== */
+.tp-text{font-size:15px;line-height:1.8;letter-spacing:.2px;max-width:100%;white-space:pre-wrap;
+  word-break:break-all;font-family:'JetBrains Mono',monospace}
+.tp-text .ok{color:var(--txt)}.tp-text .bad{color:var(--danger);text-decoration:underline}
+.tp-text .pend{color:var(--txt3)}
+.tp-text .cur{border-left:2px solid var(--accent);margin-left:-1px;padding-left:1px;animation:blink 1s step-end infinite}
 @keyframes blink{50%{border-color:transparent}}
-.type-input-area{margin-top:16px;width:100%}
-.type-input{width:100%;background:var(--bg-darker);border:2px solid var(--border);border-radius:var(--radius-sm);
-  color:#fff;font-family:var(--mono);font-size:16px;padding:12px 14px;outline:none;resize:none;
-  min-height:60px;letter-spacing:.3px}
-.type-input:focus{border-color:var(--bg-light)}
-.type-stats{display:flex;gap:24px;margin-top:16px}
-.type-stat{text-align:center}
-.type-stat .val{font-size:28px;font-weight:700;font-family:var(--mono)}
-.type-stat .lbl{font-size:11px;color:var(--text-muted);margin-top:2px}
+.tp-input{width:100%;background:var(--card);border:2px solid var(--border);border-radius:10px;
+  color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:15px;padding:11px 13px;
+  outline:none;resize:none;min-height:56px;letter-spacing:.2px;transition:border-color .2s}
+.tp-input:focus{border-color:var(--accent)}
+.tp-stats{display:flex;gap:24px;margin-top:14px}
+.tp-stat .val{font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.tp-stat .lbl{font-size:10px;color:var(--txt3);margin-top:2px}
 
-/* ===== Profile ===== */
-.profile-canvas-wrap{display:flex;justify-content:center;padding:20px}
-.profile-canvas-wrap canvas{width:260px;height:260px}
-.profile-scores{padding:0 16px 32px;display:flex;flex-direction:column;gap:8px}
-.prof-row{display:flex;align-items:center;padding:12px 16px;background:var(--card);
-  border-radius:var(--radius-sm);gap:12px}
-.prof-row .pr-name{flex:1;font-size:13px;font-weight:500}
-.prof-row .pr-score{font-size:14px;font-weight:700;font-family:var(--mono)}
-.prof-row .pr-pct{font-size:11px;color:var(--text-muted);min-width:50px;text-align:right}
+/* ===== PROFILE ===== */
+.pr-canvas{display:flex;justify-content:center;padding:20px}
+.pr-canvas canvas{width:260px;height:260px}
+.pr-rows{padding:0 14px 28px;display:flex;flex-direction:column;gap:7px}
+.pr-row{display:flex;align-items:center;padding:11px 14px;background:var(--card);border-radius:10px;gap:10px;
+  transition:background .2s}
+.pr-row:hover{background:var(--card-h)}
+.pr-nm{flex:1;font-size:12px;font-weight:500}
+.pr-sc{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.pr-pc{font-size:10px;color:var(--txt3);min-width:48px;text-align:right}
 
-/* ===== Result Overlay ===== */
-.result-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;
-  flex-direction:column;align-items:center;justify-content:center;z-index:10;
-  backdrop-filter:blur(4px);padding:24px}
-.result-overlay .ro-score{font-size:52px;font-weight:700;font-family:var(--mono);margin-bottom:4px}
-.result-overlay .ro-label{font-size:14px;color:var(--text-muted);margin-bottom:6px}
-.result-overlay .ro-pct{font-size:16px;font-weight:600;color:var(--green);margin-bottom:24px}
-.result-overlay .ro-best{font-size:12px;color:var(--orange);margin-bottom:20px}
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);
+  padding:9px 18px;border-radius:28px;font-size:12px;font-weight:500;z-index:100;opacity:0;
+  transition:all .3s;pointer-events:none;border:1px solid var(--border);box-shadow:0 4px 16px var(--sh)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ===== Toast ===== */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg-dark);
-  padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:100;
-  opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid var(--border)}
-.toast.show{opacity:1}
-
-/* ===== Scrollbar ===== */
-::-webkit-scrollbar{width:4px}
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-/* ===== Responsive ===== */
 @media(min-width:768px){
-  .home-hero h1{font-size:34px}
-  .test-card .nm{font-size:15px}
-  .reaction-panel .rp-text{font-size:34px}
-  .num-display{font-size:56px}
-  .verbal-word{font-size:38px}
+  .home-hdr h1{font-size:22px}
+  .tc .nm{font-size:14px}
+  .rp-text{font-size:30px}
+  .num-display{font-size:52px}
+  .vb-word{font-size:34px}
 }
-@media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition-duration:0s!important}
-}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:0s!important}}
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ===== HOME ===== -->
   <div id="v-home" class="view active">
-    <div class="home-hero">
+    <div class="home-hdr">
       <h1>Human Benchmark</h1>
-      <p>Measure your cognition, memory &amp; reflexes</p>
+      <button class="theme-btn" id="themeBtn" onclick="cycleTheme()"><span class="material-icons-round">dark_mode</span></button>
     </div>
+    <p class="home-sub">Mesurez votre cognition, memoire et reflexes</p>
     <div class="home-grid" id="homeGrid"></div>
   </div>
 
-  <!-- ===== REACTION TIME ===== -->
   <div id="v-reaction" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Reaction Time</span>
-    </div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Reaction Time</span></div>
     <div id="reaction-area" style="flex:1;position:relative"></div>
   </div>
-
-  <!-- ===== SEQUENCE MEMORY ===== -->
   <div id="v-sequence" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Sequence Memory</span>
-    </div>
-    <div class="test-body" id="seq-body"></div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Sequence Memory</span></div>
+    <div class="tb" id="seq-body"></div>
   </div>
-
-  <!-- ===== AIM TRAINER ===== -->
   <div id="v-aim" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Aim Trainer</span>
-      <span id="aim-counter" class="hdr-badge" style="display:none">0/30</span>
-    </div>
-    <div class="test-body padded" id="aim-body" style="justify-content:flex-start;padding-top:12px"></div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Aim Trainer</span><span id="aim-cnt" class="hdr-badge" style="display:none">0/30</span></div>
+    <div class="tb padded" id="aim-body" style="justify-content:flex-start;padding-top:10px"></div>
   </div>
-
-  <!-- ===== NUMBER MEMORY ===== -->
   <div id="v-number" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Number Memory</span>
-    </div>
-    <div class="test-body" id="num-body"></div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Number Memory</span></div>
+    <div class="tb" id="num-body"></div>
   </div>
-
-  <!-- ===== VERBAL MEMORY ===== -->
   <div id="v-verbal" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Verbal Memory</span>
-    </div>
-    <div class="test-body" id="verbal-body"></div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Verbal Memory</span></div>
+    <div class="tb" id="verbal-body"></div>
   </div>
-
-  <!-- ===== CHIMP TEST ===== -->
   <div id="v-chimp" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Chimp Test</span>
-    </div>
-    <div class="test-body" id="chimp-body"></div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Chimp Test</span></div>
+    <div class="tb" id="chimp-body"></div>
   </div>
-
-  <!-- ===== VISUAL MEMORY ===== -->
   <div id="v-visual" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Visual Memory</span>
-    </div>
-    <div class="test-body" id="visual-body"></div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Visual Memory</span></div>
+    <div class="tb" id="visual-body"></div>
   </div>
-
-  <!-- ===== TYPING TEST ===== -->
   <div id="v-typing" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Typing Test</span>
-    </div>
-    <div class="test-body" id="type-body" style="justify-content:flex-start;padding-top:20px"></div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Typing Test</span></div>
+    <div class="tb" id="type-body" style="justify-content:flex-start;padding-top:18px"></div>
   </div>
-
-  <!-- ===== PROFILE ===== -->
   <div id="v-profile" class="view">
-    <div class="hdr">
-      <button class="hdr-back" onclick="goHome()">&#8592;</button>
-      <span class="hdr-title">Your Profile</span>
-    </div>
-    <div class="profile-canvas-wrap"><canvas id="radarCanvas" width="520" height="520"></canvas></div>
-    <div class="profile-scores" id="profileScores"></div>
+    <div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Your Profile</span></div>
+    <div class="pr-canvas"><canvas id="radarCanvas" width="520" height="520"></canvas></div>
+    <div class="pr-rows" id="profRows"></div>
   </div>
-
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============================================================
-   ÉTAT GLOBAL & UTILITAIRES
-   ============================================================ */
-const LS_KEY = 'hb_scores';
-let scores = {};
-try { scores = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch(e) { scores = {}; }
-
-function saveScores() {
-  localStorage.setItem(LS_KEY, JSON.stringify(scores));
-}
-
-function saveBest(test, val) {
-  if (scores[test] === undefined || val > scores[test]) {
-    scores[test] = val;
-    saveScores();
-    return true;
-  }
-  return false;
-}
-function saveBestLower(test, val) {
-  if (scores[test] === undefined || val < scores[test]) {
-    scores[test] = val;
-    saveScores();
-    return true;
-  }
-  return false;
-}
-
-function showView(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('v-' + id).classList.add('active');
-}
-
-function goHome() {
-  // Nettoyer les tests en cours
-  if (reactionCleanup) reactionCleanup();
-  if (seqCleanup) seqCleanup();
-  if (numCleanup) numCleanup();
-  if (verbalCleanup) verbalCleanup();
-  if (chimpCleanup) chimpCleanup();
-  if (visualCleanup) visualCleanup();
-  if (typeCleanup) typeCleanup();
-  showView('home');
-  buildHome();
-}
-
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-function randInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = randInt(0, i);
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-// Percentile par approximation de la CDF normale
-function normCDF(z) {
-  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
-  const sign = z < 0 ? -1 : 1;
-  z = Math.abs(z);
-  const t = 1 / (1 + p * z);
-  const y = 1 - (((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-z*z/2);
-  return 0.5 * (1 + sign * y);
-}
-
-const TEST_PARAMS = {
-  reaction: { mean:250, sd:50, lower:true, unit:'ms', label:'Reaction Time' },
-  sequence: { mean:7, sd:2, lower:false, unit:'niv.', label:'Sequence Memory' },
-  aim:      { mean:400, sd:100, lower:true, unit:'ms', label:'Aim Trainer' },
-  number:   { mean:7, sd:2, lower:false, unit:'chiffres', label:'Number Memory' },
-  verbal:   { mean:40, sd:20, lower:false, unit:'mots', label:'Verbal Memory' },
-  chimp:    { mean:6, sd:3, lower:false, unit:'niv.', label:'Chimp Test' },
-  visual:   { mean:8, sd:3, lower:false, unit:'niv.', label:'Visual Memory' },
-  typing:   { mean:60, sd:20, lower:false, unit:'WPM', label:'Typing' }
+/* ===========================================================
+   DONNÉES DE PERCENTILES RÉELLES
+   =========================================================== */
+const PDATA={
+  reaction:{lower:true,unit:'ms',label:'Reaction Time',
+    pts:[[99,160],[90,200],[75,230],[50,273],[25,320],[10,380],[1,500]]},
+  sequence:{lower:false,unit:'niv.',label:'Sequence Memory',
+    pts:[[99,22],[90,14],[75,11],[50,9],[25,7],[10,5],[1,3]]},
+  aim:{lower:true,unit:'ms',label:'Aim Trainer',
+    pts:[[99,280],[90,360],[75,420],[50,500],[25,600],[10,750],[1,1000]]},
+  number:{lower:false,unit:'chiffres',label:'Number Memory',
+    pts:[[99,16],[90,12],[75,10],[50,9],[25,7],[10,5],[1,3]]},
+  verbal:{lower:false,unit:'mots',label:'Verbal Memory',
+    pts:[[99,160],[90,90],[75,60],[50,45],[25,30],[10,18],[1,10]]},
+  chimp:{lower:false,unit:'niv.',label:'Chimp Test',
+    pts:[[99,22],[90,15],[75,12],[50,10],[25,8],[10,6],[1,4]]},
+  visual:{lower:false,unit:'niv.',label:'Visual Memory',
+    pts:[[99,19],[90,15],[75,13],[50,10],[25,8],[10,6],[1,4]]},
+  typing:{lower:false,unit:'WPM',label:'Typing',
+    pts:[[99,125],[90,90],[75,70],[50,50],[25,35],[10,20],[1,10]]}
 };
 
-function getPercentile(test, score) {
-  const p = TEST_PARAMS[test];
-  if (!p || score === undefined || score === null) return null;
-  const z = (score - p.mean) / p.sd;
-  let pct = normCDF(z) * 100;
-  if (p.lower) pct = 100 - pct;
-  return Math.round(Math.max(0, Math.min(99), pct));
+/* Interpolation linéaire sur les données réelles */
+function getPercentile(test,score){
+  const d=PDATA[test];if(!d||score==null)return null;
+  const pts=d.pts;
+  if(d.lower){
+    if(score<=pts[0][1])return 99;if(score>=pts[pts.length-1][1])return 1;
+    for(let i=1;i<pts.length;i++){
+      if(score<=pts[i][1]){
+        const[p1,s1]=pts[i-1],[p2,s2]=pts[i];
+        return Math.round(p2+(s2-score)/(s2-s1)*(p1-p2));
+      }
+    }return 1;
+  }else{
+    if(score>=pts[0][1])return 99;if(score<=pts[pts.length-1][1])return 1;
+    for(let i=1;i<pts.length;i++){
+      if(score>=pts[i][1]){
+        const[p1,s1]=pts[i-1],[p2,s2]=pts[i];
+        return Math.round(p2+(score-s2)/(s1-s2)*(p1-p2));
+      }
+    }return 1;
+  }
 }
 
-/* ============================================================
-   PAGE D'ACCUEIL
-   ============================================================ */
-const TESTS = [
-  { id:'reaction', name:'Reaction Time', desc:'Reflexe visuel simple', icon:'⚡', color:'var(--red)' },
-  { id:'sequence', name:'Sequence Memory', desc:'Mémoire de séquences', icon:'▦', color:'#8e44ad' },
-  { id:'aim',      name:'Aim Trainer', desc:'Précision & vitesse', icon:'◎', color:'var(--orange)' },
-  { id:'number',   name:'Number Memory', desc:'Mémoire des chiffres', icon:'#', color:'var(--green)' },
-  { id:'verbal',   name:'Verbal Memory', desc:'Reconnaissance verbale', icon:'Aa', color:'#2980b9' },
-  { id:'chimp',    name:'Chimp Test', desc:'Mémoire spatiale', icon:'◉', color:'#e67e22' },
-  { id:'visual',   name:'Visual Memory', desc:'Rappel de motifs', icon:'◇', color:'#1abc9c' },
-  { id:'typing',   name:'Typing', desc:'Vitesse de frappe', icon:'⌨', color:'#9b59b6' }
+function getGrade(pct){
+  if(pct>=99)return{l:'Exceptionnel',c:'var(--accent)'};
+  if(pct>=90)return{l:'Excellent',c:'var(--success)'};
+  if(pct>=75)return{l:'Tres bon',c:'var(--success)'};
+  if(pct>=50)return{l:'Dans la moyenne',c:'var(--txt2)'};
+  if(pct>=25)return{l:'Sous la moyenne',c:'var(--warn)'};
+  return{l:'A ameliorer',c:'var(--danger)'};
+}
+
+/* ===========================================================
+   THÈME
+   =========================================================== */
+const THEMES=['obsidian','slate','paper'];
+const T_ICONS={obsidian:'dark_mode',slate:'filter_drama',paper:'light_mode'};
+function cycleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const idx=(THEMES.indexOf(cur)+1)%THEMES.length;
+  document.documentElement.setAttribute('data-theme',THEMES[idx]);
+  localStorage.setItem('hb_theme',THEMES[idx]);
+  document.querySelector('#themeBtn .material-icons-round').textContent=T_ICONS[THEMES[idx]];
+}
+(function initTheme(){
+  const t=localStorage.getItem('hb_theme')||'obsidian';
+  document.documentElement.setAttribute('data-theme',t);
+  document.addEventListener('DOMContentLoaded',()=>{
+    const ic=document.querySelector('#themeBtn .material-icons-round');
+    if(ic)ic.textContent=T_ICONS[t]||'dark_mode';
+  });
+})();
+
+/* ===========================================================
+   SCORES & UTILITAIRES
+   =========================================================== */
+const LS='hb_scores2';
+let scores={};try{scores=JSON.parse(localStorage.getItem(LS))||{}}catch(e){scores={}}
+function saveSc(){localStorage.setItem(LS,JSON.stringify(scores))}
+function saveScore(test,val){
+  const d=PDATA[test];
+  const isNew=scores[test]===undefined||(d.lower?val<scores[test]:val>scores[test]);
+  if(isNew){scores[test]=val;saveSc()}return isNew;
+}
+
+let tid=0; // identifiant de test actif pour annulation
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>{v.classList.remove('active','entering')});
+  const el=document.getElementById('v-'+id);
+  el.classList.add('entering');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{el.classList.remove('entering');el.classList.add('active')}));
+}
+function goHome(){tid++;showView('home');buildHome()}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function shuf(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=ri(0,i);[r[i],r[j]]=[r[j],r[i]]}return r}
+
+/* Barre de comparaison */
+function cmpBar(test,score){
+  const pct=getPercentile(test,score);if(pct===null)return'';
+  const d=PDATA[test];const pos=Math.max(2,Math.min(98,pct));
+  const lo=d.lower?'Lent':'Faible',hi=d.lower?'Rapide':'Fort';
+  return`<div class="cmp"><div class="cmp-lbl">Meilleur que <strong style="color:var(--accent)">${pct}%</strong> des utilisateurs</div>
+  <div class="cmp-track"><div class="cmp-fill" style="width:${pos}%"></div><div class="cmp-median" style="left:50%"></div>
+  <div class="cmp-marker" style="left:${pos}%"></div></div>
+  <div class="cmp-row"><span>${lo}</span><span>Mediane</span><span>${hi}</span></div></div>`;
+}
+
+/* Affichage résultat commun */
+function showResult(el,test,score,extra=''){
+  const d=PDATA[test];const pct=getPercentile(test,score);
+  const g=getGrade(pct);const isNew=saveScore(test,score);
+  el.innerHTML=`<div class="res-grade" style="color:${g.c}">${g.l}</div>
+    <div class="res-score">${score}<span class="res-unit">${d.unit}</span></div>
+    ${cmpBar(test,score)}
+    ${isNew?'<div class="res-new">Nouveau record!</div>':''}
+    ${extra}
+    <button class="t-btn primary" style="margin-top:20px" onclick="launchTest('${test}')">Recommencer</button>`;
+}
+
+/* ===========================================================
+   ACCUEIL
+   =========================================================== */
+const TESTS=[
+  {id:'reaction',name:'Reaction Time',desc:'Reflexe visuel simple',icon:'bolt',color:'#dc2626'},
+  {id:'sequence',name:'Sequence Memory',desc:'Memoire de sequences',icon:'grid_view',color:'#8b5cf6'},
+  {id:'aim',name:'Aim Trainer',desc:'Precision et vitesse',icon:'gps_fixed',color:'#ea580c'},
+  {id:'number',name:'Number Memory',desc:'Memoire des chiffres',icon:'pin',color:'#16a34a'},
+  {id:'verbal',name:'Verbal Memory',desc:'Reconnaissance verbale',icon:'spellcheck',color:'#0284c7'},
+  {id:'chimp',name:'Chimp Test',desc:'Memoire spatiale',icon:'visibility',color:'#d97706'},
+  {id:'visual',name:'Visual Memory',desc:'Rappel de motifs',icon:'dashboard',color:'#0d9488'},
+  {id:'typing',name:'Typing',desc:'Vitesse de frappe',icon:'keyboard',color:'#7c3aed'}
 ];
 
-function buildHome() {
-  const grid = document.getElementById('homeGrid');
-  let html = '';
-  TESTS.forEach(t => {
-    const s = scores[t.id];
-    const p = s !== undefined ? getPercentile(t.id, s) : null;
-    const param = TEST_PARAMS[t.id];
-    const scoreTxt = s !== undefined ? `${s} ${param.unit}` : '';
-    const pctTxt = p !== null ? `Top ${100-p}%` : '';
-    html += `<div class="test-card" onclick="launchTest('${t.id}')">
-      <div class="ic" style="background:${t.color};color:#fff;font-size:16px;font-weight:700">${t.icon}</div>
-      <div class="nm">${t.name}</div>
-      <div class="ds">${t.desc}</div>
-      ${scoreTxt ? `<div class="sc">${scoreTxt}${pctTxt ? ' · '+pctTxt : ''}</div>` : ''}
+function buildHome(){
+  const g=document.getElementById('homeGrid');let h='';
+  TESTS.forEach(t=>{
+    const s=scores[t.id];const pct=s!=null?getPercentile(t.id,s):null;
+    const gr=pct!=null?getGrade(pct):null;
+    const scTxt=s!=null?`${s} ${PDATA[t.id].unit}`:'';
+    const grTxt=gr?`<span style="color:${gr.c}">${gr.l}</span>`:'';
+    h+=`<div class="tc" onclick="launchTest('${t.id}')">
+      <div class="ic" style="background:${t.color};color:#fff"><span class="material-icons-round" style="font-size:19px">${t.icon}</span></div>
+      <div class="nm">${t.name}</div><div class="ds">${t.desc}</div>
+      ${scTxt?`<div class="sc" style="color:${gr?gr.c:'var(--txt3)'}">${scTxt}${grTxt?' · '+grTxt:''}</div>`:''}
     </div>`;
   });
-  html += `<div class="profile-card" onclick="showProfile()">
+  h+=`<div class="prof-card" onclick="showProfile()">
     <canvas id="miniRadar" width="140" height="140"></canvas>
-    <div class="pr-info"><h3>Your Profile</h3><p>Radar cognitif &amp; percentiles</p></div>
+    <div><h3>Votre Profil</h3><p>Radar cognitif et percentiles</p></div>
   </div>`;
-  grid.innerHTML = html;
-  // Dessiner le mini radar
-  setTimeout(() => drawRadar(document.getElementById('miniRadar'), 140), 50);
+  g.innerHTML=h;
+  setTimeout(()=>drawRadar(document.getElementById('miniRadar'),140),60);
 }
 
-function launchTest(id) {
-  showView(id);
-  switch(id) {
-    case 'reaction': initReaction(); break;
-    case 'sequence': initSequence(); break;
-    case 'aim':      initAim(); break;
-    case 'number':   initNumber(); break;
-    case 'verbal':   initVerbal(); break;
-    case 'chimp':    initChimp(); break;
-    case 'visual':   initVisual(); break;
-    case 'typing':   initTyping(); break;
+function launchTest(id){tid++;showView(id);
+  switch(id){
+    case'reaction':initReaction();break;case'sequence':initSequence();break;
+    case'aim':initAim();break;case'number':initNumber();break;
+    case'verbal':initVerbal();break;case'chimp':initChimp();break;
+    case'visual':initVisual();break;case'typing':initTyping();break;
   }
 }
 
-/* ============================================================
+/* ===========================================================
    1. REACTION TIME
-   ============================================================ */
-let reactionCleanup = null;
+   =========================================================== */
+function initReaction(){
+  const my=tid,area=document.getElementById('reaction-area');
+  let rounds=[],round=0,startTime=0,phase='wait',timer=null;
 
-function initReaction() {
-  const area = document.getElementById('reaction-area');
-  let rounds = [], round = 0, timer = null, startTime = 0, listening = false;
-  let cleanupDone = false;
-
-  function render() {
-    area.innerHTML = `<div class="reaction-panel wait" id="rp">
-      <div class="rp-text">Wait for green...</div>
-      <div class="rp-sub">Round ${round+1}/5</div>
-    </div>`;
-    const rp = document.getElementById('rp');
-
-    // Délai aléatoire 1.5–5s
-    const delay = 1500 + Math.random() * 3500;
-    timer = setTimeout(() => {
-      if (cleanupDone) return;
-      rp.className = 'reaction-panel go';
-      rp.innerHTML = '<div class="rp-text">Click!</div><div class="rp-sub">Round '+(round+1)+'/5</div>';
-      startTime = performance.now();
-      listening = true;
-    }, delay);
-
-    rp.addEventListener('pointerdown', function handler(e) {
-      e.preventDefault();
-      if (cleanupDone) return;
-      if (!listening) {
-        // Trop tôt
-        clearTimeout(timer);
-        rp.className = 'reaction-panel early';
-        rp.innerHTML = '<div class="rp-text">Too soon!</div><div class="rp-sub">Touchez pour réessayer</div>';
-        rp.removeEventListener('pointerdown', handler);
-        rp.addEventListener('pointerdown', function h2() {
-          rp.removeEventListener('pointerdown', h2);
-          render();
-        });
-        return;
-      }
-      // Mesure
-      listening = false;
-      const t = Math.round(performance.now() - startTime);
-      rounds.push(t);
-      round++;
-      rp.removeEventListener('pointerdown', handler);
-
-      if (round >= 5) {
-        // Résultat final
-        const avg = Math.round(rounds.reduce((a,b)=>a+b,0)/rounds.length);
-        const isNew = saveBestLower('reaction', avg);
-        const pct = getPercentile('reaction', avg);
-        rp.className = 'reaction-panel result';
-        rp.innerHTML = `<div class="rp-text" style="font-size:20px">Votre temps moyen</div>
-          <div class="test-big" style="margin:12px 0">${avg}<span style="font-size:20px;font-weight:400"> ms</span></div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px">Percentile: ${pct}e</div>
-          ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-bottom:8px">Nouveau record!</div>' : ''}
-          <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">[${rounds.join(', ')}] ms</div>
-          <button class="test-btn primary" onclick="initReaction()">Recommencer</button>`;
-      } else {
-        rp.className = 'reaction-panel result';
-        rp.innerHTML = `<div class="rp-text">${t} ms</div>
-          <div class="rp-sub">Round ${round+1}/5 — touchez pour continuer</div>`;
-        rp.addEventListener('pointerdown', function h3() {
-          rp.removeEventListener('pointerdown', h3);
-          render();
-        });
-      }
-    });
+  function render(){
+    if(tid!==my)return;
+    clearTimeout(timer);
+    if(phase==='wait'){
+      area.innerHTML=`<div class="rp wait"><div class="rp-text">Attendez le vert...</div><div class="rp-sub">Tour ${round+1}/5</div></div>`;
+      timer=setTimeout(()=>{if(tid!==my)return;phase='go';render()},1500+Math.random()*3500);
+    }else if(phase==='go'){
+      area.innerHTML=`<div class="rp go"><div class="rp-text">Cliquez!</div><div class="rp-sub">Tour ${round+1}/5</div></div>`;
+      startTime=performance.now();
+    }else if(phase==='early'){
+      area.innerHTML=`<div class="rp early"><div class="rp-text">Trop tot!</div><div class="rp-sub">Touchez pour reessayer</div></div>`;
+    }else if(phase==='roundOk'){
+      const t=rounds[rounds.length-1];
+      area.innerHTML=`<div class="rp result-bg"><div class="rp-text">${t} ms</div><div class="rp-sub">Tour ${round}/5 — touchez pour continuer</div></div>`;
+    }else if(phase==='done'){
+      const avg=Math.round(rounds.reduce((a,b)=>a+b,0)/rounds.length);
+      area.innerHTML='';showResult(area,'reaction',avg,`<div class="res-extra">[${rounds.join(', ')}] ms</div>`);
+    }
   }
 
+  function handleClick(){
+    if(tid!==my)return;
+    if(phase==='wait'){clearTimeout(timer);phase='early';render()}
+    else if(phase==='go'){rounds.push(Math.round(performance.now()-startTime));round++;phase=round>=5?'done':'roundOk';render()}
+    else if(phase==='early'||phase==='roundOk'){phase='wait';render()}
+  }
+
+  area.addEventListener('pointerdown',function h(e){e.preventDefault();
+    if(tid!==my){area.removeEventListener('pointerdown',h);return}handleClick()});
   render();
-  reactionCleanup = () => { cleanupDone = true; clearTimeout(timer); listening = false; reactionCleanup = null; };
 }
 
-/* ============================================================
+/* ===========================================================
    2. SEQUENCE MEMORY
-   ============================================================ */
-let seqCleanup = null;
+   =========================================================== */
+function initSequence(){
+  const my=tid,body=document.getElementById('seq-body');
+  let level=1,seq=[],userSeq=[],phase='idle',t1=null,t2=null;
 
-function initSequence() {
-  const body = document.getElementById('seq-body');
-  let level = 1, sequence = [], userSeq = [], phase = 'idle', cleanupDone = false;
-  let timer1 = null, timer2 = null;
+  function build(){
+    body.innerHTML=`<div class="ts" id="sq-st">Niveau ${level}</div>
+      <div class="sq-grid" id="sq-g" style="grid-template-columns:repeat(3,1fr);width:min(270px,78vw)"></div>`;
+    const g=document.getElementById('sq-g');
+    for(let i=0;i<9;i++){const c=document.createElement('div');c.className='sq-cell';c.dataset.i=i;
+      c.addEventListener('pointerdown',()=>onClick(i));g.appendChild(c)}
+  }
 
-  function buildGrid() {
-    body.innerHTML = `<div class="test-status" id="seq-st">Niveau ${level}</div>
-      <div class="sq-grid" id="sq-grid" style="grid-template-columns:repeat(3,1fr);width:min(280px,80vw)"></div>`;
-    const grid = document.getElementById('sq-grid');
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'sq-cell';
-      cell.dataset.idx = i;
-      cell.addEventListener('pointerdown', () => onCellClick(i));
-      grid.appendChild(cell);
+  function startLvl(){
+    if(tid!==my)return;seq.push(ri(0,8));userSeq=[];phase='showing';
+    document.getElementById('sq-st').textContent=`Niveau ${level} — Observez...`;
+    const cells=document.querySelectorAll('#sq-g .sq-cell');
+    let i=0;
+    function show(){
+      if(tid!==my||i>=seq.length){if(tid!==my)return;phase='input';
+        document.getElementById('sq-st').textContent=`Niveau ${level} — Votre tour`;return}
+      const idx=seq[i];cells[idx].classList.add('flash');
+      const ci=i;
+      t1=setTimeout(()=>{cells[seq[ci]].classList.remove('flash');i=ci+1;t2=setTimeout(show,220)},480);
+    }
+    show();
+  }
+
+  function onClick(idx){
+    if(tid!==my||phase!=='input')return;
+    const cells=document.querySelectorAll('#sq-g .sq-cell');
+    const pos=userSeq.length;
+    if(idx===seq[pos]){
+      userSeq.push(idx);cells[idx].classList.add('flash');
+      setTimeout(()=>cells[idx].classList.remove('flash'),180);
+      if(userSeq.length===seq.length){phase='wait';level++;setTimeout(()=>{if(tid!==my)return;build();startLvl()},500)}
+    }else{
+      cells[idx].classList.add('wrong');phase='done';
+      const best=level-1;setTimeout(()=>{if(tid!==my)return;showResult(body,'sequence',best)},500);
     }
   }
 
-  function startLevel() {
-    if (cleanupDone) return;
-    sequence.push(randInt(0, 8));
-    userSeq = [];
-    phase = 'showing';
-    document.getElementById('seq-st').textContent = 'Niveau ' + level + ' — Observez...';
-    const cells = document.querySelectorAll('#sq-grid .sq-cell');
-
-    let i = 0;
-    function showNext() {
-      if (cleanupDone) return;
-      if (i >= sequence.length) {
-        phase = 'input';
-        document.getElementById('seq-st').textContent = 'Niveau ' + level + ' — Votre tour';
-        return;
-      }
-      cells[sequence[i]].classList.add('flash');
-      timer1 = setTimeout(() => {
-        cells[sequence[i-1]]?.classList.remove('flash');
-        i++;
-        timer2 = setTimeout(showNext, 200);
-      }, 500);
-      i++; // on incrémente ici aussi car le timeout utilise i-1
-    }
-    // Correction: reset i
-    i = 0;
-    function showNext2() {
-      if (cleanupDone) return;
-      if (i >= sequence.length) {
-        phase = 'input';
-        document.getElementById('seq-st').textContent = 'Niveau ' + level + ' — Votre tour';
-        return;
-      }
-      const idx = sequence[i];
-      cells[idx].classList.add('flash');
-      const ci = i;
-      timer1 = setTimeout(() => {
-        cells[sequence[ci]].classList.remove('flash');
-        i = ci + 1;
-        timer2 = setTimeout(showNext2, 250);
-      }, 500);
-    }
-    showNext2();
-  }
-
-  function onCellClick(idx) {
-    if (phase !== 'input') return;
-    const cells = document.querySelectorAll('#sq-grid .sq-cell');
-    const pos = userSeq.length;
-    if (idx === sequence[pos]) {
-      userSeq.push(idx);
-      cells[idx].classList.add('flash');
-      setTimeout(() => cells[idx].classList.remove('flash'), 200);
-      if (userSeq.length === sequence.length) {
-        // Niveau réussi
-        phase = 'waiting';
-        level++;
-        setTimeout(() => { if (!cleanupDone) startLevel(); }, 600);
-      }
-    } else {
-      // Échec
-      cells[idx].classList.add('wrong');
-      phase = 'done';
-      const best = level - 1;
-      const isNew = saveBest('sequence', best);
-      const pct = getPercentile('sequence', best);
-      setTimeout(() => {
-        if (cleanupDone) return;
-        body.innerHTML = `<div class="test-status">Niveau atteint: ${best}</div>
-          <div class="test-big">${best}</div>
-          <div class="test-label">niveaux</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
-          ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
-          <button class="test-btn primary" style="margin-top:24px" onclick="initSequence()">Recommencer</button>`;
-      }, 500);
-    }
-  }
-
-  buildGrid();
-  setTimeout(() => startLevel(), 500);
-  seqCleanup = () => { cleanupDone = true; clearTimeout(timer1); clearTimeout(timer2); seqCleanup = null; };
+  build();setTimeout(()=>startLvl(),400);
 }
 
-/* ============================================================
+/* ===========================================================
    3. AIM TRAINER
-   ============================================================ */
-let aimCleanup = null;
+   =========================================================== */
+function initAim(){
+  const my=tid,body=document.getElementById('aim-body'),cnt=document.getElementById('aim-cnt');
+  cnt.style.display='none';let hits=0,startT=0,started=false;
 
-function initAim() {
-  const body = document.getElementById('aim-body');
-  const counter = document.getElementById('aim-counter');
-  counter.style.display = 'none';
-  let hits = 0, startTime = 0, started = false, cleanupDone = false;
+  body.innerHTML=`<div class="ts" id="aim-st">Cliquez sur la cible pour commencer</div><div class="aim-zone" id="aim-z"></div>`;
+  const zone=document.getElementById('aim-z');
 
-  body.innerHTML = `<div class="test-status" id="aim-st">Cliquez sur la cible pour commencer</div>
-    <div class="aim-zone" id="aim-zone"></div>`;
-  const zone = document.getElementById('aim-zone');
-
-  function spawnTarget() {
-    if (cleanupDone) return;
-    zone.innerHTML = '';
-    const t = document.createElement('div');
-    t.className = 'aim-target';
-    const pad = 30;
-    const w = zone.clientWidth, h = zone.clientHeight;
-    const x = pad + Math.random() * (w - pad*2);
-    const y = pad + Math.random() * (h - pad*2);
-    t.style.left = x + 'px';
-    t.style.top = y + 'px';
-    t.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      if (cleanupDone) return;
-      if (!started) { started = true; startTime = performance.now(); counter.style.display = ''; }
-      hits++;
-      counter.textContent = hits + '/30';
-      if (hits >= 30) {
-        const total = performance.now() - startTime;
-        const avg = Math.round(total / 30);
-        const isNew = saveBestLower('aim', avg);
-        const pct = getPercentile('aim', avg);
-        counter.style.display = 'none';
-        body.innerHTML = `<div class="test-status">Résultat</div>
-          <div class="test-big">${avg}<span style="font-size:20px;font-weight:400"> ms</span></div>
-          <div class="test-label">par cible</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
-          ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
-          <button class="test-btn primary" style="margin-top:24px" onclick="initAim()">Recommencer</button>`;
-        return;
-      }
-      spawnTarget();
-    });
+  function spawn(){
+    if(tid!==my)return;zone.innerHTML='';
+    const t=document.createElement('div');t.className='aim-target';
+    const pad=28,w=zone.clientWidth,h=zone.clientHeight;
+    t.style.left=(pad+Math.random()*(w-pad*2))+'px';
+    t.style.top=(pad+Math.random()*(h-pad*2))+'px';
+    t.addEventListener('pointerdown',e=>{e.preventDefault();if(tid!==my)return;
+      if(!started){started=true;startT=performance.now();cnt.style.display=''}
+      hits++;cnt.textContent=hits+'/30';
+      if(hits>=30){const avg=Math.round((performance.now()-startT)/30);cnt.style.display='none';
+        showResult(body,'aim',avg);return}
+      spawn()});
     zone.appendChild(t);
   }
-
-  spawnTarget();
-  aimCleanup = () => { cleanupDone = true; aimCleanup = null; };
+  spawn();
 }
 
-/* ============================================================
+/* ===========================================================
    4. NUMBER MEMORY
-   ============================================================ */
-let numCleanup = null;
+   =========================================================== */
+function initNumber(){
+  const my=tid,body=document.getElementById('num-body');
+  let level=1,t1=null,t2=null,barI=null;
 
-function initNumber() {
-  const body = document.getElementById('num-body');
-  let level = 1, cleanupDone = false;
-  let timer1 = null, timer2 = null, barInterval = null;
-
-  function startLevel() {
-    if (cleanupDone) return;
-    const digits = level;
-    const num = [];
-    for (let i = 0; i < digits; i++) num.push(randInt(i===0?1:0, 9));
-    const numStr = num.join('');
-    const showTime = Math.max(1500, digits * 800);
-
-    body.innerHTML = `<div class="test-status">Niveau ${level}</div>
-      <div class="num-display" id="num-disp">${numStr}</div>
-      <div class="num-bar"><div class="num-bar-fill" id="num-fill" style="width:100%"></div></div>`;
-
-    const fill = document.getElementById('num-fill');
-    const startT = Date.now();
-    barInterval = setInterval(() => {
-      const elapsed = Date.now() - startT;
-      const pct = Math.max(0, 1 - elapsed / showTime) * 100;
-      fill.style.width = pct + '%';
-      if (pct <= 0) clearInterval(barInterval);
-    }, 50);
-
-    timer1 = setTimeout(() => {
-      if (cleanupDone) return;
-      clearInterval(barInterval);
-      body.innerHTML = `<div class="test-status">Niveau ${level} — Tapez le nombre</div>
-        <input class="num-input" id="num-input" type="text" inputmode="numeric" autocomplete="off" autofocus>
-        <button class="test-btn primary" style="margin-top:16px" id="num-submit">Valider</button>`;
-      const inp = document.getElementById('num-input');
-      inp.focus();
-      const submit = () => {
-        if (cleanupDone) return;
-        const val = inp.value.trim();
-        if (val === numStr) {
-          level++;
-          toast('Correct!');
-          timer2 = setTimeout(() => startLevel(), 400);
-        } else {
-          const best = level - 1;
-          const isNew = saveBest('number', best);
-          const pct = getPercentile('number', best);
-          body.innerHTML = `<div class="test-status">Raté! La réponse était ${numStr}</div>
-            <div class="test-big">${best}</div>
-            <div class="test-label">chiffres</div>
-            <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
-            ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
-            <button class="test-btn primary" style="margin-top:24px" onclick="initNumber()">Recommencer</button>`;
-        }
-      };
-      document.getElementById('num-submit').addEventListener('click', submit);
-      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
-    }, showTime);
+  function startLvl(){
+    if(tid!==my)return;
+    const digits=level,num=[];for(let i=0;i<digits;i++)num.push(ri(i===0?1:0,9));
+    const numStr=num.join(''),showT=Math.max(1500,digits*800);
+    body.innerHTML=`<div class="ts">Niveau ${level}</div><div class="num-display">${numStr}</div>
+      <div class="num-bar"><div class="num-bar-fill" id="n-fill" style="width:100%"></div></div>`;
+    const fill=document.getElementById('n-fill');const s=Date.now();
+    barI=setInterval(()=>{const p=Math.max(0,(1-(Date.now()-s)/showT))*100;fill.style.width=p+'%';if(p<=0)clearInterval(barI)},50);
+    t1=setTimeout(()=>{if(tid!==my)return;clearInterval(barI);
+      body.innerHTML=`<div class="ts">Niveau ${level} — Tapez le nombre</div>
+        <input class="num-input" id="n-inp" type="text" inputmode="numeric" autocomplete="off">
+        <button class="t-btn primary" style="margin-top:14px" id="n-sub">Valider</button>`;
+      const inp=document.getElementById('n-inp');inp.focus();
+      const submit=()=>{if(tid!==my)return;const v=inp.value.trim();
+        if(v===numStr){level++;toast('Correct!');t2=setTimeout(()=>startLvl(),350)}
+        else{showResult(body,'number',level-1)}};
+      document.getElementById('n-sub').addEventListener('click',submit);
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter')submit()});
+    },showT);
   }
-
-  startLevel();
-  numCleanup = () => { cleanupDone = true; clearTimeout(timer1); clearTimeout(timer2); clearInterval(barInterval); numCleanup = null; };
+  startLvl();
 }
 
-/* ============================================================
+/* ===========================================================
    5. VERBAL MEMORY
-   ============================================================ */
-let verbalCleanup = null;
-
-const WORDS = ['bicycle','mountain','river','cloud','garden','window','pencil','dragon','silver','orange',
+   =========================================================== */
+const WORDS=['bicycle','mountain','river','cloud','garden','window','pencil','dragon','silver','orange',
   'planet','forest','bridge','castle','desert','flame','harbor','island','jungle','kitten','lemon','marble',
   'needle','ocean','parrot','quilt','rocket','shadow','temple','umbrella','valley','whisper','crystal',
   'diamond','eagle','falcon','granite','horizon','ivory','journey','knight','lantern','mirror','noble',
@@ -766,612 +590,248 @@ const WORDS = ['bicycle','mountain','river','cloud','garden','window','pencil','
   'quartz','ridge','spark','tide','vault','wave','bloom','crest','dusk','fern','glow','hive','iris','lace',
   'moss','nest','pine','reef','sage','tusk','vine','wren','zeal','amber','brisk','cobalt','dew','elm'];
 
-function initVerbal() {
-  const body = document.getElementById('verbal-body');
-  let score = 0, strikes = 0, usedWords = [], currentWord = '', cleanupDone = false;
+function initVerbal(){
+  const my=tid,body=document.getElementById('verbal-body');
+  let score=0,strikes=0,presented=[],curWord='',curIsNew=false;
 
-  function pickWord() {
-    return WORDS[randInt(0, WORDS.length - 1)];
-  }
-
-  function nextWord() {
-    if (cleanupDone) return;
-    // 50% de chance de reprendre un mot déjà vu
-    if (usedWords.length > 0 && Math.random() < 0.5) {
-      currentWord = usedWords[randInt(0, usedWords.length - 1)];
-    } else {
-      currentWord = pickWord();
-      if (!usedWords.includes(currentWord)) usedWords.push(currentWord);
-    }
+  function next(){
+    if(tid!==my)return;
+    if(presented.length>0&&Math.random()<0.5){curWord=presented[ri(0,presented.length-1)];curIsNew=false}
+    else{const avail=WORDS.filter(w=>!presented.includes(w));curWord=avail[ri(0,avail.length-1)]||WORDS[ri(0,WORDS.length-1)];curIsNew=true}
     render();
   }
 
-  function render() {
-    let dots = '';
-    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < strikes ? ' lost' : ''}"></div>`;
-    body.innerHTML = `<div class="test-status">Score: ${score}</div>
-      <div class="verbal-word">${currentWord}</div>
-      <div class="verbal-btns">
-        <button class="vb-new" id="vb-new">NOUVEAU</button>
-        <button class="vb-seen" id="vb-seen">DÉJÀ VU</button>
-      </div>
-      <div class="strikes">${dots}</div>`;
-    document.getElementById('vb-new').addEventListener('click', () => answer(false));
-    document.getElementById('vb-seen').addEventListener('click', () => answer(true));
+  function render(){
+    let dots='';for(let i=0;i<3;i++)dots+=`<div class="dot${i<strikes?' lost':''}"></div>`;
+    body.innerHTML=`<div class="ts">Score: ${score}</div><div class="vb-word">${curWord}</div>
+      <div class="vb-btns"><button class="vb-new" id="vn">NOUVEAU</button><button class="vb-seen" id="vs">DEJA VU</button></div>
+      <div class="dots">${dots}</div>`;
+    document.getElementById('vn').addEventListener('click',()=>ans(false));
+    document.getElementById('vs').addEventListener('click',()=>ans(true));
   }
 
-  function answer(isSeen) {
-    if (cleanupDone) return;
-    const wasSeen = usedWords.indexOf(currentWord) !== -1 && usedWords.indexOf(currentWord) < usedWords.length;
-    // Vérifier si le mot a déjà été montré dans cette session
-    const appearedBefore = usedWords.indexOf(currentWord) < usedWords.length - 1 ||
-      (usedWords.filter(w => w === currentWord).length > 1);
-    // Plus simple: le mot est "déjà vu" s'il est apparu avant le tour actuel
-    const count = usedWords.filter(w => w === currentWord).length;
-    // En fait, considérons: un mot est "déjà vu" s'il a déjà été présenté au moins une fois avant ce tour
-    // On va simplifier: le mot est "déjà vu" si on l'a déjà rencontré dans les tours précédents
-    const firstOccIdx = usedWords.indexOf(currentWord);
-    // Le mot est nouveau s'il vient d'être ajouté (dernier élément) et n'a jamais été tiré avant
-    const isNewWord = !verbalState.prevWords || !verbalState.prevWords.includes(currentWord);
-
-    // Réécrivons plus proprement
+  function ans(saidSeen){
+    if(tid!==my)return;
+    const ok=(saidSeen&&!curIsNew)||(!saidSeen&&curIsNew);
+    if(curIsNew)presented.push(curWord);
+    if(ok){score++;next()}
+    else{strikes++;
+      if(strikes>=3){showResult(body,'verbal',score)}
+      else{next()}}
   }
-
-  // Approche plus propre
-  let shownWords = []; // tous les mots déjà présentés (avec doublons possibles)
-
-  function nextWord2() {
-    if (cleanupDone) return;
-    if (shownWords.length === 0 || Math.random() < 0.5) {
-      // Nouveau mot jamais montré
-      let w;
-      do { w = pickWord(); } while (shownWords.includes(w) && shownWords.length < WORDS.length);
-      currentWord = w;
-      shownWords.push(w);
-    } else {
-      // Mot déjà montré
-      currentWord = shownWords[randInt(0, shownWords.length - 1)];
-    }
-    render2();
-  }
-
-  function render2() {
-    let dots = '';
-    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < strikes ? ' lost' : ''}"></div>`;
-    body.innerHTML = `<div class="test-status">Score: ${score}</div>
-      <div class="verbal-word">${currentWord}</div>
-      <div class="verbal-btns">
-        <button class="vb-new" id="vb-new">NOUVEAU</button>
-        <button class="vb-seen" id="vb-seen">DÉJÀ VU</button>
-      </div>
-      <div class="strikes">${dots}</div>`;
-    document.getElementById('vb-new').addEventListener('click', () => answer2(false));
-    document.getElementById('vb-seen').addEventListener('click', () => answer2(true));
-  }
-
-  function answer2(saidSeen) {
-    if (cleanupDone) return;
-    // Le mot a-t-il été montré avant cette apparition ?
-    const idx = shownWords.indexOf(currentWord);
-    // S'il apparaît plus d'une fois dans shownWords, ou s'il n'est pas le dernier ajouté
-    const occurrences = shownWords.filter(w => w === currentWord).length;
-    const wasSeenBefore = occurrences > 1 || (occurrences === 1 && shownWords.indexOf(currentWord) < shownWords.length - 1);
-
-    // En fait: quand on ajoute un "nouveau" mot, on le push dans shownWords.
-    // Quand on reprend un ancien, on ne le re-push pas.
-    // Donc: currentWord est "déjà vu" si il est dans shownWords ET n'a pas été ajouté juste maintenant
-    // Simplifions: gardons une liste `presentedWords` des mots présentés jusqu'au tour précédent
-
-    // Redessinons la logique:
-    // `presented` = mots présentés dans les tours précédents (avant le tour actuel)
-    // Au début du tour, on choisit un mot soit dans `presented`, soit un nouveau
-    // Si on choisit un nouveau, on l'ajoute à `presented` APRÈS la réponse
-  }
-
-  // === TROISIÈME TENTATIVE PROPRE ===
-  let presented = []; // mots présentés lors de tours précédents (unique)
-  let currentIsNew = false;
-
-  function nextWord3() {
-    if (cleanupDone) return;
-    if (presented.length === 0 || (Math.random() < 0.5 && presented.length > 0)) {
-      // Mot déjà présenté
-      currentWord = presented[randInt(0, presented.length - 1)];
-      currentIsNew = false;
-    } else {
-      // Nouveau mot
-      let w;
-      const available = WORDS.filter(w2 => !presented.includes(w2));
-      w = available[randInt(0, available.length - 1)] || pickWord();
-      currentWord = w;
-      currentIsNew = true;
-    }
-    render3();
-  }
-
-  function render3() {
-    let dots = '';
-    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < strikes ? ' lost' : ''}"></div>`;
-    body.innerHTML = `<div class="test-status">Score: ${score}</div>
-      <div class="verbal-word">${currentWord}</div>
-      <div class="verbal-btns">
-        <button class="vb-new" id="vb-new">NOUVEAU</button>
-        <button class="vb-seen" id="vb-seen">DÉJÀ VU</button>
-      </div>
-      <div class="strikes">${dots}</div>`;
-    document.getElementById('vb-new').addEventListener('click', () => answer3(false));
-    document.getElementById('vb-seen').addEventListener('click', () => answer3(true));
-  }
-
-  function answer3(saidSeen) {
-    if (cleanupDone) return;
-    const correct = (saidSeen && !currentIsNew) || (!saidSeen && currentIsNew);
-    if (correct) {
-      score++;
-      if (currentIsNew) presented.push(currentWord);
-      nextWord3();
-    } else {
-      strikes++;
-      if (currentIsNew) presented.push(currentWord);
-      if (strikes >= 3) {
-        // Game over
-        const isNew = saveBest('verbal', score);
-        const pct = getPercentile('verbal', score);
-        let dots = '';
-        for (let i = 0; i < 3; i++) dots += `<div class="dot lost"></div>`;
-        body.innerHTML = `<div class="test-status">Partie terminée</div>
-          <div class="test-big">${score}</div>
-          <div class="test-label">mots</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
-          ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
-          <button class="test-btn primary" style="margin-top:24px" onclick="initVerbal()">Recommencer</button>`;
-      } else {
-        nextWord3();
-      }
-    }
-  }
-
-  nextWord3();
-  verbalCleanup = () => { cleanupDone = true; verbalCleanup = null; };
+  next();
 }
 
-// Variable factice pour la première tentative (supprimée)
-const verbalState = {};
-
-/* ============================================================
+/* ===========================================================
    6. CHIMP TEST
-   ============================================================ */
-let chimpCleanup = null;
+   =========================================================== */
+function initChimp(){
+  const my=tid,body=document.getElementById('chimp-body');
+  let level=4,strikes=0,t1=null;
 
-function initChimp() {
-  const body = document.getElementById('chimp-body');
-  let level = 4, strikes = 0, cleanupDone = false;
-  let tiles = [], nextExpected = 1, phase = 'ready', timer1 = null;
+  function startLvl(){
+    if(tid!==my)return;
+    let nextExp=1,phase='showing';
+    const gs=Math.max(4,Math.ceil(Math.sqrt(level*2.5)));
+    const all=Array.from({length:gs*gs},(_,i)=>i);
+    const chosen=shuf(all).slice(0,level);
+    const tiles=chosen.map((pos,idx)=>({num:idx+1,pos,row:Math.floor(pos/gs),col:pos%gs}));
 
-  function startLevel() {
-    if (cleanupDone) return;
-    nextExpected = 1;
-    phase = 'showing';
+    let dots='';for(let i=0;i<3;i++)dots+=`<div class="dot${i<strikes?' lost':''}"></div>`;
+    body.innerHTML=`<div class="ts">Niveau ${level} · ${level} tuiles</div>
+      <div class="ch-grid" id="ch-g" style="grid-template-columns:repeat(${gs},1fr)"></div>
+      <div class="dots" style="margin-top:14px">${dots}</div>`;
 
-    // Grille adaptative
-    const gridSize = Math.max(4, Math.ceil(Math.sqrt(level * 2.5)));
-    const positions = [];
-    const all = [];
-    for (let i = 0; i < gridSize * gridSize; i++) all.push(i);
-    const chosen = shuffle(all).slice(0, level);
-
-    tiles = chosen.map((pos, idx) => ({
-      num: idx + 1,
-      pos: pos,
-      row: Math.floor(pos / gridSize),
-      col: pos % gridSize
-    }));
-
-    let dots = '';
-    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < strikes ? ' lost' : ''}"></div>`;
-
-    body.innerHTML = `<div class="test-status">Niveau ${level} · ${level} tuiles</div>
-      <div class="chimp-grid" id="chimp-grid" style="grid-template-columns:repeat(${gridSize},1fr)"></div>
-      <div class="strikes" style="margin-top:16px">${dots}</div>`;
-
-    const grid = document.getElementById('chimp-grid');
-    // Créer toutes les cellules
-    const cellMap = {};
-    for (let r = 0; r < gridSize; r++) {
-      for (let c = 0; c < gridSize; c++) {
-        const cell = document.createElement('div');
-        cell.className = 'chimp-cell';
-        cell.style.visibility = 'hidden';
-        const tile = tiles.find(t => t.row === r && t.col === c);
-        if (tile) {
-          cell.textContent = tile.num;
-          cell.dataset.num = tile.num;
-          cell.style.visibility = 'visible';
-          cellMap[tile.num] = cell;
-          cell.addEventListener('pointerdown', () => onTileClick(tile.num, cell));
-        }
-        grid.appendChild(cell);
-      }
+    const grid=document.getElementById('ch-g');const cellMap={};
+    for(let r=0;r<gs;r++)for(let c=0;c<gs;c++){
+      const cell=document.createElement('div');cell.className='ch-cell';cell.style.visibility='hidden';
+      const tile=tiles.find(t=>t.row===r&&t.col===c);
+      if(tile){cell.textContent=tile.num;cell.dataset.num=tile.num;cell.style.visibility='visible';
+        cellMap[tile.num]=cell;cell.addEventListener('pointerdown',()=>onTile(tile.num,cell))}
+      grid.appendChild(cell);
     }
 
-    // Cacher les numéros après un délai proportionnel au niveau
-    const showTime = Math.max(800, level * 250);
-    timer1 = setTimeout(() => {
-      if (cleanupDone) return;
-      phase = 'hidden';
-      Object.values(cellMap).forEach(c => c.classList.add('hidden-num'));
-    }, showTime);
-  }
+    const showT=Math.max(800,level*250);
+    t1=setTimeout(()=>{if(tid!==my)return;phase='hidden';
+      Object.values(cellMap).forEach(c=>{if(!c.classList.contains('correct'))c.classList.add('hidden-num')});
+    },showT);
 
-  function onTileClick(num, cell) {
-    if (cleanupDone) return;
-    if (phase === 'showing' && num !== 1) return; // Ne peut cliquer que 1 pendant la phase showing
-    if (num === nextExpected) {
-      cell.classList.add('correct');
-      cell.classList.remove('hidden-num');
-      cell.style.pointerEvents = 'none';
-      nextExpected++;
-      if (num === 1 && phase === 'showing') {
-        phase = 'hidden';
-        clearTimeout(timer1);
-        document.querySelectorAll('#chimp-grid .chimp-cell').forEach(c => {
-          if (!c.classList.contains('correct')) c.classList.add('hidden-num');
-        });
-      }
-      if (nextExpected > level) {
-        // Niveau réussi
-        phase = 'done';
-        level++;
-        setTimeout(() => { if (!cleanupDone) startLevel(); }, 600);
-      }
-    } else {
-      cell.classList.add('wrong');
-      cell.classList.remove('hidden-num');
-      strikes++;
-      if (strikes >= 3) {
-        phase = 'done';
-        const best = level - 1;
-        const isNew = saveBest('chimp', best);
-        const pct = getPercentile('chimp', best);
-        setTimeout(() => {
-          if (cleanupDone) return;
-          body.innerHTML = `<div class="test-status">Partie terminée</div>
-            <div class="test-big">${best}</div>
-            <div class="test-label">niveaux</div>
-            <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
-            ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
-            <button class="test-btn primary" style="margin-top:24px" onclick="initChimp()">Recommencer</button>`;
-        }, 500);
-      } else {
-        toast('Raté! Il fallait cliquer sur ' + nextExpected);
-        phase = 'done';
-        setTimeout(() => { if (!cleanupDone) startLevel(); }, 1000);
+    function onTile(num,cell){
+      if(tid!==my)return;
+      if(phase==='showing'&&num!==1)return;
+      if(num===nextExp){
+        cell.classList.add('correct');cell.classList.remove('hidden-num');cell.style.pointerEvents='none';nextExp++;
+        if(num===1&&phase==='showing'){phase='hidden';clearTimeout(t1);
+          document.querySelectorAll('#ch-g .ch-cell').forEach(c=>{if(!c.classList.contains('correct'))c.classList.add('hidden-num')})}
+        if(nextExp>level){phase='done';level++;setTimeout(()=>{if(tid!==my)return;startLvl()},550)}
+      }else{
+        cell.classList.add('wrong');cell.classList.remove('hidden-num');strikes++;
+        if(strikes>=3){phase='done';setTimeout(()=>{if(tid!==my)return;showResult(body,'chimp',level-1)},500)}
+        else{toast('Rate! Il fallait cliquer sur '+nextExp);phase='done';setTimeout(()=>{if(tid!==my)return;startLvl()},900)}
       }
     }
   }
-
-  startLevel();
-  chimpCleanup = () => { cleanupDone = true; clearTimeout(timer1); chimpCleanup = null; };
+  startLvl();
 }
 
-/* ============================================================
+/* ===========================================================
    7. VISUAL MEMORY
-   ============================================================ */
-let visualCleanup = null;
+   =========================================================== */
+function initVisual(){
+  const my=tid,body=document.getElementById('visual-body');
+  let level=1,lives=3,t1=null,t2=null;
 
-function initVisual() {
-  const body = document.getElementById('visual-body');
-  let level = 1, lives = 3, cleanupDone = false;
-  let timer1 = null, timer2 = null;
+  function params(lv){const g=Math.min(3+Math.floor((lv-1)/2),8);return{g,n:Math.min(2+lv,g*g-1)}}
 
-  function getLevelParams(lv) {
-    const grid = Math.min(3 + Math.floor((lv - 1) / 2), 8);
-    const tiles = Math.min(2 + lv, grid * grid - 1);
-    return { grid, tiles };
-  }
+  function startLvl(){
+    if(tid!==my)return;
+    const{g,n}=params(level);const total=g*g;
+    const chosen=shuf(Array.from({length:total},(_,i)=>i)).slice(0,n);
+    let mistakes=0,found=0,phase='showing';
 
-  function startLevel() {
-    if (cleanupDone) return;
-    const { grid, tiles: numTiles } = getLevelParams(level);
-    const total = grid * grid;
-    const chosen = shuffle(Array.from({length: total}, (_, i) => i)).slice(0, numTiles);
-    let mistakes = 0, found = 0;
+    let dots='';for(let i=0;i<3;i++)dots+=`<div class="dot${i<(3-lives)?' lost':''}"></div>`;
+    body.innerHTML=`<div class="ts">Niveau ${level} · ${n} cases · Vies: ${lives}</div>
+      <div class="sq-grid" id="vis-g" style="grid-template-columns:repeat(${g},1fr);width:min(${g*65}px,82vw)"></div>
+      <div class="dots" style="margin-top:10px">${dots}</div>`;
 
-    let dots = '';
-    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < (3 - lives) ? ' lost' : ''}"></div>`;
+    const grid=document.getElementById('vis-g');const cells=[];
+    for(let i=0;i<total;i++){const c=document.createElement('div');c.className='sq-cell';
+      if(chosen.includes(i))c.dataset.a='1';c.addEventListener('pointerdown',()=>click(i));grid.appendChild(c);cells.push(c)}
 
-    body.innerHTML = `<div class="test-status">Niveau ${level} · ${numTiles} cases · Vies: ${lives}</div>
-      <div class="sq-grid" id="vis-grid" style="grid-template-columns:repeat(${grid},1fr);width:min(${grid*70}px,85vw)"></div>
-      <div class="strikes" style="margin-top:12px">${dots}</div>`;
+    chosen.forEach(i=>cells[i].classList.add('flash'));
+    const showT=Math.max(800,n*200);
+    t1=setTimeout(()=>{if(tid!==my)return;chosen.forEach(i=>cells[i].classList.remove('flash'));phase='input'},showT);
 
-    const gridEl = document.getElementById('vis-grid');
-    const cells = [];
-    for (let i = 0; i < total; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'sq-cell';
-      cell.dataset.idx = i;
-      if (chosen.includes(i)) cell.dataset.active = '1';
-      cell.addEventListener('pointerdown', () => onCellClick(i));
-      gridEl.appendChild(cell);
-      cells.push(cell);
-    }
-
-    // Montrer le motif
-    chosen.forEach(i => cells[i].classList.add('flash'));
-    const showTime = Math.max(800, numTiles * 200);
-    timer1 = setTimeout(() => {
-      if (cleanupDone) return;
-      chosen.forEach(i => cells[i].classList.remove('flash'));
-      phase = 'input';
-    }, showTime);
-
-    let phase = 'showing';
-
-    function onCellClick(idx) {
-      if (phase !== 'input' || cleanupDone) return;
-      const cell = cells[idx];
-      if (cell.dataset.done) return;
-      cell.dataset.done = '1';
-
-      if (chosen.includes(idx)) {
-        cell.classList.add('flash');
-        found++;
-        if (found >= numTiles) {
-          // Niveau réussi
-          phase = 'done';
-          level++;
-          timer2 = setTimeout(() => { if (!cleanupDone) startLevel(); }, 500);
-        }
-      } else {
-        cell.classList.add('wrong');
-        mistakes++;
-        if (mistakes >= 3) {
-          // Niveau échoué
-          phase = 'done';
-          lives--;
-          if (lives <= 0) {
-            const best = level - 1;
-            const isNew = saveBest('visual', best);
-            const pct = getPercentile('visual', best);
-            // Révéler les cases manquantes
-            chosen.forEach(i => { if (!cells[i].classList.contains('flash')) cells[i].style.background = 'var(--orange)'; });
-            timer2 = setTimeout(() => {
-              if (cleanupDone) return;
-              body.innerHTML = `<div class="test-status">Partie terminée</div>
-                <div class="test-big">${best}</div>
-                <div class="test-label">niveaux</div>
-                <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
-                ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
-                <button class="test-btn primary" style="margin-top:24px" onclick="initVisual()">Recommencer</button>`;
-            }, 800);
-          } else {
-            toast('Trop d\'erreurs! On recommence ce niveau.');
-            timer2 = setTimeout(() => { if (!cleanupDone) startLevel(); }, 1000);
-          }
+    function click(idx){
+      if(phase!=='input'||tid!==my)return;const cell=cells[idx];
+      if(cell.dataset.done)return;cell.dataset.done='1';
+      if(chosen.includes(idx)){cell.classList.add('flash');found++;
+        if(found>=n){phase='done';level++;t2=setTimeout(()=>{if(tid!==my)return;startLvl()},450)}
+      }else{cell.classList.add('wrong');mistakes++;
+        if(mistakes>=3){phase='done';lives--;
+          chosen.forEach(i=>{if(!cells[i].classList.contains('flash'))cells[i].style.background='var(--warn)'});
+          if(lives<=0){t2=setTimeout(()=>{if(tid!==my)return;showResult(body,'visual',level-1)},700)}
+          else{toast('Trop d\'erreurs! Nouvelle tentative.');t2=setTimeout(()=>{if(tid!==my)return;startLvl()},900)}
         }
       }
     }
   }
-
-  startLevel();
-  visualCleanup = () => { cleanupDone = true; clearTimeout(timer1); clearTimeout(timer2); visualCleanup = null; };
+  startLvl();
 }
 
-/* ============================================================
+/* ===========================================================
    8. TYPING TEST
-   ============================================================ */
-let typeCleanup = null;
-
-const TYPING_TEXTS = [
+   =========================================================== */
+const TEXTS=[
   "The quick brown fox jumps over the lazy dog near the riverbank while the sun sets behind the mountains casting long shadows across the valley floor and the wind carries whispers of the coming night",
   "A journey of a thousand miles begins with a single step forward into the unknown where every path leads to new discoveries and unexpected adventures that shape who we are and who we will become",
   "The ancient library held thousands of books each containing worlds waiting to be explored by curious minds seeking knowledge and understanding of the vast universe that surrounds our small planet",
   "Science is not only a discipline of reason but also one of romance and passion because the beauty of a living thing is not the atoms that go into it but the way those atoms are put together"
 ];
 
-function initTyping() {
-  const body = document.getElementById('type-body');
-  const text = TYPING_TEXTS[randInt(0, TYPING_TEXTS.length - 1)];
-  let typed = '', startTime = 0, started = false, finished = false, cleanupDone = false;
+function initTyping(){
+  const my=tid,body=document.getElementById('type-body');
+  const text=TEXTS[ri(0,TEXTS.length-1)];
+  let typed='',startT=0,started=false,done=false;
 
-  function renderText() {
-    let html = '';
-    for (let i = 0; i < text.length; i++) {
-      let cls = 'pending';
-      if (i < typed.length) {
-        cls = typed[i] === text[i] ? 'correct' : 'wrong';
-      }
-      if (i === typed.length && !finished) {
-        html += `<span class="cursor ${cls}">${text[i]}</span>`;
-      } else {
-        html += `<span class="${cls}">${text[i]}</span>`;
-      }
-    }
-    return html;
+  function renderTxt(){
+    let h='';
+    for(let i=0;i<text.length;i++){
+      let cls=i<typed.length?(typed[i]===text[i]?'ok':'bad'):'pend';
+      if(i===typed.length&&!done)h+=`<span class="cur ${cls}">${text[i]}</span>`;
+      else h+=`<span class="${cls}">${text[i]}</span>`;
+    }return h;
   }
 
-  function render() {
-    const wpm = started ? Math.round((typed.length / 5) / ((Date.now() - startTime) / 60000)) : 0;
-    const correctChars = [...typed].filter((c, i) => c === text[i]).length;
-    const accuracy = typed.length > 0 ? Math.round(correctChars / typed.length * 100) : 100;
-
-    body.innerHTML = `<div class="test-status">Tapez le texte ci-dessous</div>
-      <div class="type-text" id="type-display">${renderText()}</div>
-      <div class="type-input-area">
-        <input class="type-input" id="type-input" type="text" autocomplete="off" autocorrect="off"
-          autocapitalize="off" spellcheck="false" placeholder="Commencez à taper ici...">
-      </div>
-      <div class="type-stats">
-        <div class="type-stat"><div class="val">${wpm}</div><div class="lbl">WPM</div></div>
-        <div class="type-stat"><div class="val">${accuracy}%</div><div class="lbl">Précision</div></div>
-      </div>`;
-
-    const inp = document.getElementById('type-input');
-    inp.focus();
-    inp.addEventListener('input', onInput);
+  function render(){
+    const wpm=started?Math.round((typed.length/5)/((Date.now()-startT)/60000)):0;
+    const cc=[...typed].filter((c,i)=>c===text[i]).length;
+    const acc=typed.length>0?Math.round(cc/typed.length*100):100;
+    body.innerHTML=`<div class="ts">Tapez le texte ci-dessous</div>
+      <div class="tp-text" id="tp-disp">${renderTxt()}</div>
+      <div style="width:100%;margin-top:14px"><input class="tp-input" id="tp-inp" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Commencez a taper ici..."></div>
+      <div class="tp-stats"><div class="tp-stat"><div class="val">${wpm}</div><div class="lbl">WPM</div></div>
+        <div class="tp-stat"><div class="val">${acc}%</div><div class="lbl">Precision</div></div></div>`;
+    const inp=document.getElementById('tp-inp');inp.focus();
+    inp.addEventListener('input',onInput);
   }
 
-  function onInput(e) {
-    if (finished || cleanupDone) return;
-    const val = e.target.value;
-    if (!started && val.length > 0) {
-      started = true;
-      startTime = Date.now();
+  function onInput(e){
+    if(done||tid!==my)return;
+    typed=e.target.value;
+    if(!started&&typed.length>0){started=true;startT=Date.now()}
+    if(typed.length>=text.length){
+      done=true;const el=(Date.now()-startT)/60000;
+      const wpm=Math.round((typed.length/5)/el);
+      const cc=[...typed].filter((c,i)=>c===text[i]).length;
+      const acc=Math.round(cc/typed.length*100);
+      showResult(body,'typing',wpm,`<div class="res-extra">Precision: ${acc}%</div>`);return;
     }
-    typed = val;
-
-    if (typed.length >= text.length) {
-      finished = true;
-      const elapsed = (Date.now() - startTime) / 60000;
-      const wpm = Math.round((typed.length / 5) / elapsed);
-      const correctChars = [...typed].filter((c, i) => c === text[i]).length;
-      const accuracy = Math.round(correctChars / typed.length * 100);
-      const isNew = saveBest('typing', wpm);
-      const pct = getPercentile('typing', wpm);
-
-      body.innerHTML = `<div class="test-status">Résultat</div>
-        <div class="test-big">${wpm}</div>
-        <div class="test-label">WPM</div>
-        <div class="type-stats" style="margin-top:12px">
-          <div class="type-stat"><div class="val">${accuracy}%</div><div class="lbl">Précision</div></div>
-        </div>
-        <div style="font-size:13px;color:var(--text-muted);margin-top:12px">Percentile: ${pct}e</div>
-        ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
-        <button class="test-btn primary" style="margin-top:24px" onclick="initTyping()">Recommencer</button>`;
-      return;
-    }
-
-    // Mettre à jour l'affichage sans re-render complet
-    const display = document.getElementById('type-display');
-    if (display) display.innerHTML = renderText();
-    // Mettre à jour stats
-    const wpm = Math.round((typed.length / 5) / ((Date.now() - startTime) / 60000));
-    const correctChars2 = [...typed].filter((c, i) => c === text[i]).length;
-    const accuracy2 = typed.length > 0 ? Math.round(correctChars2 / typed.length * 100) : 100;
-    const vals = body.querySelectorAll('.val');
-    if (vals[0]) vals[0].textContent = wpm;
-    if (vals[1]) vals[1].textContent = accuracy2 + '%';
+    const disp=document.getElementById('tp-disp');if(disp)disp.innerHTML=renderTxt();
+    const wpm=Math.round((typed.length/5)/((Date.now()-startT)/60000));
+    const cc=[...typed].filter((c,i)=>c===text[i]).length;
+    const acc=typed.length>0?Math.round(cc/typed.length*100):100;
+    const vals=body.querySelectorAll('.val');if(vals[0])vals[0].textContent=wpm;if(vals[1])vals[1].textContent=acc+'%';
   }
 
   render();
-  typeCleanup = () => { cleanupDone = true; typeCleanup = null; };
 }
 
-/* ============================================================
+/* ===========================================================
    PROFIL & RADAR
-   ============================================================ */
-function showProfile() {
-  showView('profile');
-  drawRadar(document.getElementById('radarCanvas'), 520);
-  buildProfileScores();
-}
+   =========================================================== */
+function showProfile(){showView('profile');drawRadar(document.getElementById('radarCanvas'),520);buildProfRows()}
 
-function drawRadar(canvas, size) {
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
-  const cx = w / 2, cy = h / 2;
-  const r = Math.min(cx, cy) * 0.72;
-  const labels = ['Reaction','Sequence','Aim','Number','Verbal','Chimp','Visual','Typing'];
-  const tests = ['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
-  const n = 8;
-
-  ctx.clearRect(0, 0, w, h);
+function drawRadar(canvas,size){
+  if(!canvas)return;const ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2,r=Math.min(cx,cy)*.7;
+  const style=getComputedStyle(document.documentElement);
+  const accent=style.getPropertyValue('--accent').trim();
+  const muted=style.getPropertyValue('--txt3').trim();
+  const txt=style.getPropertyValue('--txt2').trim();
+  const labels=['Reaction','Sequence','Aim','Number','Verbal','Chimp','Visual','Typing'];
+  const tests=['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
+  const n=8;ctx.clearRect(0,0,w,h);
 
   // Grille
-  for (let ring = 1; ring <= 4; ring++) {
-    const rr = r * ring / 4;
-    ctx.beginPath();
-    for (let i = 0; i <= n; i++) {
-      const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-      const x = cx + rr * Math.cos(angle);
-      const y = cy + rr * Math.sin(angle);
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-
-  // Axes
-  for (let i = 0; i < n; i++) {
-    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-    ctx.stroke();
-  }
+  for(let ring=1;ring<=4;ring++){const rr=r*ring/4;ctx.beginPath();
+    for(let i=0;i<=n;i++){const a=Math.PI*2*i/n-Math.PI/2;const x=cx+rr*Math.cos(a),y=cy+rr*Math.sin(a);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.strokeStyle='rgba(128,128,128,.15)';ctx.lineWidth=1;ctx.stroke()}
+  for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.strokeStyle='rgba(128,128,128,.08)';ctx.stroke()}
 
   // Données
-  const values = tests.map(t => {
-    const s = scores[t];
-    if (s === undefined) return 0;
-    const pct = getPercentile(t, s);
-    return pct / 100;
-  });
-
-  // Remplissage
+  const vals=tests.map(t=>{const s=scores[t];if(s==null)return 0;const p=getPercentile(t,s);return p/100});
   ctx.beginPath();
-  for (let i = 0; i <= n; i++) {
-    const idx = i % n;
-    const angle = (Math.PI * 2 * idx / n) - Math.PI / 2;
-    const val = Math.max(values[idx], 0.02);
-    const x = cx + r * val * Math.cos(angle);
-    const y = cy + r * val * Math.sin(angle);
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  }
-  ctx.fillStyle = 'rgba(255,255,255,0.18)';
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
+  for(let i=0;i<=n;i++){const idx=i%n,a=Math.PI*2*idx/n-Math.PI/2,v=Math.max(vals[idx],.03);
+    const x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}
+  ctx.fillStyle=accent+'30';ctx.fill();ctx.strokeStyle=accent;ctx.lineWidth=2;ctx.stroke();
 
-  // Points & Labels
-  ctx.fillStyle = '#fff';
-  ctx.font = `${Math.max(10, size/28)}px 'Space Grotesk', sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  for (let i = 0; i < n; i++) {
-    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-    const val = Math.max(values[i], 0.02);
-    const px = cx + r * val * Math.cos(angle);
-    const py = cy + r * val * Math.sin(angle);
-
-    // Point
-    ctx.beginPath();
-    ctx.arc(px, py, 4, 0, Math.PI * 2);
-    ctx.fillStyle = values[i] > 0 ? '#fff' : 'rgba(255,255,255,0.3)';
-    ctx.fill();
-
-    // Label
-    const lx = cx + (r + size * 0.1) * Math.cos(angle);
-    const ly = cy + (r + size * 0.1) * Math.sin(angle);
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillText(labels[i], lx, ly);
-  }
+  // Points & labels
+  const fs=Math.max(9,size/30);
+  ctx.font=`${fs}px 'Space Grotesk',sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=Math.max(vals[i],.03);
+    ctx.beginPath();ctx.arc(cx+r*v*Math.cos(a),cy+r*v*Math.sin(a),3.5,0,Math.PI*2);
+    ctx.fillStyle=vals[i]>0?accent:'rgba(128,128,128,.3)';ctx.fill();
+    const lx=cx+(r+size*.1)*Math.cos(a),ly=cy+(r+size*.1)*Math.sin(a);
+    ctx.fillStyle=txt;ctx.fillText(labels[i],lx,ly)}
 }
 
-function buildProfileScores() {
-  const container = document.getElementById('profileScores');
-  const tests = ['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
-  let html = '';
-  tests.forEach(t => {
-    const p = TEST_PARAMS[t];
-    const s = scores[t];
-    const pct = s !== undefined ? getPercentile(t, s) : null;
-    html += `<div class="prof-row">
-      <div class="pr-name">${p.label}</div>
-      <div class="pr-score">${s !== undefined ? s + ' ' + p.unit : '—'}</div>
-      <div class="pr-pct">${pct !== null ? pct + 'e percentile' : ''}</div>
-    </div>`;
-  });
-  container.innerHTML = html;
+function buildProfRows(){
+  const c=document.getElementById('profRows');
+  const tests=['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
+  let h='';
+  tests.forEach(t=>{const d=PDATA[t],s=scores[t],pct=s!=null?getPercentile(t,s):null;
+    const gr=pct!=null?getGrade(pct):null;
+    h+=`<div class="pr-row"><div class="pr-nm">${d.label}</div>
+      <div class="pr-sc" style="color:${gr?gr.c:'var(--txt3)'}">${s!=null?s+' '+d.unit:'—'}</div>
+      <div class="pr-pc">${pct!=null?pct+'e percentile':'—'}</div></div>`});
+  c.innerHTML=h;
 }
 
-/* ============================================================
-   INITIALISATION
-   ============================================================ */
+/* ===========================================================
+   INIT
+   =========================================================== */
 buildHome();
 </script>
 </body>
