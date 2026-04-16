@@ -1,861 +1,1378 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Human Benchmark</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        :root {
-            /* Thème Dark (Défaut) */
-            --bg: #1a1a1a;
-            --surface: #222222;
-            --tile: #333333;
-            --tile-active: #ffffff;
-            --tile-wrong: #d9534f;
-            --text: #e8e8e8;
-            --text-muted: #777777;
-            --accent: #5cb85c;
-            --speed-on: #f0ad4e;
-            --tile-chimp: #444444;
-            --tile-chimp-hidden: #888888;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Human Benchmark</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#2b87d1;--bg-dark:#1e6ea8;--bg-darker:#17507e;--bg-light:#4a9fe0;
+  --text:#fff;--text-muted:rgba(255,255,255,.55);--card:rgba(255,255,255,.1);
+  --card-hover:rgba(255,255,255,.18);--red:#e74c3c;--green:#27ae60;
+  --orange:#f39c12;--border:rgba(255,255,255,.12);--radius:14px;--radius-sm:10px;
+  --font:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);
+  -webkit-tap-highlight-color:transparent;user-select:none}
 
-        /* Thème Bleu Océan */
-        body.theme-blue {
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --tile: #334155;
-            --tile-active: #38bdf8;
-            --tile-wrong: #ef4444;
-            --text: #f1f5f9;
-            --text-muted: #94a3b8;
-            --accent: #3b82f6;
-            --speed-on: #f59e0b;
-            --tile-chimp: #3b4963;
-            --tile-chimp-hidden: #7da3c7;
-        }
+/* ===== App Shell ===== */
+#app{width:100%;height:100%;max-width:100%;margin:0 auto;position:relative;overflow:hidden}
+@media(min-width:768px){#app{max-width:520px;border-left:1px solid var(--border);border-right:1px solid var(--border)}}
+@media(min-width:1024px){#app{max-width:580px}}
 
-        /* Thème Cyberpunk */
-        body.theme-cyber {
-            --bg: #0a0a12;
-            --surface: #1a0a2e;
-            --tile: #2d1b4e;
-            --tile-active: #ff00ff;
-            --tile-wrong: #ff2222;
-            --text: #e0e0ff;
-            --text-muted: #a0a0cc;
-            --accent: #00ffff;
-            --speed-on: #ffff00;
-            --tile-chimp: #3d1b6e;
-            --tile-chimp-hidden: #a0a0cc;
-        }
+.view{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+.view.active{display:flex}
 
-        /* Thème Forêt */
-        body.theme-forest {
-            --bg: #0f1a0f;
-            --surface: #1a2e1a;
-            --tile: #2b4a2b;
-            --tile-active: #a3e635;
-            --tile-wrong: #ef4444;
-            --text: #e8f5e8;
-            --text-muted: #7aa07a;
-            --accent: #22c55e;
-            --speed-on: #f59e0b;
-            --tile-chimp: #3b6b3b;
-            --tile-chimp-hidden: #7aa07a;
-        }
+/* ===== Header ===== */
+.hdr{display:flex;align-items:center;padding:16px 20px;gap:12px;flex-shrink:0;
+  background:var(--bg-dark);border-bottom:1px solid var(--border);min-height:56px}
+.hdr-back{width:36px;height:36px;border-radius:50%;border:none;background:var(--card);
+  color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s}
+.hdr-back:hover{background:var(--card-hover)}
+.hdr-title{font-size:17px;font-weight:600;letter-spacing:-.3px;flex:1}
+.hdr-badge{font-size:12px;font-weight:500;background:var(--green);padding:3px 10px;border-radius:20px}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+/* ===== Home ===== */
+.home-hero{padding:36px 24px 20px;text-align:center;
+  background:linear-gradient(180deg,var(--bg-dark) 0%,var(--bg) 100%)}
+.home-hero h1{font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.home-hero p{font-size:13px;color:var(--text-muted);line-height:1.5}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 16px 24px}
+@media(min-width:768px){.home-grid{grid-template-columns:1fr 1fr;gap:14px;padding:20px 20px 32px}}
 
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px;
-            user-select: none;
-            overflow-x: hidden;
-            position: relative;
-        }
+.test-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:18px 14px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;
+  gap:8px;position:relative;overflow:hidden}
+.test-card:hover{background:var(--card-hover);transform:translateY(-2px)}
+.test-card:active{transform:scale(.97)}
+.test-card .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:18px;flex-shrink:0}
+.test-card .nm{font-size:14px;font-weight:600;letter-spacing:-.2px}
+.test-card .ds{font-size:11px;color:var(--text-muted);line-height:1.4}
+.test-card .sc{font-size:11px;font-weight:500;color:var(--green);margin-top:auto;padding-top:4px}
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 35%, rgba(92,184,92,0.02) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 65%, rgba(240,173,78,0.01) 0%, transparent 50%);
-            animation: bgFloat 25s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
+.profile-card{grid-column:1/-1;background:linear-gradient(135deg,var(--bg-dark),var(--bg-darker));
+  border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;gap:16px}
+.profile-card:hover{background:linear-gradient(135deg,var(--bg-darker),#0f3a5c);transform:translateY(-2px)}
+.profile-card canvas{width:70px;height:70px;flex-shrink:0}
+.profile-card .pr-info h3{font-size:15px;font-weight:600;margin-bottom:4px}
+.profile-card .pr-info p{font-size:12px;color:var(--text-muted);line-height:1.4}
 
-        @keyframes bgFloat {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(2%, 1%); }
-        }
+/* ===== Test Common ===== */
+.test-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;position:relative}
+.test-body.padded{padding:16px}
+.test-status{font-size:13px;color:var(--text-muted);margin-bottom:12px;text-align:center}
+.test-big{font-size:56px;font-weight:700;font-family:var(--mono);letter-spacing:-2px;line-height:1}
+.test-label{font-size:14px;color:var(--text-muted);margin-top:8px}
+.test-btn{padding:14px 40px;border:none;border-radius:var(--radius-sm);font-family:var(--font);
+  font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;color:#fff}
+.test-btn:active{transform:scale(.95)}
+.test-btn.primary{background:var(--bg-light)}
+.test-btn.primary:hover{background:#5aaff0}
+.test-btn.success{background:var(--green)}
+.test-btn.danger{background:var(--red)}
 
-        .app-container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 420px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+/* ===== Reaction ===== */
+.reaction-panel{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;cursor:pointer;transition:background .05s;z-index:2}
+.reaction-panel.wait{background:var(--red)}
+.reaction-panel.go{background:var(--green)}
+.reaction-panel.early{background:#c0392b}
+.reaction-panel.result{background:var(--bg)}
+.reaction-panel .rp-text{font-size:28px;font-weight:700;text-align:center;padding:0 30px}
+.reaction-panel .rp-sub{font-size:14px;color:rgba(255,255,255,.7);margin-top:10px;text-align:center}
 
-        /* Onglets */
-        .tabs {
-            display: flex;
-            width: 100%;
-            margin-bottom: 20px;
-            background: var(--surface);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--tile);
-        }
+/* ===== Sequence / Visual Grid ===== */
+.sq-grid{display:grid;gap:8px;margin:16px auto}
+.sq-cell{aspect-ratio:1;background:var(--bg-darker);border-radius:var(--radius-sm);cursor:pointer;
+  transition:background .15s;min-width:0}
+.sq-cell.flash,.sq-cell.selected{background:#fff!important}
+.sq-cell.wrong{background:var(--red)!important}
+.sq-cell:hover{background:var(--bg-dark)}
 
-        .tab-btn {
-            flex: 1;
-            padding: 12px 8px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+/* ===== Aim ===== */
+.aim-zone{position:relative;width:100%;flex:1;background:var(--bg-darker);border-radius:var(--radius);
+  overflow:hidden;min-height:300px;cursor:crosshair}
+.aim-target{position:absolute;width:50px;height:50px;border-radius:50%;cursor:pointer;
+  transform:translate(-50%,-50%);pointer-events:all;
+  background:radial-gradient(circle,#fff 20%,var(--bg-light) 21%,var(--bg-light) 45%,transparent 46%,
+  transparent 55%,var(--bg-light) 56%,var(--bg-light) 70%,transparent 71%)}
 
-        .tab-btn.active {
-            background: var(--tile);
-            color: var(--text);
-        }
+/* ===== Number Memory ===== */
+.num-display{font-size:48px;font-weight:700;font-family:var(--mono);letter-spacing:4px;
+  text-align:center;min-height:60px}
+.num-bar{width:80%;max-width:300px;height:6px;background:var(--bg-darker);border-radius:3px;
+  margin:16px auto;overflow:hidden}
+.num-bar-fill{height:100%;background:#fff;border-radius:3px;transition:width .1s linear}
+.num-input{background:var(--bg-darker);border:2px solid var(--border);border-radius:var(--radius-sm);
+  color:#fff;font-family:var(--mono);font-size:28px;text-align:center;padding:12px 16px;
+  width:80%;max-width:300px;outline:none;letter-spacing:4px}
+.num-input:focus{border-color:var(--bg-light)}
 
-        .tab-btn:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: -2px;
-        }
+/* ===== Verbal ===== */
+.verbal-word{font-size:32px;font-weight:600;margin:20px 0;letter-spacing:-.5px;text-align:center}
+.verbal-btns{display:flex;gap:16px;margin-top:12px}
+.verbal-btns button{flex:1;padding:16px;border:none;border-radius:var(--radius-sm);
+  font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;
+  color:#fff;letter-spacing:.5px}
+.verbal-btns button:active{transform:scale(.95)}
+.verbal-btns .vb-new{background:var(--bg-light)}
+.verbal-btns .vb-new:hover{background:#5aaff0}
+.verbal-btns .vb-seen{background:var(--bg-darker)}
+.verbal-btns .vb-seen:hover{background:var(--bg-dark)}
+.strikes{display:flex;gap:6px;margin-top:16px}
+.strikes .dot{width:12px;height:12px;border-radius:50%;background:var(--green);transition:background .3s}
+.strikes .dot.lost{background:var(--red)}
 
-        .game-section {
-            width: 100%;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-        }
+/* ===== Chimp ===== */
+.chimp-grid{display:grid;gap:8px;margin:16px auto;width:100%;max-width:360px}
+.chimp-cell{aspect-ratio:1;background:var(--bg-darker);border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;
+  font-family:var(--mono);cursor:pointer;transition:all .15s}
+.chimp-cell:hover{background:var(--bg-dark)}
+.chimp-cell.hidden-num{color:transparent}
+.chimp-cell.correct{background:var(--green)!important;color:#fff!important}
+.chimp-cell.wrong{background:var(--red)!important;color:#fff!important}
 
-        .game-section.active {
-            display: flex;
-        }
+/* ===== Typing ===== */
+.type-text{font-size:16px;line-height:1.8;letter-spacing:.3px;max-width:100%;
+  white-space:pre-wrap;word-break:break-all;font-family:var(--mono)}
+.type-text .correct{color:#fff}
+.type-text .wrong{color:var(--red);text-decoration:underline}
+.type-text .pending{color:var(--text-muted)}
+.type-text .cursor{border-left:2px solid #fff;margin-left:-1px;padding-left:1px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{border-color:transparent}}
+.type-input-area{margin-top:16px;width:100%}
+.type-input{width:100%;background:var(--bg-darker);border:2px solid var(--border);border-radius:var(--radius-sm);
+  color:#fff;font-family:var(--mono);font-size:16px;padding:12px 14px;outline:none;resize:none;
+  min-height:60px;letter-spacing:.3px}
+.type-input:focus{border-color:var(--bg-light)}
+.type-stats{display:flex;gap:24px;margin-top:16px}
+.type-stat{text-align:center}
+.type-stat .val{font-size:28px;font-weight:700;font-family:var(--mono)}
+.type-stat .lbl{font-size:11px;color:var(--text-muted);margin-top:2px}
 
-        /* Thème sélecteur */
-        .theme-selector {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 12px;
-        }
+/* ===== Profile ===== */
+.profile-canvas-wrap{display:flex;justify-content:center;padding:20px}
+.profile-canvas-wrap canvas{width:260px;height:260px}
+.profile-scores{padding:0 16px 32px;display:flex;flex-direction:column;gap:8px}
+.prof-row{display:flex;align-items:center;padding:12px 16px;background:var(--card);
+  border-radius:var(--radius-sm);gap:12px}
+.prof-row .pr-name{flex:1;font-size:13px;font-weight:500}
+.prof-row .pr-score{font-size:14px;font-weight:700;font-family:var(--mono)}
+.prof-row .pr-pct{font-size:11px;color:var(--text-muted);min-width:50px;text-align:right}
 
-        .theme-dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
+/* ===== Result Overlay ===== */
+.result-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;z-index:10;
+  backdrop-filter:blur(4px);padding:24px}
+.result-overlay .ro-score{font-size:52px;font-weight:700;font-family:var(--mono);margin-bottom:4px}
+.result-overlay .ro-label{font-size:14px;color:var(--text-muted);margin-bottom:6px}
+.result-overlay .ro-pct{font-size:16px;font-weight:600;color:var(--green);margin-bottom:24px}
+.result-overlay .ro-best{font-size:12px;color:var(--orange);margin-bottom:20px}
 
-        .theme-dot:hover { transform: scale(1.2); }
-        .theme-dot.active { border-color: var(--text); transform: scale(1.1); }
+/* ===== Toast ===== */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg-dark);
+  padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:100;
+  opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid var(--border)}
+.toast.show{opacity:1}
 
-        .theme-dot[data-theme=""] { background: #333; }
-        .theme-dot[data-theme="theme-blue"] { background: #334155; }
-        .theme-dot[data-theme="theme-cyber"] { background: #2d1b4e; }
-        .theme-dot[data-theme="theme-forest"] { background: #2b4a2b; }
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-        /* En-tête & Scores */
-        .header { text-align: center; }
-        .header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; }
-        .header p { font-size: 0.75rem; color: var(--text-muted); font-weight: 300; margin-top: 4px; }
-
-        .stats-row {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .stat-box { text-align: center; }
-        .stat-box .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 2px; }
-        .stat-box .value { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
-        .stat-box .value.secondary { color: var(--text); }
-
-        .lives-display {
-            display: flex;
-            gap: 6px;
-            font-size: 1.2rem;
-            color: var(--tile-wrong);
-        }
-
-        .lives-display .life { transition: opacity 0.3s, transform 0.3s; }
-        .lives-display .life.lost { opacity: 0.2; transform: scale(0.8); }
-
-        /* Grille Sequence */
-        .grid-wrapper {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            max-width: 320px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 10px;
-            width: 100%;
-            height: 100%;
-        }
-
-        .tile {
-            background: var(--tile);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.12s ease, transform 0.1s ease, box-shadow 0.12s ease;
-            position: relative;
-        }
-
-        .tile:hover:not(.active):not(.locked) { background: color-mix(in srgb, var(--tile) 80%, white); }
-        .tile:active:not(.locked) { transform: scale(0.95); }
-
-        .tile.active {
-            background: var(--tile-active);
-            box-shadow: 0 0 20px color-mix(in srgb, var(--tile-active) 40%, transparent);
-        }
-
-        .tile.wrong {
-            background: var(--tile-wrong);
-            box-shadow: 0 0 20px rgba(217,83,79,0.4);
-        }
-
-        .tile.locked { cursor: default; }
-
-        .grid.shake { animation: shake 0.4s ease-in-out; }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-        }
-
-        /* Zone Chimp */
-        .chimp-area {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            max-width: 320px;
-            background: var(--surface);
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--tile);
-        }
-
-        .chimp-tile {
-            position: absolute;
-            width: 16%;
-            aspect-ratio: 1 / 1;
-            background: var(--tile-chimp);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text);
-            cursor: pointer;
-            transition: transform 0.1s ease, background-color 0.2s ease, opacity 0.3s ease;
-        }
-
-        .chimp-tile:active { transform: scale(0.9); }
-        .chimp-tile.hidden-num { background: var(--tile-chimp-hidden); color: transparent; }
-        .chimp-tile.correct { background: var(--accent); color: white; transform: scale(0.95); }
-        .chimp-tile.wrong { background: var(--tile-wrong); color: white; }
-
-        /* Contrôles communs */
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .speed-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 30px;
-            background: var(--surface);
-            border: 1px solid var(--tile);
-            transition: all 0.25s ease;
-        }
-
-        .speed-toggle.active { border-color: var(--speed-on); background: rgba(240,173,78,0.08); }
-        .speed-toggle .icon { font-size: 0.8rem; color: var(--text-muted); transition: color 0.25s; }
-        .speed-toggle.active .icon { color: var(--speed-on); }
-        .speed-toggle .text { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); transition: color 0.25s; }
-        .speed-toggle.active .text { color: var(--speed-on); }
-
-        .toggle-track {
-            width: 32px; height: 16px; border-radius: 8px; background: #444; position: relative; transition: background 0.25s;
-        }
-        .speed-toggle.active .toggle-track { background: var(--speed-on); }
-        .toggle-track::after {
-            content: ''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.25s;
-        }
-        .speed-toggle.active .toggle-track::after { transform: translateX(16px); }
-
-        .btn {
-            padding: 14px 40px;
-            border: none;
-            border-radius: 10px;
-            background: var(--accent);
-            color: #fff;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn:active { transform: translateY(0); }
-        .btn.hidden { display: none; }
-
-        .status {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            min-height: 1.3em;
-            text-align: center;
-            transition: color 0.2s;
-        }
-        .status.error { color: var(--tile-wrong); font-weight: 600; }
-        .status.success { color: var(--accent); font-weight: 500; }
-
-        /* Responsive Desktop */
-        @media (min-width: 768px) {
-            .app-container { max-width: 480px; }
-            .header h1 { font-size: 1.6rem; }
-            .grid-wrapper, .chimp-area { max-width: 360px; }
-            .grid { gap: 14px; }
-            .stat-box .value { font-size: 2.2rem; }
-            .chimp-tile { font-size: 1.4rem; }
-        }
-
-        /* Petits téléphones */
-        @media (max-height: 680px) {
-            .app-container { gap: 10px; }
-            .header h1 { font-size: 1.1rem; }
-            .header p { display: none; }
-            .grid-wrapper, .chimp-area { max-width: 260px; }
-            .stat-box .value { font-size: 1.5rem; }
-            .tabs { margin-bottom: 12px; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-        }
-    </style>
+/* ===== Responsive ===== */
+@media(min-width:768px){
+  .home-hero h1{font-size:34px}
+  .test-card .nm{font-size:15px}
+  .reaction-panel .rp-text{font-size:34px}
+  .num-display{font-size:56px}
+  .verbal-word{font-size:38px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:0s!important}
+}
+</style>
 </head>
 <body>
+<div id="app">
 
-<div class="app-container">
-    <!-- Onglets -->
-    <div class="tabs">
-        <button class="tab-btn active" data-target="seq-section">Sequence Memory</button>
-        <button class="tab-btn" data-target="chimp-section">Chimp Test</button>
+  <!-- ===== HOME ===== -->
+  <div id="v-home" class="view active">
+    <div class="home-hero">
+      <h1>Human Benchmark</h1>
+      <p>Measure your cognition, memory &amp; reflexes</p>
     </div>
+    <div class="home-grid" id="homeGrid"></div>
+  </div>
 
-    <!-- Thèmes -->
-    <div class="theme-selector">
-        <div class="theme-dot active" data-theme="" title="Dark"></div>
-        <div class="theme-dot" data-theme="theme-blue" title="Bleu"></div>
-        <div class="theme-dot" data-theme="theme-cyber" title="Cyberpunk"></div>
-        <div class="theme-dot" data-theme="theme-forest" title="Forêt"></div>
+  <!-- ===== REACTION TIME ===== -->
+  <div id="v-reaction" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Reaction Time</span>
     </div>
+    <div id="reaction-area" style="flex:1;position:relative"></div>
+  </div>
 
-    <!-- ==================== SEQUENCE MEMORY ==================== -->
-    <section id="seq-section" class="game-section active">
-        <div class="header">
-            <h1>Sequence Memory</h1>
-            <p>Memorise l'ordre des cases qui s'allument</p>
-        </div>
+  <!-- ===== SEQUENCE MEMORY ===== -->
+  <div id="v-sequence" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Sequence Memory</span>
+    </div>
+    <div class="test-body" id="seq-body"></div>
+  </div>
 
-        <div class="stats-row">
-            <div class="stat-box">
-                <div class="label">Niveau</div>
-                <div class="value" id="seq-score">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="label">Best</div>
-                <div class="value secondary" id="seq-best">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="label">Vies</div>
-                <div class="lives-display" id="seq-lives">
-                    <i class="fa-solid fa-heart life"></i>
-                    <i class="fa-solid fa-heart life"></i>
-                    <i class="fa-solid fa-heart life"></i>
-                </div>
-            </div>
-        </div>
+  <!-- ===== AIM TRAINER ===== -->
+  <div id="v-aim" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Aim Trainer</span>
+      <span id="aim-counter" class="hdr-badge" style="display:none">0/30</span>
+    </div>
+    <div class="test-body padded" id="aim-body" style="justify-content:flex-start;padding-top:12px"></div>
+  </div>
 
-        <div class="grid-wrapper">
-            <div class="grid" id="seq-grid"></div>
-        </div>
+  <!-- ===== NUMBER MEMORY ===== -->
+  <div id="v-number" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Number Memory</span>
+    </div>
+    <div class="test-body" id="num-body"></div>
+  </div>
 
-        <div class="controls">
-            <div class="speed-toggle" id="speed-toggle" role="button" tabindex="0" aria-label="Mode Speed">
-                <i class="fa-solid fa-bolt icon"></i>
-                <span class="text">Speed</span>
-                <div class="toggle-track"></div>
-            </div>
-            <button class="btn" id="seq-start">Commencer</button>
-        </div>
-        
-        <div class="status" id="seq-status">Appuie sur Commencer</div>
-    </section>
+  <!-- ===== VERBAL MEMORY ===== -->
+  <div id="v-verbal" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Verbal Memory</span>
+    </div>
+    <div class="test-body" id="verbal-body"></div>
+  </div>
 
-    <!-- ==================== CHIMP TEST ==================== -->
-    <section id="chimp-section" class="game-section">
-        <div class="header">
-            <h1>Chimp Test</h1>
-            <p>Clique les nombres dans l'ordre croissant</p>
-        </div>
+  <!-- ===== CHIMP TEST ===== -->
+  <div id="v-chimp" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Chimp Test</span>
+    </div>
+    <div class="test-body" id="chimp-body"></div>
+  </div>
 
-        <div class="stats-row">
-            <div class="stat-box">
-                <div class="label">Niveau</div>
-                <div class="value" id="chimp-score">4</div>
-            </div>
-            <div class="stat-box">
-                <div class="label">Best</div>
-                <div class="value secondary" id="chimp-best">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="label">Strikes</div>
-                <div class="lives-display" id="chimp-strikes">
-                    <i class="fa-solid fa-xmark life"></i>
-                    <i class="fa-solid fa-xmark life"></i>
-                    <i class="fa-solid fa-xmark life"></i>
-                </div>
-            </div>
-        </div>
+  <!-- ===== VISUAL MEMORY ===== -->
+  <div id="v-visual" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Visual Memory</span>
+    </div>
+    <div class="test-body" id="visual-body"></div>
+  </div>
 
-        <div class="chimp-area" id="chimp-area"></div>
+  <!-- ===== TYPING TEST ===== -->
+  <div id="v-typing" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Typing Test</span>
+    </div>
+    <div class="test-body" id="type-body" style="justify-content:flex-start;padding-top:20px"></div>
+  </div>
 
-        <div class="controls">
-            <button class="btn" id="chimp-start">Commencer</button>
-        </div>
+  <!-- ===== PROFILE ===== -->
+  <div id="v-profile" class="view">
+    <div class="hdr">
+      <button class="hdr-back" onclick="goHome()">&#8592;</button>
+      <span class="hdr-title">Your Profile</span>
+    </div>
+    <div class="profile-canvas-wrap"><canvas id="radarCanvas" width="520" height="520"></canvas></div>
+    <div class="profile-scores" id="profileScores"></div>
+  </div>
 
-        <div class="status" id="chimp-status">Appuie sur Commencer</div>
-    </section>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-    /* ============================================================
-       COMMUN : Onglets & Thèmes
-       ============================================================ */
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const sections = document.querySelectorAll('.game-section');
+/* ============================================================
+   ÉTAT GLOBAL & UTILITAIRES
+   ============================================================ */
+const LS_KEY = 'hb_scores';
+let scores = {};
+try { scores = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch(e) { scores = {}; }
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            sections.forEach(s => s.classList.remove('active'));
-            document.getElementById(btn.dataset.target).classList.add('active');
+function saveScores() {
+  localStorage.setItem(LS_KEY, JSON.stringify(scores));
+}
+
+function saveBest(test, val) {
+  if (scores[test] === undefined || val > scores[test]) {
+    scores[test] = val;
+    saveScores();
+    return true;
+  }
+  return false;
+}
+function saveBestLower(test, val) {
+  if (scores[test] === undefined || val < scores[test]) {
+    scores[test] = val;
+    saveScores();
+    return true;
+  }
+  return false;
+}
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('v-' + id).classList.add('active');
+}
+
+function goHome() {
+  // Nettoyer les tests en cours
+  if (reactionCleanup) reactionCleanup();
+  if (seqCleanup) seqCleanup();
+  if (numCleanup) numCleanup();
+  if (verbalCleanup) verbalCleanup();
+  if (chimpCleanup) chimpCleanup();
+  if (visualCleanup) visualCleanup();
+  if (typeCleanup) typeCleanup();
+  showView('home');
+  buildHome();
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function randInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = randInt(0, i);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Percentile par approximation de la CDF normale
+function normCDF(z) {
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const sign = z < 0 ? -1 : 1;
+  z = Math.abs(z);
+  const t = 1 / (1 + p * z);
+  const y = 1 - (((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-z*z/2);
+  return 0.5 * (1 + sign * y);
+}
+
+const TEST_PARAMS = {
+  reaction: { mean:250, sd:50, lower:true, unit:'ms', label:'Reaction Time' },
+  sequence: { mean:7, sd:2, lower:false, unit:'niv.', label:'Sequence Memory' },
+  aim:      { mean:400, sd:100, lower:true, unit:'ms', label:'Aim Trainer' },
+  number:   { mean:7, sd:2, lower:false, unit:'chiffres', label:'Number Memory' },
+  verbal:   { mean:40, sd:20, lower:false, unit:'mots', label:'Verbal Memory' },
+  chimp:    { mean:6, sd:3, lower:false, unit:'niv.', label:'Chimp Test' },
+  visual:   { mean:8, sd:3, lower:false, unit:'niv.', label:'Visual Memory' },
+  typing:   { mean:60, sd:20, lower:false, unit:'WPM', label:'Typing' }
+};
+
+function getPercentile(test, score) {
+  const p = TEST_PARAMS[test];
+  if (!p || score === undefined || score === null) return null;
+  const z = (score - p.mean) / p.sd;
+  let pct = normCDF(z) * 100;
+  if (p.lower) pct = 100 - pct;
+  return Math.round(Math.max(0, Math.min(99), pct));
+}
+
+/* ============================================================
+   PAGE D'ACCUEIL
+   ============================================================ */
+const TESTS = [
+  { id:'reaction', name:'Reaction Time', desc:'Reflexe visuel simple', icon:'⚡', color:'var(--red)' },
+  { id:'sequence', name:'Sequence Memory', desc:'Mémoire de séquences', icon:'▦', color:'#8e44ad' },
+  { id:'aim',      name:'Aim Trainer', desc:'Précision & vitesse', icon:'◎', color:'var(--orange)' },
+  { id:'number',   name:'Number Memory', desc:'Mémoire des chiffres', icon:'#', color:'var(--green)' },
+  { id:'verbal',   name:'Verbal Memory', desc:'Reconnaissance verbale', icon:'Aa', color:'#2980b9' },
+  { id:'chimp',    name:'Chimp Test', desc:'Mémoire spatiale', icon:'◉', color:'#e67e22' },
+  { id:'visual',   name:'Visual Memory', desc:'Rappel de motifs', icon:'◇', color:'#1abc9c' },
+  { id:'typing',   name:'Typing', desc:'Vitesse de frappe', icon:'⌨', color:'#9b59b6' }
+];
+
+function buildHome() {
+  const grid = document.getElementById('homeGrid');
+  let html = '';
+  TESTS.forEach(t => {
+    const s = scores[t.id];
+    const p = s !== undefined ? getPercentile(t.id, s) : null;
+    const param = TEST_PARAMS[t.id];
+    const scoreTxt = s !== undefined ? `${s} ${param.unit}` : '';
+    const pctTxt = p !== null ? `Top ${100-p}%` : '';
+    html += `<div class="test-card" onclick="launchTest('${t.id}')">
+      <div class="ic" style="background:${t.color};color:#fff;font-size:16px;font-weight:700">${t.icon}</div>
+      <div class="nm">${t.name}</div>
+      <div class="ds">${t.desc}</div>
+      ${scoreTxt ? `<div class="sc">${scoreTxt}${pctTxt ? ' · '+pctTxt : ''}</div>` : ''}
+    </div>`;
+  });
+  html += `<div class="profile-card" onclick="showProfile()">
+    <canvas id="miniRadar" width="140" height="140"></canvas>
+    <div class="pr-info"><h3>Your Profile</h3><p>Radar cognitif &amp; percentiles</p></div>
+  </div>`;
+  grid.innerHTML = html;
+  // Dessiner le mini radar
+  setTimeout(() => drawRadar(document.getElementById('miniRadar'), 140), 50);
+}
+
+function launchTest(id) {
+  showView(id);
+  switch(id) {
+    case 'reaction': initReaction(); break;
+    case 'sequence': initSequence(); break;
+    case 'aim':      initAim(); break;
+    case 'number':   initNumber(); break;
+    case 'verbal':   initVerbal(); break;
+    case 'chimp':    initChimp(); break;
+    case 'visual':   initVisual(); break;
+    case 'typing':   initTyping(); break;
+  }
+}
+
+/* ============================================================
+   1. REACTION TIME
+   ============================================================ */
+let reactionCleanup = null;
+
+function initReaction() {
+  const area = document.getElementById('reaction-area');
+  let rounds = [], round = 0, timer = null, startTime = 0, listening = false;
+  let cleanupDone = false;
+
+  function render() {
+    area.innerHTML = `<div class="reaction-panel wait" id="rp">
+      <div class="rp-text">Wait for green...</div>
+      <div class="rp-sub">Round ${round+1}/5</div>
+    </div>`;
+    const rp = document.getElementById('rp');
+
+    // Délai aléatoire 1.5–5s
+    const delay = 1500 + Math.random() * 3500;
+    timer = setTimeout(() => {
+      if (cleanupDone) return;
+      rp.className = 'reaction-panel go';
+      rp.innerHTML = '<div class="rp-text">Click!</div><div class="rp-sub">Round '+(round+1)+'/5</div>';
+      startTime = performance.now();
+      listening = true;
+    }, delay);
+
+    rp.addEventListener('pointerdown', function handler(e) {
+      e.preventDefault();
+      if (cleanupDone) return;
+      if (!listening) {
+        // Trop tôt
+        clearTimeout(timer);
+        rp.className = 'reaction-panel early';
+        rp.innerHTML = '<div class="rp-text">Too soon!</div><div class="rp-sub">Touchez pour réessayer</div>';
+        rp.removeEventListener('pointerdown', handler);
+        rp.addEventListener('pointerdown', function h2() {
+          rp.removeEventListener('pointerdown', h2);
+          render();
         });
+        return;
+      }
+      // Mesure
+      listening = false;
+      const t = Math.round(performance.now() - startTime);
+      rounds.push(t);
+      round++;
+      rp.removeEventListener('pointerdown', handler);
+
+      if (round >= 5) {
+        // Résultat final
+        const avg = Math.round(rounds.reduce((a,b)=>a+b,0)/rounds.length);
+        const isNew = saveBestLower('reaction', avg);
+        const pct = getPercentile('reaction', avg);
+        rp.className = 'reaction-panel result';
+        rp.innerHTML = `<div class="rp-text" style="font-size:20px">Votre temps moyen</div>
+          <div class="test-big" style="margin:12px 0">${avg}<span style="font-size:20px;font-weight:400"> ms</span></div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px">Percentile: ${pct}e</div>
+          ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-bottom:8px">Nouveau record!</div>' : ''}
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">[${rounds.join(', ')}] ms</div>
+          <button class="test-btn primary" onclick="initReaction()">Recommencer</button>`;
+      } else {
+        rp.className = 'reaction-panel result';
+        rp.innerHTML = `<div class="rp-text">${t} ms</div>
+          <div class="rp-sub">Round ${round+1}/5 — touchez pour continuer</div>`;
+        rp.addEventListener('pointerdown', function h3() {
+          rp.removeEventListener('pointerdown', h3);
+          render();
+        });
+      }
     });
+  }
 
-    // Thèmes
-    const themeDots = document.querySelectorAll('.theme-dot');
-    function applyTheme(themeName) {
-        document.body.className = '';
-        if (themeName) document.body.classList.add(themeName);
-        themeDots.forEach(d => d.classList.toggle('active', d.dataset.theme === themeName));
-        localStorage.setItem('hbTheme', themeName);
+  render();
+  reactionCleanup = () => { cleanupDone = true; clearTimeout(timer); listening = false; reactionCleanup = null; };
+}
+
+/* ============================================================
+   2. SEQUENCE MEMORY
+   ============================================================ */
+let seqCleanup = null;
+
+function initSequence() {
+  const body = document.getElementById('seq-body');
+  let level = 1, sequence = [], userSeq = [], phase = 'idle', cleanupDone = false;
+  let timer1 = null, timer2 = null;
+
+  function buildGrid() {
+    body.innerHTML = `<div class="test-status" id="seq-st">Niveau ${level}</div>
+      <div class="sq-grid" id="sq-grid" style="grid-template-columns:repeat(3,1fr);width:min(280px,80vw)"></div>`;
+    const grid = document.getElementById('sq-grid');
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'sq-cell';
+      cell.dataset.idx = i;
+      cell.addEventListener('pointerdown', () => onCellClick(i));
+      grid.appendChild(cell);
     }
-    themeDots.forEach(d => d.addEventListener('click', () => applyTheme(d.dataset.theme)));
-    applyTheme(localStorage.getItem('hbTheme') || '');
+  }
 
-    /* ============================================================
-       JEU 1 : SEQUENCE MEMORY
-       ============================================================ */
-    const seqGrid = document.getElementById('seq-grid');
-    const seqScoreEl = document.getElementById('seq-score');
-    const seqBestEl = document.getElementById('seq-best');
-    const seqLivesEl = document.getElementById('seq-lives');
-    const seqStatusEl = document.getElementById('seq-status');
-    const seqStartBtn = document.getElementById('seq-start');
-    const speedToggle = document.getElementById('speed-toggle');
+  function startLevel() {
+    if (cleanupDone) return;
+    sequence.push(randInt(0, 8));
+    userSeq = [];
+    phase = 'showing';
+    document.getElementById('seq-st').textContent = 'Niveau ' + level + ' — Observez...';
+    const cells = document.querySelectorAll('#sq-grid .sq-cell');
 
-    let seqSequence = [];
-    let seqUserStep = 0;
-    let seqState = 'IDLE'; // IDLE, PLAYBACK, USER_INPUT, GAME_OVER
-    let seqScore = 0;
-    let seqBest = parseInt(localStorage.getItem('seqBest')) || 0;
-    let seqLives = 3;
-    let seqGameId = 0;
-    let seqSpeedMode = false;
-
-    // Initialiser grille 3x3
-    function initSeqGrid() {
-        seqGrid.innerHTML = '';
-        for (let i = 0; i < 9; i++) {
-            const tile = document.createElement('div');
-            tile.className = 'tile';
-            tile.dataset.id = i;
-            tile.addEventListener('click', () => seqHandleClick(i));
-            seqGrid.appendChild(tile);
-        }
+    let i = 0;
+    function showNext() {
+      if (cleanupDone) return;
+      if (i >= sequence.length) {
+        phase = 'input';
+        document.getElementById('seq-st').textContent = 'Niveau ' + level + ' — Votre tour';
+        return;
+      }
+      cells[sequence[i]].classList.add('flash');
+      timer1 = setTimeout(() => {
+        cells[sequence[i-1]]?.classList.remove('flash');
+        i++;
+        timer2 = setTimeout(showNext, 200);
+      }, 500);
+      i++; // on incrémente ici aussi car le timeout utilise i-1
     }
-
-    function updateSeqUI() {
-        seqScoreEl.textContent = seqScore;
-        seqBestEl.textContent = seqBest;
-        const hearts = seqLivesEl.querySelectorAll('.life');
-        hearts.forEach((h, i) => h.classList.toggle('lost', i >= seqLives));
+    // Correction: reset i
+    i = 0;
+    function showNext2() {
+      if (cleanupDone) return;
+      if (i >= sequence.length) {
+        phase = 'input';
+        document.getElementById('seq-st').textContent = 'Niveau ' + level + ' — Votre tour';
+        return;
+      }
+      const idx = sequence[i];
+      cells[idx].classList.add('flash');
+      const ci = i;
+      timer1 = setTimeout(() => {
+        cells[sequence[ci]].classList.remove('flash');
+        i = ci + 1;
+        timer2 = setTimeout(showNext2, 250);
+      }, 500);
     }
+    showNext2();
+  }
 
-    function setSeqStatus(text, type = '') {
-        seqStatusEl.textContent = text;
-        seqStatusEl.className = 'status' + (type ? ' ' + type : '');
+  function onCellClick(idx) {
+    if (phase !== 'input') return;
+    const cells = document.querySelectorAll('#sq-grid .sq-cell');
+    const pos = userSeq.length;
+    if (idx === sequence[pos]) {
+      userSeq.push(idx);
+      cells[idx].classList.add('flash');
+      setTimeout(() => cells[idx].classList.remove('flash'), 200);
+      if (userSeq.length === sequence.length) {
+        // Niveau réussi
+        phase = 'waiting';
+        level++;
+        setTimeout(() => { if (!cleanupDone) startLevel(); }, 600);
+      }
+    } else {
+      // Échec
+      cells[idx].classList.add('wrong');
+      phase = 'done';
+      const best = level - 1;
+      const isNew = saveBest('sequence', best);
+      const pct = getPercentile('sequence', best);
+      setTimeout(() => {
+        if (cleanupDone) return;
+        body.innerHTML = `<div class="test-status">Niveau atteint: ${best}</div>
+          <div class="test-big">${best}</div>
+          <div class="test-label">niveaux</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
+          ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
+          <button class="test-btn primary" style="margin-top:24px" onclick="initSequence()">Recommencer</button>`;
+      }, 500);
     }
+  }
 
-    function getSeqTile(id) { return seqGrid.querySelector(`[data-id="${id}"]`); }
+  buildGrid();
+  setTimeout(() => startLevel(), 500);
+  seqCleanup = () => { cleanupDone = true; clearTimeout(timer1); clearTimeout(timer2); seqCleanup = null; };
+}
 
-    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+/* ============================================================
+   3. AIM TRAINER
+   ============================================================ */
+let aimCleanup = null;
 
-    function highlightSeqTile(id, duration) {
-        return new Promise(resolve => {
-            const tile = getSeqTile(id);
-            tile.classList.add('active');
-            setTimeout(() => { tile.classList.remove('active'); resolve(); }, duration);
-        });
-    }
+function initAim() {
+  const body = document.getElementById('aim-body');
+  const counter = document.getElementById('aim-counter');
+  counter.style.display = 'none';
+  let hits = 0, startTime = 0, started = false, cleanupDone = false;
 
-    function getSeqDuration() { return Math.max(200, 600 - (seqSequence.length * 15)); }
-    function getSeqGap() { return Math.max(120, 400 - (seqSequence.length * 10)); }
+  body.innerHTML = `<div class="test-status" id="aim-st">Cliquez sur la cible pour commencer</div>
+    <div class="aim-zone" id="aim-zone"></div>`;
+  const zone = document.getElementById('aim-zone');
 
-    async function playSequence(gId) {
-        seqState = 'PLAYBACK';
-        setSeqStatus('Regarde bien...');
-        seqGrid.querySelectorAll('.tile').forEach(t => t.classList.add('locked'));
-
-        await delay(400);
-
-        const items = seqSpeedMode ? [seqSequence[seqSequence.length - 1]] : seqSequence;
-
-        for (let i = 0; i < items.length; i++) {
-            if (seqGameId !== gId) return;
-            await highlightSeqTile(items[i], getSeqDuration());
-            if (seqGameId !== gId) return;
-            if (i < items.length - 1) await delay(getSeqGap());
-        }
-
-        if (seqGameId !== gId) return;
-
-        seqGrid.querySelectorAll('.tile').forEach(t => t.classList.remove('locked'));
-        seqState = 'USER_INPUT';
-        seqUserStep = 0;
-        setSeqStatus('À toi !');
-    }
-
-    function seqHandleClick(id) {
-        if (seqState !== 'USER_INPUT') return;
-
-        const tile = getSeqTile(id);
-
-        if (id === seqSequence[seqUserStep]) {
-            // Bon
-            tile.classList.add('active');
-            setTimeout(() => tile.classList.remove('active'), 150);
-            seqUserStep++;
-
-            if (seqUserStep === seqSequence.length) {
-                // Niveau réussi
-                seqScore++;
-                if (seqScore > seqBest) {
-                    seqBest = seqScore;
-                    localStorage.setItem('seqBest', seqBest);
-                }
-                updateSeqUI();
-                seqState = 'PLAYBACK';
-                setSeqStatus('Bien joué !', 'success');
-                setTimeout(() => seqNextRound(), 700);
-            }
-        } else {
-            // Mauvais
-            tile.classList.add('wrong');
-            setTimeout(() => tile.classList.remove('wrong'), 600);
-            seqGrid.classList.add('shake');
-            setTimeout(() => seqGrid.classList.remove('shake'), 400);
-
-            seqLives--;
-            updateSeqUI();
-
-            if (seqLives <= 0) {
-                seqGameOver();
-            } else {
-                setSeqStatus(`Faux ! Il te reste ${seqLives} vie${seqLives > 1 ? 's' : ''}`, 'error');
-                seqState = 'PLAYBACK';
-                // Rejouer le même niveau
-                setTimeout(() => playSequence(seqGameId), 1200);
-            }
-        }
-    }
-
-    function seqNextRound() {
-        const nextTile = Math.floor(Math.random() * 9);
-        seqSequence.push(nextTile);
-        playSequence(seqGameId);
-    }
-
-    function seqGameOver() {
-        seqState = 'GAME_OVER';
-        setSeqStatus(`Game Over ! Niveau atteint : ${seqScore}`, 'error');
-        seqStartBtn.textContent = 'Recommencer';
-        seqStartBtn.classList.remove('hidden');
-    }
-
-    function startSeqGame() {
-        seqGameId++;
-        seqSequence = [];
-        seqScore = 0;
-        seqLives = 3;
-        seqUserStep = 0;
-        updateSeqUI();
-        setSeqStatus('');
-        seqStartBtn.classList.add('hidden');
-        seqNextRound();
-    }
-
-    seqStartBtn.addEventListener('click', startSeqGame);
-
-    speedToggle.addEventListener('click', () => {
-        if (seqState === 'PLAYBACK') return;
-        seqSpeedMode = !seqSpeedMode;
-        speedToggle.classList.toggle('active', seqSpeedMode);
+  function spawnTarget() {
+    if (cleanupDone) return;
+    zone.innerHTML = '';
+    const t = document.createElement('div');
+    t.className = 'aim-target';
+    const pad = 30;
+    const w = zone.clientWidth, h = zone.clientHeight;
+    const x = pad + Math.random() * (w - pad*2);
+    const y = pad + Math.random() * (h - pad*2);
+    t.style.left = x + 'px';
+    t.style.top = y + 'px';
+    t.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      if (cleanupDone) return;
+      if (!started) { started = true; startTime = performance.now(); counter.style.display = ''; }
+      hits++;
+      counter.textContent = hits + '/30';
+      if (hits >= 30) {
+        const total = performance.now() - startTime;
+        const avg = Math.round(total / 30);
+        const isNew = saveBestLower('aim', avg);
+        const pct = getPercentile('aim', avg);
+        counter.style.display = 'none';
+        body.innerHTML = `<div class="test-status">Résultat</div>
+          <div class="test-big">${avg}<span style="font-size:20px;font-weight:400"> ms</span></div>
+          <div class="test-label">par cible</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
+          ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
+          <button class="test-btn primary" style="margin-top:24px" onclick="initAim()">Recommencer</button>`;
+        return;
+      }
+      spawnTarget();
     });
+    zone.appendChild(t);
+  }
 
-    initSeqGrid();
-    updateSeqUI();
+  spawnTarget();
+  aimCleanup = () => { cleanupDone = true; aimCleanup = null; };
+}
 
-    /* ============================================================
-       JEU 2 : CHIMP TEST
-       ============================================================ */
-    const chimpArea = document.getElementById('chimp-area');
-    const chimpScoreEl = document.getElementById('chimp-score');
-    const chimpBestEl = document.getElementById('chimp-best');
-    const chimpStrikesEl = document.getElementById('chimp-strikes');
-    const chimpStatusEl = document.getElementById('chimp-status');
-    const chimpStartBtn = document.getElementById('chimp-start');
+/* ============================================================
+   4. NUMBER MEMORY
+   ============================================================ */
+let numCleanup = null;
 
-    let chimpLevel = 4;
-    let chimpScore = 4;
-    let chimpBest = parseInt(localStorage.getItem('chimpBest')) || 0;
-    let chimpStrikes = 0;
-    let chimpState = 'IDLE'; // IDLE, MEMORIZE, PLAYING, GAME_OVER
-    let chimpNextExpected = 1;
-    let chimpTiles = [];
+function initNumber() {
+  const body = document.getElementById('num-body');
+  let level = 1, cleanupDone = false;
+  let timer1 = null, timer2 = null, barInterval = null;
 
-    function updateChimpUI() {
-        chimpScoreEl.textContent = chimpLevel;
-        chimpBestEl.textContent = chimpBest;
-        const marks = chimpStrikesEl.querySelectorAll('.life');
-        marks.forEach((m, i) => m.classList.toggle('lost', i < (3 - chimpStrikes))); // 3-x pour afficher les strikes restants, inversé logique
-        // En fait on veut montrer les strikes utilisés. Mettons 3 coches, qui se "grisent" si utilisés.
-        // Pour faire simple : tout en opaque, et on compte les utilisés.
-        marks.forEach((m, i) => m.classList.toggle('lost', i >= chimpStrikes)); // Les premiers sont rouges (utilisés), les autres gris
-    }
+  function startLevel() {
+    if (cleanupDone) return;
+    const digits = level;
+    const num = [];
+    for (let i = 0; i < digits; i++) num.push(randInt(i===0?1:0, 9));
+    const numStr = num.join('');
+    const showTime = Math.max(1500, digits * 800);
 
-    function setChimpStatus(text, type = '') {
-        chimpStatusEl.textContent = text;
-        chimpStatusEl.className = 'status' + (type ? ' ' + type : '');
-    }
+    body.innerHTML = `<div class="test-status">Niveau ${level}</div>
+      <div class="num-display" id="num-disp">${numStr}</div>
+      <div class="num-bar"><div class="num-bar-fill" id="num-fill" style="width:100%"></div></div>`;
 
-    function generateChimpPositions(count) {
-        const positions = [];
-        const margin = 4; // %
-        const tileSize = 16; // %
-        const maxPos = 100 - tileSize - margin;
+    const fill = document.getElementById('num-fill');
+    const startT = Date.now();
+    barInterval = setInterval(() => {
+      const elapsed = Date.now() - startT;
+      const pct = Math.max(0, 1 - elapsed / showTime) * 100;
+      fill.style.width = pct + '%';
+      if (pct <= 0) clearInterval(barInterval);
+    }, 50);
 
-        for (let i = 0; i < count; i++) {
-            let placed = false;
-            let attempts = 0;
-            while (!placed && attempts < 200) {
-                const x = margin + Math.random() * (maxPos - margin);
-                const y = margin + Math.random() * (maxPos - margin);
-                
-                // Vérifier chevauchement
-                let overlaps = false;
-                for (const p of positions) {
-                    if (Math.abs(p.x - x) < (tileSize + 2) && Math.abs(p.y - y) < (tileSize + 2)) {
-                        overlaps = true;
-                        break;
-                    }
-                }
-
-                if (!overlaps) {
-                    positions.push({ x, y });
-                    placed = true;
-                }
-                attempts++;
-            }
-            if (!placed) {
-                // Fallback au cas où (très rare)
-                positions.push({ x: margin + Math.random() * maxPos, y: margin + Math.random() * maxPos });
-            }
-        }
-        return positions;
-    }
-
-    function renderChimpTiles(hideAll = false) {
-        chimpArea.innerHTML = '';
-        chimpTiles.forEach(t => {
-            const div = document.createElement('div');
-            div.className = 'chimp-tile';
-            if (hideAll && t.value !== 1) div.classList.add('hidden-num');
-            div.style.left = t.x + '%';
-            div.style.top = t.y + '%';
-            div.textContent = t.value;
-            div.addEventListener('click', () => chimpHandleClick(t.value, div));
-            chimpArea.appendChild(div);
-        });
-    }
-
-    function startChimpRound() {
-        chimpNextExpected = 1;
-        const positions = generateChimpPositions(chimpLevel);
-        // Mélanger les nombres 1 à chimpLevel
-        const numbers = Array.from({ length: chimpLevel }, (_, i) => i + 1);
-        // Pas besoin de mélanger, les positions sont déjà aléatoires
-        chimpTiles = positions.map((pos, i) => ({
-            value: numbers[i],
-            x: pos.x,
-            y: pos.y
-        }));
-
-        chimpState = 'MEMORIZE';
-        setChimpStatus('Memorise les positions...');
-        renderChimpTiles(false);
-    }
-
-    function chimpHandleClick(value, divEl) {
-        if (chimpState === 'MEMORIZE' && value === 1) {
-            // Premier clic : on cache le reste
-            chimpState = 'PLAYING';
-            chimpNextExpected = 2;
-            divEl.classList.add('correct');
-            // Cacher les autres
-            chimpArea.querySelectorAll('.chimp-tile').forEach(el => {
-                if (el !== divEl) el.classList.add('hidden-num');
-            });
-            setChimpStatus('Trouve les autres dans l\'ordre !');
-            return;
-        }
-
-        if (chimpState !== 'PLAYING') return;
-
-        if (value === chimpNextExpected) {
-            // Bon
-            divEl.classList.remove('hidden-num');
-            divEl.classList.add('correct');
-            chimpNextExpected++;
-
-            if (chimpNextExpected > chimpLevel) {
-                // Niveau réussi
-                chimpScore = chimpLevel;
-                if (chimpLevel >= 41) {
-                    // Score max atteint
-                    chimpBest = 41;
-                    localStorage.setItem('chimpBest', 41);
-                    updateChimpUI();
-                    setChimpStatus('Parfait ! Score maximum atteint (41) !', 'success');
-                    chimpState = 'GAME_OVER';
-                    chimpStartBtn.textContent = 'Recommencer';
-                    chimpStartBtn.classList.remove('hidden');
-                    return;
-                }
-
-                if (chimpLevel > chimpBest) {
-                    chimpBest = chimpLevel;
-                    localStorage.setItem('chimpBest', chimpBest);
-                }
-                updateChimpUI();
-                setChimpStatus('Bien joué !', 'success');
-                chimpState = 'IDLE';
-                setTimeout(() => {
-                    chimpLevel++;
-                    updateChimpUI();
-                    startChimpRound();
-                }, 1000);
-            }
+    timer1 = setTimeout(() => {
+      if (cleanupDone) return;
+      clearInterval(barInterval);
+      body.innerHTML = `<div class="test-status">Niveau ${level} — Tapez le nombre</div>
+        <input class="num-input" id="num-input" type="text" inputmode="numeric" autocomplete="off" autofocus>
+        <button class="test-btn primary" style="margin-top:16px" id="num-submit">Valider</button>`;
+      const inp = document.getElementById('num-input');
+      inp.focus();
+      const submit = () => {
+        if (cleanupDone) return;
+        const val = inp.value.trim();
+        if (val === numStr) {
+          level++;
+          toast('Correct!');
+          timer2 = setTimeout(() => startLevel(), 400);
         } else {
-            // Mauvais
-            divEl.classList.remove('hidden-num');
-            divEl.classList.add('wrong');
-            chimpStrikes++;
-            updateChimpUI();
-
-            if (chimpStrikes >= 3) {
-                chimpGameOver();
-            } else {
-                setChimpStatus(`Faux ! Strike ${chimpStrikes}/3`, 'error');
-                chimpState = 'IDLE';
-                // Rejouer le même niveau
-                setTimeout(() => startChimpRound(), 1200);
-            }
+          const best = level - 1;
+          const isNew = saveBest('number', best);
+          const pct = getPercentile('number', best);
+          body.innerHTML = `<div class="test-status">Raté! La réponse était ${numStr}</div>
+            <div class="test-big">${best}</div>
+            <div class="test-label">chiffres</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
+            ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
+            <button class="test-btn primary" style="margin-top:24px" onclick="initNumber()">Recommencer</button>`;
         }
+      };
+      document.getElementById('num-submit').addEventListener('click', submit);
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+    }, showTime);
+  }
+
+  startLevel();
+  numCleanup = () => { cleanupDone = true; clearTimeout(timer1); clearTimeout(timer2); clearInterval(barInterval); numCleanup = null; };
+}
+
+/* ============================================================
+   5. VERBAL MEMORY
+   ============================================================ */
+let verbalCleanup = null;
+
+const WORDS = ['bicycle','mountain','river','cloud','garden','window','pencil','dragon','silver','orange',
+  'planet','forest','bridge','castle','desert','flame','harbor','island','jungle','kitten','lemon','marble',
+  'needle','ocean','parrot','quilt','rocket','shadow','temple','umbrella','valley','whisper','crystal',
+  'diamond','eagle','falcon','granite','horizon','ivory','journey','knight','lantern','mirror','noble',
+  'oasis','pirate','queen','raven','storm','thunder','uniform','violet','wonder','zenith','anchor','blaze',
+  'cipher','drift','ember','frost','gleam','haze','ink','jade','knot','lunar','mist','nova','opal','prism',
+  'quartz','ridge','spark','tide','vault','wave','bloom','crest','dusk','fern','glow','hive','iris','lace',
+  'moss','nest','pine','reef','sage','tusk','vine','wren','zeal','amber','brisk','cobalt','dew','elm'];
+
+function initVerbal() {
+  const body = document.getElementById('verbal-body');
+  let score = 0, strikes = 0, usedWords = [], currentWord = '', cleanupDone = false;
+
+  function pickWord() {
+    return WORDS[randInt(0, WORDS.length - 1)];
+  }
+
+  function nextWord() {
+    if (cleanupDone) return;
+    // 50% de chance de reprendre un mot déjà vu
+    if (usedWords.length > 0 && Math.random() < 0.5) {
+      currentWord = usedWords[randInt(0, usedWords.length - 1)];
+    } else {
+      currentWord = pickWord();
+      if (!usedWords.includes(currentWord)) usedWords.push(currentWord);
+    }
+    render();
+  }
+
+  function render() {
+    let dots = '';
+    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < strikes ? ' lost' : ''}"></div>`;
+    body.innerHTML = `<div class="test-status">Score: ${score}</div>
+      <div class="verbal-word">${currentWord}</div>
+      <div class="verbal-btns">
+        <button class="vb-new" id="vb-new">NOUVEAU</button>
+        <button class="vb-seen" id="vb-seen">DÉJÀ VU</button>
+      </div>
+      <div class="strikes">${dots}</div>`;
+    document.getElementById('vb-new').addEventListener('click', () => answer(false));
+    document.getElementById('vb-seen').addEventListener('click', () => answer(true));
+  }
+
+  function answer(isSeen) {
+    if (cleanupDone) return;
+    const wasSeen = usedWords.indexOf(currentWord) !== -1 && usedWords.indexOf(currentWord) < usedWords.length;
+    // Vérifier si le mot a déjà été montré dans cette session
+    const appearedBefore = usedWords.indexOf(currentWord) < usedWords.length - 1 ||
+      (usedWords.filter(w => w === currentWord).length > 1);
+    // Plus simple: le mot est "déjà vu" s'il est apparu avant le tour actuel
+    const count = usedWords.filter(w => w === currentWord).length;
+    // En fait, considérons: un mot est "déjà vu" s'il a déjà été présenté au moins une fois avant ce tour
+    // On va simplifier: le mot est "déjà vu" si on l'a déjà rencontré dans les tours précédents
+    const firstOccIdx = usedWords.indexOf(currentWord);
+    // Le mot est nouveau s'il vient d'être ajouté (dernier élément) et n'a jamais été tiré avant
+    const isNewWord = !verbalState.prevWords || !verbalState.prevWords.includes(currentWord);
+
+    // Réécrivons plus proprement
+  }
+
+  // Approche plus propre
+  let shownWords = []; // tous les mots déjà présentés (avec doublons possibles)
+
+  function nextWord2() {
+    if (cleanupDone) return;
+    if (shownWords.length === 0 || Math.random() < 0.5) {
+      // Nouveau mot jamais montré
+      let w;
+      do { w = pickWord(); } while (shownWords.includes(w) && shownWords.length < WORDS.length);
+      currentWord = w;
+      shownWords.push(w);
+    } else {
+      // Mot déjà montré
+      currentWord = shownWords[randInt(0, shownWords.length - 1)];
+    }
+    render2();
+  }
+
+  function render2() {
+    let dots = '';
+    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < strikes ? ' lost' : ''}"></div>`;
+    body.innerHTML = `<div class="test-status">Score: ${score}</div>
+      <div class="verbal-word">${currentWord}</div>
+      <div class="verbal-btns">
+        <button class="vb-new" id="vb-new">NOUVEAU</button>
+        <button class="vb-seen" id="vb-seen">DÉJÀ VU</button>
+      </div>
+      <div class="strikes">${dots}</div>`;
+    document.getElementById('vb-new').addEventListener('click', () => answer2(false));
+    document.getElementById('vb-seen').addEventListener('click', () => answer2(true));
+  }
+
+  function answer2(saidSeen) {
+    if (cleanupDone) return;
+    // Le mot a-t-il été montré avant cette apparition ?
+    const idx = shownWords.indexOf(currentWord);
+    // S'il apparaît plus d'une fois dans shownWords, ou s'il n'est pas le dernier ajouté
+    const occurrences = shownWords.filter(w => w === currentWord).length;
+    const wasSeenBefore = occurrences > 1 || (occurrences === 1 && shownWords.indexOf(currentWord) < shownWords.length - 1);
+
+    // En fait: quand on ajoute un "nouveau" mot, on le push dans shownWords.
+    // Quand on reprend un ancien, on ne le re-push pas.
+    // Donc: currentWord est "déjà vu" si il est dans shownWords ET n'a pas été ajouté juste maintenant
+    // Simplifions: gardons une liste `presentedWords` des mots présentés jusqu'au tour précédent
+
+    // Redessinons la logique:
+    // `presented` = mots présentés dans les tours précédents (avant le tour actuel)
+    // Au début du tour, on choisit un mot soit dans `presented`, soit un nouveau
+    // Si on choisit un nouveau, on l'ajoute à `presented` APRÈS la réponse
+  }
+
+  // === TROISIÈME TENTATIVE PROPRE ===
+  let presented = []; // mots présentés lors de tours précédents (unique)
+  let currentIsNew = false;
+
+  function nextWord3() {
+    if (cleanupDone) return;
+    if (presented.length === 0 || (Math.random() < 0.5 && presented.length > 0)) {
+      // Mot déjà présenté
+      currentWord = presented[randInt(0, presented.length - 1)];
+      currentIsNew = false;
+    } else {
+      // Nouveau mot
+      let w;
+      const available = WORDS.filter(w2 => !presented.includes(w2));
+      w = available[randInt(0, available.length - 1)] || pickWord();
+      currentWord = w;
+      currentIsNew = true;
+    }
+    render3();
+  }
+
+  function render3() {
+    let dots = '';
+    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < strikes ? ' lost' : ''}"></div>`;
+    body.innerHTML = `<div class="test-status">Score: ${score}</div>
+      <div class="verbal-word">${currentWord}</div>
+      <div class="verbal-btns">
+        <button class="vb-new" id="vb-new">NOUVEAU</button>
+        <button class="vb-seen" id="vb-seen">DÉJÀ VU</button>
+      </div>
+      <div class="strikes">${dots}</div>`;
+    document.getElementById('vb-new').addEventListener('click', () => answer3(false));
+    document.getElementById('vb-seen').addEventListener('click', () => answer3(true));
+  }
+
+  function answer3(saidSeen) {
+    if (cleanupDone) return;
+    const correct = (saidSeen && !currentIsNew) || (!saidSeen && currentIsNew);
+    if (correct) {
+      score++;
+      if (currentIsNew) presented.push(currentWord);
+      nextWord3();
+    } else {
+      strikes++;
+      if (currentIsNew) presented.push(currentWord);
+      if (strikes >= 3) {
+        // Game over
+        const isNew = saveBest('verbal', score);
+        const pct = getPercentile('verbal', score);
+        let dots = '';
+        for (let i = 0; i < 3; i++) dots += `<div class="dot lost"></div>`;
+        body.innerHTML = `<div class="test-status">Partie terminée</div>
+          <div class="test-big">${score}</div>
+          <div class="test-label">mots</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
+          ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
+          <button class="test-btn primary" style="margin-top:24px" onclick="initVerbal()">Recommencer</button>`;
+      } else {
+        nextWord3();
+      }
+    }
+  }
+
+  nextWord3();
+  verbalCleanup = () => { cleanupDone = true; verbalCleanup = null; };
+}
+
+// Variable factice pour la première tentative (supprimée)
+const verbalState = {};
+
+/* ============================================================
+   6. CHIMP TEST
+   ============================================================ */
+let chimpCleanup = null;
+
+function initChimp() {
+  const body = document.getElementById('chimp-body');
+  let level = 4, strikes = 0, cleanupDone = false;
+  let tiles = [], nextExpected = 1, phase = 'ready', timer1 = null;
+
+  function startLevel() {
+    if (cleanupDone) return;
+    nextExpected = 1;
+    phase = 'showing';
+
+    // Grille adaptative
+    const gridSize = Math.max(4, Math.ceil(Math.sqrt(level * 2.5)));
+    const positions = [];
+    const all = [];
+    for (let i = 0; i < gridSize * gridSize; i++) all.push(i);
+    const chosen = shuffle(all).slice(0, level);
+
+    tiles = chosen.map((pos, idx) => ({
+      num: idx + 1,
+      pos: pos,
+      row: Math.floor(pos / gridSize),
+      col: pos % gridSize
+    }));
+
+    let dots = '';
+    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < strikes ? ' lost' : ''}"></div>`;
+
+    body.innerHTML = `<div class="test-status">Niveau ${level} · ${level} tuiles</div>
+      <div class="chimp-grid" id="chimp-grid" style="grid-template-columns:repeat(${gridSize},1fr)"></div>
+      <div class="strikes" style="margin-top:16px">${dots}</div>`;
+
+    const grid = document.getElementById('chimp-grid');
+    // Créer toutes les cellules
+    const cellMap = {};
+    for (let r = 0; r < gridSize; r++) {
+      for (let c = 0; c < gridSize; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'chimp-cell';
+        cell.style.visibility = 'hidden';
+        const tile = tiles.find(t => t.row === r && t.col === c);
+        if (tile) {
+          cell.textContent = tile.num;
+          cell.dataset.num = tile.num;
+          cell.style.visibility = 'visible';
+          cellMap[tile.num] = cell;
+          cell.addEventListener('pointerdown', () => onTileClick(tile.num, cell));
+        }
+        grid.appendChild(cell);
+      }
     }
 
-    function chimpGameOver() {
-        chimpState = 'GAME_OVER';
-        // Révéler les numéros restants
-        chimpArea.querySelectorAll('.chimp-tile').forEach(el => el.classList.remove('hidden-num'));
-        setChimpStatus(`Game Over ! Niveau atteint : ${chimpScore}`, 'error');
-        chimpStartBtn.textContent = 'Recommencer';
-        chimpStartBtn.classList.remove('hidden');
+    // Cacher les numéros après un délai proportionnel au niveau
+    const showTime = Math.max(800, level * 250);
+    timer1 = setTimeout(() => {
+      if (cleanupDone) return;
+      phase = 'hidden';
+      Object.values(cellMap).forEach(c => c.classList.add('hidden-num'));
+    }, showTime);
+  }
+
+  function onTileClick(num, cell) {
+    if (cleanupDone) return;
+    if (phase === 'showing' && num !== 1) return; // Ne peut cliquer que 1 pendant la phase showing
+    if (num === nextExpected) {
+      cell.classList.add('correct');
+      cell.classList.remove('hidden-num');
+      cell.style.pointerEvents = 'none';
+      nextExpected++;
+      if (num === 1 && phase === 'showing') {
+        phase = 'hidden';
+        clearTimeout(timer1);
+        document.querySelectorAll('#chimp-grid .chimp-cell').forEach(c => {
+          if (!c.classList.contains('correct')) c.classList.add('hidden-num');
+        });
+      }
+      if (nextExpected > level) {
+        // Niveau réussi
+        phase = 'done';
+        level++;
+        setTimeout(() => { if (!cleanupDone) startLevel(); }, 600);
+      }
+    } else {
+      cell.classList.add('wrong');
+      cell.classList.remove('hidden-num');
+      strikes++;
+      if (strikes >= 3) {
+        phase = 'done';
+        const best = level - 1;
+        const isNew = saveBest('chimp', best);
+        const pct = getPercentile('chimp', best);
+        setTimeout(() => {
+          if (cleanupDone) return;
+          body.innerHTML = `<div class="test-status">Partie terminée</div>
+            <div class="test-big">${best}</div>
+            <div class="test-label">niveaux</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
+            ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
+            <button class="test-btn primary" style="margin-top:24px" onclick="initChimp()">Recommencer</button>`;
+        }, 500);
+      } else {
+        toast('Raté! Il fallait cliquer sur ' + nextExpected);
+        phase = 'done';
+        setTimeout(() => { if (!cleanupDone) startLevel(); }, 1000);
+      }
+    }
+  }
+
+  startLevel();
+  chimpCleanup = () => { cleanupDone = true; clearTimeout(timer1); chimpCleanup = null; };
+}
+
+/* ============================================================
+   7. VISUAL MEMORY
+   ============================================================ */
+let visualCleanup = null;
+
+function initVisual() {
+  const body = document.getElementById('visual-body');
+  let level = 1, lives = 3, cleanupDone = false;
+  let timer1 = null, timer2 = null;
+
+  function getLevelParams(lv) {
+    const grid = Math.min(3 + Math.floor((lv - 1) / 2), 8);
+    const tiles = Math.min(2 + lv, grid * grid - 1);
+    return { grid, tiles };
+  }
+
+  function startLevel() {
+    if (cleanupDone) return;
+    const { grid, tiles: numTiles } = getLevelParams(level);
+    const total = grid * grid;
+    const chosen = shuffle(Array.from({length: total}, (_, i) => i)).slice(0, numTiles);
+    let mistakes = 0, found = 0;
+
+    let dots = '';
+    for (let i = 0; i < 3; i++) dots += `<div class="dot${i < (3 - lives) ? ' lost' : ''}"></div>`;
+
+    body.innerHTML = `<div class="test-status">Niveau ${level} · ${numTiles} cases · Vies: ${lives}</div>
+      <div class="sq-grid" id="vis-grid" style="grid-template-columns:repeat(${grid},1fr);width:min(${grid*70}px,85vw)"></div>
+      <div class="strikes" style="margin-top:12px">${dots}</div>`;
+
+    const gridEl = document.getElementById('vis-grid');
+    const cells = [];
+    for (let i = 0; i < total; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'sq-cell';
+      cell.dataset.idx = i;
+      if (chosen.includes(i)) cell.dataset.active = '1';
+      cell.addEventListener('pointerdown', () => onCellClick(i));
+      gridEl.appendChild(cell);
+      cells.push(cell);
     }
 
-    function startChimpGame() {
-        chimpLevel = 4;
-        chimpScore = 4;
-        chimpStrikes = 0;
-        updateChimpUI();
-        chimpStartBtn.classList.add('hidden');
-        startChimpRound();
+    // Montrer le motif
+    chosen.forEach(i => cells[i].classList.add('flash'));
+    const showTime = Math.max(800, numTiles * 200);
+    timer1 = setTimeout(() => {
+      if (cleanupDone) return;
+      chosen.forEach(i => cells[i].classList.remove('flash'));
+      phase = 'input';
+    }, showTime);
+
+    let phase = 'showing';
+
+    function onCellClick(idx) {
+      if (phase !== 'input' || cleanupDone) return;
+      const cell = cells[idx];
+      if (cell.dataset.done) return;
+      cell.dataset.done = '1';
+
+      if (chosen.includes(idx)) {
+        cell.classList.add('flash');
+        found++;
+        if (found >= numTiles) {
+          // Niveau réussi
+          phase = 'done';
+          level++;
+          timer2 = setTimeout(() => { if (!cleanupDone) startLevel(); }, 500);
+        }
+      } else {
+        cell.classList.add('wrong');
+        mistakes++;
+        if (mistakes >= 3) {
+          // Niveau échoué
+          phase = 'done';
+          lives--;
+          if (lives <= 0) {
+            const best = level - 1;
+            const isNew = saveBest('visual', best);
+            const pct = getPercentile('visual', best);
+            // Révéler les cases manquantes
+            chosen.forEach(i => { if (!cells[i].classList.contains('flash')) cells[i].style.background = 'var(--orange)'; });
+            timer2 = setTimeout(() => {
+              if (cleanupDone) return;
+              body.innerHTML = `<div class="test-status">Partie terminée</div>
+                <div class="test-big">${best}</div>
+                <div class="test-label">niveaux</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:8px">Percentile: ${pct}e</div>
+                ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
+                <button class="test-btn primary" style="margin-top:24px" onclick="initVisual()">Recommencer</button>`;
+            }, 800);
+          } else {
+            toast('Trop d\'erreurs! On recommence ce niveau.');
+            timer2 = setTimeout(() => { if (!cleanupDone) startLevel(); }, 1000);
+          }
+        }
+      }
+    }
+  }
+
+  startLevel();
+  visualCleanup = () => { cleanupDone = true; clearTimeout(timer1); clearTimeout(timer2); visualCleanup = null; };
+}
+
+/* ============================================================
+   8. TYPING TEST
+   ============================================================ */
+let typeCleanup = null;
+
+const TYPING_TEXTS = [
+  "The quick brown fox jumps over the lazy dog near the riverbank while the sun sets behind the mountains casting long shadows across the valley floor and the wind carries whispers of the coming night",
+  "A journey of a thousand miles begins with a single step forward into the unknown where every path leads to new discoveries and unexpected adventures that shape who we are and who we will become",
+  "The ancient library held thousands of books each containing worlds waiting to be explored by curious minds seeking knowledge and understanding of the vast universe that surrounds our small planet",
+  "Science is not only a discipline of reason but also one of romance and passion because the beauty of a living thing is not the atoms that go into it but the way those atoms are put together"
+];
+
+function initTyping() {
+  const body = document.getElementById('type-body');
+  const text = TYPING_TEXTS[randInt(0, TYPING_TEXTS.length - 1)];
+  let typed = '', startTime = 0, started = false, finished = false, cleanupDone = false;
+
+  function renderText() {
+    let html = '';
+    for (let i = 0; i < text.length; i++) {
+      let cls = 'pending';
+      if (i < typed.length) {
+        cls = typed[i] === text[i] ? 'correct' : 'wrong';
+      }
+      if (i === typed.length && !finished) {
+        html += `<span class="cursor ${cls}">${text[i]}</span>`;
+      } else {
+        html += `<span class="${cls}">${text[i]}</span>`;
+      }
+    }
+    return html;
+  }
+
+  function render() {
+    const wpm = started ? Math.round((typed.length / 5) / ((Date.now() - startTime) / 60000)) : 0;
+    const correctChars = [...typed].filter((c, i) => c === text[i]).length;
+    const accuracy = typed.length > 0 ? Math.round(correctChars / typed.length * 100) : 100;
+
+    body.innerHTML = `<div class="test-status">Tapez le texte ci-dessous</div>
+      <div class="type-text" id="type-display">${renderText()}</div>
+      <div class="type-input-area">
+        <input class="type-input" id="type-input" type="text" autocomplete="off" autocorrect="off"
+          autocapitalize="off" spellcheck="false" placeholder="Commencez à taper ici...">
+      </div>
+      <div class="type-stats">
+        <div class="type-stat"><div class="val">${wpm}</div><div class="lbl">WPM</div></div>
+        <div class="type-stat"><div class="val">${accuracy}%</div><div class="lbl">Précision</div></div>
+      </div>`;
+
+    const inp = document.getElementById('type-input');
+    inp.focus();
+    inp.addEventListener('input', onInput);
+  }
+
+  function onInput(e) {
+    if (finished || cleanupDone) return;
+    const val = e.target.value;
+    if (!started && val.length > 0) {
+      started = true;
+      startTime = Date.now();
+    }
+    typed = val;
+
+    if (typed.length >= text.length) {
+      finished = true;
+      const elapsed = (Date.now() - startTime) / 60000;
+      const wpm = Math.round((typed.length / 5) / elapsed);
+      const correctChars = [...typed].filter((c, i) => c === text[i]).length;
+      const accuracy = Math.round(correctChars / typed.length * 100);
+      const isNew = saveBest('typing', wpm);
+      const pct = getPercentile('typing', wpm);
+
+      body.innerHTML = `<div class="test-status">Résultat</div>
+        <div class="test-big">${wpm}</div>
+        <div class="test-label">WPM</div>
+        <div class="type-stats" style="margin-top:12px">
+          <div class="type-stat"><div class="val">${accuracy}%</div><div class="lbl">Précision</div></div>
+        </div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:12px">Percentile: ${pct}e</div>
+        ${isNew ? '<div style="font-size:13px;color:var(--orange);margin-top:4px">Nouveau record!</div>' : ''}
+        <button class="test-btn primary" style="margin-top:24px" onclick="initTyping()">Recommencer</button>`;
+      return;
     }
 
-    chimpStartBtn.addEventListener('click', startChimpGame);
+    // Mettre à jour l'affichage sans re-render complet
+    const display = document.getElementById('type-display');
+    if (display) display.innerHTML = renderText();
+    // Mettre à jour stats
+    const wpm = Math.round((typed.length / 5) / ((Date.now() - startTime) / 60000));
+    const correctChars2 = [...typed].filter((c, i) => c === text[i]).length;
+    const accuracy2 = typed.length > 0 ? Math.round(correctChars2 / typed.length * 100) : 100;
+    const vals = body.querySelectorAll('.val');
+    if (vals[0]) vals[0].textContent = wpm;
+    if (vals[1]) vals[1].textContent = accuracy2 + '%';
+  }
 
-    updateChimpUI();
+  render();
+  typeCleanup = () => { cleanupDone = true; typeCleanup = null; };
+}
+
+/* ============================================================
+   PROFIL & RADAR
+   ============================================================ */
+function showProfile() {
+  showView('profile');
+  drawRadar(document.getElementById('radarCanvas'), 520);
+  buildProfileScores();
+}
+
+function drawRadar(canvas, size) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const cx = w / 2, cy = h / 2;
+  const r = Math.min(cx, cy) * 0.72;
+  const labels = ['Reaction','Sequence','Aim','Number','Verbal','Chimp','Visual','Typing'];
+  const tests = ['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
+  const n = 8;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Grille
+  for (let ring = 1; ring <= 4; ring++) {
+    const rr = r * ring / 4;
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+      const x = cx + rr * Math.cos(angle);
+      const y = cy + rr * Math.sin(angle);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Axes
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.stroke();
+  }
+
+  // Données
+  const values = tests.map(t => {
+    const s = scores[t];
+    if (s === undefined) return 0;
+    const pct = getPercentile(t, s);
+    return pct / 100;
+  });
+
+  // Remplissage
+  ctx.beginPath();
+  for (let i = 0; i <= n; i++) {
+    const idx = i % n;
+    const angle = (Math.PI * 2 * idx / n) - Math.PI / 2;
+    const val = Math.max(values[idx], 0.02);
+    const x = cx + r * val * Math.cos(angle);
+    const y = cy + r * val * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Points & Labels
+  ctx.fillStyle = '#fff';
+  ctx.font = `${Math.max(10, size/28)}px 'Space Grotesk', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const val = Math.max(values[i], 0.02);
+    const px = cx + r * val * Math.cos(angle);
+    const py = cy + r * val * Math.sin(angle);
+
+    // Point
+    ctx.beginPath();
+    ctx.arc(px, py, 4, 0, Math.PI * 2);
+    ctx.fillStyle = values[i] > 0 ? '#fff' : 'rgba(255,255,255,0.3)';
+    ctx.fill();
+
+    // Label
+    const lx = cx + (r + size * 0.1) * Math.cos(angle);
+    const ly = cy + (r + size * 0.1) * Math.sin(angle);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillText(labels[i], lx, ly);
+  }
+}
+
+function buildProfileScores() {
+  const container = document.getElementById('profileScores');
+  const tests = ['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
+  let html = '';
+  tests.forEach(t => {
+    const p = TEST_PARAMS[t];
+    const s = scores[t];
+    const pct = s !== undefined ? getPercentile(t, s) : null;
+    html += `<div class="prof-row">
+      <div class="pr-name">${p.label}</div>
+      <div class="pr-score">${s !== undefined ? s + ' ' + p.unit : '—'}</div>
+      <div class="pr-pct">${pct !== null ? pct + 'e percentile' : ''}</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+/* ============================================================
+   INITIALISATION
+   ============================================================ */
+buildHome();
 </script>
 </body>
 </html>
