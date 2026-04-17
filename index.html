@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="obsidian">
+<html lang="fr" data-theme="classic">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Human Benchmark</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-<style>
-[data-theme="obsidian"]{
+<style>[data-theme="classic"]{
+  --bg:#2b87d1;--surface:#2580c4;--card:#1a6aa6;--card-h:#1e78b8;
+  --border:rgba(255,255,255,.12);--accent:#ffffff;--accent-d:rgba(255,255,255,.2);
+  --success:#2ecc71;--danger:#e74c3c;--warn:#f1c40f;
+  --txt:#ffffff;--txt2:rgba(255,255,255,.8);--txt3:rgba(255,255,255,.5);--sh:rgba(0,0,0,.25)}[data-theme="obsidian"]{
   --bg:#08090e;--surface:#10121a;--card:#181a24;--card-h:#23252f;
   --border:rgba(255,255,255,.06);--accent:#e8a838;--accent-d:rgba(232,168,56,.14);
   --success:#34d399;--danger:#f87171;--warn:#fbbf24;
@@ -28,8 +31,8 @@ html,body{height:100%;overflow:hidden}
 body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt);
   -webkit-tap-highlight-color:transparent;user-select:none;transition:background .35s,color .35s}
 #app{width:100%;height:100%;max-width:100%;margin:0 auto;position:relative;overflow:hidden}
-@media(min-width:768px){#app{max-width:500px;border-left:1px solid var(--border);border-right:1px solid var(--border)}}
-@media(min-width:1024px){#app{max-width:560px}}
+@media(min-width:768px){#app{max-width:100%}}
+@media(min-width:1100px){#app{max-width:1060px;margin:0 auto}}
 
 .view{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden}
 .view.active{display:flex}
@@ -42,13 +45,24 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt
 .hdr-title{font-size:16px;font-weight:600;letter-spacing:-.3px;flex:1}
 .hdr-badge{font-size:11px;font-weight:600;background:var(--accent);color:var(--bg);padding:3px 10px;border-radius:20px}
 
-.home-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
-.home-hdr h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
 .theme-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:var(--card);
   color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all .25s}
 .theme-btn:hover{background:var(--card-h);color:var(--accent)}
+.theme-btn-sm{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--card);
+  color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;
+  transition:all .25s;flex-shrink:0}
+.theme-btn-sm:hover{background:var(--card-h);color:var(--accent)}
+
+.speed-btn{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid var(--border);
+  background:var(--card);color:var(--txt3);cursor:pointer;transition:all .2s;font-family:'Space Grotesk',sans-serif}
+.speed-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+.home-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
+.home-hdr h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
 .home-sub{padding:6px 20px 18px;font-size:12px;color:var(--txt3);line-height:1.5}
 .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 24px}
+@media(min-width:768px){.home-grid{grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;padding:0 24px 32px;max-width:900px;margin:0 auto}}
+
 .tc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 13px;
   cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:7px}
 .tc:hover{background:var(--card-h);transform:translateY(-2px);box-shadow:0 6px 20px var(--sh)}
@@ -105,13 +119,14 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt
 .rp.result-bg .rp-sub{color:var(--txt3)}
 
 .sq-grid{display:grid;gap:7px;margin:12px auto}
+@media(min-width:768px){.sq-grid{gap:10px}}
 .sq-cell{aspect-ratio:1;background:var(--card);border-radius:10px;cursor:pointer;transition:background .15s;min-width:0}
 .sq-cell.flash{background:var(--accent)!important}
 .sq-cell.wrong{background:var(--danger)!important}
 .sq-cell:hover{background:var(--card-h)}
 
-.aim-zone{position:relative;width:100%;flex:1;background:var(--surface);border-radius:12px;
-  overflow:hidden;min-height:280px;cursor:crosshair;transition:background .35s}
+.aim-zone{position:relative;width:100%;flex:1;background:var(--surface);border-radius:12px;overflow:hidden;min-height:280px;cursor:crosshair;transition:background .35s}
+@media(min-width:768px){.aim-zone{min-height:400px}}
 .aim-target{position:absolute;width:46px;height:46px;border-radius:50%;cursor:pointer;transform:translate(-50%,-50%);
   background:radial-gradient(circle,var(--accent) 18%,transparent 19%,transparent 44%,var(--accent) 45%,var(--accent) 68%,transparent 69%)}
 
@@ -137,6 +152,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt
 .dot.lost{background:var(--danger)}
 
 .ch-grid{display:grid;gap:7px;margin:12px auto;width:100%;max-width:340px}
+@media(min-width:768px){.ch-grid{max-width:420px;gap:10px}}
 .ch-cell{aspect-ratio:1;background:var(--card);border-radius:10px;display:flex;align-items:center;
   justify-content:center;font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;
   cursor:pointer;transition:all .15s;color:var(--txt)}
@@ -176,8 +192,11 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-@media(min-width:768px){.home-hdr h1{font-size:22px}.tc .nm{font-size:14px}.rp-text{font-size:30px}
-  .num-display{font-size:52px}.vb-word{font-size:34px}}
+
+@media(min-width:768px){.home-hdr h1{font-size:24px}.tc .nm{font-size:14px}.rp-text{font-size:30px}
+  .num-display{font-size:52px}.vb-word{font-size:34px}
+  .start-screen{padding:40px 60px}.start-name{font-size:26px}.start-desc{max-width:400px}
+  .res-score{font-size:60px}.gauss-wrap{max-width:380px}.gauss-canvas{height:140px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:0s!important}}
 </style>
 </head>
@@ -185,19 +204,19 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt
 <div id="app">
   <div id="v-home" class="view active">
     <div class="home-hdr"><h1>Human Benchmark</h1>
-      <button class="theme-btn" id="themeBtn" onclick="cycleTheme()"><span class="material-icons-round">dark_mode</span></button>
+      <button class="theme-btn" id="themeBtn" onclick="cycleTheme()"><span class="material-icons-round">water</span></button>
     </div><p class="home-sub">Mesurez votre cognition, memoire et reflexes</p>
     <div class="home-grid" id="homeGrid"></div>
   </div>
-  <div id="v-reaction" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Reaction Time</span></div><div class="tb" id="reaction-body"></div></div>
-  <div id="v-sequence" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Sequence Memory</span></div><div class="tb" id="seq-body"></div></div>
-  <div id="v-aim" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Aim Trainer</span><span id="aim-cnt" class="hdr-badge" style="display:none">0/30</span></div><div class="tb padded" id="aim-body" style="justify-content:flex-start;padding-top:10px"></div></div>
-  <div id="v-number" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Number Memory</span></div><div class="tb" id="num-body"></div></div>
-  <div id="v-verbal" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Verbal Memory</span></div><div class="tb" id="verbal-body"></div></div>
-  <div id="v-chimp" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Chimp Test</span></div><div class="tb" id="chimp-body"></div></div>
-  <div id="v-visual" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Visual Memory</span></div><div class="tb" id="visual-body"></div></div>
-  <div id="v-typing" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Typing Test</span></div><div class="tb" id="type-body" style="justify-content:flex-start;padding-top:18px"></div></div>
-  <div id="v-profile" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Votre Profil</span></div><div class="pr-canvas"><canvas id="radarCanvas" width="520" height="520"></canvas></div><div class="pr-rows" id="profRows"></div></div>
+  <div id="v-reaction" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Reaction Time</span><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="tb" id="reaction-body"></div></div>
+  <div id="v-sequence" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Sequence Memory</span><button class="speed-btn" id="speed-btn" onclick="toggleSpeed()">Speed</button><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="tb" id="seq-body"></div></div>
+  <div id="v-aim" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Aim Trainer</span><span id="aim-cnt" class="hdr-badge" style="display:none">0/30</span><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="tb padded" id="aim-body" style="justify-content:flex-start;padding-top:10px"></div></div>
+  <div id="v-number" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Number Memory</span><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="tb" id="num-body"></div></div>
+  <div id="v-verbal" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Verbal Memory</span><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="tb" id="verbal-body"></div></div>
+  <div id="v-chimp" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Chimp Test</span><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="tb" id="chimp-body"></div></div>
+  <div id="v-visual" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Visual Memory</span><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="tb" id="visual-body"></div></div>
+  <div id="v-typing" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Typing Test</span><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="tb" id="type-body" style="justify-content:flex-start;padding-top:18px"></div></div>
+  <div id="v-profile" class="view"><div class="hdr"><button class="hdr-back" onclick="goHome()"><span class="material-icons-round" style="font-size:18px">arrow_back</span></button><span class="hdr-title">Votre Profil</span><button class="theme-btn-sm" onclick="cycleTheme()"><span class="material-icons-round" style="font-size:15px">water</span></button></div><div class="pr-canvas"><canvas id="radarCanvas" width="520" height="520"></canvas></div><div class="pr-rows" id="profRows"></div></div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -275,24 +294,26 @@ function getGaussParams(test) {
 /* =============================================
    THÈME
    ============================================= */
-var THEMES = ['obsidian', 'slate', 'paper'];
-var T_ICONS = {obsidian:'dark_mode', slate:'filter_drama', paper:'light_mode'};
+var THEMES =['classic', 'obsidian', 'slate', 'paper'];
+var T_ICONS = {classic:'water', obsidian:'dark_mode', slate:'filter_drama', paper:'light_mode'};
 
 function cycleTheme() {
   var cur = document.documentElement.getAttribute('data-theme');
   var idx = (THEMES.indexOf(cur) + 1) % THEMES.length;
   document.documentElement.setAttribute('data-theme', THEMES[idx]);
   localStorage.setItem('hb_theme', THEMES[idx]);
-  var ic = document.querySelector('#themeBtn .material-icons-round');
-  if (ic) ic.textContent = T_ICONS[THEMES[idx]];
+  var icon = T_ICONS[THEMES[idx]];
+  var all = document.querySelectorAll('.theme-btn-sm .material-icons-round, #themeBtn .material-icons-round');
+  for (var i = 0; i < all.length; i++) all[i].textContent = icon;
 }
 
 (function() {
-  var t = localStorage.getItem('hb_theme') || 'obsidian';
+  var t = localStorage.getItem('hb_theme') || 'classic';
   document.documentElement.setAttribute('data-theme', t);
   document.addEventListener('DOMContentLoaded', function() {
-    var ic = document.querySelector('#themeBtn .material-icons-round');
-    if (ic) ic.textContent = T_ICONS[t] || 'dark_mode';
+    var icon = T_ICONS[t] || 'water';
+    var all = document.querySelectorAll('.theme-btn-sm .material-icons-round, #themeBtn .material-icons-round');
+    for (var i = 0; i < all.length; i++) all[i].textContent = icon;
   });
 })();
 
@@ -313,6 +334,33 @@ function saveScore(test, val) {
 }
 
 var tid = 0;
+
+var audioCtx = null;
+var TONES =[523.25, 587.33, 659.26, 783.99, 880.00, 1046.50, 1174.66, 1318.51, 1567.98];
+
+function initAudio() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playTone(idx) {
+  initAudio();
+  if (!audioCtx) return;
+  var osc = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = TONES[idx % 9];
+  var now = audioCtx.currentTime;
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.12, now + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + 0.45);
+}
 
 function showView(id) {
   var views = document.querySelectorAll('.view');
@@ -356,7 +404,7 @@ function drawGaussian(canvas, test, score) {
   var userX = Math.max(xMin, Math.min(xMax, score));
   var gauss = function(x) { return Math.exp(-0.5 * Math.pow((x - mean) / sd, 2)); };
 
-  var padL = 20, padR = 20, padT = 30, padB = 20;
+  var padL = 20, padR = 20, padT = 30, padB = 26;
   var pw = W - padL - padR, ph = H - padT - padB;
   var toX = function(x) { return padL + (x - xMin) / (xMax - xMin) * pw; };
   var toY = function(y) { return padT + ph * (1 - y); };
@@ -373,6 +421,24 @@ function drawGaussian(canvas, test, score) {
   ctx.strokeStyle = 'rgba(128,128,128,0.15)';
   ctx.lineWidth = 1;
   ctx.stroke();
+
+  /* Graduations abscisse */
+  ctx.font = "10px 'JetBrains Mono',monospace";
+  ctx.fillStyle = txt3;
+  ctx.textAlign = 'center';
+  var numTicks = 5;
+  for (var ti = 0; ti <= numTicks; ti++) {
+    var tVal = xMin + (xMax - xMin) * ti / numTicks;
+    var tPx = toX(tVal);
+    ctx.beginPath();
+    ctx.moveTo(tPx, toY(0));
+    ctx.lineTo(tPx, toY(0) + 5);
+    ctx.strokeStyle = 'rgba(128,128,128,0.3)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    var lbl = tVal >= 1000 ? (tVal / 1000).toFixed(1) + 'k' : Math.round(tVal).toString();
+    ctx.fillText(lbl, tPx, toY(0) + 16);
+  }
 
   /* Médiane */
   var medPx = toX(mean);
@@ -481,7 +547,7 @@ function showResult(el, test, score, extra) {
 /* =============================================
    ÉCRAN DE DÉMARRAGE
    ============================================= */
-var TESTS = [
+var TESTS =[
   {id:'reaction', name:'Reaction Time', icon:'bolt', color:'#dc2626'},
   {id:'sequence', name:'Sequence Memory', icon:'grid_view', color:'#8b5cf6'},
   {id:'aim',      name:'Aim Trainer', icon:'gps_fixed', color:'#ea580c'},
@@ -578,7 +644,7 @@ function initReaction() {
 }
 
 function startReaction(my, body) {
-  var rounds = [], round = 0, startTime = 0, phase = 'wait', timer = null;
+  var rounds =[], round = 0, startTime = 0, phase = 'wait', timer = null;
 
   function render() {
     if (tid !== my) return;
@@ -630,6 +696,14 @@ function startReaction(my, body) {
 /* =============================================
    2. SEQUENCE MEMORY
    ============================================= */
+var speedMode = false;
+function toggleSpeed() {
+  speedMode = !speedMode;
+  var btn = document.getElementById('speed-btn');
+  if (btn) { if (speedMode) btn.classList.add('active'); else btn.classList.remove('active'); }
+  toast(speedMode ? 'Mode Speed : seul le nouveau carre est affiche' : 'Mode Speed desactive');
+}
+
 function initSequence() {
   var my = tid, body = document.getElementById('seq-body');
   showStart(body, 'sequence', function() {
@@ -639,7 +713,7 @@ function initSequence() {
 }
 
 function startSequence(my, body) {
-  var level = 1, seq = [], userSeq = [], phase = 'idle', t1 = null, t2 = null;
+  var level = 1, seq = [], userSeq =[], phase = 'idle', t1 = null, t2 = null;
 
   function build() {
     body.innerHTML = '<div class="ts" id="sq-st">Niveau ' + level + '</div>' +
@@ -655,30 +729,46 @@ function startSequence(my, body) {
 
   function startLvl() {
     if (tid !== my) return;
-    seq.push(ri(0, 8));
-    userSeq = [];
+    var next;
+    do { next = ri(0, 8); } while (seq.length > 0 && next === seq[seq.length - 1]);
+    seq.push(next);
+    userSeq =[];
     phase = 'showing';
     document.getElementById('sq-st').textContent = 'Niveau ' + level + ' — Observez...';
     var cells = document.querySelectorAll('#sq-g .sq-cell');
     var idx = 0;
 
-    function show() {
-      if (tid !== my) return;
-      if (idx >= seq.length) {
+    if (speedMode && seq.length > 1) {
+      /* Mode Speed : seul le dernier carré est affiché */
+      var lastIdx = seq[seq.length - 1];
+      cells[lastIdx].classList.add('flash');
+      playTone(lastIdx);
+      t1 = setTimeout(function() {
+        if (tid !== my) return;
+        cells[lastIdx].classList.remove('flash');
         phase = 'input';
         document.getElementById('sq-st').textContent = 'Niveau ' + level + ' — Votre tour';
-        return;
+      }, 500);
+    } else {
+      function show() {
+        if (tid !== my) return;
+        if (idx >= seq.length) {
+          phase = 'input';
+          document.getElementById('sq-st').textContent = 'Niveau ' + level + ' — Votre tour';
+          return;
+        }
+        var sIdx = seq[idx];
+        cells[sIdx].classList.add('flash');
+        playTone(sIdx);
+        var ci = idx;
+        t1 = setTimeout(function() {
+          cells[seq[ci]].classList.remove('flash');
+          idx = ci + 1;
+          t2 = setTimeout(show, 220);
+        }, 480);
       }
-      var sIdx = seq[idx];
-      cells[sIdx].classList.add('flash');
-      var ci = idx;
-      t1 = setTimeout(function() {
-        cells[seq[ci]].classList.remove('flash');
-        idx = ci + 1;
-        t2 = setTimeout(show, 220);
-      }, 480);
+      show();
     }
-    show();
   }
 
   function onClick(idx) {
@@ -688,6 +778,7 @@ function startSequence(my, body) {
     if (idx === seq[pos]) {
       userSeq.push(idx);
       cells[idx].classList.add('flash');
+      playTone(idx);
       setTimeout(function() { cells[idx].classList.remove('flash'); }, 180);
       if (userSeq.length === seq.length) {
         phase = 'wait'; level++;
@@ -695,6 +786,7 @@ function startSequence(my, body) {
       }
     } else {
       cells[idx].classList.add('wrong');
+      playTone(idx);
       phase = 'done';
       var best = level - 1;
       setTimeout(function() { if (tid !== my) return; showResult(body, 'sequence', best); }, 500);
@@ -768,7 +860,7 @@ function startNumber(my, body) {
 
   function startLvl() {
     if (tid !== my) return;
-    var digits = level, num = [];
+    var digits = level, num =[];
     for (var i = 0; i < digits; i++) num.push(ri(i === 0 ? 1 : 0, 9));
     var numStr = num.join('');
     var showT = Math.max(1500, digits * 800);
@@ -818,7 +910,7 @@ function startNumber(my, body) {
 /* =============================================
    5. VERBAL MEMORY
    ============================================= */
-var WORDS = [
+var WORDS =[
   'bicycle','mountain','river','cloud','garden','window','pencil','dragon','silver','orange',
   'planet','forest','bridge','castle','desert','flame','harbor','island','jungle','kitten',
   'lemon','marble','needle','ocean','parrot','quilt','rocket','shadow','temple','umbrella',
@@ -839,7 +931,7 @@ function initVerbal() {
 }
 
 function startVerbal(my, body) {
-  var score = 0, strikes = 0, presented = [], curWord = '', curIsNew = false;
+  var score = 0, strikes = 0, presented =[], curWord = '', curIsNew = false;
 
   function next() {
     if (tid !== my) return;
@@ -847,7 +939,7 @@ function startVerbal(my, body) {
       curWord = presented[ri(0, presented.length - 1)];
       curIsNew = false;
     } else {
-      var avail = [];
+      var avail =[];
       for (var i = 0; i < WORDS.length; i++) {
         if (presented.indexOf(WORDS[i]) === -1) avail.push(WORDS[i]);
       }
@@ -890,7 +982,7 @@ function startVerbal(my, body) {
 }
 
 /* =============================================
-   6. CHIMP TEST (corrigé)
+   6. CHIMP TEST
    ============================================= */
 function initChimp() {
   var my = tid, body = document.getElementById('chimp-body');
@@ -908,10 +1000,10 @@ function startChimp(my, body) {
     var nextExp = 1;
     var phase = 'showing';
     var gs = Math.max(4, Math.ceil(Math.sqrt(level * 2.5)));
-    var all = [];
+    var all =[];
     for (var i = 0; i < gs * gs; i++) all.push(i);
     var chosen = shuf(all).slice(0, level);
-    var tiles = [];
+    var tiles =[];
     for (var i = 0; i < chosen.length; i++) {
       tiles.push({num: i + 1, pos: chosen[i], row: Math.floor(chosen[i] / gs), col: chosen[i] % gs});
     }
@@ -960,7 +1052,6 @@ function startChimp(my, body) {
     }, showT);
 
     function onTile(num, cell) {
-      /* VERROU : si phase est 'done', ignorer tout clic */
       if (tid !== my || phase === 'done') return;
       if (phase === 'showing' && num !== 1) return;
 
@@ -985,12 +1076,10 @@ function startChimp(my, body) {
           setTimeout(function() { if (tid !== my) return; startLvl(); }, 550);
         }
       } else {
-        /* MAUVAIS CLIC → verrouiller immédiatement */
         phase = 'done';
         cell.classList.add('wrong');
         cell.classList.remove('hidden-num');
 
-        /* Désactiver TOUTES les tuiles immédiatement */
         var allCells = document.querySelectorAll('#ch-g .ch-cell');
         for (var i = 0; i < allCells.length; i++) {
           allCells[i].style.pointerEvents = 'none';
@@ -1042,7 +1131,7 @@ function startVisual(my, body) {
       '<div class="dots" style="margin-top:10px">' + dots + '</div>';
 
     var grid = document.getElementById('vis-g');
-    var cells = [];
+    var cells =[];
     for (var i = 0; i < total; i++) {
       var c = document.createElement('div');
       c.className = 'sq-cell';
@@ -1098,7 +1187,7 @@ function startVisual(my, body) {
 /* =============================================
    8. TYPING TEST
    ============================================= */
-var TEXTS = [
+var TEXTS =[
   "The quick brown fox jumps over the lazy dog near the riverbank while the sun sets behind the mountains casting long shadows across the valley floor and the wind carries whispers of the coming night",
   "A journey of a thousand miles begins with a single step forward into the unknown where every path leads to new discoveries and unexpected adventures that shape who we are and who we will become",
   "The ancient library held thousands of books each containing worlds waiting to be explored by curious minds seeking knowledge and understanding of the vast universe that surrounds our small planet",
@@ -1191,8 +1280,8 @@ function drawRadar(canvas, size) {
   var ctx = canvas.getContext('2d');
   if (!ctx) return;
   var w = canvas.width, h = canvas.height, cx = w / 2, cy = h / 2, r = Math.min(cx, cy) * 0.7;
-  var labels = ['Reaction','Sequence','Aim','Number','Verbal','Chimp','Visual','Typing'];
-  var tests = ['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
+  var labels =['Reaction','Sequence','Aim','Number','Verbal','Chimp','Visual','Typing'];
+  var tests =['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
   var n = 8;
   ctx.clearRect(0, 0, w, h);
 
@@ -1217,7 +1306,7 @@ function drawRadar(canvas, size) {
     ctx.stroke();
   }
 
-  var vals = [];
+  var vals =[];
   for (var i = 0; i < n; i++) {
     var s = scores[tests[i]];
     if (s == null) { vals.push(0); continue; }
@@ -1259,7 +1348,7 @@ function drawRadar(canvas, size) {
 
 function buildProfRows() {
   var c = document.getElementById('profRows');
-  var tests = ['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
+  var tests =['reaction','sequence','aim','number','verbal','chimp','visual','typing'];
   var h = '';
   for (var i = 0; i < tests.length; i++) {
     var t = tests[i], d = PDATA[t], s = scores[t];
