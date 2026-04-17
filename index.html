@@ -123,6 +123,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt
 .sq-cell.flash{background:var(--accent)!important}
 .sq-cell.wrong{background:var(--danger)!important}
 .sq-cell:hover{background:var(--card-h)}
+.sq-cell,.ch-cell,.aim-target,.rp,.aim-zone{touch-action:manipulation}
 
 .aim-zone{position:relative;width:100%;flex:1;background:var(--surface);border-radius:12px;overflow:hidden;min-height:280px;cursor:crosshair;transition:background .35s}
 @media(min-width:768px){.aim-zone{min-height:400px}}
@@ -285,7 +286,7 @@ function getGaussParams(test) {
 }
 
 /* THEME */
-var THEMES = ['classic', 'obsidian', 'slate', 'paper'];
+var THEMES =['classic', 'obsidian', 'slate', 'paper'];
 var T_ICONS = {classic:'water', obsidian:'dark_mode', slate:'filter_drama', paper:'light_mode'};
 
 function cycleTheme() {
@@ -324,7 +325,7 @@ var tid = 0;
 
 /* AUDIO */
 var audioCtx = null;
-var TONES = [523.25, 587.33, 659.26, 783.99, 880.00, 1046.50, 1174.66, 1318.51, 1567.98];
+var TONES =[523.25, 587.33, 659.26, 783.99, 880.00, 1046.50, 1174.66, 1318.51, 1567.98];
 function initAudio() {
   if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
@@ -448,7 +449,7 @@ function showResult(el, test, score, extra) {
 }
 
 /* START SCREEN */
-var TESTS = [
+var TESTS =[
   {id:'reaction', name:'Reaction Time', icon:'bolt', color:'#dc2626'},
   {id:'sequence', name:'Sequence Memory', icon:'grid_view', color:'#8b5cf6'},
   {id:'aim', name:'Aim Trainer', icon:'gps_fixed', color:'#ea580c'},
@@ -515,7 +516,7 @@ function initReaction() {
   showStart(body, 'reaction', function() { if (tid !== my) return; startReaction(my, body); });
 }
 function startReaction(my, body) {
-  var rounds = [], round = 0, startTime = 0, phase = 'wait', timer = null;
+  var rounds =[], round = 0, startTime = 0, phase = 'wait', timer = null;
   function render() {
     if (tid !== my) return; clearTimeout(timer);
     var cls, text, sub;
@@ -554,19 +555,20 @@ function initSequence() {
   showStart(body, 'sequence', function() { if (tid !== my) return; startSequence(my, body); });
 }
 function startSequence(my, body) {
-  var level=1, seq=[], userSeq=[], phase='idle', t1=null, t2=null;
+  var level=1, seq=[], userSeq=[], phase='idle', t1=null, t2=null, cachedCells=[];
   function build() {
     body.innerHTML='<div class="ts" id="sq-st">Niveau '+level+'</div><div class="sq-grid" id="sq-g" style="grid-template-columns:repeat(3,1fr);width:min(270px,78vw)"></div>';
     var g=body.querySelector('#sq-g');
     for(var i=0;i<9;i++){var c=document.createElement('div');c.className='sq-cell';c.dataset.i=i;
-      (function(idx){c.addEventListener('pointerdown',function(){onClick(idx);});})(i);g.appendChild(c);}
+      (function(idx){c.addEventListener('pointerdown',function(e){e.preventDefault();onClick(idx);});})(i);g.appendChild(c);}
+    cachedCells=body.querySelectorAll('#sq-g .sq-cell');
   }
   function startLvl() {
     if(tid!==my)return;
     var next; do{next=ri(0,8);}while(seq.length>0&&next===seq[seq.length-1]);
     seq.push(next); userSeq=[]; phase='showing';
     body.querySelector('#sq-st').textContent='Niveau '+level+' — Observez...';
-    var cells=body.querySelectorAll('#sq-g .sq-cell'), idx=0;
+    var cells=cachedCells, idx=0;
     if(speedMode&&seq.length>1){
       var lastIdx=seq[seq.length-1]; cells[lastIdx].classList.add('flash'); playTone(lastIdx);
       t1=setTimeout(function(){if(tid!==my)return;cells[lastIdx].classList.remove('flash');
@@ -581,7 +583,7 @@ function startSequence(my, body) {
   }
   function onClick(idx){
     if(tid!==my||phase!=='input')return;
-    var cells=body.querySelectorAll('#sq-g .sq-cell'), pos=userSeq.length;
+    var cells=cachedCells, pos=userSeq.length;
     if(idx===seq[pos]){userSeq.push(idx);cells[idx].classList.add('flash');playTone(idx);
       setTimeout(function(){cells[idx].classList.remove('flash');},180);
       if(userSeq.length===seq.length){phase='wait';level++;setTimeout(function(){if(tid!==my)return;build();startLvl();},500);}
@@ -632,7 +634,7 @@ function startNumber(my,body){
       function submit(){if(tid!==my)return;var v=inp.value.trim();
         if(v===numStr){level++;toast('Correct!');setTimeout(startLvl,350);}
         else showResult(body,'number',level-1);}
-      body.querySelector('#n-sub').addEventListener('click',submit);
+      body.querySelector('#n-sub').addEventListener('pointerdown',function(e){e.preventDefault();submit();});
       inp.addEventListener('keydown',function(e){if(e.key==='Enter')submit();});
     },showT);
   }
@@ -652,8 +654,8 @@ function startVerbal(my,body){
     render();}
   function render(){var dots='';for(var i=0;i<3;i++)dots+='<div class="dot'+(i<strikes?' lost':'')+'"></div>';
     body.innerHTML='<div class="ts">Score: '+score+'</div><div class="vb-word">'+curWord+'</div><div class="vb-btns"><button class="vb-new" id="vn">NOUVEAU</button><button class="vb-seen" id="vs">DEJA VU</button></div><div class="dots">'+dots+'</div>';
-    body.querySelector('#vn').addEventListener('click',function(){ans(false);});
-    body.querySelector('#vs').addEventListener('click',function(){ans(true);});}
+    body.querySelector('#vn').addEventListener('pointerdown',function(e){e.preventDefault();ans(false);});
+    body.querySelector('#vs').addEventListener('pointerdown',function(e){e.preventDefault();ans(true);});}
   function ans(saidSeen){if(tid!==my)return;
     var ok=(saidSeen&&!curIsNew)||(!saidSeen&&curIsNew);if(curIsNew)presented.push(curWord);
     if(ok){score++;next();}else{strikes++;if(strikes>=3)showResult(body,'verbal',score);else next();}}
@@ -677,7 +679,7 @@ function startChimp(my,body){
       var cell=document.createElement('div');cell.className='ch-cell';cell.style.visibility='hidden';
       var tile=null;for(var ti=0;ti<tiles.length;ti++){if(tiles[ti].row===r&&tiles[ti].col===c){tile=tiles[ti];break;}}
       if(tile){cell.textContent=tile.num;cell.dataset.num=tile.num;cell.style.visibility='visible';cellMap[tile.num]=cell;
-        (function(num,el){el.addEventListener('pointerdown',function(){onTile(num,el);});})(tile.num,cell);}
+        (function(num,el){el.addEventListener('pointerdown',function(e){e.preventDefault();onTile(num,el);});})(tile.num,cell);}
       grid.appendChild(cell);}}
     var showT=Math.max(800,level*250);
     t1=setTimeout(function(){if(tid!==my)return;phase='hidden';
@@ -713,7 +715,7 @@ function startVisual(my,body){
     body.innerHTML='<div class="ts">Niveau '+level+' · '+n+' cases · Vies: '+lives+'</div><div class="sq-grid" id="vis-g" style="grid-template-columns:repeat('+g+',1fr);width:min('+(g*65)+'px,82vw)"></div><div class="dots" style="margin-top:10px">'+dots+'</div>';
     var grid=body.querySelector('#vis-g'),cells=[];
     for(var i=0;i<total;i++){var c=document.createElement('div');c.className='sq-cell';if(chosen.indexOf(i)!==-1)c.dataset.a='1';
-      (function(idx){c.addEventListener('pointerdown',function(){click(idx);});})(i);grid.appendChild(c);cells.push(c);}
+      (function(idx){c.addEventListener('pointerdown',function(e){e.preventDefault();click(idx);});})(i);grid.appendChild(c);cells.push(c);}
     for(var i=0;i<chosen.length;i++)cells[chosen[i]].classList.add('flash');
     var showT=Math.max(800,n*200);
     t1=setTimeout(function(){if(tid!==my)return;for(var i=0;i<chosen.length;i++)cells[chosen[i]].classList.remove('flash');phase='input';},showT);
