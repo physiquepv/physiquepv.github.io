@@ -10,8 +10,7 @@
   --bg:#2b87d1;--surface:#2580c4;--card:#1a6aa6;--card-h:#1e78b8;
   --border:rgba(255,255,255,.12);--accent:#ffffff;--accent-d:rgba(255,255,255,.2);
   --success:#2ecc71;--danger:#e74c3c;--warn:#f1c40f;
-  --txt:#ffffff;--txt2:rgba(255,255,255,.8);--txt3:rgba(255,255,255,.5);--sh:rgba(0,0,0,.25)}
-[data-theme="obsidian"]{
+  --txt:#ffffff;--txt2:rgba(255,255,255,.8);--txt3:rgba(255,255,255,.5);--sh:rgba(0,0,0,.25)}[data-theme="obsidian"]{
   --bg:#08090e;--surface:#10121a;--card:#181a24;--card-h:#23252f;
   --border:rgba(255,255,255,.06);--accent:#e8a838;--accent-d:rgba(232,168,56,.14);
   --success:#34d399;--danger:#f87171;--warn:#fbbf24;
@@ -364,7 +363,8 @@ function startSequence(my,body){
   var inputQueue=[],processingInput=false;
 
   function build(){
-    body.innerHTML='<div class="ts" id="sq-st">Niveau '+level+'</div><div class="sq-grid" id="sq-g" style="grid-template-columns:repeat(3,1fr);width:min(270px,78vw)"></div>';
+    var sqHtml='';for(var i=0;i<9;i++)sqHtml+='<div class="sq-cell" data-i="'+i+'"></div>';
+    body.innerHTML='<div class="ts" id="sq-st">Niveau '+level+'</div><div class="sq-grid" id="sq-g" style="grid-template-columns:repeat(3,1fr);width:min(270px,78vw)">'+sqHtml+'</div>';
     var g=body.querySelector('#sq-g');
     /* UN SEUL listener sur le conteneur — event delegation */
     g.addEventListener('pointerdown',function(e){
