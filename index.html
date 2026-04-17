@@ -14,8 +14,7 @@
   --bg:#08090e;--surface:#10121a;--card:#181a24;--card-h:#23252f;
   --border:rgba(255,255,255,.06);--accent:#e8a838;--accent-d:rgba(232,168,56,.14);
   --success:#34d399;--danger:#f87171;--warn:#fbbf24;
-  --txt:#e4e4f0;--txt2:#a0a0b8;--txt3:#5a5a70;--sh:rgba(0,0,0,.5)}
-[data-theme="slate"]{
+  --txt:#e4e4f0;--txt2:#a0a0b8;--txt3:#5a5a70;--sh:rgba(0,0,0,.5)}[data-theme="slate"]{
   --bg:#0e1018;--surface:#171920;--card:#1f222e;--card-h:#282b3a;
   --border:rgba(255,255,255,.07);--accent:#38bdf8;--accent-d:rgba(56,189,248,.12);
   --success:#4ade80;--danger:#fb7185;--warn:#fbbf24;
@@ -153,11 +152,12 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt
 @media(min-width:768px){.ch-grid{max-width:420px;gap:10px}}
 .ch-cell{aspect-ratio:1;background:var(--card);border-radius:10px;display:flex;align-items:center;
   justify-content:center;font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;
-  cursor:pointer;transition:all .15s;color:var(--txt);touch-action:none}
+  cursor:pointer;transition:background .15s, opacity .2s, color .15s; color:var(--txt);touch-action:none}
 .ch-cell:hover{background:var(--card-h)}
 .ch-cell.hidden-num{color:transparent}
-.ch-cell.correct{background:var(--success)!important;color:#fff!important}
-.ch-cell.wrong{background:var(--danger)!important;color:#fff!important}
+.ch-cell.correct{background:var(--success)!important;color:#fff!important;opacity:1!important}
+.ch-cell.wrong{background:var(--danger)!important;color:#fff!important;opacity:1!important}
+.ch-cell.reveal{color:var(--warn)!important;opacity:1!important}
 
 .tp-text{font-size:15px;line-height:1.8;letter-spacing:.2px;max-width:100%;white-space:pre-wrap;
   word-break:break-all;font-family:'JetBrains Mono',monospace}
@@ -315,7 +315,7 @@ function showResult(el,test,score,extra){
 
 /* START SCREEN */
 var TESTS=[{id:'reaction',name:'Reaction Time',icon:'bolt',color:'#dc2626'},{id:'sequence',name:'Sequence Memory',icon:'grid_view',color:'#8b5cf6'},{id:'aim',name:'Aim Trainer',icon:'gps_fixed',color:'#ea580c'},{id:'number',name:'Number Memory',icon:'pin',color:'#16a34a'},{id:'verbal',name:'Verbal Memory',icon:'spellcheck',color:'#0284c7'},{id:'chimp',name:'Chimp Test',icon:'visibility',color:'#d97706'},{id:'visual',name:'Visual Memory',icon:'dashboard',color:'#0d9488'},{id:'typing',name:'Typing',icon:'keyboard',color:'#7c3aed'}];
-var TINFO={reaction:{desc:'Un ecran rouge apparait. Attendez qu\'il devienne vert, puis cliquez aussi vite que possible.',rules:'5 tours · Moyenne en ms · Ne cliquez pas trop tot!'},sequence:{desc:'Memorisez des sequences de cases qui flashent sur une grille 3x3. La sequence grandit a chaque tour.',rules:'Mort subite · Grille 3x3 · Temps illimite'},aim:{desc:'Cliquez sur les cibles le plus rapidement possible.',rules:'30 cibles · Temps moyen par cible'},number:{desc:'Memorisez un nombre qui s\'affiche brievement, puis tapez-le de memoire.',rules:'Chiffres croissants · Mort subite'},verbal:{desc:'Un mot apparait. Determinez s\'il est nouveau ou deja vu.',rules:'3 vies · Nouveau ou Deja vu'},chimp:{desc:'Des tuiles numerotees s\'affichent brievement. Cliquez-les dans l\'ordre une fois caches.',rules:'3 vies · Numeros caches'},visual:{desc:'Memorisez les cases qui flashent sur une grille, puis reproduisez le motif.',rules:'3 vies globales · Grille croissante'},typing:{desc:'Tapez le texte affiche le plus rapidement et precisement possible.',rules:'WPM · Precision · 5 car. = 1 mot'}};
+var TINFO={reaction:{desc:'Un ecran rouge apparait. Attendez qu\'il devienne vert, puis cliquez aussi vite que possible.',rules:'5 tours · Moyenne en ms · Ne cliquez pas trop tot!'},sequence:{desc:'Memorisez des sequences de cases qui flashent sur une grille 3x3. La sequence grandit a chaque tour.',rules:'Mort subite · Grille 3x3 · Temps illimite'},aim:{desc:'Cliquez sur les cibles le plus rapidement possible.',rules:'30 cibles · Temps moyen par cible'},number:{desc:'Memorisez un nombre qui s\'affiche brievement, puis tapez-le de memoire.',rules:'Chiffres croissants · Mort subite'},verbal:{desc:'Un mot apparait. Determinez s\'il est nouveau ou deja vu.',rules:'3 vies · Nouveau ou Deja vu'},chimp:{desc:'Des tuiles numerotees s\'affichent. Cliquez-les dans l\'ordre une fois qu\'ils sont caches.',rules:'3 vies · Cliquez 1 pour cacher'},visual:{desc:'Memorisez les cases qui flashent sur une grille, puis reproduisez le motif.',rules:'3 vies globales · Grille croissante'},typing:{desc:'Tapez le texte affiche le plus rapidement et precisement possible.',rules:'WPM · Precision · 5 car. = 1 mot'}};
 
 function showStart(body,testId,onStart){
   var t=null;for(var i=0;i<TESTS.length;i++){if(TESTS[i].id===testId){t=TESTS[i];break;}}
@@ -435,7 +435,7 @@ function startSequence(my,body){
         var isLast=(ci===seq.length-1);
         if(isLast){phase='input';st.textContent='Niveau '+level+' — Votre tour';}
         t1=setTimeout(function(){
-          if(tid!==my)return; /* <-- C'est ici que se trouvait le bug d'annulation du flash */
+          if(tid!==my)return;
           if(cells[seq[ci]])cells[seq[ci]].classList.remove('flash');
           if(!isLast){t2=setTimeout(show,180);}
         },380);
@@ -453,7 +453,6 @@ function startAim(my,body,cnt){
   var hits=0,startT=0,started=false;
   body.innerHTML='<div class="ts">Cliquez sur la cible pour commencer</div><div class="aim-zone" id="aim-z"></div>';
   var zone=body.querySelector('#aim-z');
-  /* Event delegation sur la zone */
   zone.addEventListener('pointerdown',function(e){e.preventDefault();
     var t=e.target.closest?e.target.closest('.aim-target'):null;if(!t)return;if(tid!==my)return;
     if(!started){started=true;startT=performance.now();}
@@ -509,7 +508,7 @@ function startVerbal(my,body){
 /* 6. CHIMP TEST */
 function initChimp(){var my=tid,body=document.getElementById('chimp-body');showStart(body,'chimp',function(){if(tid!==my)return;startChimp(my,body);});}
 function startChimp(my,body){
-  var level=4,strikes=0,t1=null;
+  var level=4,strikes=0;
   function startLvl(){if(tid!==my)return;
     var nextExp=1,phase='showing',gs=Math.max(4,Math.ceil(Math.sqrt(level*2.5)));
     var all=[];for(var i=0;i<gs*gs;i++)all.push(i);var chosen=shuf(all).slice(0,level),tiles=[];
@@ -517,26 +516,54 @@ function startChimp(my,body){
     var dots='';for(var i=0;i<3;i++)dots+='<div class="dot'+(i<strikes?' lost':'')+'"></div>';
     body.innerHTML='<div class="ts">Niveau '+level+' · '+level+' tuiles</div><div class="ch-grid" id="ch-g" style="grid-template-columns:repeat('+gs+',1fr)"></div><div class="dots" style="margin-top:14px">'+dots+'</div>';
     var grid=body.querySelector('#ch-g'),cellMap={};
-    for(var r=0;r<gs;r++){for(var c=0;c<gs;c++){var cell=document.createElement('div');cell.className='ch-cell';cell.style.visibility='hidden';cell.dataset.r=r;cell.dataset.c=c;
+    for(var r=0;r<gs;r++){for(var c=0;c<gs;c++){var cell=document.createElement('div');cell.className='ch-cell';cell.dataset.r=r;cell.dataset.c=c;
       var tile=null;for(var ti=0;ti<tiles.length;ti++){if(tiles[ti].row===r&&tiles[ti].col===c){tile=tiles[ti];break;}}
-      if(tile){cell.textContent=tile.num;cell.dataset.num=tile.num;cell.style.visibility='visible';cellMap[tile.num]=cell;}
+      if(tile){cell.textContent=tile.num;cell.dataset.num=tile.num;cellMap[tile.num]=cell;}
       grid.appendChild(cell);}}
-    /* Event delegation sur la grille */
+      
     grid.addEventListener('pointerdown',function(e){e.preventDefault();
       var cell=e.target.closest?e.target.closest('.ch-cell'):null;if(!cell||cell.dataset.num===undefined)return;
       var num=parseInt(cell.dataset.num,10);onTile(num,cellMap[num]||cell);
     });
-    var showT=Math.max(800,level*250);
-    t1=setTimeout(function(){if(tid!==my)return;phase='hidden';var keys=Object.keys(cellMap);for(var k=0;k<keys.length;k++){if(!cellMap[keys[k]].classList.contains('correct'))cellMap[keys[k]].classList.add('hidden-num');}},showT);
+    
     function onTile(num,cell){
-      if(tid!==my||phase==='done')return;if(phase==='showing'&&num!==1)return;
-      if(num===nextExp){cell.classList.add('correct');cell.classList.remove('hidden-num');cell.style.pointerEvents='none';nextExp++;
-        if(num===1&&phase==='showing'){phase='hidden';clearTimeout(t1);var ac=body.querySelectorAll('#ch-g .ch-cell');for(var i=0;i<ac.length;i++){if(!ac[i].classList.contains('correct'))ac[i].classList.add('hidden-num');}}
-        if(nextExp>level){phase='done';level++;setTimeout(function(){if(tid!==my)return;startLvl();},550);}
-      }else{phase='done';cell.classList.add('wrong');cell.classList.remove('hidden-num');
-        var ac=body.querySelectorAll('#ch-g .ch-cell');for(var i=0;i<ac.length;i++)ac[i].style.pointerEvents='none';
-        strikes++;if(strikes>=3)setTimeout(function(){if(tid!==my)return;showResult(body,'chimp',level-1);},500);
-        else{toast('Rate! Il fallait cliquer sur '+nextExp);setTimeout(function(){if(tid!==my)return;startLvl();},900);}}
+      if(tid!==my||phase==='done')return;
+      if(phase==='showing'&&num!==1)return;
+      
+      if(num===nextExp){
+        cell.classList.add('correct');cell.style.pointerEvents='none';nextExp++;
+        
+        if(num===1&&phase==='showing'){
+          phase='hidden';
+          var ac=body.querySelectorAll('#ch-g .ch-cell');
+          for(var i=0;i<ac.length;i++){
+            if(!ac[i].classList.contains('correct')) {
+              ac[i].classList.add('hidden-num');
+            }
+          }
+        }
+        
+        if(nextExp>level){
+          phase='done';level++;
+          setTimeout(function(){if(tid!==my)return;startLvl();},550);
+        }
+      }else{
+        phase='done';
+        cell.classList.add('wrong');cell.classList.remove('hidden-num');
+        
+        var ac=body.querySelectorAll('#ch-g .ch-cell');
+        for(var i=0;i<ac.length;i++){
+          ac[i].style.pointerEvents='none';
+          if(ac[i].dataset.num !== undefined && !ac[i].classList.contains('correct') && !ac[i].classList.contains('wrong')){
+             ac[i].classList.remove('hidden-num');
+             ac[i].classList.add('reveal');
+          }
+        }
+        
+        strikes++;
+        if(strikes>=3) setTimeout(function(){if(tid!==my)return;showResult(body,'chimp',level-1);},800);
+        else { toast('Rate! Il fallait cliquer sur '+nextExp); setTimeout(function(){if(tid!==my)return;startLvl();},1100); }
+      }
     }
   }
   startLvl();
@@ -554,7 +581,6 @@ function startVisual(my,body){
     body.innerHTML='<div class="ts">Niveau '+level+' · '+n+' cases · Vies: '+lives+'</div><div class="sq-grid" id="vis-g" style="grid-template-columns:repeat('+g+',1fr);width:min('+(g*65)+'px,82vw)"></div><div class="dots" style="margin-top:10px">'+dots+'</div>';
     var grid=body.querySelector('#vis-g'),cells=[];
     for(var i=0;i<total;i++){var c=document.createElement('div');c.className='sq-cell';c.dataset.i=i;if(chosen.indexOf(i)!==-1)c.dataset.a='1';grid.appendChild(c);cells.push(c);}
-    /* Event delegation */
     grid.addEventListener('pointerdown',function(e){e.preventDefault();var cell=e.target.closest?e.target.closest('.sq-cell'):null;if(!cell||cell.dataset.i===undefined)return;click(parseInt(cell.dataset.i,10));});
     for(var i=0;i<chosen.length;i++)cells[chosen[i]].classList.add('flash');
     var showT=Math.max(800,n*200);
