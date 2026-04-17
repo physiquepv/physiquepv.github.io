@@ -352,21 +352,19 @@ function startReaction(my,body){
   render();
 }
 
-/* 2. SEQUENCE MEMORY — CORRIGÉ POUR ULTRA-RÉACTIVITÉ */
+/* 2. SEQUENCE MEMORY */
 var speedMode=false;
 function toggleSpeed(){speedMode=!speedMode;var btn=document.getElementById('speed-btn');if(btn){if(speedMode)btn.classList.add('active');else btn.classList.remove('active');}toast(speedMode?'Mode Speed : seul le nouveau carre est affiche':'Mode Speed desactive');}
 
 function initSequence(){var my=tid,body=document.getElementById('seq-body');showStart(body,'sequence',function(){if(tid!==my)return;startSequence(my,body);});}
 function startSequence(my,body){
   var level=1,seq=[],userSeq=[],phase='idle',t1=null,t2=null;
-  /* File d'attente pour les inputs simultanés (multi-touch) */
   var inputQueue=[],processingInput=false;
 
   function build(){
     var sqHtml='';for(var i=0;i<9;i++)sqHtml+='<div class="sq-cell" data-i="'+i+'"></div>';
     body.innerHTML='<div class="ts" id="sq-st">Niveau '+level+'</div><div class="sq-grid" id="sq-g" style="grid-template-columns:repeat(3,1fr);width:min(270px,78vw)">'+sqHtml+'</div>';
     var g=body.querySelector('#sq-g');
-    /* UN SEUL listener sur le conteneur — event delegation */
     g.addEventListener('pointerdown',function(e){
       e.preventDefault();e.stopPropagation();
       var cell=e.target.closest?e.target.closest('.sq-cell'):null;
@@ -393,17 +391,17 @@ function startSequence(my,body){
     var st=body.querySelector('#sq-st');
     if(idx===seq[pos]){
       userSeq.push(idx);
-      /* Flash visuel + son */
       var cells=body.querySelectorAll('#sq-g .sq-cell');
-      cells[idx].classList.add('flash');playTone(idx);
-      setTimeout(function(){cells[idx].classList.remove('flash');},150);
+      if(cells[idx]){cells[idx].classList.add('flash');playTone(idx);}
+      setTimeout(function(){if(cells[idx])cells[idx].classList.remove('flash');},150);
       if(userSeq.length===seq.length){
         phase='wait';level++;
         setTimeout(function(){if(tid!==my)return;build();startLvl();},400);
       }
     }else{
       var cells=body.querySelectorAll('#sq-g .sq-cell');
-      cells[idx].classList.add('wrong');playTone(idx);phase='done';
+      if(cells[idx]){cells[idx].classList.add('wrong');playTone(idx);}
+      phase='done';
       var best=level-1;
       setTimeout(function(){if(tid!==my)return;showResult(body,'sequence',best);},500);
     }
@@ -418,24 +416,27 @@ function startSequence(my,body){
     var showIdx=0;
 
     if(speedMode&&seq.length>1){
-      /* Mode Speed : seul le dernier carré */
       var lastIdx=seq[seq.length-1];
-      cells[lastIdx].classList.add('flash');playTone(lastIdx);
-      t1=setTimeout(function(){if(tid!==my)return;cells[lastIdx].classList.remove('flash');
-        phase='input';st.textContent='Niveau '+level+' — Votre tour';drainQueue();},400);
+      if(cells[lastIdx]){cells[lastIdx].classList.add('flash');playTone(lastIdx);}
+      t1=setTimeout(function(){
+        if(tid!==my)return;
+        if(cells[lastIdx])cells[lastIdx].classList.remove('flash');
+        phase='input';st.textContent='Niveau '+level+' — Votre tour';drainQueue();
+      },400);
     }else{
       function show(){
         if(tid!==my)return;
         if(showIdx>=seq.length){
           phase='input';st.textContent='Niveau '+level+' — Votre tour';drainQueue();return;
         }
-        var sIdx=seq[showIdx];cells[sIdx].classList.add('flash');playTone(sIdx);
+        var sIdx=seq[showIdx];
+        if(cells[sIdx]){cells[sIdx].classList.add('flash');playTone(sIdx);}
         var ci=showIdx;showIdx++;
         var isLast=(ci===seq.length-1);
-        /* Dernière note : passer en input immédiatement */
         if(isLast){phase='input';st.textContent='Niveau '+level+' — Votre tour';}
         t1=setTimeout(function(){
-          if(tid!==my&&cells[seq[ci]])cells[seq[ci]].classList.remove('flash');
+          if(tid!==my)return; /* <-- C'est ici que se trouvait le bug d'annulation du flash */
+          if(cells[seq[ci]])cells[seq[ci]].classList.remove('flash');
           if(!isLast){t2=setTimeout(show,180);}
         },380);
       }
