@@ -516,9 +516,10 @@ function startChimp(my,body){
     var dots='';for(var i=0;i<3;i++)dots+='<div class="dot'+(i<strikes?' lost':'')+'"></div>';
     body.innerHTML='<div class="ts">Niveau '+level+' · '+level+' tuiles</div><div class="ch-grid" id="ch-g" style="grid-template-columns:repeat('+gs+',1fr)"></div><div class="dots" style="margin-top:14px">'+dots+'</div>';
     var grid=body.querySelector('#ch-g'),cellMap={};
-    for(var r=0;r<gs;r++){for(var c=0;c<gs;c++){var cell=document.createElement('div');cell.className='ch-cell';cell.dataset.r=r;cell.dataset.c=c;
+    for(var r=0;r<gs;r++){for(var c=0;c<gs;c++){var cell=document.createElement('div');cell.className='ch-cell';
       var tile=null;for(var ti=0;ti<tiles.length;ti++){if(tiles[ti].row===r&&tiles[ti].col===c){tile=tiles[ti];break;}}
-      if(tile){cell.textContent=tile.num;cell.dataset.num=tile.num;cellMap[tile.num]=cell;}
+      if(tile){cell.dataset.r=r;cell.dataset.c=c;cell.textContent=tile.num;cell.dataset.num=tile.num;cellMap[tile.num]=cell;}
+      else{cell.style.visibility='hidden';} /* FIX: Rend les cases vides invisibles */
       grid.appendChild(cell);}}
       
     grid.addEventListener('pointerdown',function(e){e.preventDefault();
