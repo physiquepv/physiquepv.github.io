@@ -280,7 +280,7 @@
 <!-- =============== SCRIPTS =============== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, push, set, get, onValue, remove, update, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 // ============ FIREBASE CONFIG ============
@@ -391,14 +391,23 @@ initTheme();
 
 // ============ AUTH ============
 $('login-btn').addEventListener('click', () => {
-    signInWithRedirect(auth, provider).catch(e => showToast(e.message, 'error'));
+    signInWithPopup(auth, provider)
+        .catch(e => {
+            console.error('Popup failed, trying redirect:', e);
+            showToast('Erreur de connexion: ' + e.message, 'error');
+        });
 });
 
 $('logout-btn').addEventListener('click', () => signOut(auth));
 
-// Au chargement, vérifier s'il y a un retour de redirection
-import { getRedirectResult } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-getRedirectResult(auth).catch(e => console.log('Pas de redirect result', e));
+// Vérifier s'il y a un retour de redirect (au cas où)
+getRedirectResult(auth)
+    .then((result) => {
+        if (result) {
+            console.log('Connexion via redirect réussie');
+        }
+    })
+    .catch(e => console.log('Pas de redirect result:', e));
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -477,7 +486,6 @@ window.deleteSession = async (id) => {
     showToast('Séance supprimée', 'success');
 };
 
-// Filtres split
 $$('.split-filter').forEach(btn => {
     btn.addEventListener('click', () => {
         currentFilter = btn.dataset.split;
@@ -702,7 +710,6 @@ $('call-ai-btn').addEventListener('click', async () => {
     const sessionType = document.querySelector('input[name="gen-type"]:checked').value;
     const context = $('ai-context').value.trim();
 
-    // Préparer l'historique
     const relevantSessions = sessions.filter(s => s.type === sessionType).slice(0, 5);
     if (relevantSessions.length === 0) {
         showToast('Aucune séance ' + sessionType + ' dans ton historique', 'error');
