@@ -3,79 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Google</title>
+    <title>Mon Site Gym</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #4285F4;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #357ae8;
+        }
+        #logout-btn {
+            background-color: #ea4335;
+        }
+        #logout-btn:hover {
+            background-color: #d93025;
+        }
+        #user-info {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Mon Site Web</h1>
-
-    <div id="auth-container">
+    <div class="container">
+        <h1>Bienvenue sur Gym</h1>
+        
         <button id="login-btn">Se connecter avec Google</button>
-        <button id="logout-btn" style="display:none;">Se déconnecter</button>
+        <button id="logout-btn" style="display: none;">Se déconnecter</button>
+
+        <p id="user-info">Non connecté</p>
     </div>
 
-    <p id="user-info">Non connecté</p>
-
     <script type="module">
-        // Importation des SDK Firebase Web (v10)
+        // Importation des SDK Firebase Web
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getDatabase, ref, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-        // ⚠️ REMPLACEZ AVEC VOS PROPRES IDENTIFIANTS FIREBASE ⚠️
+        // Vos identifiants de projet
         const firebaseConfig = {
-            apiKey: "VOTRE_API_KEY",
-            authDomain: "VOTRE_PROJECT_ID.firebaseapp.com",
-            projectId: "VOTRE_PROJECT_ID",
-            storageBucket: "VOTRE_PROJECT_ID.appspot.com",
-            messagingSenderId: "VOTRE_MESSAGING_SENDER_ID",
-            appId: "VOTRE_APP_ID"
+            apiKey: "AIzaSyCc8-kMmHvJagbj-nV4ZGcWDUXYytRrD0I",
+            authDomain: "englishpv-b6727.firebaseapp.com",
+            databaseURL: "https://englishpv-b6727-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "englishpv-b6727",
+            storageBucket: "englishpv-b6727.firebasestorage.app",
+            messagingSenderId: "285413164654",
+            appId: "1:285413164654:web:1998e119d91dcdad45887f",
+            measurementId: "G-PFT549QBEM"
         };
 
         // Initialisation de Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
+        const db = getDatabase(app);
         const provider = new GoogleAuthProvider();
 
         const loginBtn = document.getElementById('login-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const userInfo = document.getElementById('user-info');
 
-        // Connexion au clic
+        // Action : Clic sur le bouton de connexion Google
         loginBtn.addEventListener('click', () => {
             signInWithPopup(auth, provider)
                 .then(async (result) => {
                     const user = result.user;
                     
-                    // Enregistrement de l'historique de connexion dans Firestore
-                    await addDoc(collection(db, "logins"), {
-                        uid: user.uid,
+                    // Enregistrement de la connexion sous : users / {UID} / connexions
+                    const userConnexionsRef = ref(db, `users/${user.uid}/connexions`);
+                    const nouvelleConnexionRef = push(userConnexionsRef);
+                    
+                    await set(nouvelleConnexionRef, {
                         email: user.email,
                         displayName: user.displayName,
-                        timestamp: serverTimestamp() // Date et heure de connexion
+                        timestamp: serverTimestamp() // Date et heure de la connexion
                     });
                 })
                 .catch((error) => {
-                    console.error("Erreur lors de la connexion :", error);
+                    console.error("Erreur de connexion :", error);
                 });
         });
 
-        // Déconnexion
+        // Action : Clic sur le bouton de déconnexion
         logoutBtn.addEventListener('click', () => {
             signOut(auth);
         });
 
-        // Écouter le statut de l'utilisateur
+        // Gestion de l'affichage de l'état connecté / déconnecté
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginBtn.style.display = "none";
                 logoutBtn.style.display = "inline-block";
-                userInfo.innerText = `Connecté en tant que : ${user.displayName} (${user.email})`;
+                userInfo.innerText = `Connecté : ${user.displayName} (${user.email})`;
             } else {
                 loginBtn.style.display = "inline-block";
                 logoutBtn.style.display = "none";
