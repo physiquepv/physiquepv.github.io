@@ -49,7 +49,12 @@
             <h1 class="text-2xl font-bold">Workout Tracker</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Split Upper / Lower · IA-powered</p>
         </div>
-        <button id="login-btn" class="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-750 transition shadow-sm">
+
+        <div id="file-protocol-warning" class="hidden mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-600 dark:text-amber-400 text-xs leading-relaxed">
+            ⚠️ <strong>Attention :</strong> L'authentification Google ne fonctionne pas en ouvrant le fichier directement (<code class="font-mono">file://</code>). Lance-le avec un serveur local (Live Server VS Code, <code class="font-mono">npx serve</code>, etc.) ou héberge-le en ligne.
+        </div>
+
+        <button id="login-btn" class="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-750 transition shadow-sm active:scale-[0.98]">
             <svg class="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -58,7 +63,7 @@
             </svg>
             Se connecter avec Google
         </button>
-        <p id="login-status" class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4"></p>
+        <p id="login-status" class="text-center text-xs text-red-500 mt-4 min-h-[20px]"></p>
     </div>
 </div>
 
@@ -78,7 +83,7 @@
                 <button id="settings-btn" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition" title="Paramètres">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </button>
-                <button id="logout-btn" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition" title="Déconnexion">
+                <button id="logout-btn" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-red-500" title="Déconnexion">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                 </button>
             </div>
@@ -88,37 +93,37 @@
     <main class="max-w-3xl mx-auto px-4 py-6">
         <div id="dashboard-section">
             <div class="grid grid-cols-3 gap-3 mb-6">
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800">
+                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Séances</p>
                     <p id="stat-sessions" class="text-2xl font-bold">0</p>
                 </div>
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800">
+                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Upper</p>
                     <p id="stat-upper" class="text-2xl font-bold text-blue-500">0</p>
                 </div>
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800">
+                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Lower</p>
                     <p id="stat-lower" class="text-2xl font-bold text-purple-500">0</p>
                 </div>
             </div>
 
             <div class="flex gap-2 mb-6">
-                <button data-split="all" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-blue-500 text-white">Toutes</button>
+                <button data-split="all" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-blue-500 text-white shadow-sm">Toutes</button>
                 <button data-split="upper" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 dark:bg-gray-900">Upper</button>
                 <button data-split="lower" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 dark:bg-gray-900">Lower</button>
             </div>
 
             <div class="space-y-3 mb-6" id="sessions-list">
                 <div class="text-center text-gray-500 dark:text-gray-400 py-12 text-sm">
-                    Aucune séance enregistrée. Commence par créer ta première séance.
+                    Chargement des données...
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
-                <button id="btn-new-session" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3.5 rounded-xl transition shadow-sm shadow-blue-500/20">
+                <button id="btn-new-session" class="bg-blue-500 hover:bg-blue-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition shadow-md shadow-blue-500/20">
                     + Nouvelle séance
                 </button>
-                <button id="btn-generate" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3.5 rounded-xl transition shadow-sm shadow-purple-500/20 flex items-center justify-center gap-2">
+                <button id="btn-generate" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition shadow-md shadow-purple-500/20 flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     Générer IA
                 </button>
@@ -155,9 +160,9 @@
                     <button data-preset="180" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">3:00</button>
                 </div>
                 <div class="flex gap-2">
-                    <button id="timer-start" class="flex-1 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg">Start</button>
-                    <button id="timer-pause" class="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg hidden">Pause</button>
-                    <button id="timer-reset" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg">Reset</button>
+                    <button id="timer-start" class="flex-1 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg shadow-sm">Start</button>
+                    <button id="timer-pause" class="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg hidden shadow-sm">Pause</button>
+                    <button id="timer-reset" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg shadow-sm">Reset</button>
                 </div>
             </div>
 
@@ -169,7 +174,7 @@
 
             <div class="flex gap-3 mt-6">
                 <button id="cancel-session" class="flex-1 py-3 bg-gray-200 dark:bg-gray-800 font-medium rounded-xl">Annuler</button>
-                <button id="save-session" class="flex-1 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl">💾 Sauvegarder</button>
+                <button id="save-session" class="flex-1 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20">💾 Sauvegarder</button>
             </div>
         </div>
 
@@ -181,7 +186,7 @@
                 </button>
             </div>
 
-            <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white mb-6">
+            <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white mb-6 shadow-md">
                 <div class="flex items-center gap-3 mb-2">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     <h2 class="text-xl font-bold">Coach IA</h2>
@@ -208,10 +213,10 @@
                     <label class="block text-sm font-medium mb-2">
                         💬 Contexte additionnel <span class="text-xs text-gray-500 dark:text-gray-400 font-normal">(optionnel)</span>
                     </label>
-                    <textarea id="ai-context" rows="4" placeholder="Ex: Ça fait 11 jours que je suis pas allé à la salle / j'ai mal à l'épaule gauche..." class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl focus:outline-none focus:border-blue-500 resize-none text-sm"></textarea>
+                    <textarea id="ai-context" rows="4" placeholder="Ex: Ça fait 11 jours que je ne suis pas allé à la salle / douleur à l'épaule droite..." class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl focus:outline-none focus:border-blue-500 resize-none text-sm"></textarea>
                 </div>
 
-                <button id="call-ai-btn" class="w-full py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2">
+                <button id="call-ai-btn" class="w-full py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2 active:scale-[0.98]">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     Générer ma prochaine séance
                 </button>
@@ -229,15 +234,15 @@
                             Copier
                         </button>
                     </div>
-                    <pre id="ai-output" class="bg-gray-950 dark:bg-black text-green-400 rounded-xl p-5 overflow-x-auto text-sm font-mono leading-relaxed whitespace-pre-wrap"></pre>
+                    <pre id="ai-output" class="bg-gray-950 dark:bg-black text-green-400 rounded-xl p-5 overflow-x-auto text-sm font-mono leading-relaxed whitespace-pre-wrap border border-gray-800"></pre>
                 </div>
             </div>
         </div>
     </main>
 </div>
 
-<div id="settings-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-md border border-gray-200 dark:border-gray-800">
+<div id="settings-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-md border border-gray-200 dark:border-gray-800 shadow-xl">
         <div class="flex items-center justify-between mb-4">
             <h2 class="font-bold text-lg">⚙️ Paramètres</h2>
             <button id="close-settings" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
@@ -263,20 +268,26 @@
     </div>
 </div>
 
-<div id="toast-container" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 space-y-2"></div>
+<div id="toast-container" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 space-y-2 pointer-events-none"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { 
     getAuth, 
     signInWithPopup, 
-    signInWithRedirect, 
-    getRedirectResult,
     GoogleAuthProvider, 
     signOut, 
     onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, push, set, onValue, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { 
+    getDatabase, 
+    ref, 
+    push, 
+    set, 
+    onValue, 
+    remove, 
+    serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCc8-kMmHvJagbj-nV4ZGcWDUXYytRrD0I",
@@ -292,6 +303,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: 'select_account' });
 
 let currentUser = null;
 let sessions = [];
@@ -332,7 +344,7 @@ const $$ = (sel) => document.querySelectorAll(sel);
 function showToast(msg, type = 'info') {
     const colors = { info: 'bg-blue-500', success: 'bg-green-500', error: 'bg-red-500' };
     const toast = document.createElement('div');
-    toast.className = `px-4 py-3 ${colors[type]} text-white rounded-lg shadow-lg text-sm font-medium fade-in`;
+    toast.className = `px-4 py-3 ${colors[type]} text-white rounded-lg shadow-lg text-sm font-medium fade-in pointer-events-auto`;
     toast.textContent = msg;
     $('toast-container').appendChild(toast);
     setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
@@ -379,30 +391,50 @@ function updateThemeIcons() {
 $('theme-toggle').addEventListener('click', toggleTheme);
 initTheme();
 
-// ============ AUTH AVEC REDIRECT ============
-$('login-btn').addEventListener('click', () => {
-    $('login-status').textContent = 'Redirection vers Google...';
-    signInWithRedirect(auth, provider)
-        .catch(e => {
-            console.error('Redirect error:', e);
-            $('login-status').textContent = 'Erreur: ' + e.message;
-            showToast('Erreur de connexion: ' + e.message, 'error');
-        });
+// Avertissement protocole fichier
+if (window.location.protocol === 'file:') {
+    $('file-protocol-warning').classList.remove('hidden');
+}
+
+// ============ AUTHENTIFICATION (POPUP) ============
+$('login-btn').addEventListener('click', async () => {
+    $('login-status').textContent = 'Connexion en cours...';
+    $('login-status').className = 'text-center text-xs text-blue-500 mt-4 min-h-[20px]';
+    
+    try {
+        const result = await signInWithPopup(auth, provider);
+        $('login-status').textContent = '';
+        showToast(`Bienvenue ${result.user.displayName || ''} !`, 'success');
+    } catch (e) {
+        console.error('Erreur Auth:', e);
+        let errorMsg = "Erreur de connexion";
+        
+        if (e.code === 'auth/popup-blocked') {
+            errorMsg = "La popup Google a été bloquée par le navigateur. Autorise les popups.";
+        } else if (e.code === 'auth/unauthorized-domain') {
+            errorMsg = `Le domaine actuel (${window.location.hostname}) n'est pas autorisé dans la console Firebase (Auth > Settings > Authorized domains).`;
+        } else if (e.code === 'auth/popup-closed-by-user') {
+            errorMsg = "Fenêtre de connexion fermée.";
+        } else if (e.code === 'auth/operation-not-supported-in-this-environment') {
+            errorMsg = "Non supporté en file://. Lance un serveur HTTP local (Live Server).";
+        } else {
+            errorMsg = e.message;
+        }
+
+        $('login-status').textContent = errorMsg;
+        $('login-status').className = 'text-center text-xs text-red-500 mt-4 min-h-[20px]';
+        showToast(errorMsg, 'error');
+    }
 });
 
-$('logout-btn').addEventListener('click', () => signOut(auth));
-
-// Vérifier le résultat du redirect au chargement
-getRedirectResult(auth)
-    .then((result) => {
-        if (result) {
-            console.log('✅ Connexion via redirect réussie');
-            showToast('Connexion réussie !', 'success');
-        }
-    })
-    .catch(e => {
-        console.log('Pas de résultat redirect:', e);
-    });
+$('logout-btn').addEventListener('click', async () => {
+    try {
+        await signOut(auth);
+        showToast('Déconnecté', 'info');
+    } catch (e) {
+        showToast('Erreur déconnexion: ' + e.message, 'error');
+    }
+});
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -410,9 +442,13 @@ onAuthStateChanged(auth, (user) => {
         $('user-email').textContent = user.email || user.displayName;
         showView('app-container');
         
-        const connRef = ref(db, `users/${user.uid}/connexions`);
-        const newConnRef = push(connRef);
-        set(newConnRef, { email: user.email, displayName: user.displayName, timestamp: serverTimestamp() });
+        try {
+            const connRef = ref(db, `users/${user.uid}/connexions`);
+            const newConnRef = push(connRef);
+            set(newConnRef, { email: user.email, displayName: user.displayName, timestamp: serverTimestamp() });
+        } catch (e) {
+            console.warn('Trace de connexion non enregistrée:', e);
+        }
         
         loadSettings();
         loadSessions();
@@ -429,6 +465,9 @@ function loadSessions() {
         const data = snapshot.val();
         sessions = data ? Object.entries(data).map(([id, s]) => ({ id, ...s })).sort((a, b) => (b.date || 0) - (a.date || 0)) : [];
         renderDashboard();
+    }, (error) => {
+        console.error('Erreur lecture base de données:', error);
+        showToast('Erreur chargement données Firebase', 'error');
     });
 }
 
@@ -448,15 +487,19 @@ function renderDashboard() {
     container.innerHTML = filtered.map(s => {
         const exercises = s.exercises ? Object.values(s.exercises) : [];
         const totalSets = exercises.reduce((sum, ex) => sum + (ex.sets ? Object.values(ex.sets).length : 0), 0);
-        const typeColor = s.type === 'upper' ? 'blue' : 'purple';
+        const isUpper = s.type === 'upper';
+        const typeBadge = isUpper 
+            ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400' 
+            : 'bg-purple-100 text-purple-700 dark:bg-purple-950/50 dark:text-purple-400';
+        
         return `
-            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 hover:border-${typeColor}-400 transition fade-in">
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 transition fade-in shadow-sm">
                 <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center gap-2">
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-${typeColor}-100 text-${typeColor}-700 dark:bg-${typeColor}-950/50 dark:text-${typeColor}-400 uppercase tracking-wide">${s.type}</span>
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md ${typeBadge} uppercase tracking-wide">${s.type}</span>
                         <span class="text-sm font-semibold">${formatDate(s.date)}</span>
                     </div>
-                    <button onclick="deleteSession('${s.id}')" class="p-1.5 text-gray-400 hover:text-red-500 transition" title="Supprimer">
+                    <button onclick="window.deleteSession('${s.id}')" class="p-1.5 text-gray-400 hover:text-red-500 transition" title="Supprimer">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
                     </button>
                 </div>
@@ -476,8 +519,12 @@ function renderDashboard() {
 
 window.deleteSession = async (id) => {
     if (!confirm('Supprimer cette séance ?')) return;
-    await remove(ref(db, `users/${currentUser.uid}/sessions/${id}`));
-    showToast('Séance supprimée', 'success');
+    try {
+        await remove(ref(db, `users/${currentUser.uid}/sessions/${id}`));
+        showToast('Séance supprimée', 'success');
+    } catch (e) {
+        showToast('Erreur suppression: ' + e.message, 'error');
+    }
 };
 
 $$('.split-filter').forEach(btn => {
@@ -485,7 +532,7 @@ $$('.split-filter').forEach(btn => {
         currentFilter = btn.dataset.split;
         $$('.split-filter').forEach(b => {
             b.className = 'split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm ' + 
-                (b.dataset.split === currentFilter ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-900');
+                (b.dataset.split === currentFilter ? 'bg-blue-500 text-white shadow-sm' : 'bg-gray-100 dark:bg-gray-900');
         });
         renderDashboard();
     });
@@ -496,6 +543,7 @@ $('btn-new-session').addEventListener('click', () => {
     currentExercises = [];
     $('exercises-container').innerHTML = '';
     $('session-type').value = 'upper';
+    currentSessionType = 'upper';
     updateSessionTitle();
     resetTimer();
 });
@@ -520,11 +568,11 @@ $('add-exercise-btn').addEventListener('click', () => {
 function renderExercises() {
     const container = $('exercises-container');
     container.innerHTML = currentExercises.map((ex, idx) => `
-        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 fade-in" data-ex-idx="${idx}">
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 fade-in shadow-sm" data-ex-idx="${idx}">
             <div class="flex items-center gap-2 mb-3">
                 <span class="w-6 h-6 flex items-center justify-center text-xs font-bold rounded-full bg-blue-500 text-white">${idx + 1}</span>
-                <input type="text" value="${ex.name}" onchange="updateExName(${idx}, this.value)" placeholder="Nom de l'exercice" class="flex-1 px-2 py-1 bg-transparent font-semibold focus:outline-none placeholder-gray-400">
-                <button onclick="removeExercise(${idx})" class="p-1 text-gray-400 hover:text-red-500">
+                <input type="text" value="${ex.name}" onchange="window.updateExName(${idx}, this.value)" placeholder="Nom de l'exercice (ex: DC Incliné)" class="flex-1 px-2 py-1 bg-transparent font-semibold focus:outline-none placeholder-gray-400">
+                <button onclick="window.removeExercise(${idx})" class="p-1 text-gray-400 hover:text-red-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -534,15 +582,15 @@ function renderExercises() {
                 </div>
                 ${ex.sets.map((s, si) => `
                     <div class="grid grid-cols-[1fr_1fr_2fr_auto] gap-2">
-                        <input type="number" step="0.5" value="${s.weight}" onchange="updateSet(${idx}, ${si}, 'weight', this.value)" placeholder="0" class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500">
-                        <input type="number" value="${s.reps}" onchange="updateSet(${idx}, ${si}, 'reps', this.value)" placeholder="0" class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500">
-                        <input type="text" value="${s.note || ''}" onchange="updateSet(${idx}, ${si}, 'note', this.value)" placeholder="ex: échec, facile..." class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500">
-                        <button onclick="removeSet(${idx}, ${si})" class="p-2 text-gray-400 hover:text-red-500">
+                        <input type="number" step="0.5" value="${s.weight}" onchange="window.updateSet(${idx}, ${si}, 'weight', this.value)" placeholder="0" class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-mono">
+                        <input type="number" value="${s.reps}" onchange="window.updateSet(${idx}, ${si}, 'reps', this.value)" placeholder="0" class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-mono">
+                        <input type="text" value="${s.note || ''}" onchange="window.updateSet(${idx}, ${si}, 'note', this.value)" placeholder="ex: échec..." class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500">
+                        <button onclick="window.removeSet(${idx}, ${si})" class="p-2 text-gray-400 hover:text-red-500">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
                         </button>
                     </div>
                 `).join('')}
-                <button onclick="addSet(${idx})" class="w-full py-2 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg text-xs text-gray-500 hover:border-blue-500 hover:text-blue-500">+ Ajouter une série</button>
+                <button onclick="window.addSet(${idx})" class="w-full py-2 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg text-xs text-gray-500 hover:border-blue-500 hover:text-blue-500">+ Ajouter une série</button>
             </div>
         </div>
     `).join('');
@@ -596,7 +644,7 @@ $('save-session').addEventListener('click', async () => {
         showToast('Séance sauvegardée ! 💪', 'success');
         showSection('dashboard-section');
     } catch (e) {
-        showToast('Erreur : ' + e.message, 'error');
+        showToast('Erreur sauvegarde : ' + e.message, 'error');
     }
 });
 
@@ -711,7 +759,8 @@ $('call-ai-btn').addEventListener('click', async () => {
         historyText += `--- SÉANCE ${i + 1} (${formatDate(s.date)}) ---\n`;
         const exercises = s.exercises ? Object.values(s.exercises) : [];
         exercises.forEach(ex => {
-            const setsStr = ex.sets.map(st => `${st.weight}kg×${st.reps}${st.note ? ' ('+st.note+')' : ''}`).join(' | ');
+            const sets = ex.sets ? Object.values(ex.sets) : [];
+            const setsStr = sets.map(st => `${st.weight}kg×${st.reps}${st.note ? ' ('+st.note+')' : ''}`).join(' | ');
             historyText += `• ${ex.name} : ${setsStr}\n`;
         });
         historyText += '\n';
