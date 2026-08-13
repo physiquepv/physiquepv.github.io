@@ -1,327 +1,903 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Workout Tracker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        * { -webkit-tap-highlight-color: transparent; }
-        html, body { font-family: 'Inter', sans-serif; overscroll-behavior-y: none; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .view { display: none; }
-        .view.active { display: block; }
-        .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
-        .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-        .scrollbar-thin::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
-        .fade-in { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-        .pulse-ring { animation: pulseRing 2s ease-out infinite; }
-        @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); } 70% { box-shadow: 0 0 0 12px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
-        .timer-display { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"] { -moz-appearance: textfield; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE·LOG — Suivi musculation</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+/* ============================================================
+   FORGE·LOG — Workout Tracker / Upper-Lower / Surcharge IA
+   Tout est dans ce fichier : styles, logique "backend", données
+   ============================================================ */
+:root{
+  --bg:#0a0e13; --bg2:#0d1319;
+  --card:#121a23; --card2:#172230;
+  --line:#20303f; --line2:#2e4256;
+  --txt:#e9eff5; --mut:#8b98a5; --dim:#5a6a7a;
+  --volt:#c8f542; --volt-d:#a4d31f;
+  --amber:#ffb454; --cyan:#5fd4e0; --red:#ff6b5e;
+  --disp:'Anton', sans-serif;
+  --body:'Space Grotesk', sans-serif;
+  --mono:'JetBrains Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--txt); font-family:var(--body);
+  min-height:100vh; overflow-x:hidden;
+}
+/* ---- fond vivant : grille + halos qui dérivent lentement ---- */
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:46px 46px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 100%);
+}
+.glow{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;opacity:.16}
+.glow.a{width:520px;height:520px;background:var(--volt);top:-220px;left:-140px;animation:drift 26s ease-in-out infinite alternate}
+.glow.b{width:460px;height:460px;background:var(--amber);bottom:-240px;right:-120px;opacity:.10;animation:drift 32s ease-in-out infinite alternate-reverse}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(70px,50px) scale(1.12)}}
+
+::selection{background:var(--volt);color:#0a0e13}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;color:var(--txt)}
+:focus-visible{outline:2px solid var(--volt);outline-offset:2px}
+.mono{font-family:var(--mono)}
+.dim{color:var(--dim)}
+
+/* coins coupés = signature visuelle de l'app */
+.cut{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+
+/* ================= TOPBAR ================= */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
+  padding:12px 22px;background:rgba(10,14,19,.88);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:26px;height:26px;fill:var(--volt);filter:drop-shadow(0 0 8px rgba(200,245,66,.5))}
+.brand b{font-family:var(--disp);font-size:24px;letter-spacing:1.5px}
+.brand b span{color:var(--volt)}
+.brand small{display:block;font-size:9.5px;letter-spacing:2.5px;color:var(--dim);margin-top:-3px}
+.topbar .spacer{flex:1}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--line);
+  border-radius:8px;background:var(--card);font-size:13px;color:var(--mut);font-family:var(--mono)}
+.chip button,button.chip{background:var(--card);color:var(--mut);transition:.2s}
+button.chip:hover{border-color:var(--volt);color:var(--txt)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.chip.live .dot{background:var(--volt);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.3;transform:scale(.7)}}
+
+/* ================= BOUTONS ================= */
+.btn{border:none;border-radius:8px;padding:11px 18px;font-weight:700;font-size:14px;
+  letter-spacing:.4px;display:inline-flex;align-items:center;gap:8px;transition:.18s;white-space:nowrap}
+.btn-volt{background:var(--volt);color:#101505}
+.btn-volt:hover{background:#dcff62;transform:translateY(-1px);box-shadow:0 6px 22px rgba(200,245,66,.30)}
+.btn-volt:active{transform:translateY(1px)}
+.btn-ghost{background:transparent;border:1px solid var(--line2);color:var(--txt)}
+.btn-ghost:hover{border-color:var(--volt);color:var(--volt)}
+.btn-sm{padding:7px 12px;font-size:12.5px}
+.btn-danger{background:transparent;border:1px solid rgba(255,107,94,.4);color:var(--red)}
+.btn-danger:hover{background:rgba(255,107,94,.12)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+
+/* ================= TABS ================= */
+.tabs{display:flex;gap:6px;padding:12px 22px 0;position:relative;z-index:1;overflow-x:auto}
+.tab{background:transparent;border:1px solid transparent;color:var(--mut);padding:9px 16px;
+  border-radius:9px 9px 0 0;font-weight:600;font-size:13.5px;letter-spacing:.6px;transition:.18s}
+.tab:hover{color:var(--txt)}
+.tab.on{background:var(--card);border-color:var(--line);border-bottom-color:var(--card);color:var(--volt)}
+
+main{position:relative;z-index:1;padding:0 22px 140px;max-width:1240px;margin:0 auto}
+.view{display:none;animation:viewIn .35s ease}
+.view.on{display:block}
+@keyframes viewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* reveal au scroll */
+.rev{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.rev.in{opacity:1;transform:none}
+
+/* ================= CARTES ================= */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;transition:.2s}
+.card.lift:hover{transform:translateY(-2px);border-color:var(--line2)}
+.card h3{font-family:var(--disp);font-size:17px;letter-spacing:1.2px;margin-bottom:4px}
+.card .sub{font-size:12.5px;color:var(--mut)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+/* ================= BANDEAU PROCHAINE SÉANCE ================= */
+.board-hero{display:flex;flex-wrap:wrap;align-items:flex-end;gap:24px;justify-content:space-between;
+  margin-top:20px;padding:28px 30px;border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(120deg,var(--card) 55%,rgba(200,245,66,.06));position:relative;overflow:hidden}
+.board-hero::after{content:'';position:absolute;right:-60px;top:-60px;width:230px;height:230px;
+  background:radial-gradient(circle,rgba(200,245,66,.14),transparent 70%);pointer-events:none}
+.kicker{font-size:11px;letter-spacing:3.5px;color:var(--volt);font-weight:600;margin-bottom:8px}
+.board-hero h1{font-family:var(--disp);font-size:clamp(42px,6.5vw,74px);line-height:.95;letter-spacing:1px}
+.board-hero h1 em{font-style:normal;color:var(--volt)}
+.hero-meta{margin-top:10px;font-family:var(--mono);font-size:13px;color:var(--mut)}
+.hero-meta b{color:var(--txt)}
+.hero-actions{display:flex;flex-direction:column;gap:10px;z-index:1}
+
+/* ================= BADGES ================= */
+.badge{font-size:10px;font-weight:700;letter-spacing:1.2px;padding:3px 8px;border-radius:5px;font-family:var(--mono)}
+.badge.poly{color:var(--amber);border:1px solid rgba(255,180,84,.45)}
+.badge.iso{color:var(--cyan);border:1px solid rgba(95,212,224,.45)}
+.badge.upper{color:var(--volt);border:1px solid rgba(200,245,66,.45)}
+.badge.legs{color:var(--amber);border:1px solid rgba(255,180,84,.45)}
+
+/* ================= LIGNES EXERCICES ================= */
+.ex-row{display:flex;align-items:center;gap:14px;padding:13px 14px;border:1px solid transparent;
+  border-left:3px solid var(--line);border-radius:8px;margin-top:8px;transition:.18s;background:rgba(255,255,255,.012)}
+.ex-row:hover{border-left-color:var(--volt);background:var(--card2);transform:translateX(3px)}
+.ex-main{flex:1;min-width:0}
+.ex-name{font-weight:600;font-size:14.5px}
+.ex-last{display:block;font-family:var(--mono);font-size:13px;color:var(--mut);margin-top:3px}
+.ex-last b{color:var(--txt)}
+.ex-note{display:block;font-size:11.5px;color:var(--dim);font-style:italic;margin-top:2px}
+.delta{font-family:var(--mono);font-size:12px;font-weight:700;min-width:64px;text-align:right}
+.delta.up{color:var(--volt)} .delta.down{color:var(--red)} .delta.same{color:var(--dim)}
+.spark{flex-shrink:0}
+.ex-actions{display:flex;gap:6px}
+.mini-btn{background:var(--card2);border:1px solid var(--line);color:var(--mut);border-radius:7px;
+  padding:7px 10px;font-size:12px;font-weight:600;transition:.15s}
+.mini-btn:hover{border-color:var(--volt);color:var(--volt)}
+.mini-btn.add{color:var(--volt);border-color:rgba(200,245,66,.35)}
+.mini-btn.add:hover{background:rgba(200,245,66,.12)}
+.today-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.tchip{font-family:var(--mono);font-size:11.5px;background:rgba(200,245,66,.08);border:1px solid rgba(200,245,66,.3);
+  color:var(--volt);border-radius:6px;padding:3px 8px;display:inline-flex;gap:7px;align-items:center}
+.tchip button{background:none;border:none;color:var(--volt);font-size:12px;padding:0;opacity:.7}
+.tchip button:hover{opacity:1;color:var(--red)}
+
+/* ================= PLAN BANNIÈRE ================= */
+.plan-banner{border:1px solid rgba(200,245,66,.35);border-left:4px solid var(--volt);border-radius:12px;
+  background:linear-gradient(90deg,rgba(200,245,66,.07),transparent 60%);padding:18px 20px;margin:18px 0 6px}
+.plan-banner .ph{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.plan-banner pre{font-family:var(--mono);font-size:14px;line-height:1.75;white-space:pre-wrap;color:#e2f7b0}
+
+/* ================= CHRONO (dock flottant) ================= */
+.dock{position:fixed;right:22px;bottom:22px;z-index:60;width:250px;background:var(--card);
+  border:1px solid var(--line2);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.55);overflow:hidden}
+.dock-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
+  background:var(--card2);border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+.dock-head b{font-size:11px;letter-spacing:3px;color:var(--amber)}
+.dock-head .mini{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.dock-body{padding:16px 16px 14px;text-align:center}
+.dock.min .dock-body{display:none}
+.ring-wrap{position:relative;width:150px;height:150px;margin:0 auto 12px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{stroke:var(--line);fill:none;stroke-width:8}
+.ring-fg{stroke:url(#ringGrad);fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .2s linear}
+.ring-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-time b{font-family:var(--mono);font-size:31px;font-weight:800;letter-spacing:1px}
+.ring-time span{font-size:10px;letter-spacing:2px;color:var(--dim)}
+.dock.done .ring-time b{color:var(--volt);animation:flash .5s 4}
+@keyframes flash{50%{opacity:.2}}
+.presets{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+.preset{background:var(--bg2);border:1px solid var(--line);color:var(--mut);border-radius:6px;
+  font-family:var(--mono);font-size:11.5px;padding:5px 9px;transition:.15s}
+.preset:hover,.preset.on{border-color:var(--amber);color:var(--amber)}
+.dock-ctrl{display:flex;gap:8px;justify-content:center}
+.dock-ctrl button{background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:8px;
+  padding:9px 14px;font-weight:700;font-size:13px;transition:.15s}
+.dock-ctrl button:hover{border-color:var(--amber)}
+.dock-ctrl .play{background:var(--amber);border-color:var(--amber);color:#1a1206;min-width:84px}
+.dock-ctrl .play:hover{background:#ffc880}
+@media(max-width:640px){.dock{left:12px;right:12px;width:auto;bottom:12px}}
+
+/* ================= MODALES ================= */
+.overlay{position:fixed;inset:0;background:rgba(5,8,12,.75);backdrop-filter:blur(4px);z-index:80;
+  display:none;align-items:flex-start;justify-content:center;padding:6vh 18px;overflow-y:auto}
+.overlay.on{display:flex}
+.modal{background:var(--card);border:1px solid var(--line2);border-radius:14px;width:100%;max-width:560px;
+  padding:24px;animation:modalIn .3s cubic-bezier(.2,.9,.3,1.2)}
+.modal.wide{max-width:720px}
+@keyframes modalIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+.modal h2{font-family:var(--disp);font-size:22px;letter-spacing:1px;margin-bottom:4px}
+.modal .m-sub{color:var(--mut);font-size:13px;margin-bottom:18px}
+.m-close{float:right;background:none;border:none;color:var(--dim);font-size:20px;margin-left:12px}
+.m-close:hover{color:var(--red)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11.5px;letter-spacing:1.5px;color:var(--mut);margin-bottom:6px;font-weight:600}
+.field input,.field select,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--line);
+  border-radius:8px;padding:11px 13px;font-size:15px;transition:.15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--volt);outline:none;
+  box-shadow:0 0 0 3px rgba(200,245,66,.12)}
+.field-row{display:flex;gap:12px}
+.field-row .field{flex:1}
+.form-hint{font-size:12px;color:var(--dim);margin-top:8px}
+
+/* sortie IA "raw" */
+.raw-out{background:#0b0f14;border:1px solid var(--line2);border-left:4px solid var(--volt);border-radius:10px;
+  padding:20px;font-family:var(--mono);font-size:14.5px;line-height:1.8;white-space:pre-wrap;color:#dff0c0;
+  max-height:46vh;overflow-y:auto}
+.gen-status{display:flex;align-items:center;gap:12px;padding:26px 0;color:var(--mut);font-size:14px}
+.gen-status .bar{width:120px;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.gen-status .bar i{display:block;height:100%;width:40%;background:var(--volt);animation:slide 1s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(320%)}}
+.split-pick{display:flex;gap:10px;margin-bottom:16px}
+.split-pick label{flex:1;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center;
+  cursor:pointer;transition:.18s;position:relative}
+.split-pick input{position:absolute;opacity:0}
+.split-pick label b{font-family:var(--disp);font-size:17px;letter-spacing:1px;display:block}
+.split-pick label span{font-size:11.5px;color:var(--dim)}
+.split-pick label:has(input:checked){border-color:var(--volt);background:rgba(200,245,66,.07)}
+.rec{position:absolute;top:-9px;right:10px;background:var(--volt);color:#101505;font-size:9.5px;font-weight:800;
+  letter-spacing:1px;padding:2px 8px;border-radius:20px}
+.src-row{display:flex;gap:10px;margin-bottom:18px}
+.src-row label{flex:1;border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;transition:.18s;font-size:13px}
+.src-row label:has(input:checked){border-color:var(--amber);background:rgba(255,180,84,.07)}
+.src-row input{margin-right:8px;accent-color:var(--amber)}
+.src-row small{display:block;color:var(--dim);margin-top:3px;font-size:11px}
+
+/* ================= HISTORIQUE / LAB ================= */
+.sess-card{display:flex;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:15px 18px;margin-bottom:10px;transition:.18s}
+.sess-card:hover{border-color:var(--line2);transform:translateX(3px)}
+.sess-date{font-family:var(--disp);font-size:19px;letter-spacing:1px;min-width:120px}
+.sess-date span{display:block;margin-top:4px}
+.sess-stats{font-family:var(--mono);font-size:13px;color:var(--mut);flex:1}
+.sess-notes{font-size:12px;color:var(--dim);font-style:italic;margin-top:4px}
+pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;
+  font-family:var(--mono);font-size:12.5px;line-height:1.65;color:#b8d9a0;position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--card2);border:1px solid var(--line);
+  color:var(--mut);border-radius:6px;font-size:11px;padding:4px 9px}
+.copy-btn:hover{color:var(--volt);border-color:var(--volt)}
+.lab-sec{margin-top:26px}
+.lab-sec>h2{font-family:var(--disp);letter-spacing:1.5px;font-size:20px;margin-bottom:12px}
+.stat-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.tile b{font-family:var(--mono);font-size:19px;color:var(--volt)}
+.tile span{display:block;font-size:11.5px;color:var(--mut);margin-top:3px}
+
+/* ================= TOASTS ================= */
+#toasts{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:100;display:flex;
+  flex-direction:column;gap:8px;align-items:center}
+.toast{background:var(--card2);border:1px solid var(--line2);border-left:3px solid var(--volt);
+  padding:11px 18px;border-radius:9px;font-size:13.5px;box-shadow:0 12px 30px rgba(0,0,0,.5);
+  animation:toastIn .3s ease;max-width:90vw}
+.toast.err{border-left-color:var(--red)}
+.toast.warn{border-left-color:var(--amber)}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.chart-box{position:relative;height:270px}
+.chart-box.tall{height:320px}
+.sec-title{display:flex;align-items:baseline;gap:14px;margin:26px 0 6px;flex-wrap:wrap}
+.sec-title h2{font-family:var(--disp);font-size:30px;letter-spacing:1.5px}
+.sec-title .meta{font-family:var(--mono);font-size:12.5px;color:var(--mut)}
+@media(max-width:640px){
+  .ex-row{flex-wrap:wrap}
+  .spark{display:none}
+  .board-hero{padding:22px}
+}
+</style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors min-h-screen">
+<body>
 
-<!-- =============== LOGIN VIEW =============== -->
-<div id="login-view" class="view active min-h-screen flex items-center justify-center p-6">
-    <div class="w-full max-w-sm">
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4 shadow-lg">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-            </div>
-            <h1 class="text-2xl font-bold">Workout Tracker</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Split Upper / Lower · IA-powered</p>
-        </div>
+<div class="bg-grid"></div>
+<div class="glow a"></div>
+<div class="glow b"></div>
 
-        <div id="file-protocol-warning" class="hidden mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-600 dark:text-amber-400 text-xs leading-relaxed">
-            ⚠️ <strong>Attention :</strong> L'authentification Google ne fonctionne pas en ouvrant le fichier directement (<code class="font-mono">file://</code>). Lance-le avec un serveur local (Live Server VS Code, <code class="font-mono">npx serve</code>, etc.) ou héberge-le en ligne.
-        </div>
+<!-- ================= TOPBAR ================= -->
+<header class="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+    <div><b>FORGE<span>·LOG</span></b><small>UPPER / LOWER — SURCHARGE PROGRESSIVE</small></div>
+  </div>
+  <div class="spacer"></div>
+  <span class="chip" title="Profil">H · 1m84 · 71kg</span>
+  <button class="chip" id="workoutBtn" title="Démarrer / arrêter la séance">⏱ <span id="workoutTime">00:00</span> <span class="dot"></span></button>
+  <button class="btn btn-volt cut" data-act="open-generate">⚡ GÉNÉRER LA SÉANCE</button>
+</header>
 
-        <button id="login-btn" type="button" class="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-750 transition shadow-sm active:scale-[0.98]">
-            <svg class="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Se connecter avec Google
-        </button>
-        <p id="login-status" class="text-center text-xs text-red-500 mt-4 min-h-[20px]"></p>
+<!-- ================= NAVIGATION ================= -->
+<nav class="tabs">
+  <button class="tab on" data-act="tab" data-tab="bord">TABLEAU DE BORD</button>
+  <button class="tab" data-act="tab" data-tab="upper">HAUT DU CORPS</button>
+  <button class="tab" data-act="tab" data-tab="legs">JAMBES</button>
+  <button class="tab" data-act="tab" data-tab="prog">PROGRESSION</button>
+  <button class="tab" data-act="tab" data-tab="lab">LAB · HISTORIQUE & STACK</button>
+</nav>
+
+<main>
+  <section id="view-bord" class="view on"></section>
+  <section id="view-upper" class="view"></section>
+  <section id="view-legs" class="view"></section>
+
+  <!-- ================= PROGRESSION ================= -->
+  <section id="view-prog" class="view">
+    <div class="sec-title"><h2>PROGRESSION</h2><span class="meta">poids de travail & e1RM (Epley) par séance</span></div>
+    <div class="card rev">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <select id="progSelect" class="field" style="flex:1;min-width:220px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:9px 12px"></select>
+        <button class="btn btn-sm btn-ghost metric-btn" data-metric="poids" data-act="metric">POIDS</button>
+        <button class="btn btn-sm btn-ghost metric-btn" data-metric="e1rm" data-act="metric">e1RM</button>
+      </div>
+      <div class="chart-box tall"><canvas id="progChart"></canvas></div>
     </div>
-</div>
-
-<!-- =============== MAIN APP =============== -->
-<div id="app-container" class="view min-h-screen pb-20">
-    <header class="sticky top-0 z-30 bg-gray-50/90 dark:bg-gray-950/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
-        <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div>
-                <h1 class="font-bold text-lg leading-tight">Workout Tracker</h1>
-                <p id="user-email" class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[180px]"></p>
-            </div>
-            <div class="flex items-center gap-2">
-                <button id="theme-toggle" type="button" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition" title="Thème">
-                    <svg id="icon-moon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                    <svg id="icon-sun" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                </button>
-                <button id="settings-btn" type="button" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition" title="Paramètres">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                </button>
-                <button id="logout-btn" type="button" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-red-500" title="Déconnexion">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-3xl mx-auto px-4 py-6">
-        <div id="dashboard-section">
-            <div class="grid grid-cols-3 gap-3 mb-6">
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Séances</p>
-                    <p id="stat-sessions" class="text-2xl font-bold">0</p>
-                </div>
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Upper</p>
-                    <p id="stat-upper" class="text-2xl font-bold text-blue-500">0</p>
-                </div>
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Lower</p>
-                    <p id="stat-lower" class="text-2xl font-bold text-purple-500">0</p>
-                </div>
-            </div>
-
-            <div class="flex gap-2 mb-6">
-                <button type="button" data-split="all" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-blue-500 text-white shadow-sm">Toutes</button>
-                <button type="button" data-split="upper" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 dark:bg-gray-900">Upper</button>
-                <button type="button" data-split="lower" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 dark:bg-gray-900">Lower</button>
-            </div>
-
-            <div class="space-y-3 mb-6" id="sessions-list">
-                <div class="text-center text-gray-500 dark:text-gray-400 py-12 text-sm">
-                    Chargement des données...
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <button id="btn-new-session" type="button" class="bg-blue-500 hover:bg-blue-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition shadow-md shadow-blue-500/20">
-                    + Nouvelle séance
-                </button>
-                <button id="btn-generate" type="button" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition shadow-md shadow-purple-500/20 flex items-center justify-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    Générer IA
-                </button>
-            </div>
-        </div>
-
-        <div id="session-section" class="hidden">
-            <div class="flex items-center justify-between mb-5">
-                <button id="back-to-dashboard" type="button" class="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                    Retour
-                </button>
-                <select id="session-type" class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-1.5 text-sm font-medium">
-                    <option value="upper">Upper Body</option>
-                    <option value="lower">Lower Body</option>
-                </select>
-            </div>
-
-            <h2 class="text-xl font-bold mb-4" id="session-title">Nouvelle séance Upper</h2>
-
-            <div class="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-200 dark:border-blue-900/50 rounded-2xl p-5 mb-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold text-sm flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Repos entre les séries
-                    </h3>
-                    <span id="timer-display" class="timer-display text-3xl font-bold text-blue-500">00:00</span>
-                </div>
-                <div class="grid grid-cols-5 gap-1.5 mb-3">
-                    <button type="button" data-preset="60" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">1:00</button>
-                    <button type="button" data-preset="90" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">1:30</button>
-                    <button type="button" data-preset="120" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">2:00</button>
-                    <button type="button" data-preset="150" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">2:30</button>
-                    <button type="button" data-preset="180" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">3:00</button>
-                </div>
-                <div class="flex gap-2">
-                    <button id="timer-start" type="button" class="flex-1 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg shadow-sm">Start</button>
-                    <button id="timer-pause" type="button" class="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg hidden shadow-sm">Pause</button>
-                    <button id="timer-reset" type="button" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg shadow-sm">Reset</button>
-                </div>
-            </div>
-
-            <div id="exercises-container" class="space-y-4 mb-6"></div>
-
-            <button id="add-exercise-btn" type="button" class="w-full py-3 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition font-medium">
-                + Ajouter un exercice
-            </button>
-
-            <div class="flex gap-3 mt-6">
-                <button id="cancel-session" type="button" class="flex-1 py-3 bg-gray-200 dark:bg-gray-800 font-medium rounded-xl">Annuler</button>
-                <button id="save-session" type="button" class="flex-1 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20">💾 Sauvegarder</button>
-            </div>
-        </div>
-
-        <div id="generate-section" class="hidden">
-            <div class="flex items-center justify-between mb-5">
-                <button id="back-to-dashboard-gen" type="button" class="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                    Retour
-                </button>
-            </div>
-
-            <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white mb-6 shadow-md">
-                <div class="flex items-center gap-3 mb-2">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    <h2 class="text-xl font-bold">Coach IA</h2>
-                </div>
-                <p class="text-sm opacity-90">Génère ta prochaine séance optimisée avec surcharge progressive.</p>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-2">Type de prochaine séance</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <label class="flex items-center gap-2 p-3 border border-gray-200 dark:border-gray-800 rounded-xl cursor-pointer has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-950/30">
-                            <input type="radio" name="gen-type" value="upper" checked class="accent-blue-500">
-                            <span class="font-medium">Upper Body</span>
-                        </label>
-                        <label class="flex items-center gap-2 p-3 border border-gray-200 dark:border-gray-800 rounded-xl cursor-pointer has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-950/30">
-                            <input type="radio" name="gen-type" value="lower" class="accent-blue-500">
-                            <span class="font-medium">Lower Body</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-2">
-                        💬 Contexte additionnel <span class="text-xs text-gray-500 dark:text-gray-400 font-normal">(optionnel)</span>
-                    </label>
-                    <textarea id="ai-context" rows="4" placeholder="Ex: Ça fait 11 jours que je ne suis pas allé à la salle / douleur à l'épaule droite..." class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl focus:outline-none focus:border-blue-500 resize-none text-sm"></textarea>
-                </div>
-
-                <button id="call-ai-btn" type="button" class="w-full py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2 active:scale-[0.98]">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    Générer ma prochaine séance
-                </button>
-
-                <div id="ai-loading" class="hidden text-center py-8">
-                    <div class="inline-block w-8 h-8 border-4 border-purple-200 dark:border-purple-900 border-t-purple-500 rounded-full animate-spin"></div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-3">L'IA analyse ton historique...</p>
-                </div>
-
-                <div id="ai-result" class="hidden">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="font-semibold text-sm">📋 Programme généré</h3>
-                        <button id="copy-ai-result" type="button" class="text-xs text-blue-500 hover:underline flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                            Copier
-                        </button>
-                    </div>
-                    <pre id="ai-output" class="bg-gray-950 dark:bg-black text-green-400 rounded-xl p-5 overflow-x-auto text-sm font-mono leading-relaxed whitespace-pre-wrap border border-gray-800"></pre>
-                </div>
-            </div>
-        </div>
-    </main>
-</div>
-
-<div id="settings-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-md border border-gray-200 dark:border-gray-800 shadow-xl">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="font-bold text-lg">⚙️ Paramètres</h2>
-            <button id="close-settings" type="button" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium mb-2">🔑 Clé API Google Gemini</label>
-                <input id="gemini-key" type="password" placeholder="AIzaSy..." class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500">
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">Récupère ta clé sur <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 underline">aistudio.google.com</a></p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium mb-2">📊 Modèle</label>
-                <select id="gemini-model" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500">
-                    <option value="gemini-2.0-flash">gemini-2.0-flash (rapide)</option>
-                    <option value="gemini-1.5-flash">gemini-1.5-flash</option>
-                    <option value="gemini-1.5-pro">gemini-1.5-pro (puissant)</option>
-                </select>
-            </div>
-            <button id="save-settings" type="button" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg">Sauvegarder</button>
-        </div>
+    <div class="grid2">
+      <div class="card rev">
+        <h3>RECORDS (PR)</h3><p class="sub">meilleure charge validée par exercice</p>
+        <div class="stat-tiles" id="prTiles" style="margin-top:12px"></div>
+      </div>
+      <div class="card rev">
+        <h3>VOLUME PAR SÉANCE</h3><p class="sub">Σ (poids × reps)</p>
+        <div class="chart-box" style="height:230px;margin-top:8px"><canvas id="volChart2"></canvas></div>
+      </div>
     </div>
-</div>
+  </section>
 
-<div id="toast-container" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 space-y-2 pointer-events-none"></div>
+  <!-- ================= LAB ================= -->
+  <section id="view-lab" class="view">
+    <div class="sec-title"><h2>LAB</h2><span class="meta">historique · réglages IA · stack de production</span></div>
+    <div id="labHistory"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { 
-    getAuth, 
-    signInWithPopup, 
-    GoogleAuthProvider, 
-    signOut, 
-    onAuthStateChanged,
-    setPersistence,
-    browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { 
-    getDatabase, 
-    ref, 
-    push, 
-    set, 
-    onValue, 
-    remove, 
-    serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    <div class="card lab-sec rev">
+      <h3 style="margin-bottom:12px">RÉGLAGES IA</h3>
+      <div class="field-row">
+        <div class="field" style="flex:2"><label>CLÉ API GOOGLE GEMINI</label>
+          <input type="password" id="apiKeyInput" placeholder="AIza… (stockée uniquement dans ton navigateur)">
+        </div>
+        <div class="field"><label>MODÈLE</label>
+          <select id="modelSelect">
+            <option value="gemini-1.5-flash">gemini-1.5-flash (rapide)</option>
+            <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+            <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+          </select>
+        </div>
+      </div>
+      <p class="form-hint">⚠ En production la clé doit rester côté serveur (voir la route API ci-dessous). Ici elle ne quitte jamais ton navigateur, acceptable pour un usage perso.</p>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" data-act="export">⬇ Exporter les données (JSON)</button>
+        <button class="btn btn-danger btn-sm" data-act="reset">↺ Réinitialiser (reseed)</button>
+      </div>
+      <p class="form-hint" id="dbCount"></p>
+    </div>
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCc8-kMmHvJagbj-nV4ZGcWDUXYytRrD0I",
-    authDomain: "englishpv-b6727.firebaseapp.com",
-    databaseURL: "https://englishpv-b6727-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "englishpv-b6727",
-    storageBucket: "englishpv-b6727.firebasestorage.app",
-    messagingSenderId: "285413164654",
-    appId: "1:285413164654:web:1998e119d91dcdad45887f"
+    <div class="lab-sec rev">
+      <h2>STACK DE PRODUCTION CONSEILLÉE</h2>
+      <p class="sub" style="margin-bottom:10px;color:var(--mut)">Ce fichier unique est un prototype autonome : <span class="mono" style="color:var(--volt)">localStorage</span> y joue le rôle de SQLite et la fonction <span class="mono" style="color:var(--volt)">callGemini()</span> celui de la route backend. Pour passer en prod :</p>
+      <div class="card">
+        <ul style="line-height:2;font-size:14px;padding-left:20px;color:var(--mut)">
+          <li><b style="color:var(--txt)">Frontend + API :</b> Next.js 14 (App Router) + TailwindCSS — UI dashboard & routes serverless</li>
+          <li><b style="color:var(--txt)">Base :</b> SQLite (dev) → PostgreSQL (prod) via <b>Prisma ORM</b></li>
+          <li><b style="color:var(--txt)">IA :</b> <span class="mono">@google/generative-ai</span> (SDK Gemini), clé dans <span class="mono">.env</span></li>
+          <li><b style="color:var(--txt)">Déploiement :</b> Vercel (front + API) + Turso/Neon (DB)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lab-sec rev">
+      <h2>2 · SCHÉMA DE BASE DE DONNÉES (PRISMA)</h2>
+      <div style="position:relative"><button class="copy-btn" data-act="copy-code" data-target="prismaCode">copier</button><pre class="code" id="prismaCode"></pre></div>
+    </div>
+
+    <div class="lab-sec rev">
+      <h2>4 · ROUTE API BACKEND (NEXT.JS)</h2>
+      <div style="position:relative"><button class="copy-btn" data-act="copy-code" data-target="routeCode">copier</button><pre class="code" id="routeCode"></pre></div>
+    </div>
+  </section>
+</main>
+
+<!-- ================= CHRONO FLOTTANT ================= -->
+<aside class="dock" id="dock">
+  <div class="dock-head" data-act="dock-toggle"><b>REPOS</b><span class="mini" id="dockMini">2:30 ▾</span></div>
+  <div class="dock-body">
+    <div class="ring-wrap">
+      <svg width="150" height="150" viewBox="0 0 150 150">
+        <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffb454"/><stop offset="100%" stop-color="#c8f542"/>
+        </linearGradient></defs>
+        <circle class="ring-bg" cx="75" cy="75" r="64"/>
+        <circle class="ring-fg" id="ringFg" cx="75" cy="75" r="64" stroke-dasharray="402.1" stroke-dashoffset="0"/>
+      </svg>
+      <div class="ring-time"><b id="timerLabel">2:30</b><span id="timerSub">PRÊT</span></div>
+    </div>
+    <div class="presets">
+      <button class="preset" data-act="preset" data-sec="90">1:30</button>
+      <button class="preset" data-act="preset" data-sec="120">2:00</button>
+      <button class="preset on" data-act="preset" data-sec="150">2:30</button>
+      <button class="preset" data-act="preset" data-sec="180">3:00</button>
+    </div>
+    <div class="dock-ctrl">
+      <button data-act="t-adj" data-sec="-15">−15s</button>
+      <button class="play" id="playBtn" data-act="t-toggle">DÉMARRER</button>
+      <button data-act="t-adj" data-sec="15">+15s</button>
+    </div>
+  </div>
+</aside>
+
+<div class="overlay" id="overlay"><div class="modal" id="modalBox"></div></div>
+<div id="toasts"></div>
+
+<script>
+'use strict';
+/* ══════════════════════════════════════════════════════════════
+   1. COUCHE "BASE DE DONNÉES" — équivalent SQLite/Prisma en prod
+      (le schéma Prisma correspondant est affiché dans l'onglet LAB)
+   ══════════════════════════════════════════════════════════════ */
+const DB_KEY = 'forgelog.v1';
+const uid = () => Math.random().toString(36).slice(2, 10);
+let db = null;
+
+function seed(){
+  const dAgo = n => { const d = new Date(); d.setDate(d.getDate() - n); d.setHours(18, 30, 0, 0); return d.toISOString(); };
+  const exercises = [
+    { id:'dev-incline', name:'Développé incliné haltères',   split:'upper', kind:'poly', order:1 },
+    { id:'tirage',      name:'Tirage vertical',              split:'upper', kind:'poly', order:2 },
+    { id:'chest',       name:'Chest press',                  split:'upper', kind:'poly', order:3 },
+    { id:'elev-lat',    name:'Élévations latérales haltères',split:'upper', kind:'iso',  order:4 },
+    { id:'curl',        name:'Curl barre EZ',                split:'upper', kind:'iso',  order:5 },
+    { id:'tric',        name:'Extension triceps poulie',     split:'upper', kind:'iso',  order:6 },
+    { id:'presse',      name:'Presse à jambes',              split:'legs',  kind:'poly', order:1 },
+    { id:'rdl',         name:'RDL haltères',                 split:'legs',  kind:'poly', order:2 },
+    { id:'squat-h',     name:'Squat haltère (goblet)',       split:'legs',  kind:'poly', order:3 },
+    { id:'leg-ext',     name:'Leg extension',                split:'legs',  kind:'iso',  order:4 },
+    { id:'leg-curl',    name:'Leg curl',                     split:'legs',  kind:'iso',  order:5 },
+    { id:'mollets',     name:'Mollets debout',               split:'legs',  kind:'iso',  order:6 },
+  ];
+  const sessions = [
+    { id:'sU1', date:dAgo(13), split:'upper' },
+    { id:'sL1', date:dAgo(11), split:'legs'  },
+    { id:'sU2', date:dAgo(6),  split:'upper' },
+    { id:'sL2', date:dAgo(4),  split:'legs'  },
+  ];
+  const sets = [];
+  const S = (sessId, exId, rows) => rows.forEach(([w, r, n]) =>
+    sets.push({ id: uid(), exId, sessId, date: sessions.find(s => s.id === sessId).date, weight: w, reps: r, note: n || '' }));
+  // ── Upper J-13 ──
+  S('sU1','dev-incline',[[18,12],[18,10],[18,10,'un peu juste']]);
+  S('sU1','tirage',      [[45,12],[45,12],[45,10]]);
+  S('sU1','chest',       [[20,12],[20,10],[20,10]]);
+  S('sU1','elev-lat',    [[8,12],[8,12],[8,12]]);
+  S('sU1','curl',        [[25,10],[25,9],[25,8,'échec à la 8e']]);
+  S('sU1','tric',        [[20,12],[20,12],[20,11]]);
+  // ── Legs J-11 ──
+  S('sL1','presse',      [[120,12],[120,10],[120,10,'très essoufflé']]);
+  S('sL1','rdl',         [[22,12],[22,10],[22,10,'ischios bien ciblés']]);
+  S('sL1','squat-h',     [[24,10],[24,10],[24,8,'souffle limitant']]);
+  S('sL1','leg-ext',     [[40,12],[40,12],[40,10]]);
+  S('sL1','leg-curl',    [[35,12],[35,10],[35,10]]);
+  S('sL1','mollets',     [[60,15],[60,15],[60,12]]);
+  // ── Upper J-6 ──
+  S('sU2','dev-incline',[[20,12],[20,11],[20,9,'échec à 9 reps']]);
+  S('sU2','tirage',      [[50,12],[50,12],[50,11]]);
+  S('sU2','chest',       [[22.5,12],[22.5,11],[22.5,9]]);
+  S('sU2','elev-lat',    [[10,12],[10,12],[10,12,'un peu d’élan en fin de série']]);
+  S('sU2','curl',        [[25,11],[25,10],[25,9]]);
+  S('sU2','tric',        [[22.5,12],[22.5,11],[22.5,10]]);
+  // ── Legs J-4 ──
+  S('sL2','presse',      [[140,12],[140,12],[140,10,'solide, RAS']]);
+  S('sL2','rdl',         [[24,12],[24,12],[24,10]]);
+  S('sL2','squat-h',     [[26,10],[26,10],[26,10,'genou OK']]);
+  S('sL2','leg-ext',     [[45,12],[45,12],[45,11]]);
+  S('sL2','leg-curl',    [[35,12],[35,12],[35,12,'facile, marge de 2-3 reps']]);
+  S('sL2','mollets',     [[65,15],[65,14],[65,12]]);
+  return {
+    profile:{ sex:'H', h:184, w:71 },
+    exercises, sessions, sets,
+    plans:[], settings:{ apiKey:'', model:'gemini-1.5-flash' }
+  };
+}
+function load(){ try{ const raw = localStorage.getItem(DB_KEY); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }
+function save(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+/* ══════════════════════════════════════════════════════════════
+   2. UTILITAIRES
+   ══════════════════════════════════════════════════════════════ */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtW = w => (Math.round(w * 10) / 10).toString().replace('.', ',');
+const fmtDate = iso => new Date(iso).toLocaleDateString('fr-FR', { day:'2-digit', month:'short' });
+const startOfDay = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+const daysSince = iso => Math.round((startOfDay(Date.now()) - startOfDay(iso)) / 864e5);
+const isToday = iso => startOfDay(iso).getTime() === startOfDay(Date.now()).getTime();
+const splitName = s => s === 'upper' ? 'HAUT DU CORPS' : 'JAMBES';
+
+function toast(msg, type = 'ok', ms = 2600){
+  const t = document.createElement('div');
+  t.className = 'toast' + (type !== 'ok' ? ' ' + type : '');
+  t.innerHTML = msg;
+  $('#toasts').appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = '.3s'; setTimeout(() => t.remove(), 320); }, ms);
+}
+function copyText(txt){
+  if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('Copié dans le presse-papier ✓'));
+  else { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('Copié ✓'); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. SÉLECTEURS MÉTIER (équivalent des requêtes Prisma)
+   ══════════════════════════════════════════════════════════════ */
+const exById = id => db.exercises.find(e => e.id === id);
+const sessionsOfSplit = split => db.sessions.filter(s => s.split === split).sort((a, b) => new Date(a.date) - new Date(b.date));
+const lastSession = split => { const a = sessionsOfSplit(split); return a[a.length - 1]; };
+const setsOfSession = (exId, sessId) => db.sets.filter(t => t.exId === exId && t.sessId === sessId);
+const lastSetsOf = exId => { const s = lastSession(exById(exId).split); return s ? setsOfSession(exId, s.id) : []; };
+const bestWeight = sets => sets.length ? Math.max(...sets.map(t => t.weight)) : 0;
+const sessionVolume = sessId => db.sets.filter(t => t.sessId === sessId).reduce((a, t) => a + t.weight * t.reps, 0);
+function historyBest(exId){ // meilleur poids par séance (pour sparkline & graphiques)
+  return sessionsOfSplit(exById(exId).split)
+    .map(s => ({ sess: s, w: bestWeight(setsOfSession(exId, s.id)) }))
+    .filter(p => p.w > 0);
+}
+function exDelta(exId){
+  const hist = historyBest(exId);
+  if (hist.length < 2) return { dir:'same', txt:'—' };
+  const d = +(hist[hist.length-1].w - hist[hist.length-2].w).toFixed(1);
+  if (d > 0) return { dir:'up',   txt:'▲ +' + fmtW(d) + ' kg' };
+  if (d < 0) return { dir:'down', txt:'▼ ' + fmtW(d) + ' kg' };
+  return { dir:'same', txt:'● stable' };
+}
+function recommendedSplit(){
+  const lu = lastSession('upper'), ll = lastSession('legs');
+  if (!lu) return 'upper'; if (!ll) return 'legs';
+  return daysSince(lu.date) >= daysSince(ll.date) ? 'upper' : 'legs';
+}
+function restSecondsFor(ex){ return ex.kind === 'poly' ? 150 : 90; }
+const fmtRest = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+
+/* ══════════════════════════════════════════════════════════════
+   4. RENDU DES VUES
+   ══════════════════════════════════════════════════════════════ */
+function sparkSVG(exId){
+  const vals = historyBest(exId).map(p => p.w);
+  const w = 104, h = 34, pad = 5;
+  if (vals.length < 2) return `<svg class="spark" width="${w}" height="${h}"><line x1="${pad}" y1="${h/2}" x2="${w-pad}" y2="${h/2}" stroke="#2e4256" stroke-width="2" stroke-dasharray="3 3"/></svg>`;
+  const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 1;
+  const pts = vals.map((v, i) => [pad + i * (w - 2*pad) / (vals.length - 1), h - pad - (v - min) / span * (h - 2*pad)]);
+  const line = pts.map(p => p.join(',')).join(' ');
+  const last = pts[pts.length - 1];
+  return `<svg class="spark" width="${w}" height="${h}">
+    <polygon points="${pad},${h-pad} ${line} ${last[0]},${h-pad}" fill="rgba(200,245,66,.08)"/>
+    <polyline points="${line}" fill="none" stroke="#c8f542" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="3" fill="#c8f542"/></svg>`;
+}
+
+function exRow(ex, full){
+  const sets = lastSetsOf(ex.id);
+  if (!sets.length) return '';
+  const reps = sets.map(t => t.reps).join('·');
+  const d = exDelta(ex.id);
+  const note = sets.find(t => t.note)?.note;
+  const todaySets = db.sets.filter(t => t.exId === ex.id && isToday(t.date));
+  const chips = todaySets.map(t =>
+    `<span class="tchip">${fmtW(t.weight)}kg×${t.reps}<button data-act="del-set" data-set="${t.id}" title="supprimer">✕</button></span>`).join('');
+  return `<div class="ex-row rev">
+    <div class="ex-main">
+      <span class="ex-name">${esc(ex.name)}</span> <span class="badge ${ex.kind}">${ex.kind === 'poly' ? 'POLY' : 'ISO'}</span>
+      <span class="ex-last"><b>${fmtW(bestWeight(sets))} kg</b> × ${reps} <span class="dim">· TR conseillé ${fmtRest(restSecondsFor(ex))}</span></span>
+      ${note ? `<span class="ex-note">« ${esc(note)} »</span>` : ''}
+      ${chips ? `<div class="today-chips">${chips}</div>` : ''}
+    </div>
+    <div class="delta ${d.dir}">${d.txt}</div>
+    ${sparkSVG(ex.id)}
+    ${full ? `<div class="ex-actions">
+        <button class="mini-btn add" data-act="log" data-ex="${ex.id}">+ série</button>
+        <button class="mini-btn" data-act="chart" data-ex="${ex.id}" title="progression">📈</button>
+      </div>` : ''}
+  </div>`;
+}
+
+function planBanner(split){
+  const plan = db.plans.filter(p => p.split === split).sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+  if (!plan) return '';
+  return `<div class="plan-banner rev">
+    <div class="ph"><span class="badge ${split}">🎯 PLAN CIBLE</span>
+      <span class="dim" style="font-size:12px">généré le ${fmtDate(plan.date)} · source : ${plan.source}</span>
+      <span style="flex:1"></span>
+      <button class="mini-btn" data-act="copy-plan" data-plan="${plan.id}">copier</button>
+      <button class="mini-btn" data-act="del-plan" data-plan="${plan.id}">✕</button></div>
+    <pre>${esc(plan.raw)}</pre></div>`;
+}
+
+function renderSplitView(split){
+  const el = $('#view-' + split);
+  const last = lastSession(split);
+  const exs = db.exercises.filter(e => e.split === split).sort((a,b) => a.order - b.order);
+  el.innerHTML = `
+    ${planBanner(split)}
+    <div class="sec-title">
+      <h2>${splitName(split)}</h2>
+      <span class="meta">dernière séance : ${last ? fmtDate(last.date) + ' (il y a ' + daysSince(last.date) + ' j)' : 'jamais'} · ${exs.length} exercices</span>
+      <span style="flex:1"></span>
+      <button class="btn btn-volt btn-sm cut" data-act="open-generate" data-split="${split}">⚡ Générer ce split</button>
+    </div>
+    <div class="card rev">
+      ${exs.map(e => exRow(e, true)).join('') || '<p class="dim">Aucun exercice.</p>'}
+    </div>`;
+  observeAll();
+}
+
+function renderDashboard(){
+  const next = recommendedSplit();
+  const last = lastSession(next);
+  const lastU = lastSession('upper'), lastL = lastSession('legs');
+  const vol = last ? sessionVolume(last.id) : 0;
+  const nbSets = last ? db.sets.filter(t => t.sessId === last.id).length : 0;
+  const lastPlan = [...db.plans].sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+  $('#view-bord').innerHTML = `
+    <div class="board-hero rev">
+      <div>
+        <div class="kicker">PROCHAINE SÉANCE RECOMMANDÉE</div>
+        <h1>JOUR <em>${next === 'upper' ? 'HAUT' : 'JAMBES'}</em></h1>
+        <div class="hero-meta">dernière séance il y a <b>${last ? daysSince(last.date) : '∞'} j</b>
+          · ${nbSets} séries · volume <b>${vol.toLocaleString('fr-FR')} kg</b></div>
+      </div>
+      <div class="hero-actions">
+        <button class="btn btn-volt cut" data-act="open-generate" data-split="${next}" style="font-size:16px;padding:15px 24px">⚡ GÉNÉRER LA SÉANCE (IA)</button>
+        <button class="btn btn-ghost" data-act="gen-local" data-split="${next}">🤖 Coach local (hors-ligne)</button>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card lift rev"><h3>HAUT DU CORPS</h3>
+        <p class="sub">dernière séance : ${lastU ? fmtDate(lastU.date) : '—'} <span class="badge upper" style="margin-left:6px">UPPER</span></p>
+        ${db.exercises.filter(e => e.split === 'upper').sort((a,b) => a.order-b.order).map(e => exRow(e, false)).join('')}</div>
+      <div class="card lift rev"><h3>JAMBES</h3>
+        <p class="sub">dernière séance : ${lastL ? fmtDate(lastL.date) : '—'} <span class="badge legs" style="margin-left:6px">LEGS</span></p>
+        ${db.exercises.filter(e => e.split === 'legs').sort((a,b) => a.order-b.order).map(e => exRow(e, false)).join('')}</div>
+    </div>
+    <div class="grid2">
+      <div class="card rev"><h3>VOLUME PAR SÉANCE</h3><p class="sub">Σ (poids × reps), par date</p>
+        <div class="chart-box" style="margin-top:10px"><canvas id="volChart"></canvas></div></div>
+      <div class="card rev"><h3>DERNIER PLAN GÉNÉRÉ</h3>
+        ${lastPlan ? `<p class="sub">${splitName(lastPlan.split)} · ${fmtDate(lastPlan.date)} · ${lastPlan.source}</p>
+          <pre class="raw-out" style="margin-top:10px;max-height:220px">${esc(lastPlan.raw)}</pre>`
+          : '<p class="sub" style="margin-top:10px">Aucun plan pour l’instant.<br><br>Clique sur <b style="color:var(--volt)">⚡ GÉNÉRER LA SÉANCE</b> : l’historique complet est envoyé à l’IA avec le system prompt de surcharge progressive, et le programme brut s’affiche ici, lisible directement à la salle.</p>'}</div>
+    </div>`;
+  observeAll();
+  if (currentTab === 'bord') renderVolumeChart('volChart');
+}
+
+function renderLab(){
+  const sessions = [...db.sessions].sort((a,b) => new Date(b.date) - new Date(a.date));
+  $('#labHistory').innerHTML = `<h2 style="font-family:var(--disp);letter-spacing:1.5px;font-size:20px;margin-bottom:12px">HISTORIQUE DES SÉANCES</h2>` +
+    (sessions.map(s => {
+      const sets = db.sets.filter(t => t.sessId === s.id);
+      const notes = [...new Set(sets.map(t => t.note).filter(Boolean))].slice(0, 2);
+      const exs = new Set(sets.map(t => t.exId)).size;
+      return `<div class="sess-card rev">
+        <div class="sess-date">${fmtDate(s.date).toUpperCase()}<span><span class="badge ${s.split}">${s.split === 'upper' ? 'UPPER' : 'LEGS'}</span></span></div>
+        <div class="sess-stats">${exs} exos · ${sets.length} séries · ${sessionVolume(s.id).toLocaleString('fr-FR')} kg
+          ${notes.length ? `<div class="sess-notes">${notes.map(n => '« ' + esc(n) + ' »').join(' · ')}</div>` : ''}</div>
+        <button class="mini-btn" data-act="del-sess" data-sess="${s.id}" title="supprimer la séance">✕</button>
+      </div>`;
+    }).join('') || '<p class="dim">Aucune séance.</p>');
+  $('#dbCount').textContent = `${db.sets.length} séries · ${db.sessions.length} séances · ${db.plans.length} plans enregistrés — données stockées en localStorage.`;
+  observeAll();
+}
+
+function renderAll(){
+  renderDashboard(); renderSplitView('upper'); renderSplitView('legs'); renderLab();
+  buildProgSelect(); renderPR();
+}
+
+/* ---- révélation au scroll ---- */
+const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold:.06 });
+const observeAll = () => $$('.rev:not(.in)').forEach(el => io.observe(el));
+
+/* ══════════════════════════════════════════════════════════════
+   5. GRAPHIQUES (Chart.js)
+   ══════════════════════════════════════════════════════════════ */
+let volChart = null, volChart2 = null, progChart = null, progMetric = 'poids';
+function chartsReady(){ return typeof Chart !== 'undefined'; }
+if (chartsReady()){
+  Chart.defaults.color = '#8b98a5';
+  Chart.defaults.borderColor = 'rgba(255,255,255,.06)';
+  Chart.defaults.font.family = "'Space Grotesk', sans-serif";
+}
+function renderVolumeChart(canvasId){
+  if (!chartsReady()) return;
+  const cv = document.getElementById(canvasId); if (!cv) return;
+  const sessions = [...db.sessions].sort((a,b) => new Date(a.date) - new Date(b.date));
+  const data = {
+    labels: sessions.map(s => fmtDate(s.date)),
+    datasets: [{
+      data: sessions.map(s => sessionVolume(s.id)),
+      backgroundColor: sessions.map(s => s.split === 'upper' ? 'rgba(200,245,66,.75)' : 'rgba(255,180,84,.75)'),
+      borderRadius: 6, maxBarThickness: 42
+    }]
+  };
+  const inst = canvasId === 'volChart' ? volChart : volChart2;
+  if (inst) inst.destroy();
+  const cfg = { type:'bar', data, options:{ maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: c => c.parsed.y.toLocaleString('fr-FR') + ' kg' } } },
+    scales:{ y:{ ticks:{ callback: v => (v/1000) + 'k' } } } } };
+  if (canvasId === 'volChart') volChart = new Chart(cv, cfg); else volChart2 = new Chart(cv, cfg);
+}
+function buildProgSelect(){
+  const sel = $('#progSelect'); if (!sel) return;
+  const val = sel.value;
+  sel.innerHTML = ['upper','legs'].map(sp =>
+    `<optgroup label="${splitName(sp)}">` +
+    db.exercises.filter(e => e.split === sp).sort((a,b) => a.order-b.order)
+      .map(e => `<option value="${e.id}">${e.name}</option>`).join('') + '</optgroup>').join('');
+  if (val && exById(val)) sel.value = val;
+}
+function renderProgChart(){
+  if (!chartsReady()) return;
+  const exId = $('#progSelect').value; if (!exId) return;
+  const ex = exById(exId);
+  const points = sessionsOfSplit(ex.split).map(s => {
+    const sets = setsOfSession(exId, s.id); if (!sets.length) return null;
+    if (progMetric === 'e1rm')
+      return { d: s.date, v: Math.max(...sets.map(t => t.weight * (1 + t.reps / 30))) };
+    return { d: s.date, v: bestWeight(sets) };
+  }).filter(Boolean);
+  if (progChart) progChart.destroy();
+  progChart = new Chart($('#progChart'), {
+    type:'line',
+    data:{ labels: points.map(p => fmtDate(p.d)), datasets:[{
+      label: ex.name, data: points.map(p => +p.v.toFixed(1)),
+      borderColor:'#c8f542', backgroundColor:'rgba(200,245,66,.10)', fill:true,
+      tension:.3, pointRadius:5, pointBackgroundColor:'#c8f542', pointBorderColor:'#0a0e13', borderWidth:2 }]},
+    options:{ maintainAspectRatio:false,
+      plugins:{ legend:{display:false},
+        tooltip:{ callbacks:{ label: c => c.parsed.y + (progMetric === 'e1rm' ? ' (e1RM)' : ' kg') } } },
+      scales:{ y:{ suggestedMin: Math.min(...points.map(p=>p.v)) * .9 } } }
+  });
+  $$('.metric-btn').forEach(b => {
+    b.style.borderColor = b.dataset.metric === progMetric ? 'var(--volt)' : '';
+    b.style.color = b.dataset.metric === progMetric ? 'var(--volt)' : '';
+  });
+}
+function renderPR(){
+  const box = $('#prTiles'); if (!box) return;
+  box.innerHTML = db.exercises.map(ex => {
+    const all = db.sets.filter(t => t.exId === ex.id);
+    if (!all.length) return '';
+    const best = all.reduce((a,b) => b.weight > a.weight ? b : a);
+    return `<div class="tile"><b>${fmtW(best.weight)} kg</b><span>${esc(ex.name)}<br><span class="dim">× ${best.reps} reps · ${fmtDate(best.date)}</span></span></div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6. CHRONOMÈTRE DE REPOS (dock flottant, précis via timestamps)
+   ══════════════════════════════════════════════════════════════ */
+const RING_C = 2 * Math.PI * 64;
+const Timer = {
+  total:150, left:150, running:false, endAt:0, int:null, audio:null,
+  paint(){
+    $('#timerLabel').textContent = fmtRest(Math.max(0, Math.ceil(this.left)));
+    $('#dockMini').textContent = fmtRest(Math.max(0, Math.ceil(this.left))) + ($('#dock').classList.contains('min') ? ' ▸' : ' ▾');
+    $('#ringFg').style.strokeDashoffset = RING_C * (1 - Math.max(0, this.left) / this.total);
+    $('#timerSub').textContent = this.running ? 'EN COURS' : (this.left < this.total ? 'PAUSE' : 'PRÊT');
+    $('#playBtn').textContent = this.running ? 'PAUSE' : (this.left < this.total && this.left > 0 ? 'REPRENDRE' : 'DÉMARRER');
+  },
+  set(sec){ this.stop(); this.total = this.left = sec; $('#dock').classList.remove('done'); this.paint();
+    $$('.preset').forEach(p => p.classList.toggle('on', +p.dataset.sec === sec)); },
+  start(){
+    if (!this.audio){ try{ this.audio = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){} }
+    this.endAt = Date.now() + this.left * 1000; this.running = true;
+    clearInterval(this.int); this.int = setInterval(() => this.tick(), 100); this.paint();
+  },
+  tick(){
+    this.left = (this.endAt - Date.now()) / 1000;
+    if (this.left <= 0){ this.left = 0; this.finish(); }
+    this.paint();
+  },
+  stop(){ this.running = false; clearInterval(this.int); },
+  toggle(){ this.running ? (this.stop(), this.paint()) : this.start(); },
+  adj(s){ this.left = Math.max(5, this.left + s); this.total = Math.max(this.total, this.left); if (this.running) this.endAt = Date.now() + this.left * 1000; this.paint(); },
+  finish(){
+    this.stop(); $('#dock').classList.add('done'); this.beep();
+    toast('⏱ <b>Repos terminé</b> — à ta série !', 'ok', 3500);
+    let on = true; const base = document.title;
+    const f = setInterval(() => { document.title = (on = !on) ? base : '⏰ REPOS TERMINÉ !'; }, 600);
+    setTimeout(() => { clearInterval(f); document.title = base; this.left = this.total; $('#dock').classList.remove('done'); this.paint(); }, 5000);
+  },
+  beep(){
+    if (!this.audio) return;
+    [0, .35, .7].forEach(t => {
+      const o = this.audio.createOscillator(), g = this.audio.createGain();
+      o.type = 'sine'; o.frequency.value = 1240; o.connect(g); g.connect(this.audio.destination);
+      const at = this.audio.currentTime + t;
+      g.gain.setValueAtTime(.001, at); g.gain.exponentialRampToValueAtTime(.4, at + .02);
+      g.gain.exponentialRampToValueAtTime(.001, at + .28); o.start(at); o.stop(at + .3);
+    });
+  }
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
-
-// Forcer la persistance locale
-setPersistence(auth, browserLocalPersistence).catch(err => {
-    console.warn("Impossible de forcer browserLocalPersistence:", err);
+/* ---- chrono global de séance ---- */
+let workoutStart = null, workoutInt = null;
+$('#workoutBtn').addEventListener('click', () => {
+  if (!workoutStart){
+    workoutStart = Date.now();
+    $('#workoutBtn').classList.add('live');
+    workoutInt = setInterval(() => {
+      const s = Math.floor((Date.now() - workoutStart) / 1000);
+      $('#workoutTime').textContent = String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+    }, 1000);
+    toast('Séance démarrée 💪');
+  } else {
+    const s = Math.floor((Date.now() - workoutStart) / 1000);
+    clearInterval(workoutInt); workoutStart = null;
+    $('#workoutBtn').classList.remove('live'); $('#workoutTime').textContent = '00:00';
+    toast(`Séance terminée en <b>${Math.floor(s/60)} min</b> 🏁`);
+  }
 });
 
-let currentUser = null;
-let sessions = [];
-let currentFilter = 'all';
-let currentSessionType = 'upper';
-let currentExercises = [];
-let timerInterval = null;
-let timerSeconds = 0;
-let timerTarget = 0;
-let timerRunning = false;
+/* ══════════════════════════════════════════════════════════════
+   7. SAISIE DES PERFORMANCES (modale séries)
+   ══════════════════════════════════════════════════════════════ */
+function openModal(html, wide){
+  $('#modalBox').className = 'modal' + (wide ? ' wide' : '');
+  $('#modalBox').innerHTML = html;
+  $('#overlay').classList.add('on');
+}
+const closeModal = () => $('#overlay').classList.remove('on');
+$('#overlay').addEventListener('click', e => { if (e.target.id === 'overlay') closeModal(); });
 
+function ensureTodaySession(split){
+  let s = db.sessions.find(x => x.split === split && isToday(x.date));
+  if (!s){ s = { id: uid(), date: new Date().toISOString(), split }; db.sessions.push(s); }
+  return s;
+}
+function openLog(exId){
+  const ex = exById(exId);
+  const last = lastSetsOf(exId);
+  const defW = last.length ? bestWeight(last) : '';
+  const renderChips = () => {
+    const sess = db.sessions.find(x => x.split === ex.split && isToday(x.date));
+    const today = sess ? setsOfSession(exId, sess.id) : [];
+    $('#todaySets').innerHTML = today.length
+      ? today.map(t => `<span class="tchip">${fmtW(t.weight)}kg × ${t.reps}${t.note ? ' · ' + esc(t.note) : ''}
+          <button data-del="${t.id}">✕</button></span>`).join('')
+      : '<span class="dim" style="font-size:12.5px">Aucune série aujourd’hui pour cet exercice.</span>';
+    $$('#todaySets [data-del]').forEach(b => b.addEventListener('click', () => {
+      db.sets = db.sets.filter(t => t.id !== b.dataset.del);
+      const empty = db.sessions.filter(s => isToday(s.date) && db.sets.some(t => t.sessId === s.id) === false);
+      empty.forEach(s => { if (s.split === ex.split) db.sessions = db.sessions.filter(x => x.id !== s.id); });
+      save(); renderChips(); renderAll();
+    }));
+  };
+  openModal(`
+    <button class="m-close" data-act="close-modal">✕</button>
+    <h2>${esc(ex.name)}</h2>
+    <p class="m-sub"><span class="badge ${ex.split}">${ex.split === 'upper' ? 'UPPER' : 'LEGS'}</span>
+      <span class="badge ${ex.kind}" style="margin-left:6px">${ex.kind === 'poly' ? 'POLY' : 'ISO'}</span>
+      · repos conseillé <b class="mono" style="color:var(--amber)">${fmtRest(restSecondsFor(ex))}</b></p>
+    <div id="todaySets" class="today-chips" style="margin-bottom:16px"></div>
+    <form id="setForm">
+      <div class="field-row">
+        <div class="field"><label>POIDS (KG)</label><input type="text" inputmode="decimal" id="fWeight" value="${defW}" required></div>
+        <div class="field"><label>REPS</label><input type="number" id="fReps" min="1" max="60" value="12" required></div>
+      </div>
+      <div class="field"><label>NOTE (optionnel — échec, douleur, essoufflé…)</label>
+        <input type="text" id="fNote" maxlength="90" placeholder="ex : échec à la 10e, RAS, genou ok…"></div>
+      <button class="btn btn-volt cut" style="width:100%;justify-content:center" type="submit">+ AJOUTER LA SÉRIE & LANCER LE REPOS</button>
+      <p class="form-hint">Le chrono de ${fmtRest(restSecondsFor(ex))} démarrera automatiquement. Espace = play/pause du chrono.</p>
+    </form>`);
+  renderChips();
+  $('#fWeight').select();
+  $('#setForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const w = parseFloat($('#fWeight').value.replace(',', '.'));
+    const r = parseInt($('#fReps').value, 10);
+    if (!w || w <= 0 || !r){ toast('Poids ou reps invalide', 'err'); return; }
+    const sess = ensureTodaySession(ex.split);
+    db.sets.push({ id: uid(), exId, sessId: sess.id, date: sess.date, weight: w, reps: r, note: $('#fNote').value.trim() });
+    save();
+    if (!workoutStart) $('#workoutBtn').click();
+    renderChips(); renderAll();
+    Timer.set(restSecondsFor(ex)); Timer.start();
+    toast(`Série validée : <b>${fmtW(w)}kg × ${r}</b> · repos ${fmtRest(restSecondsFor(ex))} lancé ⏱`);
+    $('#fNote').value = ''; $('#fReps').select();
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8. IA — ÉQUIVALENT DE LA ROUTE API BACKEND
+      buildHistoryPayload()  → formate la base pour le modèle
+      SYSTEM_PROMPT          → le prompt coach fourni (inchangé)
+      callGemini()           → appel API (en prod : côté serveur)
+      localCoach()           → repli hors-ligne, mêmes règles
+   ══════════════════════════════════════════════════════════════ */
 const SYSTEM_PROMPT = `Tu es un coach sportif expert en hypertrophie et en surcharge progressive. Ton rôle est d'analyser l'historique d'entraînement de l'utilisateur (Homme, 1m84, 71kg, cherchant à prendre de la masse) et de lui générer le programme EXACT de sa prochaine séance.
 
 Règles strictes de génération :
@@ -335,488 +911,329 @@ Règles strictes de génération :
    - Exercices d'isolation (Curl, Élévations latérales, Triceps, Mollets) : 1.5 à 2 minutes.
 4. FORMAT DE SORTIE : Sois chirurgical et direct. PAS DE PHRASES D'INTRODUCTION OU DE CONCLUSION. Utilise uniquement ce format exact :
 [Nom de l'exo] : [Poids]kg x [Objectif Reps] | Repos : [Temps]
-💡 [Note/Conseil hyper court UNIQUEMENT si nécessaire (ex: réglage machine, respiration, posture)]
+💡 [Note/Conseil hyper court UNIQUEMENT si nécessaire (ex: réglage machine, respiration, posture)]`;
 
-Exemple de sortie attendue :
-Développé incliné haltères : 20kg x 12, 12, 10 | Repos : 2min30
-Tirage vertical : 50kg x 12, 12, 12 | Repos : 2min30
-💡 Garde le dos droit et contrôle la phase excentrique.
-Chest press : 22,5kg x 12, 12, 10 | Repos : 2min30
-Élévations latérales haltères : 10kg x 12, 12, 12 | Repos : 1min30
-💡 Fais des pauses de 1s en bas si nécessaire pour éviter l'élan.`;
-
-const $ = (id) => document.getElementById(id);
-const $$ = (sel) => document.querySelectorAll(sel);
-
-function showToast(msg, type = 'info') {
-    const colors = { info: 'bg-blue-500', success: 'bg-green-500', error: 'bg-red-500' };
-    const toast = document.createElement('div');
-    toast.className = `px-4 py-3 ${colors[type]} text-white rounded-lg shadow-lg text-sm font-medium fade-in pointer-events-auto`;
-    toast.textContent = msg;
-    $('toast-container').appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
-}
-
-function formatDate(ts) {
-    if (!ts) return '';
-    const d = new Date(ts);
-    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
-}
-
-function showView(viewId) {
-    $$('.view').forEach(v => v.classList.remove('active'));
-    $(viewId).classList.add('active');
-}
-
-function showSection(sectionId) {
-    ['dashboard-section', 'session-section', 'generate-section'].forEach(id => {
-        $(id).classList.add('hidden');
-    });
-    $(sectionId).classList.remove('hidden');
-    window.scrollTo(0, 0);
-}
-
-function initTheme() {
-    const saved = localStorage.getItem('theme') || 'dark';
-    document.documentElement.classList.toggle('dark', saved === 'dark');
-    updateThemeIcons();
-}
-
-function toggleTheme() {
-    const isDark = document.documentElement.classList.contains('dark');
-    document.documentElement.classList.toggle('dark', !isDark);
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
-    updateThemeIcons();
-}
-
-function updateThemeIcons() {
-    const isDark = document.documentElement.classList.contains('dark');
-    $('icon-moon').classList.toggle('hidden', isDark);
-    $('icon-sun').classList.toggle('hidden', !isDark);
-}
-
-$('theme-toggle').addEventListener('click', toggleTheme);
-initTheme();
-
-if (window.location.protocol === 'file:') {
-    $('file-protocol-warning').classList.remove('hidden');
-}
-
-// ============ AUTHENTIFICATION (POPUP) ============
-$('login-btn').addEventListener('click', async () => {
-    $('login-status').textContent = 'Connexion en cours...';
-    $('login-status').className = 'text-center text-xs text-blue-500 mt-4 min-h-[20px]';
-    
-    try {
-        await setPersistence(auth, browserLocalPersistence);
-        const result = await signInWithPopup(auth, provider);
-        $('login-status').textContent = '';
-        showToast(`Bienvenue ${result.user.displayName || ''} !`, 'success');
-    } catch (e) {
-        console.error('Erreur Auth:', e);
-        let errorMsg = "Erreur de connexion";
-        
-        if (e.code === 'auth/popup-blocked') {
-            errorMsg = "La popup Google a été bloquée. Autorise les fenêtres pop-up.";
-        } else if (e.code === 'auth/unauthorized-domain') {
-            errorMsg = `Le domaine (${window.location.hostname}) n'est pas autorisé dans la console Firebase (Auth > Settings > Authorized domains).`;
-        } else if (e.code === 'auth/popup-closed-by-user') {
-            errorMsg = "Fenêtre de connexion fermée.";
-        } else if (e.code === 'auth/operation-not-supported-in-this-environment') {
-            errorMsg = "Non supporté en file://. Lance un serveur local (Live Server).";
-        } else {
-            errorMsg = e.message;
-        }
-
-        $('login-status').textContent = errorMsg;
-        $('login-status').className = 'text-center text-xs text-red-500 mt-4 min-h-[20px]';
-        showToast(errorMsg, 'error');
+function buildHistoryPayload(split){
+  const exs = db.exercises.filter(e => e.split === split).sort((a,b) => a.order - b.order);
+  const sess = sessionsOfSplit(split);
+  const last = sess[sess.length - 1];
+  const out = [];
+  out.push(`PROFIL — Homme, 1m84, 71 kg, objectif : prise de masse. Programme : split Upper / Lower.`);
+  out.push(`SÉANCE À GÉNÉRER : ${splitName(split)} (${split === 'upper' ? 'Upper' : 'Legs'}).`);
+  if (last) out.push(`Dernière séance de ce type : ${fmtDate(last.date)}, soit ${daysSince(last.date)} jour(s) plus tôt.`);
+  out.push('', 'HISTORIQUE DÉTAILLÉ (du plus ancien au plus récent) :');
+  for (const ex of exs){
+    out.push('', `■ ${ex.name} — ${ex.kind === 'poly' ? 'polyarticulaire' : 'isolation'}`);
+    for (const s of sess){
+      const sets = setsOfSession(ex.id, s.id);
+      if (!sets.length) continue;
+      out.push(`   • ${fmtDate(s.date)} : ` + sets.map(t =>
+        `${fmtW(t.weight)}kg x${t.reps}${t.note ? ` (note : « ${t.note} »)` : ''}`).join(', '));
     }
-});
+  }
+  out.push('', 'Génère maintenant le programme exact de la prochaine séance, en respectant strictement le format de sortie.');
+  return out.join('\n');
+}
 
-$('logout-btn').addEventListener('click', async () => {
-    try {
-        await signOut(auth);
-        showToast('Déconnecté', 'info');
-    } catch (e) {
-        showToast('Erreur déconnexion: ' + e.message, 'error');
-    }
-});
+async function callGemini(split){
+  const key = (db.settings.apiKey || '').trim();
+  if (!key) throw new Error('Aucune clé API enregistrée (onglet LAB) — utilise le Coach local.');
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${db.settings.model}:generateContent?key=${encodeURIComponent(key)}`;
+  const res = await fetch(url, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents: [{ role: 'user', parts: [{ text: buildHistoryPayload(split) }] }],
+      generationConfig: { temperature: 0.35, maxOutputTokens: 2048 }
+    })
+  });
+  if (!res.ok){
+    throw new Error(res.status === 400 || res.status === 403
+      ? 'API ' + res.status + ' — clé invalide, quota dépassé ou modèle indisponible.'
+      : 'Erreur API (' + res.status + '). Réessaie dans quelques secondes.');
+  }
+  const data = await res.json();
+  const txt = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('').trim();
+  if (!txt) throw new Error('Réponse vide de l’API.');
+  return txt;
+}
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        currentUser = user;
-        $('user-email').textContent = user.email || user.displayName;
-        showView('app-container');
-        
-        try {
-            const connRef = ref(db, `users/${user.uid}/connexions`);
-            const newConnRef = push(connRef);
-            set(newConnRef, { email: user.email, displayName: user.displayName, timestamp: serverTimestamp() });
-        } catch (e) {
-            console.warn('Trace de connexion non enregistrée:', e);
-        }
-        
-        loadSettings();
-        loadSessions();
+/* Coach local : applique mécaniquement les mêmes règles que le system prompt */
+async function localCoach(split){
+  await new Promise(r => setTimeout(r, 1500)); // simulation d'analyse
+  const exs = db.exercises.filter(e => e.split === split).sort((a,b) => a.order - b.order);
+  const out = [];
+  for (const ex of exs){
+    const sets = lastSetsOf(ex.id); if (!sets.length) continue;
+    const reps = sets.map(t => t.reps);
+    const w = bestWeight(sets);
+    const notes = sets.map(t => t.note).filter(Boolean).join(' ').toLowerCase();
+    const pain = /(douleur|gêne|gene)/.test(notes);
+    const fail = /(échec|echec)/.test(notes);
+    const neg  = /(essoufl|trop dur|juste|fatigue)/.test(notes);
+    const goalBot = ex.kind === 'poly' ? 10 : 12;
+    let W = w, R = [...reps], tip = null;
+    if (pain){
+      tip = `Douleur signalée la dernière fois : reste à ${fmtW(w)}kg (voire -10%) et réduis l’amplitude si la gêne persiste.`;
+    } else if (fail || Math.min(...reps) < goalBot){
+      R = reps.map(r => r + 1);
+      tip = 'Charge maintenue : vise +1 rep sur chaque série avant de remonter.';
+    } else if (Math.min(...reps) >= 12 && !neg){
+      const inc = ex.kind === 'poly' ? (w >= 100 ? 5 : 2.5) : (w <= 12 ? 1 : 2.5);
+      W = +(w + inc).toFixed(1);
+      R = ex.kind === 'poly' ? [12, 12, 10] : [12, 12, 12];
+      if (ex.kind === 'poly') tip = `+${fmtW(inc)}kg : prends 2 séries d’échauffement légères avant la charge de travail.`;
     } else {
-        currentUser = null;
-        showView('login-view');
+      tip = 'Consolide cette charge : cherche la propreté du geste avant de monter.';
     }
-});
-
-function loadSessions() {
-    if (!currentUser) return;
-    const sessionsRef = ref(db, `users/${currentUser.uid}/sessions`);
-    onValue(sessionsRef, (snapshot) => {
-        const data = snapshot.val();
-        sessions = data ? Object.entries(data).map(([id, s]) => ({ id, ...s })).sort((a, b) => (b.date || 0) - (a.date || 0)) : [];
-        renderDashboard();
-    }, (error) => {
-        console.error('Erreur lecture base de données:', error);
-        showToast('Erreur chargement données Firebase', 'error');
-    });
+    const rest = ex.kind === 'poly' ? (w >= 100 ? '3min' : '2min30') : (w <= 12 ? '1min30' : '2min');
+    out.push(`${ex.name} : ${fmtW(W)}kg x ${R.join(', ')} | Repos : ${rest}`);
+    if (tip) out.push(`💡 ${tip}`);
+  }
+  return out.join('\n');
 }
 
-function renderDashboard() {
-    $('stat-sessions').textContent = sessions.length;
-    $('stat-upper').textContent = sessions.filter(s => s.type === 'upper').length;
-    $('stat-lower').textContent = sessions.filter(s => s.type === 'lower').length;
-
-    const filtered = currentFilter === 'all' ? sessions : sessions.filter(s => s.type === currentFilter);
-    const container = $('sessions-list');
-
-    if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center text-gray-500 dark:text-gray-400 py-12 text-sm">Aucune séance enregistrée. Commence par créer ta première séance.</div>`;
-        return;
-    }
-
-    container.innerHTML = filtered.map(s => {
-        const exercises = s.exercises ? Object.values(s.exercises) : [];
-        const totalSets = exercises.reduce((sum, ex) => sum + (ex.sets ? Object.values(ex.sets).length : 0), 0);
-        const isUpper = s.type === 'upper';
-        const typeBadge = isUpper 
-            ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400' 
-            : 'bg-purple-100 text-purple-700 dark:bg-purple-950/50 dark:text-purple-400';
-        
-        return `
-            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 transition fade-in shadow-sm">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md ${typeBadge} uppercase tracking-wide">${s.type}</span>
-                        <span class="text-sm font-semibold">${formatDate(s.date)}</span>
-                    </div>
-                    <button type="button" onclick="window.deleteSession('${s.id}')" class="p-1.5 text-gray-400 hover:text-red-500 transition" title="Supprimer">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
-                    </button>
-                </div>
-                <div class="space-y-1.5">
-                    ${exercises.slice(0, 3).map(ex => {
-                        const sets = ex.sets ? Object.values(ex.sets) : [];
-                        const setsStr = sets.map(st => `${st.weight}kg×${st.reps}`).join(' · ');
-                        return `<div class="text-sm"><span class="font-medium">${ex.name}</span> <span class="text-gray-500 dark:text-gray-400 text-xs">${setsStr}</span></div>`;
-                    }).join('')}
-                    ${exercises.length > 3 ? `<div class="text-xs text-gray-500">+${exercises.length - 3} autres exercices</div>` : ''}
-                </div>
-                <div class="text-xs text-gray-500 dark:text-gray-400 mt-2 pt-2 border-t border-gray-100 dark:border-gray-800">${exercises.length} exercices · ${totalSets} séries</div>
-            </div>
-        `;
-    }).join('');
+/* ---- modale de génération ---- */
+function openGenerate(presetSplit, presetSource){
+  const rec = recommendedSplit();
+  const hasKey = !!db.settings.apiKey.trim();
+  openModal(`
+    <button class="m-close" data-act="close-modal">✕</button>
+    <h2>⚡ GÉNÉRER LA PROCHAINE SÉANCE</h2>
+    <p class="m-sub">L’historique complet (${db.sets.length} séries) + le system prompt de surcharge progressive sont envoyés au modèle.</p>
+    <div class="split-pick">
+      <label><input type="radio" name="gSplit" value="upper" ${presetSplit === 'upper' || (!presetSplit && rec === 'upper') ? 'checked' : ''}>
+        <b>HAUT DU CORPS</b><span>dernière il y a ${daysSince(lastSession('upper')?.date || 0)} j</span>
+        ${rec === 'upper' ? '<span class="rec">RECOMMANDÉ</span>' : ''}</label>
+      <label><input type="radio" name="gSplit" value="legs" ${presetSplit === 'legs' || (!presetSplit && rec === 'legs') ? 'checked' : ''}>
+        <b>JAMBES</b><span>dernière il y a ${daysSince(lastSession('legs')?.date || 0)} j</span>
+        ${rec === 'legs' ? '<span class="rec">RECOMMANDÉ</span>' : ''}</label>
+    </div>
+    <div class="src-row">
+      <label><input type="radio" name="gSrc" value="gemini" ${presetSource !== 'local' && hasKey ? 'checked' : ''}>🛰 Gemini API
+        <small>${hasKey ? 'clé enregistrée ✓ · modèle ' + db.settings.model : 'aucune clé — configure-la dans LAB'}</small></label>
+      <label><input type="radio" name="gSrc" value="local" ${presetSource === 'local' || !hasKey ? 'checked' : ''}>🤖 Coach local
+        <small>hors-ligne · applique les mêmes règles de surcharge</small></label>
+    </div>
+    <div id="genBody"></div>
+    <button class="btn btn-volt cut" id="genGo" style="width:100%;justify-content:center;font-size:15px;padding:14px">GÉNÉRER LE PROGRAMME</button>
+  `, true);
+  $('#genGo').addEventListener('click', runGenerate);
+  if (presetSource) runGenerate();
+}
+const GEN_STEPS = ['Lecture de l’historique…', 'Analyse des échecs & notes…', 'Calcul de la surcharge…', 'Optimisation des temps de repos…', 'Mise en forme du programme…'];
+async function runGenerate(){
+  const split = document.querySelector('input[name="gSplit"]:checked')?.value || recommendedSplit();
+  const src = document.querySelector('input[name="gSrc"]:checked')?.value || 'local';
+  const body = $('#genBody'); const go = $('#genGo');
+  go.disabled = true; let step = 0;
+  body.innerHTML = `<div class="gen-status"><div class="bar"><i></i></div><span id="genStep">${GEN_STEPS[0]}</span></div>`;
+  const rot = setInterval(() => { step = (step + 1) % GEN_STEPS.length; const el = $('#genStep'); if (el) el.textContent = GEN_STEPS[step]; }, 850);
+  try {
+    const text = src === 'gemini' ? await callGemini(split) : await localCoach(split);
+    clearInterval(rot);
+    body.innerHTML = `
+      <p class="sub" style="margin:4px 0 8px">PROGRAMME — <b style="color:var(--volt)">${splitName(split)}</b> · ${fmtDate(new Date().toISOString())} · source : ${src === 'gemini' ? 'Gemini (' + db.settings.model + ')' : 'Coach local'}</p>
+      <div class="raw-out" id="genRaw"></div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn btn-volt btn-sm" data-act="save-plan" data-split="${split}" data-src="${src}">💾 ENREGISTRER COMME PLAN CIBLE</button>
+        <button class="btn btn-ghost btn-sm" id="copyGen">⧉ Copier</button>
+        <button class="btn btn-ghost btn-sm" id="regen">↻ Régénérer</button>
+      </div>`;
+    $('#genRaw').textContent = text;
+    $('#copyGen').addEventListener('click', () => copyText(text));
+    $('#regen').addEventListener('click', runGenerate);
+    go.disabled = false; go.style.display = 'none';
+    body.dataset.raw = text;
+  } catch (err){
+    clearInterval(rot);
+    body.innerHTML = `<p style="color:var(--red);font-size:13.5px;margin-top:6px">✕ ${esc(err.message)}</p>`;
+    go.disabled = false;
+  }
 }
 
-window.deleteSession = async (id) => {
-    if (!confirm('Supprimer cette séance ?')) return;
-    try {
-        await remove(ref(db, `users/${currentUser.uid}/sessions/${id}`));
-        showToast('Séance supprimée', 'success');
-    } catch (e) {
-        showToast('Erreur suppression: ' + e.message, 'error');
-    }
-};
+/* ══════════════════════════════════════════════════════════════
+   9. DOCUMENTATION (onglet LAB) — schéma Prisma & route backend
+   ══════════════════════════════════════════════════════════════ */
+const PRISMA_SCHEMA = `// prisma/schema.prisma
+generator client { provider = "prisma-client-js" }
+datasource db    { provider = "sqlite" }   // → "postgresql" en production
 
-$$('.split-filter').forEach(btn => {
-    btn.addEventListener('click', () => {
-        currentFilter = btn.dataset.split;
-        $$('.split-filter').forEach(b => {
-            b.className = 'split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm ' + 
-                (b.dataset.split === currentFilter ? 'bg-blue-500 text-white shadow-sm' : 'bg-gray-100 dark:bg-gray-900');
-        });
-        renderDashboard();
-    });
-});
+enum Split { UPPER LEGS }
+enum Kind  { POLY ISO }        // polyarticulaire / isolation
 
-$('btn-new-session').addEventListener('click', () => {
-    showSection('session-section');
-    currentExercises = [];
-    $('exercises-container').innerHTML = '';
-    $('session-type').value = 'upper';
-    currentSessionType = 'upper';
-    updateSessionTitle();
-    resetTimer();
-});
-
-$('session-type').addEventListener('change', (e) => {
-    currentSessionType = e.target.value;
-    updateSessionTitle();
-});
-
-function updateSessionTitle() {
-    $('session-title').textContent = `Nouvelle séance ${currentSessionType === 'upper' ? 'Upper' : 'Lower'}`;
+model Exercise {
+  id     String  @id @default(cuid())
+  name   String
+  split  Split
+  kind   Kind
+  order  Int
+  sets   Set[]
+  target String?               // dernier objectif généré par l'IA (ex: "22.5kg x 12,12,10")
 }
 
-$('back-to-dashboard').addEventListener('click', () => showSection('dashboard-section'));
-$('cancel-session').addEventListener('click', () => showSection('dashboard-section'));
-
-$('add-exercise-btn').addEventListener('click', () => {
-    currentExercises.push({ id: Date.now(), name: '', sets: [{ weight: '', reps: '', note: '' }] });
-    renderExercises();
-});
-
-function renderExercises() {
-    const container = $('exercises-container');
-    container.innerHTML = currentExercises.map((ex, idx) => `
-        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 fade-in shadow-sm" data-ex-idx="${idx}">
-            <div class="flex items-center gap-2 mb-3">
-                <span class="w-6 h-6 flex items-center justify-center text-xs font-bold rounded-full bg-blue-500 text-white">${idx + 1}</span>
-                <input type="text" value="${ex.name}" onchange="window.updateExName(${idx}, this.value)" placeholder="Nom de l'exercice (ex: DC Incliné)" class="flex-1 px-2 py-1 bg-transparent font-semibold focus:outline-none placeholder-gray-400">
-                <button type="button" onclick="window.removeExercise(${idx})" class="p-1 text-gray-400 hover:text-red-500">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
-            <div class="space-y-2">
-                <div class="grid grid-cols-[1fr_1fr_2fr_auto] gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 px-1">
-                    <span>Poids (kg)</span><span>Reps</span><span>Note</span><span></span>
-                </div>
-                ${ex.sets.map((s, si) => `
-                    <div class="grid grid-cols-[1fr_1fr_2fr_auto] gap-2">
-                        <input type="number" step="0.5" value="${s.weight}" onchange="window.updateSet(${idx}, ${si}, 'weight', this.value)" placeholder="0" class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-mono">
-                        <input type="number" value="${s.reps}" onchange="window.updateSet(${idx}, ${si}, 'reps', this.value)" placeholder="0" class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-mono">
-                        <input type="text" value="${s.note || ''}" onchange="window.updateSet(${idx}, ${si}, 'note', this.value)" placeholder="ex: échec..." class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500">
-                        <button type="button" onclick="window.removeSet(${idx}, ${si})" class="p-2 text-gray-400 hover:text-red-500">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
-                        </button>
-                    </div>
-                `).join('')}
-                <button type="button" onclick="window.addSet(${idx})" class="w-full py-2 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg text-xs text-gray-500 hover:border-blue-500 hover:text-blue-500">+ Ajouter une série</button>
-            </div>
-        </div>
-    `).join('');
+model Session {
+  id     String   @id @default(cuid())
+  date   DateTime
+  split  Split
+  note   String?
+  sets   Set[]
 }
 
-window.updateExName = (idx, val) => currentExercises[idx].name = val;
-window.updateSet = (exIdx, setIdx, field, val) => currentExercises[exIdx].sets[setIdx][field] = val;
-window.removeSet = (exIdx, setIdx) => {
-    currentExercises[exIdx].sets.splice(setIdx, 1);
-    if (currentExercises[exIdx].sets.length === 0) currentExercises[exIdx].sets.push({ weight: '', reps: '', note: '' });
-    renderExercises();
-};
-window.addSet = (exIdx) => {
-    currentExercises[exIdx].sets.push({ weight: '', reps: '', note: '' });
-    renderExercises();
-};
-window.removeExercise = (idx) => {
-    currentExercises.splice(idx, 1);
-    renderExercises();
-};
-
-$('save-session').addEventListener('click', async () => {
-    const validExercises = currentExercises
-        .filter(ex => ex.name && ex.sets.some(s => s.weight && s.reps))
-        .map(ex => ({
-            name: ex.name,
-            sets: ex.sets.filter(s => s.weight && s.reps).map(s => ({
-                weight: parseFloat(s.weight),
-                reps: parseInt(s.reps),
-                note: s.note || ''
-            }))
-        }));
-
-    if (validExercises.length === 0) {
-        showToast('Ajoute au moins un exercice avec des séries valides', 'error');
-        return;
-    }
-
-    const sessionData = {
-        date: Date.now(),
-        type: currentSessionType,
-        exercises: validExercises.reduce((acc, ex, idx) => {
-            acc[idx] = ex;
-            return acc;
-        }, {})
-    };
-
-    try {
-        const newRef = push(ref(db, `users/${currentUser.uid}/sessions`));
-        await set(newRef, sessionData);
-        showToast('Séance sauvegardée ! 💪', 'success');
-        showSection('dashboard-section');
-    } catch (e) {
-        showToast('Erreur sauvegarde : ' + e.message, 'error');
-    }
-});
-
-function startTimer() {
-    if (timerRunning) return;
-    timerRunning = true;
-    $('timer-start').classList.add('hidden');
-    $('timer-pause').classList.remove('hidden');
-    timerInterval = setInterval(() => {
-        timerSeconds++;
-        updateTimerDisplay();
-        if (timerTarget > 0 && timerSeconds >= timerTarget) {
-            timerDone();
-        }
-    }, 1000);
+model Set {
+  id         String   @id @default(cuid())
+  weight     Float                 // kg (accepte 22.5)
+  reps       Int
+  note       String?               // "échec", "essoufflé", "douleur"…
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId String
+  session    Session  @relation(fields: [sessionId],  references: [id])
+  sessionId  String
+  @@index([exerciseId, sessionId])
 }
 
-function pauseTimer() {
-    timerRunning = false;
-    clearInterval(timerInterval);
-    $('timer-start').classList.remove('hidden');
-    $('timer-pause').classList.add('hidden');
+model Plan {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  split     Split
+  source    String                 // "gemini" | "local"
+  raw       String                 // sortie brute de l'IA (affichage "raw")
+}`;
+
+const API_ROUTE = `// app/api/generate/route.ts  (Next.js App Router)
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+
+// Le bloc coach fourni dans le cahier des charges, mot pour mot
+const SYSTEM_PROMPT = "Tu es un coach sportif expert en hypertrophie… (bloc complet)";
+
+export async function POST(req: Request) {
+  const { split } = await req.json(); // "UPPER" | "LEGS"
+
+  // 1. Lecture + formatage de l'historique depuis la base
+  const sets = await prisma.set.findMany({
+    where: { exercise: { split } },
+    orderBy: { session: { date: "asc" } },
+    include: { exercise: true, session: true },
+  });
+  const history = sets.map(s =>
+    "[" + s.session.date.toISOString().slice(0, 10) + "] " +
+    s.exercise.name + " (" + s.exercise.kind + ") : " +
+    s.weight + "kg x" + s.reps +
+    (s.note ? ' — note : "' + s.note + '"' : "")
+  ).join("\\n");
+
+  const prompt = "PROFIL : Homme, 1m84, 71kg, prise de masse, split Upper/Lower.\\n" +
+    "Séance à générer : " + split + "\\n\\nHISTORIQUE :\\n" + history +
+    "\\n\\nGénère le programme exact de la prochaine séance.";
+
+  // 2. Appel Gemini avec le System Prompt
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+    systemInstruction: SYSTEM_PROMPT,
+    generationConfig: { temperature: 0.35 },
+  });
+  const result = await model.generateContent(prompt);
+  const raw = result.response.text();
+
+  // 3. Persistance du plan + renvoi du texte brut au front
+  await prisma.plan.create({ data: { split, source: "gemini", raw } });
+  return NextResponse.json({ raw });
+}`;
+
+/* ══════════════════════════════════════════════════════════════
+   10. NAVIGATION, DÉLÉGATION D'ÉVÉNEMENTS & INIT
+   ══════════════════════════════════════════════════════════════ */
+let currentTab = 'bord';
+function switchTab(name){
+  currentTab = name;
+  $$('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab === name));
+  $$('.view').forEach(v => v.classList.toggle('on', v.id === 'view-' + name));
+  if (name === 'bord') renderVolumeChart('volChart');
+  if (name === 'prog'){ renderProgChart(); renderVolumeChart('volChart2'); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function resetTimer() {
-    pauseTimer();
-    timerSeconds = 0;
-    timerTarget = 0;
-    updateTimerDisplay();
-    $$('.preset-btn').forEach(b => b.classList.remove('ring-2', 'ring-blue-500'));
-}
-
-function updateTimerDisplay() {
-    const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-    const s = (timerSeconds % 60).toString().padStart(2, '0');
-    $('timer-display').textContent = `${m}:${s}`;
-}
-
-function timerDone() {
-    pauseTimer();
-    const disp = $('timer-display');
-    disp.classList.add('text-red-500');
-    showToast('⏰ Temps de repos écoulé !', 'success');
-    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    setTimeout(() => disp.classList.remove('text-red-500'), 2000);
-}
-
-$('timer-start').addEventListener('click', startTimer);
-$('timer-pause').addEventListener('click', pauseTimer);
-$('timer-reset').addEventListener('click', resetTimer);
-
-$$('.preset-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        pauseTimer();
-        timerSeconds = 0;
-        timerTarget = parseInt(btn.dataset.preset);
-        updateTimerDisplay();
-        $$('.preset-btn').forEach(b => b.classList.remove('ring-2', 'ring-blue-500'));
-        btn.classList.add('ring-2', 'ring-blue-500');
-        startTimer();
-    });
-});
-
-$('settings-btn').addEventListener('click', () => {
-    $('gemini-key').value = localStorage.getItem('gemini_key') || '';
-    $('gemini-model').value = localStorage.getItem('gemini_model') || 'gemini-2.0-flash';
-    $('settings-modal').classList.remove('hidden');
-});
-$('close-settings').addEventListener('click', () => $('settings-modal').classList.add('hidden'));
-
-$('save-settings').addEventListener('click', () => {
-    localStorage.setItem('gemini_key', $('gemini-key').value.trim());
-    localStorage.setItem('gemini_model', $('gemini-model').value);
-    $('settings-modal').classList.add('hidden');
-    showToast('Paramètres sauvegardés', 'success');
-});
-
-function loadSettings() {
-    if (!localStorage.getItem('gemini_key')) {
-        setTimeout(() => $('settings-modal').classList.remove('hidden'), 500);
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const { act } = el.dataset;
+  switch (act){
+    case 'tab': switchTab(el.dataset.tab); break;
+    case 'open-generate': openGenerate(el.dataset.split); break;
+    case 'gen-local': openGenerate(el.dataset.split, 'local'); break;
+    case 'log': openLog(el.dataset.ex); break;
+    case 'chart': switchTab('prog'); $('#progSelect').value = el.dataset.ex; renderProgChart(); break;
+    case 'close-modal': closeModal(); break;
+    case 'preset': Timer.set(+el.dataset.sec); Timer.start(); break;
+    case 't-toggle': Timer.toggle(); break;
+    case 't-adj': Timer.adj(+el.dataset.sec); break;
+    case 'dock-toggle': $('#dock').classList.toggle('min'); Timer.paint(); break;
+    case 'metric': progMetric = el.dataset.metric; renderProgChart(); break;
+    case 'del-set': {
+      const set = db.sets.find(t => t.id === el.dataset.set);
+      db.sets = db.sets.filter(t => t.id !== el.dataset.set);
+      if (set && !db.sets.some(t => t.sessId === set.sessId)) db.sessions = db.sessions.filter(s => s.id !== set.sessId);
+      save(); renderAll(); toast('Série supprimée', 'warn'); break;
     }
-}
-
-$('btn-generate').addEventListener('click', () => {
-    showSection('generate-section');
-    $('ai-result').classList.add('hidden');
-    $('ai-loading').classList.add('hidden');
+    case 'del-sess':
+      openModal(`<h2>Supprimer cette séance ?</h2><p class="m-sub">Toutes ses séries seront effacées. Action irréversible.</p>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost btn-sm" data-act="close-modal">Annuler</button>
+        <button class="btn btn-danger btn-sm" id="confirmSess">Supprimer</button></div>`);
+      $('#confirmSess').addEventListener('click', () => {
+        db.sets = db.sets.filter(t => t.sessId !== el.dataset.sess);
+        db.sessions = db.sessions.filter(s => s.id !== el.dataset.sess);
+        save(); renderAll(); closeModal(); toast('Séance supprimée', 'warn');
+      }); break;
+    case 'save-plan': {
+      const raw = $('#genBody').dataset.raw || $('#genRaw')?.textContent || '';
+      db.plans.push({ id: uid(), date: new Date().toISOString(), split: el.dataset.split, source: el.dataset.src, raw });
+      db.plans = db.plans.slice(-8); save(); renderAll(); closeModal();
+      toast('Plan cible enregistré 🎯 — visible en tête de l’onglet ' + (el.dataset.split === 'upper' ? 'HAUT' : 'JAMBES'));
+      switchTab(el.dataset.split); break;
+    }
+    case 'copy-plan': copyText(db.plans.find(p => p.id === el.dataset.plan)?.raw || ''); break;
+    case 'del-plan': db.plans = db.plans.filter(p => p.id !== el.dataset.plan); save(); renderAll(); toast('Plan supprimé', 'warn'); break;
+    case 'copy-code': copyText(document.getElementById(el.dataset.target).textContent); break;
+    case 'export': {
+      const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'forgelog-export.json'; a.click(); toast('Export téléchargé ⬇'); break;
+    }
+    case 'reset':
+      openModal(`<h2>Réinitialiser toutes les données ?</h2><p class="m-sub">Retour aux données de démonstration (seed).</p>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost btn-sm" data-act="close-modal">Annuler</button>
+        <button class="btn btn-danger btn-sm" id="confirmReset">Tout effacer</button></div>`);
+      $('#confirmReset').addEventListener('click', () => {
+        localStorage.removeItem(DB_KEY); db = seed(); save(); renderAll(); closeModal(); toast('Données réinitialisées ↺');
+      }); break;
+  }
 });
 
-$('back-to-dashboard-gen').addEventListener('click', () => showSection('dashboard-section'));
-
-$('call-ai-btn').addEventListener('click', async () => {
-    const apiKey = localStorage.getItem('gemini_key');
-    if (!apiKey) {
-        showToast('Configure ta clé API Gemini dans les paramètres', 'error');
-        $('settings-modal').classList.remove('hidden');
-        return;
-    }
-
-    const model = localStorage.getItem('gemini_model') || 'gemini-2.0-flash';
-    const sessionType = document.querySelector('input[name="gen-type"]:checked').value;
-    const context = $('ai-context').value.trim();
-
-    const relevantSessions = sessions.filter(s => s.type === sessionType).slice(0, 5);
-    if (relevantSessions.length === 0) {
-        showToast('Aucune séance ' + sessionType + ' dans ton historique', 'error');
-        return;
-    }
-
-    let historyText = 'HISTORIQUE DES ' + relevantSessions.length + ' DERNIÈRES SÉANCES ' + sessionType.toUpperCase() + ' :\n\n';
-    relevantSessions.forEach((s, i) => {
-        historyText += `--- SÉANCE ${i + 1} (${formatDate(s.date)}) ---\n`;
-        const exercises = s.exercises ? Object.values(s.exercises) : [];
-        exercises.forEach(ex => {
-            const sets = ex.sets ? Object.values(ex.sets) : [];
-            const setsStr = sets.map(st => `${st.weight}kg×${st.reps}${st.note ? ' ('+st.note+')' : ''}`).join(' | ');
-            historyText += `• ${ex.name} : ${setsStr}\n`;
-        });
-        historyText += '\n';
-    });
-
-    if (context) {
-        historyText += `\nCONTEXTE ADDITIONNEL DE L'UTILISATEUR (À PRENDRE EN COMPTE ABSOLUMENT) :\n"${context}"\n\n`;
-    }
-
-    historyText += `Type de séance demandée : ${sessionType.toUpperCase()}\nGénère maintenant le programme EXACT en respectant strictement le format demandé.`;
-
-    $('ai-loading').classList.remove('hidden');
-    $('ai-result').classList.add('hidden');
-    $('call-ai-btn').disabled = true;
-
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-                contents: [{ parts: [{ text: historyText }] }],
-                generationConfig: { temperature: 0.4, maxOutputTokens: 2048 }
-            })
-        });
-
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.error?.message || 'Erreur API');
-        }
-
-        const data = await response.json();
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Aucune réponse';
-        
-        $('ai-output').textContent = text.trim();
-        $('ai-loading').classList.add('hidden');
-        $('ai-result').classList.remove('hidden');
-    } catch (e) {
-        $('ai-loading').classList.add('hidden');
-        showToast('Erreur IA : ' + e.message, 'error');
-    } finally {
-        $('call-ai-btn').disabled = false;
-    }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.code === 'Space' && !['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName) && !$('#overlay').classList.contains('on')){
+    e.preventDefault(); Timer.toggle();
+  }
 });
 
-$('copy-ai-result').addEventListener('click', () => {
-    const text = $('ai-output').textContent;
-    navigator.clipboard.writeText(text).then(() => showToast('Copié !', 'success'));
-});
+$('#progSelect').addEventListener('change', renderProgChart);
+$('#apiKeyInput').addEventListener('input', e => { db.settings.apiKey = e.target.value; save(); });
+$('#modelSelect').addEventListener('change', e => { db.settings.model = e.target.value; save(); toast('Modèle : ' + e.target.value); });
+
+/* ---- initialisation ---- */
+db = load() || (db = seed(), save());
+$('#apiKeyInput').value = db.settings.apiKey;
+$('#modelSelect').value = db.settings.model;
+$('#prismaCode').textContent = PRISMA_SCHEMA;
+$('#routeCode').textContent = API_ROUTE;
+Timer.paint();
+renderAll();
+switchTab('bord');
 </script>
 </body>
 </html>
