@@ -390,8 +390,15 @@ $('theme-toggle').addEventListener('click', toggleTheme);
 initTheme();
 
 // ============ AUTH ============
-$('login-btn').addEventListener('click', () => signInWithPopup(auth, provider).catch(e => showToast(e.message, 'error')));
+$('login-btn').addEventListener('click', () => {
+    signInWithRedirect(auth, provider).catch(e => showToast(e.message, 'error'));
+});
+
 $('logout-btn').addEventListener('click', () => signOut(auth));
+
+// Au chargement, vérifier s'il y a un retour de redirection
+import { getRedirectResult } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+getRedirectResult(auth).catch(e => console.log('Pas de redirect result', e));
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -399,15 +406,11 @@ onAuthStateChanged(auth, (user) => {
         $('user-email').textContent = user.email || user.displayName;
         showView('app-container');
         
-        // Enregistrer la connexion
         const connRef = ref(db, `users/${user.uid}/connexions`);
         const newConnRef = push(connRef);
         set(newConnRef, { email: user.email, displayName: user.displayName, timestamp: serverTimestamp() });
         
-        // Charger les settings
         loadSettings();
-        
-        // Écouter les séances en temps réel
         loadSessions();
     } else {
         currentUser = null;
