@@ -54,7 +54,7 @@
             ⚠️ <strong>Attention :</strong> L'authentification Google ne fonctionne pas en ouvrant le fichier directement (<code class="font-mono">file://</code>). Lance-le avec un serveur local (Live Server VS Code, <code class="font-mono">npx serve</code>, etc.) ou héberge-le en ligne.
         </div>
 
-        <button id="login-btn" class="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-750 transition shadow-sm active:scale-[0.98]">
+        <button id="login-btn" type="button" class="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-750 transition shadow-sm active:scale-[0.98]">
             <svg class="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -76,14 +76,14 @@
                 <p id="user-email" class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[180px]"></p>
             </div>
             <div class="flex items-center gap-2">
-                <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition" title="Thème">
+                <button id="theme-toggle" type="button" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition" title="Thème">
                     <svg id="icon-moon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                     <svg id="icon-sun" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </button>
-                <button id="settings-btn" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition" title="Paramètres">
+                <button id="settings-btn" type="button" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition" title="Paramètres">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </button>
-                <button id="logout-btn" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-red-500" title="Déconnexion">
+                <button id="logout-btn" type="button" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-red-500" title="Déconnexion">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                 </button>
             </div>
@@ -108,9 +108,9 @@
             </div>
 
             <div class="flex gap-2 mb-6">
-                <button data-split="all" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-blue-500 text-white shadow-sm">Toutes</button>
-                <button data-split="upper" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 dark:bg-gray-900">Upper</button>
-                <button data-split="lower" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 dark:bg-gray-900">Lower</button>
+                <button type="button" data-split="all" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-blue-500 text-white shadow-sm">Toutes</button>
+                <button type="button" data-split="upper" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 dark:bg-gray-900">Upper</button>
+                <button type="button" data-split="lower" class="split-filter flex-1 px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 dark:bg-gray-900">Lower</button>
             </div>
 
             <div class="space-y-3 mb-6" id="sessions-list">
@@ -120,10 +120,10 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3">
-                <button id="btn-new-session" class="bg-blue-500 hover:bg-blue-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition shadow-md shadow-blue-500/20">
+                <button id="btn-new-session" type="button" class="bg-blue-500 hover:bg-blue-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition shadow-md shadow-blue-500/20">
                     + Nouvelle séance
                 </button>
-                <button id="btn-generate" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition shadow-md shadow-purple-500/20 flex items-center justify-center gap-2">
+                <button id="btn-generate" type="button" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition shadow-md shadow-purple-500/20 flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     Générer IA
                 </button>
@@ -132,7 +132,7 @@
 
         <div id="session-section" class="hidden">
             <div class="flex items-center justify-between mb-5">
-                <button id="back-to-dashboard" class="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                <button id="back-to-dashboard" type="button" class="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                     Retour
                 </button>
@@ -153,34 +153,34 @@
                     <span id="timer-display" class="timer-display text-3xl font-bold text-blue-500">00:00</span>
                 </div>
                 <div class="grid grid-cols-5 gap-1.5 mb-3">
-                    <button data-preset="60" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">1:00</button>
-                    <button data-preset="90" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">1:30</button>
-                    <button data-preset="120" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">2:00</button>
-                    <button data-preset="150" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">2:30</button>
-                    <button data-preset="180" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">3:00</button>
+                    <button type="button" data-preset="60" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">1:00</button>
+                    <button type="button" data-preset="90" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">1:30</button>
+                    <button type="button" data-preset="120" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">2:00</button>
+                    <button type="button" data-preset="150" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">2:30</button>
+                    <button type="button" data-preset="180" class="preset-btn py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-xs font-medium hover:bg-white dark:hover:bg-gray-800">3:00</button>
                 </div>
                 <div class="flex gap-2">
-                    <button id="timer-start" class="flex-1 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg shadow-sm">Start</button>
-                    <button id="timer-pause" class="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg hidden shadow-sm">Pause</button>
-                    <button id="timer-reset" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg shadow-sm">Reset</button>
+                    <button id="timer-start" type="button" class="flex-1 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg shadow-sm">Start</button>
+                    <button id="timer-pause" type="button" class="flex-1 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg hidden shadow-sm">Pause</button>
+                    <button id="timer-reset" type="button" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg shadow-sm">Reset</button>
                 </div>
             </div>
 
             <div id="exercises-container" class="space-y-4 mb-6"></div>
 
-            <button id="add-exercise-btn" class="w-full py-3 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition font-medium">
+            <button id="add-exercise-btn" type="button" class="w-full py-3 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition font-medium">
                 + Ajouter un exercice
             </button>
 
             <div class="flex gap-3 mt-6">
-                <button id="cancel-session" class="flex-1 py-3 bg-gray-200 dark:bg-gray-800 font-medium rounded-xl">Annuler</button>
-                <button id="save-session" class="flex-1 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20">💾 Sauvegarder</button>
+                <button id="cancel-session" type="button" class="flex-1 py-3 bg-gray-200 dark:bg-gray-800 font-medium rounded-xl">Annuler</button>
+                <button id="save-session" type="button" class="flex-1 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20">💾 Sauvegarder</button>
             </div>
         </div>
 
         <div id="generate-section" class="hidden">
             <div class="flex items-center justify-between mb-5">
-                <button id="back-to-dashboard-gen" class="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                <button id="back-to-dashboard-gen" type="button" class="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                     Retour
                 </button>
@@ -216,7 +216,7 @@
                     <textarea id="ai-context" rows="4" placeholder="Ex: Ça fait 11 jours que je ne suis pas allé à la salle / douleur à l'épaule droite..." class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl focus:outline-none focus:border-blue-500 resize-none text-sm"></textarea>
                 </div>
 
-                <button id="call-ai-btn" class="w-full py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2 active:scale-[0.98]">
+                <button id="call-ai-btn" type="button" class="w-full py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2 active:scale-[0.98]">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     Générer ma prochaine séance
                 </button>
@@ -229,7 +229,7 @@
                 <div id="ai-result" class="hidden">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="font-semibold text-sm">📋 Programme généré</h3>
-                        <button id="copy-ai-result" class="text-xs text-blue-500 hover:underline flex items-center gap-1">
+                        <button id="copy-ai-result" type="button" class="text-xs text-blue-500 hover:underline flex items-center gap-1">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                             Copier
                         </button>
@@ -245,7 +245,7 @@
     <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-md border border-gray-200 dark:border-gray-800 shadow-xl">
         <div class="flex items-center justify-between mb-4">
             <h2 class="font-bold text-lg">⚙️ Paramètres</h2>
-            <button id="close-settings" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
+            <button id="close-settings" type="button" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
@@ -263,7 +263,7 @@
                     <option value="gemini-1.5-pro">gemini-1.5-pro (puissant)</option>
                 </select>
             </div>
-            <button id="save-settings" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg">Sauvegarder</button>
+            <button id="save-settings" type="button" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg">Sauvegarder</button>
         </div>
     </div>
 </div>
@@ -277,7 +277,9 @@ import {
     signInWithPopup, 
     GoogleAuthProvider, 
     signOut, 
-    onAuthStateChanged 
+    onAuthStateChanged,
+    setPersistence,
+    browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { 
     getDatabase, 
@@ -304,6 +306,11 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account' });
+
+// Forcer la persistance locale
+setPersistence(auth, browserLocalPersistence).catch(err => {
+    console.warn("Impossible de forcer browserLocalPersistence:", err);
+});
 
 let currentUser = null;
 let sessions = [];
@@ -391,7 +398,6 @@ function updateThemeIcons() {
 $('theme-toggle').addEventListener('click', toggleTheme);
 initTheme();
 
-// Avertissement protocole fichier
 if (window.location.protocol === 'file:') {
     $('file-protocol-warning').classList.remove('hidden');
 }
@@ -402,6 +408,7 @@ $('login-btn').addEventListener('click', async () => {
     $('login-status').className = 'text-center text-xs text-blue-500 mt-4 min-h-[20px]';
     
     try {
+        await setPersistence(auth, browserLocalPersistence);
         const result = await signInWithPopup(auth, provider);
         $('login-status').textContent = '';
         showToast(`Bienvenue ${result.user.displayName || ''} !`, 'success');
@@ -410,13 +417,13 @@ $('login-btn').addEventListener('click', async () => {
         let errorMsg = "Erreur de connexion";
         
         if (e.code === 'auth/popup-blocked') {
-            errorMsg = "La popup Google a été bloquée par le navigateur. Autorise les popups.";
+            errorMsg = "La popup Google a été bloquée. Autorise les fenêtres pop-up.";
         } else if (e.code === 'auth/unauthorized-domain') {
-            errorMsg = `Le domaine actuel (${window.location.hostname}) n'est pas autorisé dans la console Firebase (Auth > Settings > Authorized domains).`;
+            errorMsg = `Le domaine (${window.location.hostname}) n'est pas autorisé dans la console Firebase (Auth > Settings > Authorized domains).`;
         } else if (e.code === 'auth/popup-closed-by-user') {
             errorMsg = "Fenêtre de connexion fermée.";
         } else if (e.code === 'auth/operation-not-supported-in-this-environment') {
-            errorMsg = "Non supporté en file://. Lance un serveur HTTP local (Live Server).";
+            errorMsg = "Non supporté en file://. Lance un serveur local (Live Server).";
         } else {
             errorMsg = e.message;
         }
@@ -499,7 +506,7 @@ function renderDashboard() {
                         <span class="px-2.5 py-1 text-xs font-semibold rounded-md ${typeBadge} uppercase tracking-wide">${s.type}</span>
                         <span class="text-sm font-semibold">${formatDate(s.date)}</span>
                     </div>
-                    <button onclick="window.deleteSession('${s.id}')" class="p-1.5 text-gray-400 hover:text-red-500 transition" title="Supprimer">
+                    <button type="button" onclick="window.deleteSession('${s.id}')" class="p-1.5 text-gray-400 hover:text-red-500 transition" title="Supprimer">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
                     </button>
                 </div>
@@ -572,7 +579,7 @@ function renderExercises() {
             <div class="flex items-center gap-2 mb-3">
                 <span class="w-6 h-6 flex items-center justify-center text-xs font-bold rounded-full bg-blue-500 text-white">${idx + 1}</span>
                 <input type="text" value="${ex.name}" onchange="window.updateExName(${idx}, this.value)" placeholder="Nom de l'exercice (ex: DC Incliné)" class="flex-1 px-2 py-1 bg-transparent font-semibold focus:outline-none placeholder-gray-400">
-                <button onclick="window.removeExercise(${idx})" class="p-1 text-gray-400 hover:text-red-500">
+                <button type="button" onclick="window.removeExercise(${idx})" class="p-1 text-gray-400 hover:text-red-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -585,12 +592,12 @@ function renderExercises() {
                         <input type="number" step="0.5" value="${s.weight}" onchange="window.updateSet(${idx}, ${si}, 'weight', this.value)" placeholder="0" class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-mono">
                         <input type="number" value="${s.reps}" onchange="window.updateSet(${idx}, ${si}, 'reps', this.value)" placeholder="0" class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-mono">
                         <input type="text" value="${s.note || ''}" onchange="window.updateSet(${idx}, ${si}, 'note', this.value)" placeholder="ex: échec..." class="px-2 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-blue-500">
-                        <button onclick="window.removeSet(${idx}, ${si})" class="p-2 text-gray-400 hover:text-red-500">
+                        <button type="button" onclick="window.removeSet(${idx}, ${si})" class="p-2 text-gray-400 hover:text-red-500">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
                         </button>
                     </div>
                 `).join('')}
-                <button onclick="window.addSet(${idx})" class="w-full py-2 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg text-xs text-gray-500 hover:border-blue-500 hover:text-blue-500">+ Ajouter une série</button>
+                <button type="button" onclick="window.addSet(${idx})" class="w-full py-2 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg text-xs text-gray-500 hover:border-blue-500 hover:text-blue-500">+ Ajouter une série</button>
             </div>
         </div>
     `).join('');
