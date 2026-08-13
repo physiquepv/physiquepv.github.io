@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   FORGE·LOG — Workout Tracker / Upper-Lower / Surcharge IA
+   FORGE·LOG v2 — données réelles du carnet (12 Up / 12 Legs)
    Tout est dans ce fichier : styles, logique "backend", données
    ============================================================ */
 :root{
@@ -28,36 +28,27 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg); color:var(--txt); font-family:var(--body);
-  min-height:100vh; overflow-x:hidden;
-}
-/* ---- fond vivant : grille + halos qui dérivent lentement ---- */
+body{background:var(--bg);color:var(--txt);font-family:var(--body);min-height:100vh;overflow-x:hidden}
 .bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
                    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
   background-size:46px 46px;
-  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 100%);
-}
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 100%)}
 .glow{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;opacity:.16}
 .glow.a{width:520px;height:520px;background:var(--volt);top:-220px;left:-140px;animation:drift 26s ease-in-out infinite alternate}
 .glow.b{width:460px;height:460px;background:var(--amber);bottom:-240px;right:-120px;opacity:.10;animation:drift 32s ease-in-out infinite alternate-reverse}
 @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(70px,50px) scale(1.12)}}
-
 ::selection{background:var(--volt);color:#0a0e13}
 button{font-family:inherit;cursor:pointer}
 input,select,textarea{font-family:inherit;color:var(--txt)}
 :focus-visible{outline:2px solid var(--volt);outline-offset:2px}
 .mono{font-family:var(--mono)}
 .dim{color:var(--dim)}
-
-/* coins coupés = signature visuelle de l'app */
 .cut{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
 
 /* ================= TOPBAR ================= */
 .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
-  padding:12px 22px;background:rgba(10,14,19,.88);backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);}
+  padding:12px 22px;background:rgba(10,14,19,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:10px}
 .brand svg{width:26px;height:26px;fill:var(--volt);filter:drop-shadow(0 0 8px rgba(200,245,66,.5))}
 .brand b{font-family:var(--disp);font-size:24px;letter-spacing:1.5px}
@@ -66,15 +57,15 @@ input,select,textarea{font-family:inherit;color:var(--txt)}
 .topbar .spacer{flex:1}
 .chip{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--line);
   border-radius:8px;background:var(--card);font-size:13px;color:var(--mut);font-family:var(--mono)}
-.chip button,button.chip{background:var(--card);color:var(--mut);transition:.2s}
+button.chip{transition:.2s}
 button.chip:hover{border-color:var(--volt);color:var(--txt)}
 .chip .dot{width:7px;height:7px;border-radius:50%;background:var(--dim)}
 .chip.live .dot{background:var(--volt);animation:pulse 1.2s infinite}
 @keyframes pulse{50%{opacity:.3;transform:scale(.7)}}
 
 /* ================= BOUTONS ================= */
-.btn{border:none;border-radius:8px;padding:11px 18px;font-weight:700;font-size:14px;
-  letter-spacing:.4px;display:inline-flex;align-items:center;gap:8px;transition:.18s;white-space:nowrap}
+.btn{border:none;border-radius:8px;padding:11px 18px;font-weight:700;font-size:14px;letter-spacing:.4px;
+  display:inline-flex;align-items:center;gap:8px;transition:.18s;white-space:nowrap}
 .btn-volt{background:var(--volt);color:#101505}
 .btn-volt:hover{background:#dcff62;transform:translateY(-1px);box-shadow:0 6px 22px rgba(200,245,66,.30)}
 .btn-volt:active{transform:translateY(1px)}
@@ -96,8 +87,6 @@ main{position:relative;z-index:1;padding:0 22px 140px;max-width:1240px;margin:0 
 .view{display:none;animation:viewIn .35s ease}
 .view.on{display:block}
 @keyframes viewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-/* reveal au scroll */
 .rev{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
 .rev.in{opacity:1;transform:none}
 
@@ -133,6 +122,8 @@ main{position:relative;z-index:1;padding:0 22px 140px;max-width:1240px;margin:0 
 .ex-row{display:flex;align-items:center;gap:14px;padding:13px 14px;border:1px solid transparent;
   border-left:3px solid var(--line);border-radius:8px;margin-top:8px;transition:.18s;background:rgba(255,255,255,.012)}
 .ex-row:hover{border-left-color:var(--volt);background:var(--card2);transform:translateX(3px)}
+.ex-row.paused{opacity:.68}
+.ex-row.paused:hover{opacity:1}
 .ex-main{flex:1;min-width:0}
 .ex-name{font-weight:600;font-size:14.5px}
 .ex-last{display:block;font-family:var(--mono);font-size:13px;color:var(--mut);margin-top:3px}
@@ -152,6 +143,13 @@ main{position:relative;z-index:1;padding:0 22px 140px;max-width:1240px;margin:0 
   color:var(--volt);border-radius:6px;padding:3px 8px;display:inline-flex;gap:7px;align-items:center}
 .tchip button{background:none;border:none;color:var(--volt);font-size:12px;padding:0;opacity:.7}
 .tchip button:hover{opacity:1;color:var(--red)}
+
+/* exercices archivés */
+.arch{margin-top:16px;border:1px dashed var(--line);border-radius:10px;padding:10px 16px}
+.arch summary{cursor:pointer;color:var(--dim);font-size:13px;font-weight:600;padding:4px 0}
+.arch summary:hover{color:var(--mut)}
+.arch-row{display:flex;justify-content:space-between;gap:14px;padding:8px 4px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--mut);flex-wrap:wrap}
 
 /* ================= PLAN BANNIÈRE ================= */
 .plan-banner{border:1px solid rgba(200,245,66,.35);border-left:4px solid var(--volt);border-radius:12px;
@@ -211,7 +209,6 @@ main{position:relative;z-index:1;padding:0 22px 140px;max-width:1240px;margin:0 
 .field-row .field{flex:1}
 .form-hint{font-size:12px;color:var(--dim);margin-top:8px}
 
-/* sortie IA "raw" */
 .raw-out{background:#0b0f14;border:1px solid var(--line2);border-left:4px solid var(--volt);border-radius:10px;
   padding:20px;font-family:var(--mono);font-size:14.5px;line-height:1.8;white-space:pre-wrap;color:#dff0c0;
   max-height:46vh;overflow-y:auto}
@@ -234,7 +231,7 @@ main{position:relative;z-index:1;padding:0 22px 140px;max-width:1240px;margin:0 
 .src-row input{margin-right:8px;accent-color:var(--amber)}
 .src-row small{display:block;color:var(--dim);margin-top:3px;font-size:11px}
 
-/* ================= HISTORIQUE / LAB ================= */
+/* ================= LAB ================= */
 .sess-card{display:flex;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);
   border-radius:10px;padding:15px 18px;margin-bottom:10px;transition:.18s}
 .sess-card:hover{border-color:var(--line2);transform:translateX(3px)}
@@ -254,7 +251,6 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
 .tile b{font-family:var(--mono);font-size:19px;color:var(--volt)}
 .tile span{display:block;font-size:11.5px;color:var(--mut);margin-top:3px}
 
-/* ================= TOASTS ================= */
 #toasts{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:100;display:flex;
   flex-direction:column;gap:8px;align-items:center}
 .toast{background:var(--card2);border:1px solid var(--line2);border-left:3px solid var(--volt);
@@ -282,7 +278,6 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
 <div class="glow a"></div>
 <div class="glow b"></div>
 
-<!-- ================= TOPBAR ================= -->
 <header class="topbar">
   <div class="brand">
     <svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
@@ -294,7 +289,6 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
   <button class="btn btn-volt cut" data-act="open-generate">⚡ GÉNÉRER LA SÉANCE</button>
 </header>
 
-<!-- ================= NAVIGATION ================= -->
 <nav class="tabs">
   <button class="tab on" data-act="tab" data-tab="bord">TABLEAU DE BORD</button>
   <button class="tab" data-act="tab" data-tab="upper">HAUT DU CORPS</button>
@@ -308,7 +302,6 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
   <section id="view-upper" class="view"></section>
   <section id="view-legs" class="view"></section>
 
-  <!-- ================= PROGRESSION ================= -->
   <section id="view-prog" class="view">
     <div class="sec-title"><h2>PROGRESSION</h2><span class="meta">poids de travail & e1RM (Epley) par séance</span></div>
     <div class="card rev">
@@ -331,7 +324,6 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
     </div>
   </section>
 
-  <!-- ================= LAB ================= -->
   <section id="view-lab" class="view">
     <div class="sec-title"><h2>LAB</h2><span class="meta">historique · réglages IA · stack de production</span></div>
     <div id="labHistory"></div>
@@ -353,7 +345,7 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
       <p class="form-hint">⚠ En production la clé doit rester côté serveur (voir la route API ci-dessous). Ici elle ne quitte jamais ton navigateur, acceptable pour un usage perso.</p>
       <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
         <button class="btn btn-ghost btn-sm" data-act="export">⬇ Exporter les données (JSON)</button>
-        <button class="btn btn-danger btn-sm" data-act="reset">↺ Réinitialiser (reseed)</button>
+        <button class="btn btn-danger btn-sm" data-act="reset">↺ Réinitialiser (ton carnet)</button>
       </div>
       <p class="form-hint" id="dbCount"></p>
     </div>
@@ -363,7 +355,7 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
       <p class="sub" style="margin-bottom:10px;color:var(--mut)">Ce fichier unique est un prototype autonome : <span class="mono" style="color:var(--volt)">localStorage</span> y joue le rôle de SQLite et la fonction <span class="mono" style="color:var(--volt)">callGemini()</span> celui de la route backend. Pour passer en prod :</p>
       <div class="card">
         <ul style="line-height:2;font-size:14px;padding-left:20px;color:var(--mut)">
-          <li><b style="color:var(--txt)">Frontend + API :</b> Next.js 14 (App Router) + TailwindCSS — UI dashboard & routes serverless</li>
+          <li><b style="color:var(--txt)">Frontend + API :</b> Next.js 14 (App Router) + TailwindCSS</li>
           <li><b style="color:var(--txt)">Base :</b> SQLite (dev) → PostgreSQL (prod) via <b>Prisma ORM</b></li>
           <li><b style="color:var(--txt)">IA :</b> <span class="mono">@google/generative-ai</span> (SDK Gemini), clé dans <span class="mono">.env</span></li>
           <li><b style="color:var(--txt)">Déploiement :</b> Vercel (front + API) + Turso/Neon (DB)</li>
@@ -417,70 +409,249 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
 <script>
 'use strict';
 /* ══════════════════════════════════════════════════════════════
-   1. COUCHE "BASE DE DONNÉES" — équivalent SQLite/Prisma en prod
-      (le schéma Prisma correspondant est affiché dans l'onglet LAB)
+   1. COUCHE "BASE DE DONNÉES" — SEED = TON CARNET D'ENTRAÎNEMENT
+      12 séances Upper (U1→U12) + 12 séances Legs (L1→L12)
+      Échauffements exclus · exercices ponctuels archivés
    ══════════════════════════════════════════════════════════════ */
-const DB_KEY = 'forgelog.v1';
+const DB_KEY = 'forgelog.v2';
 const uid = () => Math.random().toString(36).slice(2, 10);
 let db = null;
 
 function seed(){
   const dAgo = n => { const d = new Date(); d.setDate(d.getDate() - n); d.setHours(18, 30, 0, 0); return d.toISOString(); };
   const exercises = [
-    { id:'dev-incline', name:'Développé incliné haltères',   split:'upper', kind:'poly', order:1 },
-    { id:'tirage',      name:'Tirage vertical',              split:'upper', kind:'poly', order:2 },
-    { id:'chest',       name:'Chest press',                  split:'upper', kind:'poly', order:3 },
-    { id:'elev-lat',    name:'Élévations latérales haltères',split:'upper', kind:'iso',  order:4 },
-    { id:'curl',        name:'Curl barre EZ',                split:'upper', kind:'iso',  order:5 },
-    { id:'tric',        name:'Extension triceps poulie',     split:'upper', kind:'iso',  order:6 },
-    { id:'presse',      name:'Presse à jambes',              split:'legs',  kind:'poly', order:1 },
-    { id:'rdl',         name:'RDL haltères',                 split:'legs',  kind:'poly', order:2 },
-    { id:'squat-h',     name:'Squat haltère (goblet)',       split:'legs',  kind:'poly', order:3 },
-    { id:'leg-ext',     name:'Leg extension',                split:'legs',  kind:'iso',  order:4 },
-    { id:'leg-curl',    name:'Leg curl',                     split:'legs',  kind:'iso',  order:5 },
-    { id:'mollets',     name:'Mollets debout',               split:'legs',  kind:'iso',  order:6 },
+    /* ── HAUT DU CORPS · routine actuelle ── */
+    { id:'dev-incline', name:'Développé incliné haltères',            split:'upper', kind:'poly', order:1 },
+    { id:'tirage-vert', name:'Tirage vertical',                       split:'upper', kind:'poly', order:2 },
+    { id:'chest-press', name:'Chest press (machine)',                 split:'upper', kind:'poly', order:3 },
+    { id:'tirage-horz', name:'Tirage horizontal (poulie basse)',      split:'upper', kind:'poly', order:4 },
+    { id:'shoulder',    name:'Shoulder press (machine)',              split:'upper', kind:'poly', order:5 },
+    { id:'elev-lat',    name:'Élévations latérales haltères',        split:'upper', kind:'iso',  order:6 },
+    { id:'tric-poulie', name:'Extension triceps poulie (corde)',      split:'upper', kind:'iso',  order:7 },
+    { id:'curl-poulie', name:'Curl biceps poulie basse',              split:'upper', kind:'iso',  order:8 },
+    /* ── HAUT · archivés / ponctuels ── */
+    { id:'curl-incline', name:'Curl biceps incliné haltères', split:'upper', kind:'iso',  order:20, archived:true },
+    { id:'dev-couche',   name:'Développé couché barre',       split:'upper', kind:'poly', order:21, archived:true },
+    { id:'chest-incline',name:'Chest press incliné (machine)',split:'upper', kind:'poly', order:22, archived:true },
+    { id:'ext-tete',     name:'Extension au-dessus de la tête',split:'upper',kind:'iso',  order:23, archived:true },
+    { id:'dips-banc',    name:'Dips banc',                    split:'upper', kind:'poly', order:24, archived:true },
+    { id:'traction',     name:'Tractions',                    split:'upper', kind:'poly', order:25, archived:true },
+    { id:'rowing',       name:'Rowing barre (buste penché)',  split:'upper', kind:'poly', order:26, archived:true },
+    { id:'oiseau',       name:'Oiseau buste penché',          split:'upper', kind:'iso',  order:27, archived:true },
+    { id:'shrugs',       name:'Shrugs haltères',              split:'upper', kind:'iso',  order:28, archived:true },
+    /* ── JAMBES · routine actuelle ── */
+    { id:'presse',        name:'Leg press',                       split:'legs', kind:'poly', order:1 },
+    { id:'rdl',           name:'Soulevé de terre roumain (halt.)',split:'legs', kind:'poly', order:2 },
+    { id:'leg-ext',       name:'Leg extension',                 split:'legs', kind:'iso',  order:3 },
+    { id:'leg-curl',      name:'Leg curl',                      split:'legs', kind:'iso',  order:4 },
+    { id:'mollets',       name:'Mollets (machine assis)',       split:'legs', kind:'iso',  order:5 },
+    { id:'ab-crunch',     name:'Abdominaux (machine crunch)',   split:'legs', kind:'iso',  order:6 },
+    { id:'squat-machine', name:'Squat machine incliné',         split:'legs', kind:'poly', order:7 },
+    { id:'squat-haltere', name:'Squat haltère (goblet)',        split:'legs', kind:'poly', order:20, archived:true },
   ];
-  const sessions = [
-    { id:'sU1', date:dAgo(13), split:'upper' },
-    { id:'sL1', date:dAgo(11), split:'legs'  },
-    { id:'sU2', date:dAgo(6),  split:'upper' },
-    { id:'sL2', date:dAgo(4),  split:'legs'  },
+  /* Chronologie reconstituée (jours avant aujourd'hui) */
+  const plan = [
+    ['U1','upper',129],['L1','legs',124],['U2','upper',117],['L2','legs',113],
+    ['U3','upper',107],['L3','legs',102],['U4','upper',95], ['L4','legs',90],
+    ['U5','upper',84], ['L5','legs',80], ['U6','upper',73], ['L6','legs',68],
+    ['U7','upper',62], ['L7','legs',58], ['U8','upper',51], ['L8','legs',46],
+    ['U9','upper',40], ['L9','legs',35], ['U10','upper',27],['L10','legs',23],
+    ['U11','upper',16],['L11','legs',11],['U12','upper',5], ['L12','legs',2],
   ];
+  const sessions = plan.map(([id, split, ago]) => ({ id, split, date: dAgo(ago) }));
+  const D = id => sessions.find(s => s.id === id).date;
   const sets = [];
   const S = (sessId, exId, rows) => rows.forEach(([w, r, n]) =>
-    sets.push({ id: uid(), exId, sessId, date: sessions.find(s => s.id === sessId).date, weight: w, reps: r, note: n || '' }));
-  // ── Upper J-13 ──
-  S('sU1','dev-incline',[[18,12],[18,10],[18,10,'un peu juste']]);
-  S('sU1','tirage',      [[45,12],[45,12],[45,10]]);
-  S('sU1','chest',       [[20,12],[20,10],[20,10]]);
-  S('sU1','elev-lat',    [[8,12],[8,12],[8,12]]);
-  S('sU1','curl',        [[25,10],[25,9],[25,8,'échec à la 8e']]);
-  S('sU1','tric',        [[20,12],[20,12],[20,11]]);
-  // ── Legs J-11 ──
-  S('sL1','presse',      [[120,12],[120,10],[120,10,'très essoufflé']]);
-  S('sL1','rdl',         [[22,12],[22,10],[22,10,'ischios bien ciblés']]);
-  S('sL1','squat-h',     [[24,10],[24,10],[24,8,'souffle limitant']]);
-  S('sL1','leg-ext',     [[40,12],[40,12],[40,10]]);
-  S('sL1','leg-curl',    [[35,12],[35,10],[35,10]]);
-  S('sL1','mollets',     [[60,15],[60,15],[60,12]]);
-  // ── Upper J-6 ──
-  S('sU2','dev-incline',[[20,12],[20,11],[20,9,'échec à 9 reps']]);
-  S('sU2','tirage',      [[50,12],[50,12],[50,11]]);
-  S('sU2','chest',       [[22.5,12],[22.5,11],[22.5,9]]);
-  S('sU2','elev-lat',    [[10,12],[10,12],[10,12,'un peu d’élan en fin de série']]);
-  S('sU2','curl',        [[25,11],[25,10],[25,9]]);
-  S('sU2','tric',        [[22.5,12],[22.5,11],[22.5,10]]);
-  // ── Legs J-4 ──
-  S('sL2','presse',      [[140,12],[140,12],[140,10,'solide, RAS']]);
-  S('sL2','rdl',         [[24,12],[24,12],[24,10]]);
-  S('sL2','squat-h',     [[26,10],[26,10],[26,10,'genou OK']]);
-  S('sL2','leg-ext',     [[45,12],[45,12],[45,11]]);
-  S('sL2','leg-curl',    [[35,12],[35,12],[35,12,'facile, marge de 2-3 reps']]);
-  S('sL2','mollets',     [[65,15],[65,14],[65,12]]);
+    sets.push({ id: uid(), exId, sessId, date: D(sessId), weight: w, reps: r, note: n || '' }));
+
+  /* ═══════════ UPPER ═══════════ */
+  // Développé incliné haltères
+  S('U1','dev-incline',[[12,5],[12,6,'premières séances']]);
+  S('U2','dev-incline',[[14,12],[14,10],[14,6]]);
+  S('U3','dev-incline',[[16,10],[16,10],[16,8]]);
+  S('U4','dev-incline',[[16,12],[16,12],[16,11,'dernière à 90% d’amplitude → comptée 11']]);
+  S('U5','dev-incline',[[18,10],[18,10],[18,8]]);
+  S('U6','dev-incline',[[18,10],[18,10],[18,10]]);
+  S('U7','dev-incline',[[18,12],[18,12],[18,9]]);
+  S('U8','dev-incline',[[18,12],[18,12],[18,9,'4 j de repos avant la séance jambes']]);
+  S('U9','dev-incline',[[18,12],[18,12],[18,8,'faut-il augmenter le poids d’échauffement ?']]);
+  S('U10','dev-incline',[[18,12],[18,12],[18,10]]);
+  S('U11','dev-incline',[[18,12,'très très facile, pas d’échauffement (trop de monde)'],[18,12,'très très facile'],[20,12,'12e rep bizarre']]);
+  S('U12','dev-incline',[[20,11],[20,10],[20,9]]);
+  // Tirage vertical
+  S('U1','tirage-vert',[[35,12],[35,12],[35,10],[40,6],[35,11,'tests de charges']]);
+  S('U2','tirage-vert',[[40,12],[40,12],[40,12]]);
+  S('U3','tirage-vert',[[45,10],[45,10],[45,8]]);
+  S('U4','tirage-vert',[[45,12],[45,10],[45,9]]);
+  S('U5','tirage-vert',[[45,12],[45,12],[45,10]]);
+  S('U6','tirage-vert',[[45,12],[45,12],[45,11]]);
+  S('U7','tirage-vert',[[45,12],[45,12],[45,12]]);
+  S('U8','tirage-vert',[[50,10],[50,10],[50,8]]);
+  S('U9','tirage-vert',[[50,11],[50,10],[50,9,'les deux dernières auraient pu être meilleures']]);
+  S('U10','tirage-vert',[[50,12],[50,11],[50,10,'dur de tirer tout en bas']]);
+  S('U11','tirage-vert',[[50,12],[50,12],[50,10,'shoulder press fait avant, trop de monde']]);
+  S('U12','tirage-vert',[[50,12],[50,12],[50,12,'une semaine sans salle ; dernières reps compliquées']]);
+  // Chest press
+  S('U1','chest-press',[[10,8],[10,6]]);
+  S('U2','chest-press',[[15,12],[15,10],[15,7]]);
+  S('U3','chest-press',[[15,12],[15,9],[15,7,'à cause du shoulder press ?']]);
+  S('U4','chest-press',[[15,12],[15,12],[15,8,'9 possible à l’échec']]);
+  S('U5','chest-press',[[15,12],[15,12],[15,12,'plus compliqué à la fin']]);
+  S('U6','chest-press',[[20,12],[20,12,'12e compliqué'],[20,9]]);
+  S('U7','chest-press',[[20,12],[20,12],[20,8,'besoin de plus de repos ?']]);
+  S('U8','chest-press',[[20,12],[20,12],[20,11]]);
+  S('U9','chest-press',[[20,12],[20,12,'échec'],[20,8,'+2 après une micro-pause']]);
+  S('U10','chest-press',[[20,12],[20,12],[20,11,'je pense qu’on peut augmenter le poids']]);
+  S('U11','chest-press',[[25,12],[25,8],[25,6,'22,5 dispo en vrai ; 3 min de repos']]);
+  S('U12','chest-press',[[22.5,12],[22.5,12,'échec'],[22.5,9]]);
+  // Tirage horizontal
+  S('U1','tirage-horz',[[35,8],[35,11],[35,9],[30,8]]);
+  S('U2','tirage-horz',[[35,12],[35,10],[35,8]]);
+  S('U3','tirage-horz',[[35,12],[35,12],[35,8]]);
+  S('U4','tirage-horz',[[35,12],[35,12],[35,12]]);
+  S('U5','tirage-horz',[[40,8],[40,8],[40,8]]);
+  S('U6','tirage-horz',[[40,10],[40,10],[40,10]]);
+  S('U7','tirage-horz',[[40,12],[40,11],[40,10]]);
+  S('U8','tirage-horz',[[40,12],[40,12],[40,10]]);
+  S('U9','tirage-horz',[[40,12],[40,12],[40,10,'réveillé à 13h, pas ma meilleure séance']]);
+  S('U10','tirage-horz',[[40,12],[40,12],[40,12]]);
+  S('U11','tirage-horz',[[45,10],[45,9],[45,8]]);
+  S('U12','tirage-horz',[[45,10],[45,10],[45,7]]);
+  // Shoulder press (skip U1, U2, U8, U9, U12)
+  S('U3','shoulder',[[15,6,'après 2 tentatives à 20kg (9 puis 5)']]);
+  S('U4','shoulder',[[15,12],[15,7],[15,6]]);
+  S('U5','shoulder',[[15,10],[15,7],[15,5,'pourquoi cette baisse ?']]);
+  S('U6','shoulder',[[15,9],[15,8],[15,7]]);
+  S('U7','shoulder',[[15,10],[15,9],[15,6,'7 après une micro-pause']]);
+  S('U10','shoulder',[[15,9,'c’est dur — dos collé ? siège à combien ? (Technogym, 1m84)'],[15,5,'cata, j’arrête là. Déjà 1h de salle à la 2e série ?']]);
+  S('U11','shoulder',[[15,10],[15,9],[15,9,'j’aurais pu faire plus sur toutes les séries']]);
+  // Élévations latérales
+  S('U2','elev-lat',[[6,12],[6,12],[6,12],[6,12,'stoppé exprès à 12 (j’aurais pu aller à 15)']]);
+  S('U3','elev-lat',[[6,15],[6,15],[6,15,'compliqué la dernière'],[6,14]]);
+  S('U4','elev-lat',[[8,12],[8,10],[8,10],[8,9,'10e rep bizarre']]);
+  S('U5','elev-lat',[[8,10],[8,10],[8,10],[8,10]]);
+  S('U6','elev-lat',[[8,12],[8,12],[8,10],[8,10]]);
+  S('U7','elev-lat',[[8,12],[8,12],[8,12],[8,12]]);
+  S('U8','elev-lat',[[10,10],[10,9],[10,8],[10,8,'pas fait shoulder press machine']]);
+  S('U9','elev-lat',[[10,10],[10,10],[10,9],[10,9]]);
+  S('U10','elev-lat',[[10,10],[10,10],[10,10,'pause 1-2s entre reps, c’est ok ?'],[10,10,'exos épaules inversés car machine occupée']]);
+  S('U11','elev-lat',[[10,10],[10,10],[10,9],[10,8]]);
+  S('U12','elev-lat',[[10,10],[10,10],[10,10],[10,8]]);
+  // Triceps poulie corde
+  S('U1','tric-poulie',[[12.5,12],[12.5,11],[12.5,8],[10,12]]);
+  S('U2','tric-poulie',[[12.5,12],[12.5,7],[10,9],[10,7]]);
+  S('U3','tric-poulie',[[12.5,15],[12.5,12],[12.5,10]]);
+  S('U4','tric-poulie',[[15,9],[15,7],[12.5,8]]);
+  S('U5','tric-poulie',[[15,10],[15,7],[15,6],[12,2,'back-off']]);
+  S('U6','tric-poulie',[[15,11],[15,10],[15,10]]);
+  S('U7','tric-poulie',[[15,12],[15,9],[15,5],[12.5,3,'back-off']]);
+  S('U8','tric-poulie',[[15,12],[15,10],[15,9]]);
+  S('U9','tric-poulie',[[15,12],[15,12],[15,8,'8 ou 9, je sais plus']]);
+  S('U10','tric-poulie',[[15,8,'plus de bras — trop longtemps sans salle ?'],[12.5,11],[12.5,8,'pas ma journée ; la poulie est trop haute ?']]);
+  S('U11','tric-poulie',[[15,10,'déjà 1h05 de séance, y’a un problème ?'],[15,8],[15,6]]);
+  S('U12','tric-poulie',[[15,12],[15,12],[15,12]]);
+  // Curl incliné haltères (abandonné après U5 → remplacé par poulie basse)
+  S('U1','curl-incline',[[10,9],[8,7],[8,8,'bras par bras']]);
+  S('U2','curl-incline',[[12,9],[10,8],[10,5]]);
+  S('U3','curl-incline',[[12,9],[10,5],[8,8,'fin bras par bras']]);
+  S('U4','curl-incline',[[10,10],[10,10,'micro-pauses pour reprendre mon souffle, je sens le malaise venir']]);
+  S('U5','curl-incline',[[10,10],[10,8],[10,5,'les fins sont dures']]);
+  // Curl poulie basse (depuis U7)
+  S('U7','curl-poulie',[[20,10],[20,10,'dur'],[20,7]]);
+  S('U8','curl-poulie',[[20,10],[20,10],[20,6]]);
+  S('U9','curl-poulie',[[20,10],[20,9],[20,8]]);
+  S('U10','curl-poulie',[[20,10],[20,10],[20,5,'KO']]);
+  S('U11','curl-poulie',[[20,10],[20,10],[20,7]]);
+  S('U12','curl-poulie',[[20,10],[20,10],[20,7]]);
+  // Exercices de la toute première séance (exploration)
+  S('U1','dev-couche',[[10,11,'kg par côté'],[10,10],[10,6],[10,5]]);
+  S('U1','chest-incline',[[10,8,'kg par côté'],[10,7]]);
+  S('U1','ext-tete',[[7.5,6],[7.5,8],[7.5,8],[7.5,8]]);
+  S('U1','dips-banc',[[0,6,'poids de corps']]);
+  S('U1','traction',[[0,1,'1 seule rep']]);
+  S('U1','rowing',[[20,12],[20,12],[20,12]]);
+  S('U1','oiseau',[[6,12],[6,12],[6,10]]);
+  S('U1','shrugs',[[12,12],[12,13],[12,14]]);
+
+  /* ═══════════ LEGS ═══════════ */
+  // Squat machine incliné (fait seulement L1 et L4)
+  S('L1','squat-machine',[[20,12],[20,12],[20,12],[20,9,'kg par côté']]);
+  S('L4','squat-machine',[[25,12],[25,12],[25,12,'kg par côté']]);
+  S('L1','squat-haltere',[[14,15],[14,15],[14,15]]);
+  // Leg press (skip L1, L4)
+  S('L2','presse',[[60,10],[60,10],[60,10]]);
+  S('L3','presse',[[70,12],[70,11],[70,11]]);
+  S('L5','presse',[[80,10],[80,10],[80,10]]);
+  S('L6','presse',[[80,12],[80,11],[80,10]]);
+  S('L7','presse',[[80,12],[80,12],[80,12,'réglage dossier 2/3 : beaucoup plus simple']]);
+  S('L8','presse',[[90,9],[90,9],[90,9,'3 j depuis la séance Upper']]);
+  S('L9','presse',[[90,10],[90,10],[90,10,'pas osé plus, ça faisait un moment']]);
+  S('L10','presse',[[100,10],[100,10],[100,10]]);
+  S('L11','presse',[[100,12],[100,11],[100,10,'6 j sans salle']]);
+  S('L12','presse',[[100,12],[100,12],[100,10,'8 j sans salle']]);
+  // Soulevé de terre roumain
+  S('L2','rdl',[[14,12],[14,12],[14,12,'mouvement pas parfait ?']]);
+  S('L3','rdl',[[14,12],[14,7],[14,8,'ça tire derrière les genoux']]);
+  S('L4','rdl',[[14,12],[14,12],[14,12]]);
+  S('L5','rdl',[[16,10],[16,12],[16,12,'comment savoir si le mouvement est bon ? Je dois sentir quoi ?']]);
+  S('L6','rdl',[[16,12],[16,12],[16,12]]);
+  S('L7','rdl',[[18,12],[18,12],[18,12]]);
+  S('L8','rdl',[[20,10],[20,11,'seulement 2 séries']]);
+  S('L9','rdl',[[20,11],[20,12],[20,12,'j’aurais pu faire 12 sur la 1re ; très essoufflé à la fin']]);
+  S('L10','rdl',[[22,12],[22,10,'mal compté, peut-être plus'],[22,10]]);
+  S('L11','rdl',[[22,12],[22,12],[22,12,'KO']]);
+  S('L12','rdl',[[22,12],[22,10],[22,9,'très essoufflé, j’ai pris plus de repos']]);
+  // Leg extension (machine 1 = par côté au début, puis machine 2)
+  S('L1','leg-ext',[[10,12],[10,12,'machine 1']]);
+  S('L2','leg-ext',[[35,12],[35,11],[35,10,'machine 2']]);
+  S('L3','leg-ext',[[20,10],[20,10],[20,6,'machine 1, kg par côté']]);
+  S('L4','leg-ext',[[35,15],[40,12],[40,11,'machine 2']]);
+  S('L5','leg-ext',[[40,12],[40,12]]);
+  S('L6','leg-ext',[[40,12],[40,12],[40,12,'dur la fin']]);
+  S('L7','leg-ext',[[45,12],[45,12],[45,12]]);
+  S('L8','leg-ext',[[50,10],[50,10],[50,10,'moyen / facile']]);
+  S('L9','leg-ext',[[55,12],[55,10],[55,8]]);
+  S('L10','leg-ext',[[55,12],[55,11],[55,8,'10 après quelques secondes de pause']]);
+  S('L11','leg-ext',[[55,12],[55,8],[55,8,'respiré trop vite, quasi malaise ; 2 min de repos trop court ?']]);
+  S('L12','leg-ext',[[55,12],[55,9],[55,7,'je commence à m’endormir']]);
+  // Leg curl (dernière = couché, machine assise prise)
+  S('L1','leg-curl',[[30,10],[30,9]]);
+  S('L2','leg-curl',[[35,11],[35,11]]);
+  S('L3','leg-curl',[[35,12],[35,12],[35,12,'compliqué sur la fin']]);
+  S('L4','leg-curl',[[40,10],[40,10],[40,10]]);
+  S('L5','leg-curl',[[40,12],[40,12],[40,11,'ordre inversé : extension avant curl']]);
+  S('L6','leg-curl',[[40,12],[40,12],[40,12]]);
+  S('L7','leg-curl',[[45,12],[45,10],[45,8]]);
+  S('L8','leg-curl',[[45,12],[45,11],[45,9]]);
+  S('L9','leg-curl',[[45,12],[45,12],[45,9,'manque de souffle']]);
+  S('L10','leg-curl',[[45,12],[45,10],[45,6]]);
+  S('L11','leg-curl',[[35,10,'leg curl couché (assis pris) ; j’en ai marre, trop fatigué, je rentre']]);
+  // Mollets
+  S('L1','mollets',[[15,13],[15,12],[15,12]]);
+  S('L2','mollets',[[20,15],[20,11],[20,10],[20,10]]);
+  S('L3','mollets',[[20,15],[20,13],[20,11],[20,9]]);
+  S('L4','mollets',[[16,15],[16,12],[16,10,'haltères, machine occupée']]);
+  S('L5','mollets',[[20,15],[20,14],[20,11],[20,10]]);
+  S('L6','mollets',[[20,15],[20,13,'13,5 en vrai'],[20,12,'dur'],[20,11]]);
+  S('L7','mollets',[[20,15],[20,15],[20,12],[20,10]]);
+  S('L8','mollets',[[20,15],[20,15],[20,14],[20,12]]);
+  S('L9','mollets',[[16,15],[16,14,'haltères'],[20,15],[20,12,'puis machine']]);
+  S('L10','mollets',[[20,15],[20,15],[20,15],[20,14,'échec']]);
+  S('L11','mollets',[[25,15],[25,13],[25,10],[25,10,'dernières reps pas tout en haut']]);
+  // Abdominaux machine (skip L1, L4, L9, L12)
+  S('L2','ab-crunch',[[40,15],[40,15],[40,15]]);
+  S('L3','ab-crunch',[[45,13],[45,12],[45,11]]);
+  S('L5','ab-crunch',[[45,15],[45,15],[45,13]]);
+  S('L6','ab-crunch',[[45,15],[45,15],[45,15]]);
+  S('L7','ab-crunch',[[50,12],[50,12],[50,11]]);
+  S('L8','ab-crunch',[[50,13],[50,13],[50,13]]);
+  S('L10','ab-crunch',[[50,15],[50,15],[50,12]]);
+  S('L11','ab-crunch',[[50,15],[50,12],[50,8]]);
+
   return {
-    profile:{ sex:'H', h:184, w:71 },
+    profile: { sex:'H', h:184, w:71 },
     exercises, sessions, sets,
-    plans:[], settings:{ apiKey:'', model:'gemini-1.5-flash' }
+    plans: [], settings: { apiKey:'', model:'gemini-1.5-flash' }
   };
 }
 function load(){ try{ const raw = localStorage.getItem(DB_KEY); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }
@@ -493,6 +664,7 @@ const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtW = w => (Math.round(w * 10) / 10).toString().replace('.', ',');
+const fmtWLabel = w => w > 0 ? fmtW(w) + ' kg' : 'poids de corps';
 const fmtDate = iso => new Date(iso).toLocaleDateString('fr-FR', { day:'2-digit', month:'short' });
 const startOfDay = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
 const daysSince = iso => Math.round((startOfDay(Date.now()) - startOfDay(iso)) / 864e5);
@@ -512,16 +684,27 @@ function copyText(txt){
 }
 
 /* ══════════════════════════════════════════════════════════════
-   3. SÉLECTEURS MÉTIER (équivalent des requêtes Prisma)
+   3. SÉLECTEURS MÉTIER
    ══════════════════════════════════════════════════════════════ */
 const exById = id => db.exercises.find(e => e.id === id);
-const sessionsOfSplit = split => db.sessions.filter(s => s.split === split).sort((a, b) => new Date(a.date) - new Date(b.date));
+const activeExercises = split => db.exercises.filter(e => e.split === split && !e.archived).sort((a,b) => a.order - b.order);
+const sessionsOfSplit = split => db.sessions.filter(s => s.split === split).sort((a,b) => new Date(a.date) - new Date(b.date));
 const lastSession = split => { const a = sessionsOfSplit(split); return a[a.length - 1]; };
 const setsOfSession = (exId, sessId) => db.sets.filter(t => t.exId === exId && t.sessId === sessId);
-const lastSetsOf = exId => { const s = lastSession(exById(exId).split); return s ? setsOfSession(exId, s.id) : []; };
+/* Dernière performance = dernière séance où l'exercice a été RÉELLEMENT fait
+   (gère les exos zappés : leg curl, mollets, shoulder press…) */
+function lastSetsOf(exId){
+  const ex = exById(exId);
+  const sess = sessionsOfSplit(ex.split);
+  for (let i = sess.length - 1; i >= 0; i--){
+    const s = setsOfSession(exId, sess[i].id);
+    if (s.length) return { sets: s, sess: sess[i] };
+  }
+  return { sets: [], sess: null };
+}
 const bestWeight = sets => sets.length ? Math.max(...sets.map(t => t.weight)) : 0;
 const sessionVolume = sessId => db.sets.filter(t => t.sessId === sessId).reduce((a, t) => a + t.weight * t.reps, 0);
-function historyBest(exId){ // meilleur poids par séance (pour sparkline & graphiques)
+function historyBest(exId){
   return sessionsOfSplit(exById(exId).split)
     .map(s => ({ sess: s, w: bestWeight(setsOfSession(exId, s.id)) }))
     .filter(p => p.w > 0);
@@ -560,18 +743,22 @@ function sparkSVG(exId){
 }
 
 function exRow(ex, full){
-  const sets = lastSetsOf(ex.id);
+  const { sets, sess } = lastSetsOf(ex.id);
   if (!sets.length) return '';
+  const lastSess = lastSession(ex.split);
+  const paused = !lastSess || sess.id !== lastSess.id;
   const reps = sets.map(t => t.reps).join('·');
   const d = exDelta(ex.id);
   const note = sets.find(t => t.note)?.note;
   const todaySets = db.sets.filter(t => t.exId === ex.id && isToday(t.date));
   const chips = todaySets.map(t =>
     `<span class="tchip">${fmtW(t.weight)}kg×${t.reps}<button data-act="del-set" data-set="${t.id}" title="supprimer">✕</button></span>`).join('');
-  return `<div class="ex-row rev">
+  return `<div class="ex-row rev ${paused ? 'paused' : ''}">
     <div class="ex-main">
       <span class="ex-name">${esc(ex.name)}</span> <span class="badge ${ex.kind}">${ex.kind === 'poly' ? 'POLY' : 'ISO'}</span>
-      <span class="ex-last"><b>${fmtW(bestWeight(sets))} kg</b> × ${reps} <span class="dim">· TR conseillé ${fmtRest(restSecondsFor(ex))}</span></span>
+      <span class="ex-last"><b>${fmtWLabel(bestWeight(sets))}</b> × ${reps}
+        <span class="dim">· ${fmtDate(sess.date)} · il y a ${daysSince(sess.date)} j</span>
+        <span class="dim">· TR conseillé ${fmtRest(restSecondsFor(ex))}</span></span>
       ${note ? `<span class="ex-note">« ${esc(note)} »</span>` : ''}
       ${chips ? `<div class="today-chips">${chips}</div>` : ''}
     </div>
@@ -582,6 +769,19 @@ function exRow(ex, full){
         <button class="mini-btn" data-act="chart" data-ex="${ex.id}" title="progression">📈</button>
       </div>` : ''}
   </div>`;
+}
+
+function archivedBlock(split){
+  const arch = db.exercises.filter(e => e.split === split && e.archived);
+  if (!arch.length) return '';
+  return `<details class="arch rev"><summary>📦 Exercices ponctuels / archivés (${arch.length}) — exclus de la génération IA</summary>
+    ${arch.map(e => {
+      const { sets, sess } = lastSetsOf(e.id);
+      if (!sets.length) return '';
+      return `<div class="arch-row"><span>${esc(e.name)}</span>
+        <span class="mono dim">${fmtWLabel(bestWeight(sets))} × ${sets.map(t => t.reps).join('·')} · ${fmtDate(sess.date)}</span></div>`;
+    }).join('')}
+  </details>`;
 }
 
 function planBanner(split){
@@ -599,17 +799,18 @@ function planBanner(split){
 function renderSplitView(split){
   const el = $('#view-' + split);
   const last = lastSession(split);
-  const exs = db.exercises.filter(e => e.split === split).sort((a,b) => a.order - b.order);
   el.innerHTML = `
     ${planBanner(split)}
     <div class="sec-title">
       <h2>${splitName(split)}</h2>
-      <span class="meta">dernière séance : ${last ? fmtDate(last.date) + ' (il y a ' + daysSince(last.date) + ' j)' : 'jamais'} · ${exs.length} exercices</span>
+      <span class="meta">dernière séance : ${last ? fmtDate(last.date) + ' (il y a ' + daysSince(last.date) + ' j)' : 'jamais'}
+        · les exos en gris n'ont pas été faits à la dernière séance</span>
       <span style="flex:1"></span>
       <button class="btn btn-volt btn-sm cut" data-act="open-generate" data-split="${split}">⚡ Générer ce split</button>
     </div>
     <div class="card rev">
-      ${exs.map(e => exRow(e, true)).join('') || '<p class="dim">Aucun exercice.</p>'}
+      ${activeExercises(split).map(e => exRow(e, true)).join('') || '<p class="dim">Aucun exercice.</p>'}
+      ${archivedBlock(split)}
     </div>`;
   observeAll();
 }
@@ -637,18 +838,18 @@ function renderDashboard(){
     <div class="grid2">
       <div class="card lift rev"><h3>HAUT DU CORPS</h3>
         <p class="sub">dernière séance : ${lastU ? fmtDate(lastU.date) : '—'} <span class="badge upper" style="margin-left:6px">UPPER</span></p>
-        ${db.exercises.filter(e => e.split === 'upper').sort((a,b) => a.order-b.order).map(e => exRow(e, false)).join('')}</div>
+        ${activeExercises('upper').map(e => exRow(e, false)).join('')}</div>
       <div class="card lift rev"><h3>JAMBES</h3>
         <p class="sub">dernière séance : ${lastL ? fmtDate(lastL.date) : '—'} <span class="badge legs" style="margin-left:6px">LEGS</span></p>
-        ${db.exercises.filter(e => e.split === 'legs').sort((a,b) => a.order-b.order).map(e => exRow(e, false)).join('')}</div>
+        ${activeExercises('legs').map(e => exRow(e, false)).join('')}</div>
     </div>
     <div class="grid2">
-      <div class="card rev"><h3>VOLUME PAR SÉANCE</h3><p class="sub">Σ (poids × reps), par date</p>
+      <div class="card rev"><h3>VOLUME PAR SÉANCE</h3><p class="sub">Σ (poids × reps), ${db.sessions.length} séances</p>
         <div class="chart-box" style="margin-top:10px"><canvas id="volChart"></canvas></div></div>
       <div class="card rev"><h3>DERNIER PLAN GÉNÉRÉ</h3>
         ${lastPlan ? `<p class="sub">${splitName(lastPlan.split)} · ${fmtDate(lastPlan.date)} · ${lastPlan.source}</p>
           <pre class="raw-out" style="margin-top:10px;max-height:220px">${esc(lastPlan.raw)}</pre>`
-          : '<p class="sub" style="margin-top:10px">Aucun plan pour l’instant.<br><br>Clique sur <b style="color:var(--volt)">⚡ GÉNÉRER LA SÉANCE</b> : l’historique complet est envoyé à l’IA avec le system prompt de surcharge progressive, et le programme brut s’affiche ici, lisible directement à la salle.</p>'}</div>
+          : '<p class="sub" style="margin-top:10px">Aucun plan pour l’instant.<br><br>Clique sur <b style="color:var(--volt)">⚡ GÉNÉRER LA SÉANCE</b> : tout ton historique (séries, reps, notes d’échec et de fatigue) est envoyé à l’IA avec le system prompt de surcharge progressive. Le programme brut s’affiche ici, lisible directement à la salle.</p>'}</div>
     </div>`;
   observeAll();
   if (currentTab === 'bord') renderVolumeChart('volChart');
@@ -659,6 +860,9 @@ function renderLab(){
   $('#labHistory').innerHTML = `<h2 style="font-family:var(--disp);letter-spacing:1.5px;font-size:20px;margin-bottom:12px">HISTORIQUE DES SÉANCES</h2>` +
     (sessions.map(s => {
       const sets = db.sets.filter(t => t.sessId === s.id);
+      if (!sets.length) return `<div class="sess-card rev" style="opacity:.55">
+        <div class="sess-date">${fmtDate(s.date).toUpperCase()}<span><span class="badge ${s.split}">${s.split === 'upper' ? 'UPPER' : 'LEGS'}</span></span></div>
+        <div class="sess-stats dim">séance sautée (repos)</div></div>`;
       const notes = [...new Set(sets.map(t => t.note).filter(Boolean))].slice(0, 2);
       const exs = new Set(sets.map(t => t.exId)).size;
       return `<div class="sess-card rev">
@@ -667,8 +871,8 @@ function renderLab(){
           ${notes.length ? `<div class="sess-notes">${notes.map(n => '« ' + esc(n) + ' »').join(' · ')}</div>` : ''}</div>
         <button class="mini-btn" data-act="del-sess" data-sess="${s.id}" title="supprimer la séance">✕</button>
       </div>`;
-    }).join('') || '<p class="dim">Aucune séance.</p>');
-  $('#dbCount').textContent = `${db.sets.length} séries · ${db.sessions.length} séances · ${db.plans.length} plans enregistrés — données stockées en localStorage.`;
+    }).join(''));
+  $('#dbCount').textContent = `${db.sets.length} séries · ${db.sessions.length} séances · ${db.plans.length} plans — données stockées en localStorage (ton carnet).`;
   observeAll();
 }
 
@@ -677,12 +881,11 @@ function renderAll(){
   buildProgSelect(); renderPR();
 }
 
-/* ---- révélation au scroll ---- */
 const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold:.06 });
 const observeAll = () => $$('.rev:not(.in)').forEach(el => io.observe(el));
 
 /* ══════════════════════════════════════════════════════════════
-   5. GRAPHIQUES (Chart.js)
+   5. GRAPHIQUES
    ══════════════════════════════════════════════════════════════ */
 let volChart = null, volChart2 = null, progChart = null, progMetric = 'poids';
 function chartsReady(){ return typeof Chart !== 'undefined'; }
@@ -694,14 +897,13 @@ if (chartsReady()){
 function renderVolumeChart(canvasId){
   if (!chartsReady()) return;
   const cv = document.getElementById(canvasId); if (!cv) return;
-  const sessions = [...db.sessions].sort((a,b) => new Date(a.date) - new Date(b.date));
+  const sessions = [...db.sessions].sort((a,b) => new Date(a.date) - new Date(b.date))
+    .filter(s => db.sets.some(t => t.sessId === s.id));
   const data = {
     labels: sessions.map(s => fmtDate(s.date)),
-    datasets: [{
-      data: sessions.map(s => sessionVolume(s.id)),
+    datasets: [{ data: sessions.map(s => sessionVolume(s.id)),
       backgroundColor: sessions.map(s => s.split === 'upper' ? 'rgba(200,245,66,.75)' : 'rgba(255,180,84,.75)'),
-      borderRadius: 6, maxBarThickness: 42
-    }]
+      borderRadius: 6, maxBarThickness: 42 }]
   };
   const inst = canvasId === 'volChart' ? volChart : volChart2;
   if (inst) inst.destroy();
@@ -713,10 +915,10 @@ function renderVolumeChart(canvasId){
 function buildProgSelect(){
   const sel = $('#progSelect'); if (!sel) return;
   const val = sel.value;
-  sel.innerHTML = ['upper','legs'].map(sp =>
-    `<optgroup label="${splitName(sp)}">` +
-    db.exercises.filter(e => e.split === sp).sort((a,b) => a.order-b.order)
-      .map(e => `<option value="${e.id}">${e.name}</option>`).join('') + '</optgroup>').join('');
+  const grp = (label, list) => `<optgroup label="${label}">${list.map(e => `<option value="${e.id}">${e.name}</option>`).join('')}</optgroup>`;
+  sel.innerHTML = grp('HAUT DU CORPS', activeExercises('upper'))
+    + grp('JAMBES', activeExercises('legs'))
+    + grp('ARCHIVÉS', db.exercises.filter(e => e.archived));
   if (val && exById(val)) sel.value = val;
 }
 function renderProgChart(){
@@ -729,6 +931,7 @@ function renderProgChart(){
       return { d: s.date, v: Math.max(...sets.map(t => t.weight * (1 + t.reps / 30))) };
     return { d: s.date, v: bestWeight(sets) };
   }).filter(Boolean);
+  if (!points.length) return;
   if (progChart) progChart.destroy();
   progChart = new Chart($('#progChart'), {
     type:'line',
@@ -739,7 +942,7 @@ function renderProgChart(){
     options:{ maintainAspectRatio:false,
       plugins:{ legend:{display:false},
         tooltip:{ callbacks:{ label: c => c.parsed.y + (progMetric === 'e1rm' ? ' (e1RM)' : ' kg') } } },
-      scales:{ y:{ suggestedMin: Math.min(...points.map(p=>p.v)) * .9 } } }
+      scales:{ y:{ suggestedMin: Math.min(...points.map(p => p.v)) * .9 } } }
   });
   $$('.metric-btn').forEach(b => {
     b.style.borderColor = b.dataset.metric === progMetric ? 'var(--volt)' : '';
@@ -748,16 +951,17 @@ function renderProgChart(){
 }
 function renderPR(){
   const box = $('#prTiles'); if (!box) return;
-  box.innerHTML = db.exercises.map(ex => {
+  box.innerHTML = db.exercises.filter(e => !e.archived).map(ex => {
     const all = db.sets.filter(t => t.exId === ex.id);
     if (!all.length) return '';
     const best = all.reduce((a,b) => b.weight > a.weight ? b : a);
+    if (best.weight <= 0) return '';
     return `<div class="tile"><b>${fmtW(best.weight)} kg</b><span>${esc(ex.name)}<br><span class="dim">× ${best.reps} reps · ${fmtDate(best.date)}</span></span></div>`;
   }).join('');
 }
 
 /* ══════════════════════════════════════════════════════════════
-   6. CHRONOMÈTRE DE REPOS (dock flottant, précis via timestamps)
+   6. CHRONOMÈTRE DE REPOS
    ══════════════════════════════════════════════════════════════ */
 const RING_C = 2 * Math.PI * 64;
 const Timer = {
@@ -803,7 +1007,6 @@ const Timer = {
   }
 };
 
-/* ---- chrono global de séance ---- */
 let workoutStart = null, workoutInt = null;
 $('#workoutBtn').addEventListener('click', () => {
   if (!workoutStart){
@@ -823,7 +1026,7 @@ $('#workoutBtn').addEventListener('click', () => {
 });
 
 /* ══════════════════════════════════════════════════════════════
-   7. SAISIE DES PERFORMANCES (modale séries)
+   7. SAISIE DES PERFORMANCES
    ══════════════════════════════════════════════════════════════ */
 function openModal(html, wide){
   $('#modalBox').className = 'modal' + (wide ? ' wide' : '');
@@ -840,7 +1043,7 @@ function ensureTodaySession(split){
 }
 function openLog(exId){
   const ex = exById(exId);
-  const last = lastSetsOf(exId);
+  const last = lastSetsOf(exId).sets;
   const defW = last.length ? bestWeight(last) : '';
   const renderChips = () => {
     const sess = db.sessions.find(x => x.split === ex.split && isToday(x.date));
@@ -851,8 +1054,8 @@ function openLog(exId){
       : '<span class="dim" style="font-size:12.5px">Aucune série aujourd’hui pour cet exercice.</span>';
     $$('#todaySets [data-del]').forEach(b => b.addEventListener('click', () => {
       db.sets = db.sets.filter(t => t.id !== b.dataset.del);
-      const empty = db.sessions.filter(s => isToday(s.date) && db.sets.some(t => t.sessId === s.id) === false);
-      empty.forEach(s => { if (s.split === ex.split) db.sessions = db.sessions.filter(x => x.id !== s.id); });
+      const empty = db.sessions.filter(s => isToday(s.date) && s.split === ex.split && !db.sets.some(t => t.sessId === s.id));
+      empty.forEach(s => db.sessions = db.sessions.filter(x => x.id !== s.id));
       save(); renderChips(); renderAll();
     }));
   };
@@ -869,7 +1072,7 @@ function openLog(exId){
         <div class="field"><label>REPS</label><input type="number" id="fReps" min="1" max="60" value="12" required></div>
       </div>
       <div class="field"><label>NOTE (optionnel — échec, douleur, essoufflé…)</label>
-        <input type="text" id="fNote" maxlength="90" placeholder="ex : échec à la 10e, RAS, genou ok…"></div>
+        <input type="text" id="fNote" maxlength="90" placeholder="ex : échec à la 10e, essoufflé, RAS…"></div>
       <button class="btn btn-volt cut" style="width:100%;justify-content:center" type="submit">+ AJOUTER LA SÉRIE & LANCER LE REPOS</button>
       <p class="form-hint">Le chrono de ${fmtRest(restSecondsFor(ex))} démarrera automatiquement. Espace = play/pause du chrono.</p>
     </form>`);
@@ -893,10 +1096,6 @@ function openLog(exId){
 
 /* ══════════════════════════════════════════════════════════════
    8. IA — ÉQUIVALENT DE LA ROUTE API BACKEND
-      buildHistoryPayload()  → formate la base pour le modèle
-      SYSTEM_PROMPT          → le prompt coach fourni (inchangé)
-      callGemini()           → appel API (en prod : côté serveur)
-      localCoach()           → repli hors-ligne, mêmes règles
    ══════════════════════════════════════════════════════════════ */
 const SYSTEM_PROMPT = `Tu es un coach sportif expert en hypertrophie et en surcharge progressive. Ton rôle est d'analyser l'historique d'entraînement de l'utilisateur (Homme, 1m84, 71kg, cherchant à prendre de la masse) et de lui générer le programme EXACT de sa prochaine séance.
 
@@ -914,16 +1113,19 @@ Règles strictes de génération :
 💡 [Note/Conseil hyper court UNIQUEMENT si nécessaire (ex: réglage machine, respiration, posture)]`;
 
 function buildHistoryPayload(split){
-  const exs = db.exercises.filter(e => e.split === split).sort((a,b) => a.order - b.order);
+  const exs = activeExercises(split);
   const sess = sessionsOfSplit(split);
   const last = sess[sess.length - 1];
   const out = [];
-  out.push(`PROFIL — Homme, 1m84, 71 kg, objectif : prise de masse. Programme : split Upper / Lower.`);
+  out.push(`PROFIL — Homme, 1m84, 71 kg, objectif : prise de masse. Programme : split Upper / Lower. Fréquence irrégulière (parfois 4 à 8 jours entre séances).`);
   out.push(`SÉANCE À GÉNÉRER : ${splitName(split)} (${split === 'upper' ? 'Upper' : 'Legs'}).`);
   if (last) out.push(`Dernière séance de ce type : ${fmtDate(last.date)}, soit ${daysSince(last.date)} jour(s) plus tôt.`);
+  const arch = db.exercises.filter(e => e.split === split && e.archived);
+  if (arch.length) out.push(`Exercices testés puis ABANDONNÉS (ne PAS les inclure dans le programme) : ${arch.map(e => e.name).join(', ')}.`);
   out.push('', 'HISTORIQUE DÉTAILLÉ (du plus ancien au plus récent) :');
   for (const ex of exs){
-    out.push('', `■ ${ex.name} — ${ex.kind === 'poly' ? 'polyarticulaire' : 'isolation'}`);
+    const lp = lastSetsOf(ex.id);
+    out.push('', `■ ${ex.name} — ${ex.kind === 'poly' ? 'polyarticulaire' : 'isolation'}${lp.sess ? ` (dernière performance il y a ${daysSince(lp.sess.date)} j)` : ''}`);
     for (const s of sess){
       const sets = setsOfSession(ex.id, s.id);
       if (!sets.length) continue;
@@ -958,27 +1160,30 @@ async function callGemini(split){
   return txt;
 }
 
-/* Coach local : applique mécaniquement les mêmes règles que le system prompt */
+/* Coach local : mêmes règles que le system prompt, hors-ligne */
 async function localCoach(split){
-  await new Promise(r => setTimeout(r, 1500)); // simulation d'analyse
-  const exs = db.exercises.filter(e => e.split === split).sort((a,b) => a.order - b.order);
+  await new Promise(r => setTimeout(r, 1500));
   const out = [];
-  for (const ex of exs){
-    const sets = lastSetsOf(ex.id); if (!sets.length) continue;
+  for (const ex of activeExercises(split)){
+    const { sets } = lastSetsOf(ex.id); if (!sets.length) continue;
     const reps = sets.map(t => t.reps);
     const w = bestWeight(sets);
     const notes = sets.map(t => t.note).filter(Boolean).join(' ').toLowerCase();
     const pain = /(douleur|gêne|gene)/.test(notes);
     const fail = /(échec|echec)/.test(notes);
-    const neg  = /(essoufl|trop dur|juste|fatigue)/.test(notes);
+    const neg  = /(essoufl|trop dur|juste|fatigue|marre|ko|malaise)/.test(notes);
     const goalBot = ex.kind === 'poly' ? 10 : 12;
     let W = w, R = [...reps], tip = null;
     if (pain){
       tip = `Douleur signalée la dernière fois : reste à ${fmtW(w)}kg (voire -10%) et réduis l’amplitude si la gêne persiste.`;
-    } else if (fail || Math.min(...reps) < goalBot){
+    } else if (fail || neg){
+      tip = fail ? 'Charge maintenue : vise +1 rep sur chaque série avant de remonter.'
+                 : 'Notes de fatigue/essoufflement : consolide cette charge, allonge le repos et respire fort sur chaque rep.';
+      R = reps.map(r => r + 1);
+    } else if (Math.min(...reps) < goalBot){
       R = reps.map(r => r + 1);
       tip = 'Charge maintenue : vise +1 rep sur chaque série avant de remonter.';
-    } else if (Math.min(...reps) >= 12 && !neg){
+    } else if (Math.min(...reps) >= 12){
       const inc = ex.kind === 'poly' ? (w >= 100 ? 5 : 2.5) : (w <= 12 ? 1 : 2.5);
       W = +(w + inc).toFixed(1);
       R = ex.kind === 'poly' ? [12, 12, 10] : [12, 12, 12];
@@ -993,20 +1198,19 @@ async function localCoach(split){
   return out.join('\n');
 }
 
-/* ---- modale de génération ---- */
 function openGenerate(presetSplit, presetSource){
   const rec = recommendedSplit();
   const hasKey = !!db.settings.apiKey.trim();
   openModal(`
     <button class="m-close" data-act="close-modal">✕</button>
     <h2>⚡ GÉNÉRER LA PROCHAINE SÉANCE</h2>
-    <p class="m-sub">L’historique complet (${db.sets.length} séries) + le system prompt de surcharge progressive sont envoyés au modèle.</p>
+    <p class="m-sub">Ton historique complet (${db.sets.length} séries, notes incluses) + le system prompt de surcharge progressive sont envoyés au modèle.</p>
     <div class="split-pick">
       <label><input type="radio" name="gSplit" value="upper" ${presetSplit === 'upper' || (!presetSplit && rec === 'upper') ? 'checked' : ''}>
-        <b>HAUT DU CORPS</b><span>dernière il y a ${daysSince(lastSession('upper')?.date || 0)} j</span>
+        <b>HAUT DU CORPS</b><span>dernière il y a ${lastSession('upper') ? daysSince(lastSession('upper').date) : '∞'} j</span>
         ${rec === 'upper' ? '<span class="rec">RECOMMANDÉ</span>' : ''}</label>
       <label><input type="radio" name="gSplit" value="legs" ${presetSplit === 'legs' || (!presetSplit && rec === 'legs') ? 'checked' : ''}>
-        <b>JAMBES</b><span>dernière il y a ${daysSince(lastSession('legs')?.date || 0)} j</span>
+        <b>JAMBES</b><span>dernière il y a ${lastSession('legs') ? daysSince(lastSession('legs').date) : '∞'} j</span>
         ${rec === 'legs' ? '<span class="rec">RECOMMANDÉ</span>' : ''}</label>
     </div>
     <div class="src-row">
@@ -1021,7 +1225,7 @@ function openGenerate(presetSplit, presetSource){
   $('#genGo').addEventListener('click', runGenerate);
   if (presetSource) runGenerate();
 }
-const GEN_STEPS = ['Lecture de l’historique…', 'Analyse des échecs & notes…', 'Calcul de la surcharge…', 'Optimisation des temps de repos…', 'Mise en forme du programme…'];
+const GEN_STEPS = ['Lecture de ton carnet…', 'Analyse des échecs & notes de fatigue…', 'Calcul de la surcharge…', 'Optimisation des temps de repos…', 'Mise en forme du programme…'];
 async function runGenerate(){
   const split = document.querySelector('input[name="gSplit"]:checked')?.value || recommendedSplit();
   const src = document.querySelector('input[name="gSrc"]:checked')?.value || 'local';
@@ -1053,7 +1257,7 @@ async function runGenerate(){
 }
 
 /* ══════════════════════════════════════════════════════════════
-   9. DOCUMENTATION (onglet LAB) — schéma Prisma & route backend
+   9. DOCUMENTATION (LAB)
    ══════════════════════════════════════════════════════════════ */
 const PRISMA_SCHEMA = `// prisma/schema.prisma
 generator client { provider = "prisma-client-js" }
@@ -1063,13 +1267,14 @@ enum Split { UPPER LEGS }
 enum Kind  { POLY ISO }        // polyarticulaire / isolation
 
 model Exercise {
-  id     String  @id @default(cuid())
-  name   String
-  split  Split
-  kind   Kind
-  order  Int
-  sets   Set[]
-  target String?               // dernier objectif généré par l'IA (ex: "22.5kg x 12,12,10")
+  id       String  @id @default(cuid())
+  name     String
+  split    Split
+  kind     Kind
+  order    Int
+  archived Boolean @default(false)   // exos ponctuels, exclus de la génération IA
+  sets     Set[]
+  target   String?                   // dernier objectif généré par l'IA
 }
 
 model Session {
@@ -1113,7 +1318,7 @@ export async function POST(req: Request) {
 
   // 1. Lecture + formatage de l'historique depuis la base
   const sets = await prisma.set.findMany({
-    where: { exercise: { split } },
+    where: { exercise: { split, archived: false } },
     orderBy: { session: { date: "asc" } },
     include: { exercise: true, session: true },
   });
@@ -1144,7 +1349,7 @@ export async function POST(req: Request) {
 }`;
 
 /* ══════════════════════════════════════════════════════════════
-   10. NAVIGATION, DÉLÉGATION D'ÉVÉNEMENTS & INIT
+   10. NAVIGATION, DÉLÉGATION & INIT
    ══════════════════════════════════════════════════════════════ */
 let currentTab = 'bord';
 function switchTab(name){
@@ -1204,12 +1409,12 @@ document.addEventListener('click', e => {
       a.download = 'forgelog-export.json'; a.click(); toast('Export téléchargé ⬇'); break;
     }
     case 'reset':
-      openModal(`<h2>Réinitialiser toutes les données ?</h2><p class="m-sub">Retour aux données de démonstration (seed).</p>
+      openModal(`<h2>Réinitialiser toutes les données ?</h2><p class="m-sub">Retour à ton carnet d'entraînement (seed).</p>
         <div style="display:flex;gap:10px;justify-content:flex-end">
         <button class="btn btn-ghost btn-sm" data-act="close-modal">Annuler</button>
         <button class="btn btn-danger btn-sm" id="confirmReset">Tout effacer</button></div>`);
       $('#confirmReset').addEventListener('click', () => {
-        localStorage.removeItem(DB_KEY); db = seed(); save(); renderAll(); closeModal(); toast('Données réinitialisées ↺');
+        localStorage.removeItem(DB_KEY); db = seed(); save(); renderAll(); closeModal(); toast('Carnet rechargé ↺');
       }); break;
   }
 });
@@ -1226,6 +1431,7 @@ $('#apiKeyInput').addEventListener('input', e => { db.settings.apiKey = e.target
 $('#modelSelect').addEventListener('change', e => { db.settings.model = e.target.value; save(); toast('Modèle : ' + e.target.value); });
 
 /* ---- initialisation ---- */
+localStorage.removeItem('forgelog.v1'); // ancienne version démo
 db = load() || (db = seed(), save());
 $('#apiKeyInput').value = db.settings.apiKey;
 $('#modelSelect').value = db.settings.model;
