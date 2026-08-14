@@ -2,7 +2,9 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <title>FORGE·LOG — Suivi musculation</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +30,8 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--txt);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--txt);font-family:var(--body);min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;touch-action:manipulation}
+button,input,select,textarea{touch-action:manipulation}
 .bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
                    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
@@ -39,8 +42,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--body);min-height:10
 .glow.b{width:460px;height:460px;background:var(--amber);bottom:-240px;right:-120px;opacity:.10;animation:drift 32s ease-in-out infinite alternate-reverse}
 @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(70px,50px) scale(1.12)}}
 ::selection{background:var(--volt);color:#0a0e13}
-button{font-family:inherit;cursor:pointer}
-input,select,textarea{font-family:inherit;color:var(--txt)}
+button{font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+input,select,textarea{font-family:inherit;color:var(--txt);-webkit-appearance:none;appearance:none}
 :focus-visible{outline:2px solid var(--volt);outline-offset:2px}
 .mono{font-family:var(--mono)}
 .dim{color:var(--dim)}
@@ -185,7 +188,6 @@ main{position:relative;z-index:1;padding:0 22px 140px;max-width:1240px;margin:0 
 .dock-ctrl button:hover{border-color:var(--amber)}
 .dock-ctrl .play{background:var(--amber);border-color:var(--amber);color:#1a1206;min-width:84px}
 .dock-ctrl .play:hover{background:#ffc880}
-@media(max-width:640px){.dock{left:12px;right:12px;width:auto;bottom:12px}}
 
 /* ================= MODALES ================= */
 .overlay{position:fixed;inset:0;background:rgba(5,8,12,.75);backdrop-filter:blur(4px);z-index:80;
@@ -265,10 +267,112 @@ pre.code{background:#0b0f14;border:1px solid var(--line);border-radius:10px;padd
 .sec-title{display:flex;align-items:baseline;gap:14px;margin:26px 0 6px;flex-wrap:wrap}
 .sec-title h2{font-family:var(--disp);font-size:30px;letter-spacing:1.5px}
 .sec-title .meta{font-family:var(--mono);font-size:12.5px;color:var(--mut)}
+
+/* ================= RESPONSIVE MOBILE-FIRST ================= */
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
 @media(max-width:640px){
-  .ex-row{flex-wrap:wrap}
+  /* Topbar mobile */
+  .topbar{padding:10px 12px;gap:8px;flex-wrap:wrap}
+  .brand svg{width:22px;height:22px}
+  .brand b{font-size:18px}
+  .brand small{display:none}
+  .chip{padding:5px 9px;font-size:11px}
+  .btn{padding:9px 12px;font-size:12px}
+  
+  /* Tabs mobile - scrollable */
+  .tabs{padding:10px 12px 0;gap:4px;-webkit-overflow-scrolling:touch}
+  .tab{padding:8px 12px;font-size:12px;white-space:nowrap}
+  
+  /* Main content */
+  main{padding:0 12px 160px}
+  
+  /* Board hero */
+  .board-hero{padding:18px 16px;margin-top:14px}
+  .kicker{font-size:9px;letter-spacing:2px}
+  .board-hero h1{font-size:clamp(28px,8vw,48px)}
+  .hero-actions{width:100%;margin-top:14px}
+  .hero-actions .btn{width:100%;justify-content:center}
+  
+  /* Exercise rows */
+  .ex-row{flex-wrap:wrap;padding:10px 12px;gap:10px}
+  .ex-main{min-width:calc(100% - 70px)}
+  .ex-name{font-size:13.5px}
+  .ex-last{font-size:12px}
+  .delta{width:100%;text-align:left;margin-top:4px;font-size:11px}
+  .ex-actions{width:100%;justify-content:flex-end;margin-top:6px}
   .spark{display:none}
-  .board-hero{padding:22px}
+  
+  /* Cards */
+  .card{padding:14px;border-radius:10px}
+  .card h3{font-size:15px}
+  
+  /* Plan banner */
+  .plan-banner{padding:14px 16px;margin:14px 0}
+  .plan-banner pre{font-size:12.5px;line-height:1.6}
+  
+  /* Timer dock */
+  .dock{left:12px;right:12px;width:auto;bottom:12px;max-width:280px}
+  .dock-head{padding:8px 12px}
+  .dock-head b{font-size:10px}
+  .dock-body{padding:12px}
+  .ring-wrap{width:120px;height:120px}
+  .ring-wrap svg{width:120px;height:120px}
+  .ring-time b{font-size:24px}
+  .ring-time span{font-size:9px}
+  .presets{gap:4px}
+  .preset{padding:4px 8px;font-size:10.5px}
+  .dock-ctrl button{padding:7px 10px;font-size:12px}
+  .dock-ctrl .play{min-width:70px}
+  
+  /* Modals */
+  .overlay{padding:4vh 12px}
+  .modal{max-width:none;padding:18px;border-radius:12px}
+  .modal.wide{max-width:none}
+  .modal h2{font-size:18px}
+  .field input,.field select,.field textarea{padding:10px 11px;font-size:14px}
+  .field-row{flex-direction:column;gap:10px}
+  .split-pick{flex-direction:column;gap:8px}
+  .src-row{flex-direction:column;gap:8px}
+  
+  /* Lab section */
+  .sess-card{flex-direction:column;align-items:flex-start;gap:10px;padding:12px}
+  .sess-date{min-width:auto}
+  .stat-tiles{grid-template-columns:repeat(2,1fr)}
+  .tile{padding:10px 12px}
+  .tile b{font-size:16px}
+  
+  /* Charts */
+  .chart-box{height:240px}
+  .chart-box.tall{height:280px}
+  .sec-title h2{font-size:22px}
+  .sec-title .meta{font-size:11px;width:100%}
+  
+  /* Buttons in forms */
+  .form-hint{font-size:11px}
+  .btn-sm{padding:6px 10px;font-size:11.5px}
+  
+  /* Badges */
+  .badge{font-size:9px;padding:2px 6px}
+  
+  /* Toasts */
+  .toast{max-width:95vw;font-size:12.5px;padding:10px 14px}
+  
+  /* Raw output */
+  .raw-out{padding:14px;font-size:13px;max-height:50vh}
+}
+
+/* Extra small phones */
+@media(max-width:380px){
+  .brand b{font-size:16px}
+  .topbar .chip:not(#workoutBtn){display:none}
+  .tabs{padding-bottom:0}
+  .tab{padding:7px 10px;font-size:11px}
+  .board-hero h1{font-size:24px}
+  .ex-name{font-size:12.5px}
+  .preset{padding:3px 6px;font-size:9.5px}
+  .ring-wrap{width:100px;height:100px}
+  .ring-wrap svg{width:100px;height:100px}
+  .ring-time b{font-size:20px}
 }
 </style>
 </head>
