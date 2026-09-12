@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Emploi du temps -| L2 MIASHS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Emploi du temps - L2 MIASHS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,6 +33,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -48,7 +49,7 @@
     }
 
     /* ========================================================
-       1. AFFICHAGE ÉCRAN (NAVIGATION FLÈCHES GAUCHE / DROITE)
+       1. AFFICHAGE ÉCRAN (DESKTOP PAR DÉFAUT)
        ======================================================== */
     .screen-header {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
@@ -89,6 +90,7 @@
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255,255,255,0.2);
       color: #f8fafc;
+      white-space: nowrap;
     }
     .badge-hl {
       background: #2563eb;
@@ -122,6 +124,7 @@
       font-family: inherit;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       transition: all 0.2s ease;
     }
@@ -149,6 +152,12 @@
       margin-top: 2px;
     }
 
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
     .print-trigger-btn {
       background: #15803d;
       color: white;
@@ -161,6 +170,7 @@
       font-family: inherit;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       box-shadow: 0 2px 6px rgba(21, 128, 61, 0.3);
       transition: background 0.2s ease;
@@ -169,12 +179,18 @@
       background: #166534;
     }
 
-    /* GRILLE HEBDOMADAIRE INTERACTIVE (ÉCRAN) */
+    /* BARRE D'ONGLETS JOURS SPÉCIALE MOBILE (MASQUÉE SUR PC) */
+    .mobile-day-tabs {
+      display: none;
+    }
+
+    /* GRILLE HEBDOMADAIRE (ÉCRAN) */
     .screen-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(210px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
+      touch-action: pan-y;
     }
 
     .screen-col {
@@ -202,6 +218,9 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 2px;
+    }
+    .col-day-badge {
+      display: none;
     }
 
     .screen-col-body {
@@ -268,8 +287,209 @@
     }
 
     /* ========================================================
+       ADAPTATION SMARTPHONE / MOBILE (RÉACTIF ET TACTILE)
+       ======================================================== */
+    @media screen and (max-width: 820px) {
+      body {
+        padding: 10px 10px 28px 10px;
+      }
+
+      /* En-tête mobile compact */
+      .screen-header {
+        padding: 14px 16px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        gap: 10px;
+      }
+      .screen-header h1 {
+        font-size: 1.25rem;
+      }
+      .screen-header p {
+        font-size: 0.78rem;
+      }
+
+      /* Badges défilants horizontalement au pouce */
+      .header-badges {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 6px;
+        width: 100%;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .header-badges::-webkit-scrollbar {
+        display: none;
+      }
+      .badge {
+        font-size: 0.72rem;
+        padding: 4px 10px;
+        flex-shrink: 0;
+      }
+
+      /* Barre de navigation réorganisée */
+      .nav-toolbar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "center center"
+          "prev   next"
+          "print  print";
+        padding: 12px;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .nav-center {
+        grid-area: center;
+        margin-bottom: 4px;
+      }
+      .nav-title {
+        font-size: 1.05rem;
+      }
+      .nav-subtitle {
+        font-size: 0.78rem;
+      }
+
+      #btnPrevWeek {
+        grid-area: prev;
+        width: 100%;
+        padding: 9px 8px;
+        font-size: 0.82rem;
+      }
+      .nav-actions {
+        display: contents;
+      }
+      #btnNextWeek {
+        grid-area: next;
+        width: 100%;
+        padding: 9px 8px;
+        font-size: 0.82rem;
+      }
+      .print-trigger-btn {
+        grid-area: print;
+        width: 100%;
+        margin-top: 4px;
+        padding: 9px;
+        font-size: 0.82rem;
+      }
+
+      /* Onglets de sélection de jour sur mobile */
+      .mobile-day-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 12px;
+        position: sticky;
+        top: 6px;
+        z-index: 20;
+        background: var(--bg-body);
+        padding: 4px 0;
+      }
+
+      .mobile-day-tab {
+        flex: 1;
+        padding: 7px 2px;
+        background: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        cursor: pointer;
+        text-align: center;
+        font-family: inherit;
+        transition: all 0.15s ease;
+      }
+
+      .mobile-day-tab.active {
+        background: #2563eb;
+        color: #ffffff;
+        border-color: #2563eb;
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+      }
+
+      /* Grille convertie en 1 seule colonne lisible */
+      .screen-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .screen-col {
+        min-height: auto;
+        border-radius: 10px;
+      }
+
+      /* Masquage quand un jour précis est filtré sur mobile */
+      .screen-col.mobile-hidden-day {
+        display: none !important;
+      }
+
+      .screen-col-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        padding: 10px 14px;
+        background: #f1f5f9;
+      }
+
+      .col-day-name {
+        font-size: 0.95rem;
+      }
+      .col-day-date {
+        font-size: 0.78rem;
+        margin-top: 0;
+      }
+
+      .col-day-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: #e2e8f0;
+        color: #475569;
+      }
+      .col-day-badge.active-courses {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+
+      .screen-col-body {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .screen-card {
+        padding: 12px 14px;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      }
+
+      .card-time-row {
+        font-size: 0.82rem;
+      }
+      .card-title-text {
+        font-size: 0.92rem;
+      }
+      .card-meta-text {
+        font-size: 0.8rem;
+      }
+      .card-tag-pill {
+        font-size: 0.72rem;
+      }
+
+      .screen-empty-day {
+        min-height: 42px;
+        padding: 8px;
+        font-size: 0.8rem;
+      }
+    }
+
+    /* ========================================================
        2. AFFICHAGE IMPRESSION RECTO-VERSO (2 PAGES STRICTES)
-       Totalement masqué sur l'écran d'ordinateur / téléphone
        ======================================================== */
     #printTwoPagesMaster {
       display: none;
@@ -278,7 +498,7 @@
     @media print {
       @page {
         size: A4 landscape;
-        margin: 5mm 6mm; /* Marges nettes garantissant 2 pages exactement */
+        margin: 5mm 6mm;
       }
 
       html, body {
@@ -291,18 +511,15 @@
         print-color-adjust: exact !important;
       }
 
-      /* On masque toute l'interface interactive d'écran */
-      .screen-header, .nav-toolbar, .screen-grid {
+      .screen-header, .nav-toolbar, .mobile-day-tabs, .screen-grid {
         display: none !important;
       }
 
-      /* On active la vue d'impression 2 pages */
       #printTwoPagesMaster {
         display: block !important;
         width: 100% !important;
       }
 
-      /* Chaque page imprimée occupe 198mm pour ne jamais déborder */
       .print-page-sheet {
         height: 198mm !important;
         max-height: 198mm !important;
@@ -312,7 +529,6 @@
         justify-content: space-between !important;
       }
 
-      /* Saut de page automatique entre Page 1 et Page 2 */
       .page-one {
         page-break-after: always !important;
         break-after: page !important;
@@ -322,7 +538,6 @@
         break-after: avoid !important;
       }
 
-      /* EN-TÊTE IMPRESSION */
       .p-head {
         border-bottom: 2px solid #0f172a;
         padding-bottom: 3px;
@@ -351,13 +566,12 @@
         border-radius: 4px;
       }
 
-      /* TABLEAUX SEMESTRE IMPRIMABLES */
       .p-table {
         width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
         flex-grow: 1;
-        font-size: 8pt !important; /* POLICE BIEN PLUS GROSSE */
+        font-size: 8pt !important;
       }
 
       .p-table th {
@@ -397,14 +611,13 @@
         color: #475569;
       }
 
-      /* CARTES DE COURS IMPRIMÉES (GRAND FORMAT) */
       .p-item {
         display: block;
         padding: 2px 5px;
         margin-bottom: 2.5px;
         border-radius: 4px;
         border-left: 3.5px solid #94a3b8;
-        font-size: 7.8pt !important; /* LISIBILITÉ MAXIMALE */
+        font-size: 7.8pt !important;
         line-height: 1.18;
       }
       .p-item:last-child { margin-bottom: 0; }
@@ -416,7 +629,6 @@
       .p-item.socio { border-left-color: var(--c-socio); background: var(--c-socio-bg); }
       .p-item.anglais { border-left-color: var(--c-anglais); background: var(--c-anglais-bg); }
 
-      /* HEURES EN TRÈS GROS ET GRAS */
       .p-time {
         font-weight: 800;
         font-size: 8.5pt !important;
@@ -439,7 +651,6 @@
         border-radius: 3px;
       }
 
-      /* CAS PARTICULIERS MIS EN VALEUR */
       .p-macro-highlight {
         border: 1.5px dashed #0f766e !important;
         border-left: 4px solid #0f766e !important;
@@ -489,12 +700,10 @@
 
   <div class="app-container">
 
-    <!-- ========================================================
-         INTERFACE ÉCRAN AVEC FLÈCHES GAUCHE / DROITE
-         ======================================================== -->
+    <!-- EN-TÊTE ÉCRAN -->
     <div class="screen-header">
       <div>
-        <h1> Emploi du temps S3</h1>
+        <h1>📅 Emploi du temps S3</h1>
         <p>L2 Mathématiques & Informatique Appliquées aux SHS (MIASHS) • UVSQ 2026/2027</p>
       </div>
       <div class="header-badges">
@@ -508,9 +717,10 @@
       </div>
     </div>
 
+    <!-- BARRE DE COMMANDE -->
     <div class="nav-toolbar">
       <button class="nav-btn" id="btnPrevWeek" onclick="changeScreenWeek(-1)">
-        ◀ Semaine précédente
+        ◀ Précédente
       </button>
 
       <div class="nav-center">
@@ -518,9 +728,9 @@
         <div class="nav-subtitle" id="screenWeekSub">Rentrée universitaire (Cours Magistraux) • Semaine 1 sur 14</div>
       </div>
 
-      <div style="display:flex; gap:10px; align-items:center;">
+      <div class="nav-actions">
         <button class="nav-btn" id="btnNextWeek" onclick="changeScreenWeek(1)">
-          Semaine suivante ▶
+          Suivante ▶
         </button>
         <button class="print-trigger-btn" onclick="window.print()" title="Imprime tout le semestre sur 2 pages Recto-Verso en gros caractères">
           🖨️ Imprimer Recto-Verso (2 pages)
@@ -528,18 +738,25 @@
       </div>
     </div>
 
-    <!-- GRILLE ÉCRAN DYNAMIQUE (LUNDI À VENDREDI) -->
+    <!-- SÉLECTEUR DE JOUR SUR TÉLÉPHONE (VISIBLE UNIQUEMENT SUR MOBILE) -->
+    <div class="mobile-day-tabs" id="mobileDayTabs">
+      <button class="mobile-day-tab active" data-day="all" onclick="setMobileDayFilter('all')">Tous</button>
+      <button class="mobile-day-tab" data-day="0" onclick="setMobileDayFilter(0)">Lun</button>
+      <button class="mobile-day-tab" data-day="1" onclick="setMobileDayFilter(1)">Mar</button>
+      <button class="mobile-day-tab" data-day="2" onclick="setMobileDayFilter(2)">Mer</button>
+      <button class="mobile-day-tab" data-day="3" onclick="setMobileDayFilter(3)">Jeu</button>
+      <button class="mobile-day-tab" data-day="4" onclick="setMobileDayFilter(4)">Ven</button>
+    </div>
+
+    <!-- GRILLE ÉCRAN DYNAMIQUE (SWIPEABLE SUR MOBILE) -->
     <div class="screen-grid" id="screenWeekGrid"></div>
 
   </div>
 
-  <!-- ========================================================
-       VUE IMPRESSION RECTO-VERSO (PAGE 1 & PAGE 2)
-       S'active uniquement lors du clic sur Imprimer
-       ======================================================== -->
+  <!-- VUE IMPRESSION RECTO-VERSO (PAGE 1 & PAGE 2) -->
   <div id="printTwoPagesMaster">
 
-    <!-- PAGE 1 (RECTO) : SEPTEMBRE & OCTOBRE 2026 (SEMAINES 1 À 7) -->
+    <!-- PAGE 1 (RECTO) : SEPTEMBRE & OCTOBRE 2026 -->
     <div class="print-page-sheet page-one">
       <div class="p-head">
         <div>
@@ -741,7 +958,7 @@
       </table>
     </div>
 
-    <!-- PAGE 2 (VERSO) : NOVEMBRE & DÉCEMBRE 2026 (SEMAINES 8 À 14) -->
+    <!-- PAGE 2 (VERSO) : NOVEMBRE & DÉCEMBRE 2026 -->
     <div class="print-page-sheet page-two">
       <div class="p-head">
         <div>
@@ -927,7 +1144,7 @@
   </div>
 
   <!-- ========================================================
-       LOGIQUE JAVASCRIPT : NAVIGATION INTERACTIVE DE L'ÉCRAN
+       LOGIQUE JAVASCRIPT : NAVIGATION & GESTION MOBILE TACTILE
        ======================================================== -->
   <script>
     const weeksScreenData = [
@@ -1459,7 +1676,24 @@
       }
     ];
 
-    let currentScreenIndex = 2; // Ouvre directement sur la Semaine 3 (première semaine complète)
+    let currentScreenIndex = 2; // Semaine 3 par défaut
+    let currentMobileDayFilter = 'all'; // 'all' ou index (0: Lun, 1: Mar, ...)
+
+    function setMobileDayFilter(filter) {
+      currentMobileDayFilter = filter;
+      document.querySelectorAll('.mobile-day-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.day === String(filter));
+      });
+
+      document.querySelectorAll('.screen-col').forEach(col => {
+        const dIdx = parseInt(col.dataset.dayIndex, 10);
+        if (filter === 'all' || filter === dIdx) {
+          col.classList.remove('mobile-hidden-day');
+        } else {
+          col.classList.add('mobile-hidden-day');
+        }
+      });
+    }
 
     function renderScreenTimetable(index) {
       currentScreenIndex = index;
@@ -1477,21 +1711,31 @@
       const totalCourses = w.days.reduce((acc, d) => acc + d.courses.length, 0);
       if (totalCourses === 0) {
         grid.innerHTML = `
-          <div style="grid-column:1/-1; background:#fff; border:1px dashed #cbd5e1; border-radius:12px; padding:60px 20px; text-align:center; color:#64748b;">
+          <div style="grid-column:1/-1; background:#fff; border:1px dashed #cbd5e1; border-radius:12px; padding:40px 20px; text-align:center; color:#64748b;">
             <h3 style="color:#0f172a; margin-bottom:6px;">Aucun cours régulier programmé cette semaine</h3>
-            <p>Période de révisions ou examens de substitution.</p>
+            <p style="font-size:0.85rem;">Période de révisions ou examens de substitution.</p>
           </div>
         `;
         return;
       }
 
-      w.days.forEach(day => {
+      w.days.forEach((day, dayIdx) => {
         const col = document.createElement('div');
         col.className = 'screen-col';
+        col.dataset.dayIndex = dayIdx;
+
+        // Si un filtre mobile est activé
+        if (currentMobileDayFilter !== 'all' && currentMobileDayFilter !== dayIdx) {
+          col.classList.add('mobile-hidden-day');
+        }
+
+        const count = day.courses.length;
+        const badgeLabel = count === 0 ? 'Repos' : `${count} cours`;
+        const badgeClass = count === 0 ? 'col-day-badge' : 'col-day-badge active-courses';
 
         let coursesHtml = '';
-        if (day.courses.length === 0) {
-          coursesHtml = `<div class="screen-empty-day">Aucun cours</div>`;
+        if (count === 0) {
+          coursesHtml = `<div class="screen-empty-day">Aucun cours prévu</div>`;
         } else {
           coursesHtml = day.courses.map(c => `
             <div class="screen-card ${c.cat}">
@@ -1508,8 +1752,11 @@
 
         col.innerHTML = `
           <div class="screen-col-header">
-            <div class="col-day-name">${day.name}</div>
-            <div class="col-day-date">${day.date}</div>
+            <div>
+              <div class="col-day-name">${day.name}</div>
+              <div class="col-day-date">${day.date}</div>
+            </div>
+            <span class="${badgeClass}">${badgeLabel}</span>
           </div>
           <div class="screen-col-body">
             ${coursesHtml}
@@ -1526,13 +1773,39 @@
       }
     }
 
-    // Navigation pratique au clavier
+    // Navigation au clavier sur ordinateur
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') changeScreenWeek(-1);
       if (e.key === 'ArrowRight') changeScreenWeek(1);
     });
 
-    // Chargement initial sur la Semaine 3
+    // NAVIGATION TACTILE (SWIPE AU DOIGT SUR SMARTPHONE)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const swipeArea = document.getElementById('screenWeekGrid');
+
+    swipeArea.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+    }, { passive: true });
+
+    swipeArea.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      // Balayage horizontal franc (> 45px)
+      if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
+        if (deltaX < 0) {
+          changeScreenWeek(1);  // Balayage vers la gauche = Semaine suivante
+        } else {
+          changeScreenWeek(-1); // Balayage vers la droite = Semaine précédente
+        }
+      }
+    }, { passive: true });
+
+    // Chargement initial
     renderScreenTimetable(currentScreenIndex);
   </script>
 </body>
