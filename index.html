@@ -482,8 +482,8 @@
     }
 
     /* ========================================================
-       2. AFFICHAGE IMPRESSION RECTO-VERSO (GRAND FORMAT A4)
-       Optimisé pour remplir 100 % de la feuille avec du gros texte
+       2. AFFICHAGE IMPRESSION RECTO-VERSO (EXACTEMENT 2 PAGES A4 PAYSAGE)
+       Calibré au millimètre pour remplir 100 % de la surface sans aucune coupure
        ======================================================== */
     #printTwoPagesMaster {
       display: none;
@@ -492,15 +492,22 @@
     @media print {
       @page {
         size: A4 landscape;
-        margin: 4mm 6mm; /* Marges réduites pour exploiter toute la surface */
+        margin: 5mm 6mm;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box !important;
       }
 
       html, body {
-        background: white !important;
+        background: #ffffff !important;
+        color: #000000 !important;
         padding: 0 !important;
         margin: 0 !important;
         width: 100% !important;
-        height: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -512,19 +519,25 @@
       #printTwoPagesMaster {
         display: block !important;
         width: 100% !important;
-        height: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
 
-      /* Chaque page occupe exactement la hauteur A4 paysage sans saut intempestif */
+      /* Chaque page remplit toute la surface A4 paysage sans saut intempestif */
       .print-page-sheet {
-        height: 200mm !important;
-        max-height: 200mm !important;
-        overflow: hidden !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        height: 195mm !important;
+        max-height: 196mm !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
-        box-sizing: border-box !important;
         padding: 0 !important;
+        margin: 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        overflow: visible !important;
       }
 
       .page-one {
@@ -532,49 +545,55 @@
         break-after: page !important;
       }
       .page-two {
+        page-break-before: always !important;
+        break-before: page !important;
         page-break-after: avoid !important;
         break-after: avoid !important;
       }
 
       /* EN-TÊTE IMPRESSION LARGE */
       .p-head {
-        border-bottom: 2.5px solid #0f172a;
-        padding-bottom: 3px;
-        margin-bottom: 4px;
+        border-bottom: 2px solid #0f172a;
+        padding-bottom: 2px;
+        margin-bottom: 3px;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        height: 13mm;
+        height: 11.5mm;
+        flex-shrink: 0;
       }
       .p-head h2 {
-        font-size: 13pt !important;
+        font-size: 11.5pt !important;
         font-weight: 800;
         text-transform: uppercase;
         color: #0f172a;
-        letter-spacing: -0.3px;
+        margin: 0;
+        letter-spacing: -0.2px;
       }
       .p-head p {
-        font-size: 9pt !important;
-        color: #1e293b;
+        font-size: 8.5pt !important;
+        color: #334155;
         font-weight: 600;
-        margin-top: 1px;
+        margin: 1px 0 0 0;
       }
       .p-badges {
-        font-size: 8.8pt !important;
+        font-size: 8.2pt !important;
         font-weight: 700;
         background: #f1f5f9;
-        border: 1.5px solid #64748b;
-        padding: 4px 10px;
-        border-radius: 6px;
+        border: 1px solid #64748b;
+        padding: 3px 8px;
+        border-radius: 5px;
         color: #0f172a;
+        white-space: nowrap;
       }
 
       /* TABLEAU PLEINE PAGE */
       .p-table {
         width: 100% !important;
-        height: calc(100% - 15mm) !important; /* Remplit toute la hauteur disponible */
+        height: calc(100% - 13.5mm) !important;
         border-collapse: collapse !important;
         table-layout: fixed !important;
+        margin: 0 !important;
       }
 
       .p-table th {
@@ -582,52 +601,56 @@
         color: white !important;
         text-transform: uppercase;
         font-weight: 800;
-        padding: 5px 6px;
-        border: 1.5px solid #0f172a;
-        font-size: 10pt !important;
+        padding: 4px 5px;
+        border: 1px solid #0f172a;
+        font-size: 9.5pt !important;
         text-align: center;
+        height: 7mm;
       }
 
       .p-table td {
-        border: 1.5px solid #94a3b8 !important;
-        padding: 4px 6px;
+        border: 1px solid #94a3b8 !important;
+        padding: 2.5px 4px;
         vertical-align: middle;
         background: #ffffff;
       }
 
-      /* Proportions optimales des colonnes */
-      .th-sem { width: 10%; }
+      /* Proportions des colonnes */
+      .th-sem { width: 9%; }
       .th-lun { width: 20%; }
-      .th-mar { width: 18%; }
+      .th-mar { width: 19%; }
       .th-mer { width: 22%; }
-      .th-jeu { width: 18%; }
-      .th-ven { width: 12%; }
+      .th-jeu { width: 19%; }
+      .th-ven { width: 11%; }
 
       .p-sem-col {
         text-align: center;
         background: #f8fafc !important;
       }
       .p-sem-name {
-        font-size: 10.5pt !important;
+        font-size: 9.8pt !important;
         font-weight: 800;
         display: block;
         color: #0f172a;
+        line-height: 1.15;
       }
       .p-sem-dates {
-        font-size: 8.5pt !important;
+        font-size: 8pt !important;
         font-weight: 700;
         color: #334155;
+        display: block;
+        margin-top: 1px;
       }
 
-      /* BLOCS DE COURS : GRANDES POLICES TRÈS LISIBLES */
+      /* BLOCS DE COURS : TRÈS LISIBLES ET NETS */
       .p-item {
         display: block;
-        padding: 3.5px 7px;
-        margin-bottom: 4px;
-        border-radius: 5px;
-        border-left: 5px solid #94a3b8;
-        font-size: 9.6pt !important; /* Bien gros et lisible */
-        line-height: 1.22;
+        padding: 2.5px 5px;
+        margin-bottom: 2.5px;
+        border-radius: 4px;
+        border-left: 4.5px solid #94a3b8;
+        font-size: 8.8pt !important;
+        line-height: 1.2;
       }
       .p-item:last-child { margin-bottom: 0; }
 
@@ -638,82 +661,79 @@
       .p-item.socio { border-left-color: var(--c-socio); background: var(--c-socio-bg); }
       .p-item.anglais { border-left-color: var(--c-anglais); background: var(--c-anglais-bg); }
 
-      /* HEURES ET TITRES EN GROS CARACTÈRES */
       .p-time {
         font-weight: 800;
-        font-size: 10.5pt !important;
+        font-size: 9.2pt !important;
         color: #0f172a;
-        margin-right: 5px;
+        margin-right: 4px;
       }
       .p-title {
         font-weight: 700;
-        font-size: 9.8pt !important;
+        font-size: 8.8pt !important;
       }
       .p-room {
-        font-size: 9pt !important;
+        font-size: 8.2pt !important;
         font-weight: 600;
         color: #334155;
       }
       .p-grp {
-        font-size: 8.2pt !important;
+        font-size: 7.8pt !important;
         font-weight: 800;
         text-transform: uppercase;
         background: rgba(0,0,0,0.08);
-        padding: 1px 4px;
+        padding: 1px 3px;
         border-radius: 3px;
       }
 
-      /* MISE EN AVANT DU TD DE MACROÉCONOMIE */
+      /* MISE EN AVANT TD MACRO */
       .p-macro-highlight {
-        border: 2px dashed #0f766e !important;
-        border-left: 6px solid #0f766e !important;
+        border: 1.5px dashed #0f766e !important;
+        border-left: 5px solid #0f766e !important;
         background: #ccfbf1 !important;
-        padding: 5px 8px !important;
+        padding: 3px 5px !important;
       }
       .p-macro-highlight .p-time {
         color: #042f2e !important;
-        font-size: 11pt !important;
+        font-size: 9.5pt !important;
       }
 
-      /* BLOCS GROUPÉS / SIMPLIFIÉS LORSQU'UN JOUR EST FIXE */
+      /* CARTES FIXES SANS BLOCAGE DE HAUTEUR */
       .p-fixed-group-card {
         background: #f8fafc;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 6px;
-        padding: 6px 8px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
+        border: 1px solid #cbd5e1;
+        border-radius: 5px;
+        padding: 4px 6px;
+        box-sizing: border-box;
       }
       .p-fixed-badge-title {
-        font-size: 8.5pt;
+        font-size: 7.5pt;
         font-weight: 800;
         text-transform: uppercase;
         color: #1e293b;
         letter-spacing: 0.3px;
-        margin-bottom: 4px;
-        border-bottom: 1.5px solid #cbd5e1;
-        padding-bottom: 2px;
+        margin-bottom: 3px;
+        border-bottom: 1px solid #cbd5e1;
+        padding-bottom: 1px;
+        text-align: center;
       }
 
       .p-empty {
         color: #94a3b8;
         text-align: center;
         font-style: italic;
-        font-size: 9pt;
+        font-size: 8.5pt;
       }
 
       .p-alert-box {
         background: #fef2f2 !important;
-        border: 2px solid #f87171 !important;
+        border: 1.5px solid #f87171 !important;
         color: #991b1b !important;
         font-weight: 800;
         text-align: center;
-        padding: 10px;
-        border-radius: 6px;
-        font-size: 10pt !important;
-        line-height: 1.3;
+        padding: 6px 4px;
+        border-radius: 4px;
+        font-size: 8.5pt !important;
+        line-height: 1.25;
       }
 
       .p-libere-box {
@@ -722,9 +742,10 @@
         color: #166534 !important;
         text-align: center;
         font-weight: 800;
-        font-size: 9.8pt;
-        padding: 12px 6px;
-        border-radius: 6px;
+        font-size: 8.8pt !important;
+        padding: 8px 4px;
+        border-radius: 5px;
+        line-height: 1.3;
       }
 
       .p-vacances-row {
@@ -732,10 +753,10 @@
         text-align: center;
         font-weight: 800;
         color: #92400e;
-        padding: 6px !important;
-        font-size: 10pt !important;
-        border: 2px solid #f59e0b !important;
-        letter-spacing: 0.5px;
+        padding: 4px !important;
+        font-size: 8.5pt !important;
+        border: 1.5px solid #f59e0b !important;
+        letter-spacing: 0.4px;
       }
 
       .p-revisions-row {
@@ -743,9 +764,9 @@
         text-align: center;
         font-weight: 800;
         color: #1e293b;
-        padding: 12px !important;
-        font-size: 10.5pt !important;
-        border: 2px dashed #64748b !important;
+        padding: 6px !important;
+        font-size: 9pt !important;
+        border: 1.5px dashed #64748b !important;
       }
     }
   </style>
@@ -786,13 +807,13 @@
         <button class="nav-btn" id="btnNextWeek" onclick="changeScreenWeek(1)">
           Suivante ▶
         </button>
-        <button class="print-trigger-btn" onclick="window.print()" title="Imprime tout le semestre sur 2 pages Recto-Verso en gros caractères">
+        <button class="print-trigger-btn" onclick="window.print()" title="Imprime tout le semestre sur 2 pages Recto-Verso">
           🖨️ Imprimer Recto-Verso (2 pages)
         </button>
       </div>
     </div>
 
-    <!-- SÉLECTEUR DE JOUR SUR TÉLÉPHONE (VISIBLE UNIQUEMENT SUR MOBILE) -->
+    <!-- SÉLECTEUR DE JOUR SUR TÉLÉPHONE -->
     <div class="mobile-day-tabs" id="mobileDayTabs">
       <button class="mobile-day-tab active" data-day="all" onclick="setMobileDayFilter('all')">Tous</button>
       <button class="mobile-day-tab" data-day="0" onclick="setMobileDayFilter(0)">Lun</button>
@@ -809,8 +830,7 @@
 
   <!-- ========================================================
        AFFICHAGE IMPRESSION RECTO-VERSO (2 PAGES PLEINES A4)
-       Les jours identiques sont simplifiés et regroupés pour
-       garantir une taille de texte maximale et une lisibilité parfaite
+       Optimisé pour garantir 100% de lisibilité sans coupure
        ======================================================== -->
   <div id="printTwoPagesMaster">
 
@@ -839,7 +859,7 @@
         </thead>
         <tbody>
           <!-- S1 : Rentrée -->
-          <tr style="height: 12%;">
+          <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 1</span><span class="p-sem-dates">07 – 12 Sept.</span></td>
             <td class="p-empty">—</td>
             <td class="p-empty">—</td>
@@ -852,7 +872,7 @@
           </tr>
 
           <!-- S2 : Lancement TD -->
-          <tr style="height: 14%;">
+          <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 2</span><span class="p-sem-dates">14 – 19 Sept.</span></td>
             <td>
               <div class="p-item socio"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Socio démographie</span> <span class="p-room">[2203]</span></div>
@@ -870,14 +890,14 @@
               <div class="p-item info"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Bases de données</span> <span class="p-room">[Amphi E]</span></div>
               <div class="p-item maths"><span class="p-time">11:20-12:50</span> <span class="p-title">CM Analyse 2 & Algèbre 2</span> <span class="p-room">[Amphi G]</span></div>
             </td>
-            <!-- Vendredi fusionné sur tout le semestre S2 à S7 -->
+            <!-- Vendredi fusionné sur S2 à S7 -->
             <td rowspan="6" style="background:#fcfdfd; text-align:center;">
-              <div class="p-fixed-group-card" style="justify-content:center;">
+              <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">TOUS LES VENDREDIS (S2 à S7)</div>
-                <div class="p-item micro" style="padding:12px 6px;">
-                  <span class="p-time" style="font-size:11.5pt !important;">14:00 - 16:00</span><br>
-                  <b style="font-size:10.5pt;">CM Microéconomie 2</b><br>
-                  <span class="p-room" style="font-size:9.5pt;">Amphi G - Fermat</span>
+                <div class="p-item micro" style="padding:10px 4px;">
+                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
+                  <b style="font-size:9.5pt;">CM Microéconomie 2</b><br>
+                  <span class="p-room" style="font-size:8.5pt;">Amphi G - Fermat</span>
                 </div>
               </div>
             </td>
@@ -919,7 +939,7 @@
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-item anglais"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais</span> <span class="p-grp">TD 01</span> <span class="p-room">[E304]</span></div>
-              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">TD 01</span> <span class="p-room">[Amphi F] (Séance 1/4)</span></div>
+              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">TD 01</span> <span class="p-room">[Amphi F] (1/4)</span></div>
             </td>
 
             <!-- Jeudi fusionné S3 à S6 -->
@@ -933,7 +953,7 @@
                   <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre 2</b> <span class="p-room">[Amphi G]</span>
                 </div>
                 <div class="p-item info">
-                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp">TD 02</span> <span class="p-room">[RC22 Descartes]</span>
+                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp">TD 02</span> <span class="p-room">[RC22]</span>
                 </div>
               </div>
             </td>
@@ -945,7 +965,7 @@
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-item anglais"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais</span> <span class="p-grp">TD 01</span> <span class="p-room">[E304]</span></div>
-              <div class="p-empty" style="padding-top:4px;">(Pas de TD Macro ce mercredi)</div>
+              <div class="p-empty" style="padding-top:2px;">(Après-midi libre)</div>
             </td>
           </tr>
 
@@ -955,7 +975,7 @@
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-item anglais"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais</span> <span class="p-grp">TD 01</span> <span class="p-room">[E304]</span></div>
-              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">TD 01</span> <span class="p-room">[Amphi F] (Séance 2/4)</span></div>
+              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">TD 01</span> <span class="p-room">[Amphi F] (2/4)</span></div>
             </td>
           </tr>
 
@@ -965,7 +985,7 @@
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G / 204]</span></div>
               <div class="p-item anglais"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais</span> <span class="p-grp">TD 01</span> <span class="p-room">[E304]</span></div>
-              <div class="p-empty" style="padding-top:4px;">(Pas de TD Macro ce mercredi)</div>
+              <div class="p-empty" style="padding-top:2px;">(Après-midi libre)</div>
             </td>
           </tr>
 
@@ -975,7 +995,7 @@
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-item anglais"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais</span> <span class="p-grp">TD 01</span> <span class="p-room">[E304]</span></div>
-              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">TD 01</span> <span class="p-room">[Amphi F] (Séance 3/4)</span></div>
+              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">TD 01</span> <span class="p-room">[Amphi F] (3/4)</span></div>
             </td>
             <td>
               <div class="p-alert-box">🚫 AUCUN COURS<br><strong>Trophée SQY Campus</strong></div>
@@ -983,7 +1003,7 @@
           </tr>
 
           <!-- VACANCES DE TOUSSAINT -->
-          <tr style="height: 5%;">
+          <tr>
             <td colspan="6" class="p-vacances-row">
               🍁 DU 26 AU 31 OCTOBRE 2026 : INTERRUPTION DES COURS — VACANCES DE LA TOUSSAINT
             </td>
@@ -1073,12 +1093,12 @@
 
             <!-- Vendredi fusionné S8 à S11 -->
             <td rowspan="4" style="text-align:center;">
-              <div class="p-fixed-group-card" style="justify-content:center;">
+              <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">VENDREDIS (S8 à S11)</div>
-                <div class="p-item micro" style="padding:12px 6px;">
-                  <span class="p-time" style="font-size:11.5pt !important;">14:00 - 16:00</span><br>
-                  <b style="font-size:10.5pt;">CM Microéconomie 2</b><br>
-                  <span class="p-room" style="font-size:9.5pt;">Amphi G - Fermat</span>
+                <div class="p-item micro" style="padding:10px 4px;">
+                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
+                  <b style="font-size:9.5pt;">CM Microéconomie 2</b><br>
+                  <span class="p-room" style="font-size:8.5pt;">Amphi G - Fermat</span>
                 </div>
               </div>
             </td>
@@ -1089,7 +1109,7 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 9</span><span class="p-sem-dates">09 – 14 Nov.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Maths (Noté EDT)</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:4px; padding:3px 6px; font-size:8.5pt; font-weight:700; color:#9f1239; margin-top:3px;">
+              <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:4px; padding:2px 5px; font-size:8pt; font-weight:700; color:#9f1239; margin-top:2px;">
                 Mercredi 11 Nov. Férié (Armistice)
               </div>
             </td>
@@ -1114,19 +1134,19 @@
           </tr>
 
           <!-- S12 : Banalisée / Révisions -->
-          <tr style="height: 7%;">
+          <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 12</span><span class="p-sem-dates">30 Nov. – 05 Déc.</span></td>
             <td colspan="5" class="p-revisions-row">
               🎯 SEMAINE BANALISÉE / RÉVISIONS / ÉVALUATIONS DE SUBSTITUTION (Aucun enseignement régulier)
             </td>
           </tr>
 
-          <!-- S13 & S14 : FIN DU SEMESTRE (IDENTIQUES, REGROUPÉES POUR UN MAXIMUM D'ESPACE) -->
-          <tr style="height: 32%;">
+          <!-- S13 & S14 : FIN DU SEMESTRE (DÉCEMBRE) -->
+          <tr>
             <td class="p-sem-col">
               <span class="p-sem-name">Semaines 13 & 14</span>
-              <span class="p-sem-dates" style="display:block; margin-top:3px;">07 – 19 Déc.</span>
-              <span style="font-size:7.5pt; font-weight:800; color:#0f766e; background:#ccfbf1; padding:2px 4px; border-radius:3px; display:inline-block; margin-top:4px;">
+              <span class="p-sem-dates">07 – 19 Déc.</span>
+              <span style="font-size:7.5pt; font-weight:800; color:#0f766e; background:#ccfbf1; padding:2px 4px; border-radius:3px; display:inline-block; margin-top:3px;">
                 Dernières séances
               </span>
             </td>
@@ -1147,12 +1167,12 @@
               </div>
             </td>
 
-            <!-- Mardi S13-S14 : Totalement Libéré ! -->
+            <!-- Mardi S13-S14 : Libéré -->
             <td>
               <div class="p-libere-box">
-                🌴 MARDI LIBÉRÉ<br>
-                <span style="font-size:8.5pt; font-weight:600; color:#475569; display:block; margin-top:3px;">
-                  (Fin des cours d'Anglais et de CM Macro)
+                🌴 MARDI TOTALEMENT LIBÉRÉ<br>
+                <span style="font-size:7.8pt; font-weight:600; color:#475569; display:block; margin-top:2px;">
+                  (Fin des cours d'Anglais et CM Macro)
                 </span>
               </div>
             </td>
@@ -1161,13 +1181,13 @@
             <td>
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">MERCREDIS (09 & 16 DÉC.)</div>
-                <div class="p-item maths" style="padding:10px 8px;">
+                <div class="p-item maths" style="padding:6px 4px;">
                   <span class="p-time">09:40 - 12:50</span><br>
-                  <b style="font-size:10pt;">TD Analyse & Algèbre 2</b><br>
+                  <b style="font-size:9.2pt;">TD Analyse & Algèbre 2</b><br>
                   <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G / G204]</span>
                 </div>
-                <div style="font-size:8.5pt; text-align:center; color:#64748b; font-style:italic;">
-                  Après-midi libre (Pas d'Anglais)
+                <div style="font-size:7.8pt; text-align:center; color:#64748b; font-style:italic; margin-top:3px;">
+                  Après-midi libre (Plus d'Anglais)
                 </div>
               </div>
             </td>
@@ -1190,14 +1210,21 @@
 
             <!-- Vendredi S13-S14 -->
             <td style="text-align:center;">
-              <div class="p-fixed-group-card" style="justify-content:center;">
+              <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">VENDREDIS (11 & 18 DÉC.)</div>
-                <div class="p-item micro" style="padding:12px 6px;">
-                  <span class="p-time" style="font-size:11.5pt !important;">14:00 - 16:00</span><br>
-                  <b style="font-size:10.5pt;">CM Microéconomie 2</b><br>
-                  <span class="p-room" style="font-size:9.5pt;">Amphi G - Fermat</span>
+                <div class="p-item micro" style="padding:10px 4px;">
+                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
+                  <b style="font-size:9.5pt;">CM Microéconomie 2</b><br>
+                  <span class="p-room" style="font-size:8.5pt;">Amphi G - Fermat</span>
                 </div>
               </div>
+            </td>
+          </tr>
+
+          <!-- VACANCES DE NOËL -->
+          <tr>
+            <td colspan="6" class="p-vacances-row" style="background:#e0f2fe !important; border-color:#0284c7 !important; color:#0369a1 !important;">
+              🎄 DU 19 DÉCEMBRE 2026 AU 03 JANVIER 2027 : VACANCES DE NOËL & FIN DU SEMESTRE 3
             </td>
           </tr>
         </tbody>
@@ -1835,7 +1862,7 @@
       }
     }
 
-    // Clavier ordinateur
+    // Raccourcis clavier
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') changeScreenWeek(-1);
       if (e.key === 'ArrowRight') changeScreenWeek(1);
@@ -1866,7 +1893,7 @@
       }
     }, { passive: true });
 
-    // Initialisation
+    // Lancement
     renderScreenTimetable(currentScreenIndex);
   </script>
 </body>
