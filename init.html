@@ -458,10 +458,92 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ============================================================
+           IMPRESSION — fiches de cours
+           Sans cette feuille, l'impression sortait quasi blanche :
+           - seules les sections affichées existent (section{display:none})
+           - les blocs non encore défilés sont à opacity:0
+           ============================================================ */
+        .print-only { display: none; }
+
+        .theme-toggle.print-btn { right: 74px; }
+        .sidebar-print { margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: .75rem; }
+        .sidebar-print a { color: var(--text-accent); font-weight: 600; }
+        @media (max-width: 768px) {
+            .theme-toggle.print-btn { right: 64px; }
+        }
+
+        @media print {
+            @page { size: A4 portrait; margin: 14mm 12mm; }
+
+            *, *::before, *::after {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                box-sizing: border-box !important;
+                animation: none !important;
+                transition: none !important;
+            }
+
+            /* Thème clair forcé : un fond sombre viderait les cartouches */
+            :root, [data-theme="dark"] {
+                --bg-primary: #ffffff;  --bg-secondary: #f6f8fa; --bg-card: #ffffff;
+                --text-primary: #111827; --text-secondary: #374151; --text-accent: #1d4ed8;
+                --border: #cbd5e1; --shadow: transparent; --code-bg: #f3f4f6; --highlight: #fde68a;
+            }
+
+            html, body {
+                background: #fff !important; color: #111 !important;
+                margin: 0 !important; padding: 0 !important;
+            }
+            body { font-size: 10.5pt; line-height: 1.45; }
+
+            /* Interface masquée */
+            .theme-toggle, .burger-menu-icon, .sidebar, .overlay { display: none !important; }
+
+            /* Par défaut : TOUS les chapitres, pas seulement celui affiché à l'écran */
+            section { display: block !important; }
+            html:not(.print-one-chapter) section + section {
+                break-before: page; page-break-before: always;
+            }
+            /* Mode « chapitre courant » : on respecte la sélection faite à l'écran */
+            html.print-one-chapter section:not(.is-active) { display: none !important; }
+
+            /* Sans ceci, les blocs qui n'ont pas encore défilé restent invisibles */
+            .animate-on-scroll { opacity: 1 !important; transform: none !important; }
+
+            .container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+            .header { box-shadow: none; margin-bottom: 1.1rem; padding: 1rem; }
+
+            /* Pas de coupure au milieu d'un énoncé, d'une formule ou d'un tableau */
+            .card, .definition, .theorem, .property, .application, .summary-card,
+            .formula, .demo, .rendement, .important, .schema, table, ul, ol, .summary-grid {
+                break-inside: avoid; page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; break-inside: avoid; }
+            p { orphans: 3; widows: 3; }
+
+            table { width: 100% !important; border-collapse: collapse !important; }
+            table thead { display: table-header-group !important; }
+            table tr { break-inside: avoid; page-break-inside: avoid; }
+
+            a { color: #111 !important; text-decoration: none !important; }
+
+            /* Bandeau d'identification du document imprimé */
+            .print-only {
+                display: block;
+                font-size: 8pt; color: #6b7280; text-align: center;
+                border-bottom: 1px solid #cbd5e1;
+                padding-bottom: 4px; margin-bottom: 12px;
+                letter-spacing: .04em;
+            }
+        }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <button class="theme-toggle print-btn" onclick="printSheets(true)"
+            title="Imprimer toutes les fiches (tous les chapitres)">🖨️</button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème">🌓</button>
     
     <div class="burger-menu-icon" onclick="toggleSidebar()">
         <div class="line"></div>
@@ -473,11 +555,13 @@
         <ul>
             <li><a href="#chapitre-t4" onclick="selectChapter('chapitre-t4')">Chapitre T4 - Transition de phase</a></li>
             <li><a href="#chapitre-t5" onclick="selectChapter('chapitre-t5')">Chapitre T5 - Machines thermiques</a></li>
+            <li class="sidebar-print"><a href="#" onclick="event.preventDefault(); printSheets(false);">🖨️ Imprimer ce chapitre seulement</a></li>
         </ul>
     </div>
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
     <div class="container">
+        <div class="print-only">Physique — Lycée Paul Valéry MP2I · R. Metzdorff 2024–2025 · Fiches de révision T4 &amp; T5</div>
         <header class="header animate-on-scroll">
             <h1>Physique - Lycée Paul Valéry MP2I</h1>
             <p><strong>R. Metzdorff - 2024–2025</strong></p>
@@ -1857,6 +1941,13 @@
     </div>
 
     <script>
+        /* Impression : tous les chapitres, ou seulement celui affiché.
+           (les styles d'impression sont dans la feuille @media print) */
+        function printSheets(allChapters) {
+            document.documentElement.classList.toggle('print-one-chapter', !allChapters);
+            window.print();
+        }
+
         // Function to toggle theme
         function toggleTheme() {
             const body = document.body;
@@ -1889,8 +1980,11 @@
         function showChapter(chapterId) {
             document.querySelectorAll('section').forEach(section => {
                 section.style.display = 'none'; // Hide all sections
+                section.classList.remove('is-active');
             });
-            document.getElementById(chapterId).style.display = 'block'; // Show the selected section
+            const active = document.getElementById(chapterId);
+            active.style.display = 'block'; // Show the selected section
+            active.classList.add('is-active');
 
             // Smooth scroll to the top of the selected chapter
             document.getElementById(chapterId).scrollIntoView({
