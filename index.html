@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Emploi du temps - L2 MIASHS - Cédric JEAN-BAPTISTE</title>
+  <title>Emploi du temps - L2 MIASHS (Cédric JEAN-BAPTISTE)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -97,7 +97,7 @@
       border-color: #60a5fa;
       font-weight: 800;
     }
-    .badge-anglais {
+    .badge-alert {
       background: #b45309;
       border-color: #f59e0b;
       font-weight: 800;
@@ -149,7 +149,7 @@
       text-align: center;
     }
     .nav-title {
-      font-size: 1.2rem;
+      font-size: 1.22rem;
       font-weight: 800;
     }
     .nav-subtitle {
@@ -289,8 +289,6 @@
       color: #94a3b8;
       font-style: italic;
       font-size: 0.85rem;
-      text-align: center;
-      padding: 20px;
     }
 
     /* ========================================================
@@ -309,6 +307,9 @@
       }
       .screen-header h1 {
         font-size: 1.2rem;
+      }
+      .screen-header p {
+        font-size: 0.78rem;
       }
 
       .header-badges {
@@ -346,13 +347,35 @@
         grid-area: center;
         margin-bottom: 4px;
       }
-      .nav-title { font-size: 1.05rem; }
-      .nav-subtitle { font-size: 0.78rem; }
+      .nav-title {
+        font-size: 1.05rem;
+      }
+      .nav-subtitle {
+        font-size: 0.78rem;
+      }
 
-      #btnPrevWeek { grid-area: prev; width: 100%; padding: 9px; font-size: 0.82rem; }
-      .nav-actions { display: contents; }
-      #btnNextWeek { grid-area: next; width: 100%; padding: 9px; font-size: 0.82rem; }
-      .print-trigger-btn { grid-area: print; width: 100%; margin-top: 4px; padding: 9px; font-size: 0.82rem; }
+      #btnPrevWeek {
+        grid-area: prev;
+        width: 100%;
+        padding: 9px 8px;
+        font-size: 0.82rem;
+      }
+      .nav-actions {
+        display: contents;
+      }
+      #btnNextWeek {
+        grid-area: next;
+        width: 100%;
+        padding: 9px 8px;
+        font-size: 0.82rem;
+      }
+      .print-trigger-btn {
+        grid-area: print;
+        width: 100%;
+        margin-top: 4px;
+        padding: 9px;
+        font-size: 0.82rem;
+      }
 
       .mobile-day-tabs {
         display: flex;
@@ -377,6 +400,7 @@
         cursor: pointer;
         text-align: center;
         font-family: inherit;
+        transition: all 0.15s ease;
       }
 
       .mobile-day-tab.active {
@@ -434,7 +458,7 @@
     @media print {
       @page {
         size: A4 landscape;
-        margin: 4.5mm 5.5mm;
+        margin: 4mm 5mm;
       }
 
       *, *::before, *::after {
@@ -476,7 +500,7 @@
         margin: 0 !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
-        overflow: hidden !important;
+        overflow: visible !important;
       }
 
       .page-one {
@@ -501,20 +525,20 @@
         flex-shrink: 0;
       }
       .p-head h2 {
-        font-size: 10.5pt !important;
+        font-size: 10.8pt !important;
         font-weight: 800;
         text-transform: uppercase;
         color: #0f172a;
         margin: 0;
       }
       .p-head p {
-        font-size: 8.2pt !important;
+        font-size: 8pt !important;
         color: #334155;
         font-weight: 600;
         margin: 1px 0 0 0;
       }
       .p-badges {
-        font-size: 8pt !important;
+        font-size: 7.6pt !important;
         font-weight: 700;
         background: #f1f5f9;
         border: 1px solid #64748b;
@@ -539,7 +563,7 @@
         font-weight: 800;
         padding: 3px 4px;
         border: 1px solid #0f172a;
-        font-size: 9pt !important;
+        font-size: 8.8pt !important;
         text-align: center;
         height: 6.5mm;
       }
@@ -551,19 +575,20 @@
         background: #ffffff;
       }
 
+      /* Proportions adaptées */
       .th-sem { width: 9%; }
       .th-lun { width: 21%; }
-      .th-mar { width: 22%; }
+      .th-mar { width: 19%; }
       .th-mer { width: 21%; }
-      .th-jeu { width: 18%; }
-      .th-ven { width: 9%; }
+      .th-jeu { width: 19%; }
+      .th-ven { width: 11%; }
 
       .p-sem-col {
         text-align: center;
         background: #f8fafc !important;
       }
       .p-sem-name {
-        font-size: 9.2pt !important;
+        font-size: 9pt !important;
         font-weight: 800;
         display: block;
         color: #0f172a;
@@ -579,11 +604,11 @@
 
       .p-item {
         display: block;
-        padding: 2px 4.5px;
+        padding: 2px 4px;
         margin-bottom: 2px;
         border-radius: 3.5px;
-        border-left: 4.5px solid #94a3b8;
-        font-size: 8.3pt !important;
+        border-left: 4px solid #94a3b8;
+        font-size: 8.2pt !important;
         line-height: 1.2;
       }
       .p-item:last-child { margin-bottom: 0; }
@@ -597,13 +622,13 @@
 
       .p-time {
         font-weight: 800;
-        font-size: 8.5pt !important;
+        font-size: 8.4pt !important;
         color: #0f172a;
-        margin-right: 3px;
+        margin-right: 2px;
       }
       .p-title {
         font-weight: 700;
-        font-size: 8.3pt !important;
+        font-size: 8.2pt !important;
       }
       .p-room {
         font-size: 7.7pt !important;
@@ -621,16 +646,16 @@
 
       .p-macro-highlight {
         border: 1.5px dashed #0f766e !important;
-        border-left: 5px solid #0f766e !important;
+        border-left: 4.5px solid #0f766e !important;
         background: #ccfbf1 !important;
-        padding: 2.5px 4.5px !important;
+        padding: 2.5px 4px !important;
       }
 
       .p-fixed-group-card {
         background: #f8fafc;
         border: 1px solid #cbd5e1;
         border-radius: 5px;
-        padding: 3.5px 5px;
+        padding: 3.5px 4.5px;
         box-sizing: border-box;
       }
       .p-fixed-badge-title {
@@ -671,7 +696,7 @@
         text-align: center;
         font-weight: 800;
         font-size: 8.2pt !important;
-        padding: 6px 3px;
+        padding: 5px 3px;
         border-radius: 5px;
         line-height: 1.3;
       }
@@ -682,7 +707,7 @@
         font-weight: 800;
         color: #92400e;
         padding: 3.5px !important;
-        font-size: 8.2pt !important;
+        font-size: 8pt !important;
         border: 1.5px solid #f59e0b !important;
       }
     }
@@ -700,11 +725,11 @@
       </div>
       <div class="header-badges">
         <span class="badge badge-hl">N° Étudiant : 22608239</span>
-        <span class="badge badge-anglais">Anglais UE2 : <strong>TD 01 (Mar 8h00 - E303)</strong></span>
-        <span class="badge">Maths (LSMA302) : <strong>TD 02 (Mer 9h40)</strong></span>
+        <span class="badge badge-alert">Anglais : <strong>TD 01 (Mardi 8h00 - E303)</strong></span>
+        <span class="badge">Maths : <strong>TD 02 (Mer 9h40)</strong></span>
         <span class="badge">Bases de données : <strong>TD 02 (Jeu 13h50)</strong></span>
         <span class="badge">Microéconomie : <strong>TD 02 (Lun 15h30)</strong></span>
-        <span class="badge">Macro / Socio : <strong>Promo TD 1 & 2</strong></span>
+        <span class="badge">Macro & Socio : <strong>Promo réunie</strong></span>
       </div>
     </div>
 
@@ -716,7 +741,7 @@
 
       <div class="nav-center">
         <div class="nav-title" id="screenWeekTitle">Semaine 1 : 14 – 19 Septembre 2026</div>
-        <div class="nav-subtitle" id="screenWeekSub">Lancement des cours • Semaine 1 sur 13</div>
+        <div class="nav-subtitle" id="screenWeekSub">Lancement du semestre et des TD</div>
       </div>
 
       <div class="nav-actions">
@@ -753,11 +778,11 @@
     <div class="print-page-sheet page-one">
       <div class="p-head">
         <div>
-          <h2>UVSQ • L2 MIASHS (S3) — Planning Personnel : Cédric JEAN-BAPTISTE</h2>
-          <p>N° Étudiant : <strong>22608239</strong> • Groupes : <strong>Anglais TD 01</strong> | <strong>Maths, BDD, Micro TD 02</strong> • <strong>Page 1 / 2 (Recto)</strong></p>
+          <h2>UVSQ • L2 MIASHS (S3) — Emploi du temps (Partie 1 : Septembre & Octobre 2026)</h2>
+          <p>Étudiant : <strong>Cédric JEAN-BAPTISTE (22608239)</strong> • <strong>Page 1 / 2 (Recto)</strong></p>
         </div>
         <div class="p-badges">
-          Septembre & Octobre 2026 • Semaines 1 à 6
+          Anglais en <strong>TD 01</strong> (Mar 8h) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio <strong>Promo</strong>
         </div>
       </div>
 
@@ -788,7 +813,7 @@
             </td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre 2</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="padding:4px; margin-top:3px;">🌴 Après-midi libre dès 12h50<br><span style="font-size:7.2pt;">(Anglais TD1 suivi le mardi matin)</span></div>
+              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE<br><span style="font-size:7.2pt;">(Anglais fait le mardi 8h !)</span></div>
             </td>
             <td>
               <div class="p-item info"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Bases de données</span> <span class="p-room">[Amphi E]</span></div>
@@ -799,9 +824,9 @@
             <td rowspan="6" style="background:#fcfdfd; text-align:center;">
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">VENDREDIS (S1 à S6)</div>
-                <div class="p-empty" style="margin-bottom:6px;">Matin libre<br><span style="font-size:7.3pt;">(Maths matin réservé TD1)</span></div>
+                <div class="p-empty" style="margin-bottom:6px;">Matin libre<br><span style="font-size:7.2pt;">(TD Maths matin = TD 1)</span></div>
                 <div class="p-item micro" style="padding:10px 4px;">
-                  <span class="p-time" style="font-size:10.2pt !important;">14:00 - 16:00</span><br>
+                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
                   <b style="font-size:9.2pt;">CM Microéconomie 2</b><br>
                   <span class="p-room" style="font-size:8.2pt;">Amphi G - Fermat</span>
                 </div>
@@ -838,15 +863,14 @@
                 <div class="p-item macro">
                   <span class="p-time">09:40-12:50</span> <b>CM Macroéconomie 2</b> <span class="p-room">[Amphi B]</span>
                 </div>
-                <div class="p-empty" style="margin-top:6px;">Après-midi libre</div>
+                <div class="p-empty" style="margin-top:6px;">Après-midi entièrement libre</div>
               </div>
             </td>
 
             <!-- Mercredi S2 -->
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-empty" style="font-size:7.4pt; margin:1px 0;">12:50-15:30 Pause libre</div>
-              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (1/4)</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (1/4)</span></div>
             </td>
 
             <!-- Jeudi fusionné S2 à S5 -->
@@ -871,7 +895,7 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 3</span><span class="p-sem-dates">28 Sept. – 03 Oct.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="padding:4px; margin-top:3px;">🌴 Après-midi entièrement libre<br><span style="font-size:7.2pt;">(Pas d'Anglais ni TD Macro)</span></div>
+              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
 
@@ -880,8 +904,7 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 4</span><span class="p-sem-dates">05 – 10 Oct.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-empty" style="font-size:7.4pt; margin:1px 0;">12:50-15:30 Pause libre</div>
-              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">(2/4)</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (2/4)</span></div>
             </td>
           </tr>
 
@@ -889,8 +912,8 @@
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 5</span><span class="p-sem-dates">12 – 17 Oct.</span></td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="padding:4px; margin-top:3px;">🌴 Après-midi entièrement libre<br><span style="font-size:7.2pt;">(Pas d'Anglais ni TD Macro)</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G / 204]</span></div>
+              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
 
@@ -899,8 +922,7 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 6</span><span class="p-sem-dates">19 – 24 Oct.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-empty" style="font-size:7.4pt; margin:1px 0;">12:50-15:30 Pause libre</div>
-              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (3/4)</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (3/4)</span></div>
             </td>
             <td>
               <div class="p-alert-box">🚫 AUCUN COURS<br><strong>Trophée SQY Campus</strong></div>
@@ -921,11 +943,11 @@
     <div class="print-page-sheet page-two">
       <div class="p-head">
         <div>
-          <h2>UVSQ • L2 MIASHS (S3) — Planning Personnel : Cédric JEAN-BAPTISTE</h2>
-          <p>N° Étudiant : <strong>22608239</strong> • Groupes : <strong>Anglais TD 01</strong> | <strong>Maths, BDD, Micro TD 02</strong> • <strong>Page 2 / 2 (Verso)</strong></p>
+          <h2>UVSQ • L2 MIASHS (S3) — Emploi du temps (Partie 2 : Novembre & Décembre 2026)</h2>
+          <p>Étudiant : <strong>Cédric JEAN-BAPTISTE (22608239)</strong> • <strong>Page 2 / 2 (Verso)</strong></p>
         </div>
         <div class="p-badges">
-          Novembre & Décembre 2026 • Semaines 7 à 13
+          Anglais en <strong>TD 01</strong> (Mar 8h) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio <strong>Promo</strong>
         </div>
       </div>
 
@@ -944,10 +966,10 @@
           <!-- S7 : Reprise + Dernier TD Macro 4/4 -->
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 7</span><span class="p-sem-dates">02 – 07 Nov.</span></td>
-            <!-- Lundi fusionné S7 à S13 -->
-            <td rowspan="6">
+            <!-- Lundi fusionné S7 à S11 -->
+            <td rowspan="5">
               <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">TOUS LES LUNDIS (S7 à S13)</div>
+                <div class="p-fixed-badge-title">LUNDIS (S7 à S11)</div>
                 <div class="p-item socio">
                   <span class="p-time">09:40-11:10</span> <b>CM Socio</b> <span class="p-room">[2203]</span>
                 </div>
@@ -971,23 +993,19 @@
                   <span class="p-time">09:40-12:50</span> <b>CM Macroéconomie 2</b> <span class="p-room">[Amphi B]</span>
                 </div>
                 <div class="p-empty" style="margin-top:4px;">Après-midi libre</div>
-                <div style="font-size:7.1pt; text-align:center; color:#b45309; font-weight:700; margin-top:3px;">
-                  ⚠️ Sem. 10 (24 nov.) : Dernières séances d'Anglais et de CM Macro !
-                </div>
               </div>
             </td>
 
             <!-- Mercredi S7 -->
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-empty" style="font-size:7.4pt; margin:1px 0;">12:50-15:30 Pause libre</div>
-              <div class="p-item macro p-macro-highlight"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (Dernier 4/4)</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (Dernier 4/4)</span></div>
             </td>
 
-            <!-- Jeudi fusionné S7 à S13 -->
-            <td rowspan="6">
+            <!-- Jeudi fusionné S7 à S11 -->
+            <td rowspan="5">
               <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">JEUDIS (S7 à S13)</div>
+                <div class="p-fixed-badge-title">JEUDIS (S7 à S11)</div>
                 <div class="p-item info">
                   <span class="p-time">09:40-11:10</span> <b>CM Bases de données</b> <span class="p-room">[Amphi E]</span>
                 </div>
@@ -995,18 +1013,18 @@
                   <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre</b> <span class="p-room">[Amphi G]</span>
                 </div>
                 <div class="p-item info">
-                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp">TD 02</span> <span class="p-room">[RC22 Descartes]</span>
+                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp">TD 02</span> <span class="p-room">[RC22]</span>
                 </div>
               </div>
             </td>
 
-            <!-- Vendredi fusionné S7 à S13 -->
-            <td rowspan="6" style="text-align:center;">
+            <!-- Vendredi fusionné S7 à S11 -->
+            <td rowspan="5" style="text-align:center;">
               <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">VENDREDIS (S7 à S13)</div>
+                <div class="p-fixed-badge-title">VENDREDIS (S7 à S11)</div>
                 <div class="p-empty" style="margin-bottom:6px;">Matin libre</div>
                 <div class="p-item micro" style="padding:10px 4px;">
-                  <span class="p-time" style="font-size:10.2pt !important;">14:00 - 16:00</span><br>
+                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
                   <b style="font-size:9.2pt;">CM Microéconomie 2</b><br>
                   <span class="p-room" style="font-size:8.2pt;">Amphi G - Fermat</span>
                 </div>
@@ -1019,7 +1037,7 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 8</span><span class="p-sem-dates">09 – 14 Nov.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Maths (Maintenu EDT)</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:3px; padding:2px 4px; font-size:7.5pt; font-weight:700; color:#9f1239; margin-top:2px; text-align:center;">
+              <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:3px; padding:2px 4px; font-size:7.6pt; font-weight:700; color:#9f1239; margin-top:2px;">
                 11 Nov. Férié • Après-midi libre
               </div>
             </td>
@@ -1030,31 +1048,30 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 9</span><span class="p-sem-dates">16 – 21 Nov.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="padding:4px; margin-top:2px;">🌴 Après-midi entièrement libre dès 12h50</div>
+              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
 
-          <!-- S10 : Fin CM Macro & Anglais -->
+          <!-- S10 : Fin CM Macro & TD Anglais -->
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 10</span><span class="p-sem-dates">23 – 28 Nov.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="padding:4px; margin-top:2px;">🌴 Après-midi entièrement libre dès 12h50</div>
+              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
 
-          <!-- S11 : Mardis désormais libérés -->
+          <!-- S11 : 30 Nov - 05 Déc (Mardi libéré) -->
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 11</span><span class="p-sem-dates">30 Nov. – 05 Déc.</span></td>
-            <td rowspan="2">
-              <div class="p-libere-box" style="padding:10px 4px;">
-                🌴 MARDIS DÉSORMAIS TOTALEMENT LIBÉRÉS !<br>
-                <span style="font-size:7.3pt; font-weight:600; color:#166534;">(10 séances d'Anglais et CM Macro terminés en S10)</span>
+            <td>
+              <div class="p-libere-box" style="padding:6px 2px;">
+                🌴 MARDI LIBÉRÉ<br><span style="font-size:7.2pt;">(Anglais & Macro terminés)</span>
               </div>
             </td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="padding:4px; margin-top:2px;">🌴 Après-midi entièrement libre dès 12h50</div>
+              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
 
@@ -1067,16 +1084,68 @@
                 Dernières séances
               </span>
             </td>
+
+            <!-- Lundi S12-S13 -->
+            <td>
+              <div class="p-fixed-group-card">
+                <div class="p-fixed-badge-title">LUNDIS (07 & 14 DÉC.)</div>
+                <div class="p-item socio">
+                  <span class="p-time">09:40-11:10</span> <b>CM Socio</b> <span class="p-room">[2203]</span>
+                </div>
+                <div class="p-item socio">
+                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp">Promo</span> <span class="p-room">[2203]</span>
+                </div>
+                <div class="p-item micro">
+                  <span class="p-time">15:30-17:00</span> <b>TD Micro</b> <span class="p-grp">TD 02</span> <span class="p-room">[2206]</span>
+                </div>
+              </div>
+            </td>
+
+            <!-- Mardi S12-S13 : Libéré -->
+            <td>
+              <div class="p-libere-box">
+                🌴 MARDIS TOTALEMENT LIBÉRÉS
+              </div>
+            </td>
+
+            <!-- Mercredi S12-S13 : Maths matin -->
             <td>
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">MERCREDIS (09 & 16 DÉC.)</div>
-                <div class="p-item maths" style="padding:5px 4px;">
+                <div class="p-item maths" style="padding:6px 4px;">
                   <span class="p-time">09:40 - 12:50</span><br>
-                  <b style="font-size:8.8pt;">TD Analyse & Algèbre 2</b><br>
+                  <b style="font-size:9pt;">TD Analyse & Algèbre 2</b><br>
                   <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G / G204]</span>
                 </div>
-                <div class="p-libere-box" style="padding:3px; margin-top:3px; font-size:7.6pt !important;">
-                  🌴 Après-midi libre
+                <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
+              </div>
+            </td>
+
+            <!-- Jeudi S12-S13 -->
+            <td>
+              <div class="p-fixed-group-card">
+                <div class="p-fixed-badge-title">JEUDIS (10 & 17 DÉC.)</div>
+                <div class="p-item info">
+                  <span class="p-time">09:40-11:10</span> <b>CM Bases de données</b> <span class="p-room">[Amphi E]</span>
+                </div>
+                <div class="p-item maths">
+                  <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre</b> <span class="p-room">[Amphi G]</span>
+                </div>
+                <div class="p-item info">
+                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp">TD 02</span> <span class="p-room">[RC22]</span>
+                </div>
+              </div>
+            </td>
+
+            <!-- Vendredi S12-S13 -->
+            <td style="text-align:center;">
+              <div class="p-fixed-group-card">
+                <div class="p-fixed-badge-title">VENDREDIS (11 & 18 DÉC.)</div>
+                <div class="p-empty" style="margin-bottom:6px;">Matin libre</div>
+                <div class="p-item micro" style="padding:10px 4px;">
+                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
+                  <b style="font-size:9.2pt;">CM Microéconomie 2</b><br>
+                  <span class="p-room" style="font-size:8.2pt;">Amphi G - Fermat</span>
                 </div>
               </div>
             </td>
@@ -1095,14 +1164,14 @@
   </div>
 
   <!-- ========================================================
-       DONNÉES DYNAMIQUES DU PLANNING (CONFORME ADE / CELCAT & CONTRAT D'ÉTUDES)
+       DONNÉES DU PLANNING (100% CONFORME ADE CAMPUS & CONTRAT)
        ======================================================== -->
   <script>
     const weeksScreenData = [
       {
         id: 1,
         title: "Semaine 1 : 14 – 19 Septembre 2026",
-        sub: "Lancement du semestre et des cours",
+        sub: "Lancement du semestre et des TD",
         days: [
           { 
             name: "Lundi", date: "14 sept. 2026", 
@@ -1114,7 +1183,7 @@
           { 
             name: "Mardi", date: "15 sept. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "Salle E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 1/10)" },
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 1/10)" },
               { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI D - DESCARTES", tag: "Promo MIASHS" }
             ] 
           },
@@ -1142,7 +1211,7 @@
       {
         id: 2,
         title: "Semaine 2 : 21 – 26 Septembre 2026",
-        sub: "Lancement des TD BDD et Micro • TD 1 Macro",
+        sub: "Lancement des TD Machine BDD et Micro • TD 1 Macro",
         days: [
           { 
             name: "Lundi", date: "21 sept. 2026", 
@@ -1185,7 +1254,7 @@
       {
         id: 3,
         title: "Semaine 3 : 28 Septembre – 03 Octobre 2026",
-        sub: "Semaine régulière (mercredi après-midi libéré)",
+        sub: "Semaine régulière (mercredi après-midi 100% libre dès 12h50)",
         days: [
           { 
             name: "Lundi", date: "28 sept. 2026", 
@@ -1248,7 +1317,7 @@
             name: "Mercredi", date: "7 oct. 2026", 
             courses: [
               { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F / Fermat", tag: "Promo • Séance 2/4" }
+              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "Promo • Séance 2/4" }
             ] 
           },
           { 
@@ -1270,7 +1339,7 @@
       {
         id: 5,
         title: "Semaine 5 : 12 – 17 Octobre 2026",
-        sub: "Semaine régulière",
+        sub: "Semaine régulière (mercredi après-midi 100% libre dès 12h50)",
         days: [
           { 
             name: "Lundi", date: "12 oct. 2026", 
@@ -1433,7 +1502,7 @@
       {
         id: 9,
         title: "Semaine 9 : 16 – 21 Novembre 2026",
-        sub: "Semaine régulière",
+        sub: "Semaine régulière (mercredi après-midi 100% libre dès 12h50)",
         days: [
           { 
             name: "Lundi", date: "16 nov. 2026", 
@@ -1488,8 +1557,8 @@
           { 
             name: "Mardi", date: "24 nov. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance finale 10/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo • Séance finale 10/10" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 10/10 finale)" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo • Séance 10/10 finale" }
             ] 
           },
           { 
@@ -1517,7 +1586,7 @@
       {
         id: 11,
         title: "Semaine 11 : 30 Novembre – 05 Décembre 2026",
-        sub: "Mardi désormais libéré (Anglais et CM Macro terminés)",
+        sub: "Mardi libéré (Anglais et Macro terminés)",
         days: [
           { 
             name: "Lundi", date: "30 nov. 2026", 
@@ -1553,7 +1622,7 @@
       {
         id: 12,
         title: "Semaine 12 : 07 – 12 Décembre 2026",
-        sub: "Avant-dernière semaine (Mardis et Mercredis après-midi libres)",
+        sub: "Avant-dernière semaine (Mardi et Mercredi après-midi libérés)",
         days: [
           { 
             name: "Lundi", date: "7 déc. 2026", 
@@ -1709,13 +1778,11 @@
       }
     }
 
-    // Raccourcis flèches clavier
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') changeScreenWeek(-1);
       if (e.key === 'ArrowRight') changeScreenWeek(1);
     });
 
-    // Balayage tactile smartphone
     let touchStartX = 0;
     let touchStartY = 0;
     const swipeArea = document.getElementById('screenWeekGrid');
@@ -1740,7 +1807,6 @@
       }
     }, { passive: true });
 
-    // Lancement au chargement
     renderScreenTimetable(currentScreenIndex);
   </script>
 </body>
