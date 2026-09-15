@@ -230,23 +230,23 @@
 
     /* Échelle horaire sur bureau */
     .screen-col-body {
-      position: relative;
-      flex-grow: 1;
+  position: relative;
+  flex-grow: 1;
 
-      /* Échelle de 8 h à 19 h : 84 px par heure */
-      min-height: 948px;
+  /* Passe de 948px à 680px */
+  min-height: 680px;
 
-      /* Une ligne horizontale toutes les heures */
-      background-image: repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent 83px,
-        #e2e8f0 83px,
-        #e2e8f0 84px
-      );
+  /* Lignes toutes les heures (60px au lieu de 84px) */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 59px,
+    #e2e8f0 59px,
+    #e2e8f0 60px
+  );
 
-      background-position: 0 12px;
-    }
+  background-position: 0 12px;
+}
 
     .screen-col-body .screen-card {
       position: absolute;
@@ -256,13 +256,13 @@
     }
 
     .screen-card {
-      padding: 12px 14px;
+      padding: 6px 10px
       border-radius: 8px;
       border-left: 4px solid #cbd5e1;
       font-size: 0.82rem;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 3px; 
       background: #f8fafc;
     }
     .screen-card.maths { border-left-color: var(--c-maths); background: var(--c-maths-bg); }
@@ -1749,7 +1749,7 @@
     }
 
     const DAY_START_MINUTES = 8 * 60; // La grille commence à 8 h
-    const PIXELS_PER_MINUTE = 84 / 60; // 84 px par heure
+    const PIXELS_PER_MINUTE = 60 / 60; // soit 1 pixel par minute (60 px / heure)
 
     function getCoursePosition(time) {
       const [startText, endText] = time.split('-').map(value => value.trim());
