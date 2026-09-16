@@ -44,7 +44,7 @@
     }
 
     .app-container {
-      max-width: 1340px;
+      max-width: 1360px;
       margin: 0 auto;
     }
 
@@ -56,7 +56,7 @@
       color: white;
       padding: 22px 28px;
       border-radius: 14px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -66,14 +66,14 @@
     }
 
     .screen-header h1 {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.5px;
     }
 
     .screen-header p {
       color: #94a3b8;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
     }
 
     .header-badges {
@@ -85,23 +85,60 @@
     .badge {
       font-size: 0.76rem;
       font-weight: 600;
-      padding: 5px 12px;
+      padding: 5px 11px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255,255,255,0.2);
       color: #f8fafc;
       white-space: nowrap;
     }
-    .badge-hl {
-      background: #2563eb;
-      border-color: #60a5fa;
-      font-weight: 800;
-    }
-    .badge-alert {
+    .badge-td1 {
       background: #b45309;
       border-color: #f59e0b;
       font-weight: 800;
     }
+    .badge-td2 {
+      background: #1d4ed8;
+      border-color: #60a5fa;
+      font-weight: 800;
+    }
+    .badge-id {
+      background: #334155;
+      border-color: #475569;
+      font-weight: 800;
+    }
+
+    /* LÉGENDE PÉDAGOGIQUE */
+    .legend-toolbar {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      font-size: 0.8rem;
+      color: #334155;
+    }
+    .legend-title {
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-perso { background: #2563eb; }
+    .dot-reuni { background: #7c3aed; }
+    .dot-cm { background: #0f766e; }
 
     /* BARRE DE NAVIGATION */
     .nav-toolbar {
@@ -205,7 +242,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      min-height: 480px;
+      min-height: 500px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
@@ -230,33 +267,28 @@
 
     /* Échelle horaire sur bureau */
     .screen-col-body {
-  position: relative;
-  flex-grow: 1;
-
-  /* Passe de 948px à 680px */
-  min-height: 680px;
-
-  /* Lignes toutes les heures (60px au lieu de 84px) */
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 59px,
-    #e2e8f0 59px,
-    #e2e8f0 60px
-  );
-
-  background-position: 0 12px;
-}
+      position: relative;
+      flex-grow: 1;
+      min-height: 680px;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 59px,
+        #e2e8f0 59px,
+        #e2e8f0 60px
+      );
+      background-position: 0 12px;
+    }
 
     .screen-col-body .screen-card {
       position: absolute;
-      left: 12px;
-      right: 12px;
+      left: 10px;
+      right: 10px;
       overflow: hidden;
     }
 
     .screen-card {
-      padding: 6px 10px
+      padding: 6px 10px;
       border-radius: 8px;
       border-left: 4px solid #cbd5e1;
       font-size: 0.82rem;
@@ -264,6 +296,7 @@
       flex-direction: column;
       gap: 3px; 
       background: #f8fafc;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
     .screen-card.maths { border-left-color: var(--c-maths); background: var(--c-maths-bg); }
     .screen-card.info { border-left-color: var(--c-info); background: var(--c-info-bg); }
@@ -276,12 +309,13 @@
       font-weight: 800;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       color: #1e293b;
       font-size: 0.78rem;
     }
     .card-title-text {
       font-weight: 700;
-      font-size: 0.88rem;
+      font-size: 0.87rem;
       color: #0f172a;
       line-height: 1.25;
     }
@@ -298,7 +332,13 @@
       border: 1px solid rgba(0,0,0,0.1);
       width: fit-content;
       margin-top: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
+    .pill-perso { color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; }
+    .pill-reuni { color: #6d28d9; border-color: #ddd6fe; background: #f5f3ff; }
+    .pill-cm { color: #0f766e; border-color: #99f6e4; background: #f0fdfa; }
 
     .screen-empty-day {
       display: flex;
@@ -309,6 +349,8 @@
       font-size: 0.85rem;
       height: 100%;
       min-height: 120px;
+      text-align: center;
+      padding: 20px;
     }
 
     /* ========================================================
@@ -326,7 +368,7 @@
         gap: 10px;
       }
       .screen-header h1 {
-        font-size: 1.2rem;
+        font-size: 1.18rem;
       }
       .screen-header p {
         font-size: 0.78rem;
@@ -349,6 +391,13 @@
         font-size: 0.72rem;
         padding: 4px 10px;
         flex-shrink: 0;
+      }
+
+      .legend-toolbar {
+        padding: 8px 12px;
+        font-size: 0.74rem;
+        gap: 8px;
+        margin-bottom: 12px;
       }
 
       .nav-toolbar {
@@ -467,7 +516,6 @@
         color: #1d4ed8;
       }
 
-      /* Vue empilée conservée sur mobile */
       .screen-col-body {
         position: static;
         min-height: auto;
@@ -512,7 +560,7 @@
         print-color-adjust: exact !important;
       }
 
-      .screen-header, .nav-toolbar, .mobile-day-tabs, .screen-grid {
+      .screen-header, .legend-toolbar, .nav-toolbar, .mobile-day-tabs, .screen-grid {
         display: none !important;
       }
 
@@ -561,7 +609,7 @@
         flex-shrink: 0;
       }
       .p-head h2 {
-        font-size: 10.8pt !important;
+        font-size: 10.5pt !important;
         font-weight: 800;
         text-transform: uppercase;
         color: #0f172a;
@@ -574,7 +622,7 @@
         margin: 1px 0 0 0;
       }
       .p-badges {
-        font-size: 7.6pt !important;
+        font-size: 7.3pt !important;
         font-weight: 700;
         background: #f1f5f9;
         border: 1px solid #64748b;
@@ -611,7 +659,7 @@
         background: #ffffff;
       }
 
-      /* Proportions adaptées */
+      /* Proportions des colonnes */
       .th-sem { width: 9%; }
       .th-lun { width: 21%; }
       .th-mar { width: 19%; }
@@ -644,7 +692,7 @@
         margin-bottom: 2px;
         border-radius: 3.5px;
         border-left: 4px solid #94a3b8;
-        font-size: 8.2pt !important;
+        font-size: 8.1pt !important;
         line-height: 1.2;
       }
       .p-item:last-child { margin-bottom: 0; }
@@ -658,26 +706,34 @@
 
       .p-time {
         font-weight: 800;
-        font-size: 8.4pt !important;
+        font-size: 8.3pt !important;
         color: #0f172a;
         margin-right: 2px;
       }
       .p-title {
         font-weight: 700;
-        font-size: 8.2pt !important;
+        font-size: 8.1pt !important;
       }
       .p-room {
-        font-size: 7.7pt !important;
+        font-size: 7.6pt !important;
         font-weight: 600;
         color: #334155;
       }
       .p-grp {
-        font-size: 7.3pt !important;
+        font-size: 7.2pt !important;
         font-weight: 800;
         text-transform: uppercase;
         background: rgba(0,0,0,0.07);
         padding: 1px 3px;
         border-radius: 3px;
+      }
+      .p-grp-perso {
+        background: #dbeafe !important;
+        color: #1e40af !important;
+      }
+      .p-grp-reuni {
+        background: #ede9fe !important;
+        color: #5b21b6 !important;
       }
 
       .p-macro-highlight {
@@ -695,7 +751,7 @@
         box-sizing: border-box;
       }
       .p-fixed-badge-title {
-        font-size: 7.2pt;
+        font-size: 7.1pt;
         font-weight: 800;
         text-transform: uppercase;
         color: #1e293b;
@@ -710,7 +766,7 @@
         color: #94a3b8;
         text-align: center;
         font-style: italic;
-        font-size: 8pt;
+        font-size: 7.8pt;
       }
 
       .p-alert-box {
@@ -731,7 +787,7 @@
         color: #166534 !important;
         text-align: center;
         font-weight: 800;
-        font-size: 8.2pt !important;
+        font-size: 8.1pt !important;
         padding: 5px 3px;
         border-radius: 5px;
         line-height: 1.3;
@@ -757,16 +813,21 @@
     <div class="screen-header">
       <div>
         <h1>📅 Emploi du temps S3 • Cédric JEAN-BAPTISTE</h1>
-        <p>L2 MIASHS • Université de Versailles Saint-Quentin (UVSQ) • 2026/2027</p>
+        <p>L2 MIASHS • Université de Versailles Saint-Quentin (UVSQ) • Année 2026/2027</p>
       </div>
       <div class="header-badges">
-        <span class="badge badge-hl">N° Étudiant : 22608239</span>
-        <span class="badge badge-alert">Anglais : <strong>TD 01 (Mardi 8h00 - E303)</strong></span>
-        <span class="badge">Maths : <strong>TD 02 (Mer 9h40)</strong></span>
-        <span class="badge">Bases de données : <strong>TD 02 (Jeu 13h50)</strong></span>
-        <span class="badge">Microéconomie : <strong>TD 02 (Lun 15h30)</strong></span>
-        <span class="badge">Macro & Socio : <strong>Promo réunie</strong></span>
+        <span class="badge badge-id">N° Étudiant : 22608239</span>
+        <span class="badge badge-td1">TD 01 : <strong>Anglais (Mar 8h) • Macro & Socio (Promo réunie)</strong></span>
+        <span class="badge badge-td2">TD 02 : <strong>Maths (Mer 9h40) • BDD (Jeu 13h50) • Micro (Lun 15h30)</strong></span>
       </div>
+    </div>
+
+    <!-- LÉGENDE PÉDAGOGIQUE -->
+    <div class="legend-toolbar">
+      <span class="legend-title">Repères :</span>
+      <span class="legend-item"><span class="legend-dot dot-perso"></span> <strong>TD spécifique à votre groupe</strong> (Dédoublé : Anglais en TD1 ; Maths, BDD, Micro en TD2)</span>
+      <span class="legend-item"><span class="legend-dot dot-reuni"></span> <strong>TD commun (Promo réunie)</strong> (Socio le lundi, Macro le mercredi : TD1 & TD2 ensemble)</span>
+      <span class="legend-item"><span class="legend-dot dot-cm"></span> <strong>CM</strong> (Promo entière)</span>
     </div>
 
     <!-- BARRE DE NAVIGATION -->
@@ -785,7 +846,7 @@
           Suivante ▶
         </button>
         <button class="print-trigger-btn" onclick="window.print()" title="Imprime l'intégralité du semestre sur exactement 2 pages A4 paysage">
-          🖨️ Imprimer Recto-Verso (2 pages)
+          🖨️ Imprimer Recto-Verso (2 pages A4)
         </button>
       </div>
     </div>
@@ -818,7 +879,7 @@
           <p>Étudiant : <strong>Cédric JEAN-BAPTISTE (22608239)</strong> • <strong>Page 1 / 2 (Recto)</strong></p>
         </div>
         <div class="p-badges">
-          Anglais en <strong>TD 01</strong> (Mar 8h) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio <strong>Promo</strong>
+          Anglais en <strong>TD 01</strong> (Mar 8h) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio en <strong>TD réuni (TD 1 & 2)</strong>
         </div>
       </div>
 
@@ -839,17 +900,17 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 1</span><span class="p-sem-dates">14 – 19 Sept.</span></td>
             <td>
               <div class="p-item socio"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Socio démographie</span> <span class="p-room">[2203]</span></div>
-              <div class="p-item socio"><span class="p-time">11:20-12:50</span> <span class="p-title">TD Socio démographie</span> <span class="p-grp">Promo</span> <span class="p-room">[2203]</span></div>
+              <div class="p-item socio"><span class="p-time">11:20-12:50</span> <span class="p-title">TD Socio démographie</span> <span class="p-grp p-grp-reuni">TD Promo réunie</span> <span class="p-room">[2203]</span></div>
               <div class="p-empty" style="margin-top:2px;">(Pas de TD Micro cette semaine)</div>
             </td>
             <td>
-              <div class="p-item anglais"><span class="p-time">08:00-09:30</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp">TD 01</span> <span class="p-room">[E303]</span></div>
+              <div class="p-item anglais"><span class="p-time">08:00-09:30</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD 01</span> <span class="p-room">[E303]</span></div>
               <div class="p-item macro"><span class="p-time">09:40-12:50</span> <span class="p-title">CM Macroéconomie 2</span> <span class="p-room">[Amphi D]</span></div>
               <div class="p-empty" style="margin-top:2px;">Après-midi libre</div>
             </td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre 2</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE<br><span style="font-size:7.2pt;">(Anglais fait le mardi 8h !)</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre 2</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE<br><span style="font-size:7.2pt;">(Anglais TD1 fait le mardi matin !)</span></div>
             </td>
             <td>
               <div class="p-item info"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Bases de données</span> <span class="p-room">[Amphi E]</span></div>
@@ -860,7 +921,7 @@
             <td rowspan="6" style="background:#fcfdfd; text-align:center;">
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">VENDREDIS (S1 à S6)</div>
-                <div class="p-empty" style="margin-bottom:6px;">Matin libre<br><span style="font-size:7.2pt;">(TD Maths matin = TD 1)</span></div>
+                <div class="p-empty" style="margin-bottom:6px;">Matin libre<br><span style="font-size:7.1pt;">(TD Maths matin = TD 01)</span></div>
                 <div class="p-item micro" style="padding:10px 4px;">
                   <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
                   <b style="font-size:9.2pt;">CM Microéconomie 2</b><br>
@@ -878,14 +939,15 @@
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">TOUS LES LUNDIS (S2 à S6)</div>
                 <div class="p-item socio">
-                  <span class="p-time">09:40-11:10</span> <b>CM Socio démographie</b> <span class="p-room">[2203]</span>
+                  <span class="p-time">09:40-11:10</span> <b>CM Socio</b> <span class="p-room">[2203]</span>
                 </div>
                 <div class="p-item socio">
-                  <span class="p-time">11:20-12:50</span> <b>TD Socio démographie</b> <span class="p-grp">Promo</span> <span class="p-room">[2203]</span>
+                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[2203]</span>
                 </div>
                 <div class="p-item micro">
-                  <span class="p-time">15:30-17:00</span> <b>TD Microéconomie 2</b> <span class="p-grp">TD 02</span> <span class="p-room">[2206 Fermat]</span>
+                  <span class="p-time">15:30-17:00</span> <b>TD Micro 2</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[2206]</span>
                 </div>
+                <div class="p-empty" style="margin-top:3px; font-size:7.1pt;">(13h50 = créneau TD 01)</div>
               </div>
             </td>
 
@@ -894,10 +956,10 @@
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">TOUS LES MARDIS (S2 à S6)</div>
                 <div class="p-item anglais">
-                  <span class="p-time">08:00-09:30</span> <b>TD Anglais UE2</b> <span class="p-grp">TD 01</span> <span class="p-room">[E303]</span>
+                  <span class="p-time">08:00-09:30</span> <b>TD Anglais UE2</b> <span class="p-grp p-grp-perso">Votre TD 01</span> <span class="p-room">[E303]</span>
                 </div>
                 <div class="p-item macro">
-                  <span class="p-time">09:40-12:50</span> <b>CM Macroéconomie 2</b> <span class="p-room">[Amphi B]</span>
+                  <span class="p-time">09:40-12:50</span> <b>CM Macro 2</b> <span class="p-room">[Amphi B / 2201]</span>
                 </div>
                 <div class="p-empty" style="margin-top:6px;">Après-midi entièrement libre</div>
               </div>
@@ -905,8 +967,8 @@
 
             <!-- Mercredi S2 -->
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (1/4)</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F] (1/4)</span></div>
             </td>
 
             <!-- Jeudi fusionné S2 à S5 -->
@@ -917,10 +979,10 @@
                   <span class="p-time">09:40-11:10</span> <b>CM Bases de données</b> <span class="p-room">[Amphi E]</span>
                 </div>
                 <div class="p-item maths">
-                  <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre 2</b> <span class="p-room">[Amphi G]</span>
+                  <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre</b> <span class="p-room">[Amphi G]</span>
                 </div>
                 <div class="p-item info">
-                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp">TD 02</span> <span class="p-room">[RC22]</span>
+                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[RC22]</span>
                 </div>
               </div>
             </td>
@@ -930,7 +992,7 @@
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 3</span><span class="p-sem-dates">28 Sept. – 03 Oct.</span></td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
@@ -939,8 +1001,8 @@
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 4</span><span class="p-sem-dates">05 – 10 Oct.</span></td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (2/4)</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F] (2/4)</span></div>
             </td>
           </tr>
 
@@ -948,7 +1010,7 @@
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 5</span><span class="p-sem-dates">12 – 17 Oct.</span></td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G / 204]</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
@@ -957,8 +1019,8 @@
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 6</span><span class="p-sem-dates">19 – 24 Oct.</span></td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (3/4)</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F] (3/4)</span></div>
             </td>
             <td>
               <div class="p-alert-box">🚫 AUCUN COURS<br><strong>Trophée SQY Campus</strong></div>
@@ -968,7 +1030,7 @@
           <!-- VACANCES DE TOUSSAINT -->
           <tr>
             <td colspan="6" class="p-vacances-row">
-              🍁 DU 26 AU 31 OCTOBRE 2026 : INTERRUPTION DES COURS — VACANCES DE LA TOUSSAINT
+              🍁 DU 26 OCTOBRE AU 01 NOVEMBRE 2026 : INTERRUPTION DES COURS — VACANCES DE LA TOUSSAINT
             </td>
           </tr>
         </tbody>
@@ -983,7 +1045,7 @@
           <p>Étudiant : <strong>Cédric JEAN-BAPTISTE (22608239)</strong> • <strong>Page 2 / 2 (Verso)</strong></p>
         </div>
         <div class="p-badges">
-          Anglais en <strong>TD 01</strong> (Mar 8h) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio <strong>Promo</strong>
+          Anglais en <strong>TD 01</strong> (Mar 8h) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio en <strong>TD réuni (TD 1 & 2)</strong>
         </div>
       </div>
 
@@ -1010,10 +1072,10 @@
                   <span class="p-time">09:40-11:10</span> <b>CM Socio</b> <span class="p-room">[2203]</span>
                 </div>
                 <div class="p-item socio">
-                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp">Promo</span> <span class="p-room">[2203]</span>
+                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[2203]</span>
                 </div>
                 <div class="p-item micro">
-                  <span class="p-time">15:30-17:00</span> <b>TD Micro</b> <span class="p-grp">TD 02</span> <span class="p-room">[2206 Fermat]</span>
+                  <span class="p-time">15:30-17:00</span> <b>TD Micro 2</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[2206]</span>
                 </div>
               </div>
             </td>
@@ -1023,10 +1085,10 @@
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">MARDIS (S7 à S10)</div>
                 <div class="p-item anglais">
-                  <span class="p-time">08:00-09:30</span> <b>TD Anglais UE2</b> <span class="p-grp">TD 01</span> <span class="p-room">[E303]</span>
+                  <span class="p-time">08:00-09:30</span> <b>TD Anglais UE2</b> <span class="p-grp p-grp-perso">Votre TD 01</span> <span class="p-room">[E303]</span>
                 </div>
                 <div class="p-item macro">
-                  <span class="p-time">09:40-12:50</span> <b>CM Macroéconomie 2</b> <span class="p-room">[Amphi B]</span>
+                  <span class="p-time">09:40-12:50</span> <b>CM Macro 2</b> <span class="p-room">[Amphi B / 2201]</span>
                 </div>
                 <div class="p-empty" style="margin-top:4px;">Après-midi libre</div>
               </div>
@@ -1034,8 +1096,8 @@
 
             <!-- Mercredi S7 -->
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp">Promo</span> <span class="p-room">[Amphi F] (Dernier 4/4)</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F] (Dernier 4/4)</span></div>
             </td>
 
             <!-- Jeudi fusionné S7 à S11 -->
@@ -1049,7 +1111,7 @@
                   <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre</b> <span class="p-room">[Amphi G]</span>
                 </div>
                 <div class="p-item info">
-                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp">TD 02</span> <span class="p-room">[RC22]</span>
+                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[RC22]</span>
                 </div>
               </div>
             </td>
@@ -1072,9 +1134,10 @@
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 8</span><span class="p-sem-dates">09 – 14 Nov.</span></td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Maths (Maintenu EDT)</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:3px; padding:2px 4px; font-size:7.6pt; font-weight:700; color:#9f1239; margin-top:2px;">
-                11 Nov. Férié • Après-midi libre
+              <div class="p-alert-box" style="padding:12px 4px;">
+                🚫 11 NOVEMBRE FÉRIÉ<br>
+                <strong>Armistice 1918</strong><br>
+                <span style="font-size:7.2pt; font-weight:600;">Université fermée • Aucun cours</span>
               </div>
             </td>
           </tr>
@@ -1083,7 +1146,7 @@
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 9</span><span class="p-sem-dates">16 – 21 Nov.</span></td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
@@ -1092,7 +1155,7 @@
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 10</span><span class="p-sem-dates">23 – 28 Nov.</span></td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
@@ -1106,7 +1169,7 @@
               </div>
             </td>
             <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G]</span></div>
+              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
               <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
             </td>
           </tr>
@@ -1129,10 +1192,10 @@
                   <span class="p-time">09:40-11:10</span> <b>CM Socio</b> <span class="p-room">[2203]</span>
                 </div>
                 <div class="p-item socio">
-                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp">Promo</span> <span class="p-room">[2203]</span>
+                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[2203]</span>
                 </div>
                 <div class="p-item micro">
-                  <span class="p-time">15:30-17:00</span> <b>TD Micro</b> <span class="p-grp">TD 02</span> <span class="p-room">[2206]</span>
+                  <span class="p-time">15:30-17:00</span> <b>TD Micro 2</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[2206]</span>
                 </div>
               </div>
             </td>
@@ -1151,7 +1214,7 @@
                 <div class="p-item maths" style="padding:6px 4px;">
                   <span class="p-time">09:40 - 12:50</span><br>
                   <b style="font-size:9pt;">TD Analyse & Algèbre 2</b><br>
-                  <span class="p-grp">TD 02</span> <span class="p-room">[Amphi G / G204]</span>
+                  <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span>
                 </div>
                 <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
               </div>
@@ -1168,7 +1231,7 @@
                   <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre</b> <span class="p-room">[Amphi G]</span>
                 </div>
                 <div class="p-item info">
-                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp">TD 02</span> <span class="p-room">[RC22]</span>
+                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[RC22]</span>
                 </div>
               </div>
             </td>
@@ -1200,46 +1263,46 @@
   </div>
 
   <!-- ========================================================
-       DONNÉES DU PLANNING (100% CONFORME ADE CAMPUS & CONTRAT)
+       DONNÉES DU PLANNING DYNAMIQUE (CELCAT UVSQ CONFORME)
        ======================================================== -->
   <script>
     const weeksScreenData = [
       {
         id: 1,
         title: "Semaine 1 : 14 – 19 Septembre 2026",
-        sub: "Lancement du semestre et des TD",
+        sub: "Lancement du semestre et des premiers TD",
         days: [
           { 
             name: "Lundi", date: "14 sept. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "Salle 2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "Salle 2203 - FERMAT", tag: "Promo réunie TD 1 & 2" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" }
             ] 
           },
           { 
             name: "Mardi", date: "15 sept. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 1/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI D - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 1/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI D - DESCARTES", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "16 sept. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT / G204", tag: "Votre TD 02" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Jeudi", date: "17 sept. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation aux bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation aux bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Vendredi", date: "18 sept. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1247,42 +1310,42 @@
       {
         id: 2,
         title: "Semaine 2 : 21 – 26 Septembre 2026",
-        sub: "Lancement des TD Machine BDD et Micro • TD 1 Macro",
+        sub: "Lancement des TD BDD & Micro • Séance 1/4 TD Macro",
         days: [
           { 
             name: "Lundi", date: "21 sept. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "22 sept. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 2/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 2/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F & B - DESCARTES", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "23 sept. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT / G204", tag: "Votre TD 02" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "Promo • Séance 1/4" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 1/4)", tagType: "reuni" }
             ] 
           },
           { 
             name: "Jeudi", date: "24 sept. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation aux bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation aux bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "25 sept. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1290,41 +1353,41 @@
       {
         id: 3,
         title: "Semaine 3 : 28 Septembre – 03 Octobre 2026",
-        sub: "Semaine régulière (mercredi après-midi 100% libre dès 12h50)",
+        sub: "Semaine régulière (mercredi après-midi libre dès 12h50)",
         days: [
           { 
             name: "Lundi", date: "28 sept. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "29 sept. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 3/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 3/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "30 sept. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Jeudi", date: "1 oct. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "2 oct. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1332,42 +1395,42 @@
       {
         id: 4,
         title: "Semaine 4 : 05 – 10 Octobre 2026",
-        sub: "Avec TD 2 de Macroéconomie le mercredi 7 oct.",
+        sub: "Avec TD 2 de Macroéconomie le mercredi après-midi",
         days: [
           { 
             name: "Lundi", date: "5 oct. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "6 oct. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 4/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 4/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "7 oct. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "Promo • Séance 2/4" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F (ou salle désignée)", tag: "TD Promo réunie (Séance 2/4)", tagType: "reuni" }
             ] 
           },
           { 
             name: "Jeudi", date: "8 oct. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "9 oct. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1375,41 +1438,41 @@
       {
         id: 5,
         title: "Semaine 5 : 12 – 17 Octobre 2026",
-        sub: "Semaine régulière (mercredi après-midi 100% libre dès 12h50)",
+        sub: "Semaine régulière (mercredi après-midi libre dès 12h50)",
         days: [
           { 
             name: "Lundi", date: "12 oct. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "13 oct. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 5/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 5/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B & 2204", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "14 oct. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / I / G204", tag: "Votre TD 02" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Jeudi", date: "15 oct. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "16 oct. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1422,30 +1485,30 @@
           { 
             name: "Lundi", date: "19 oct. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "20 oct. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 6/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 6/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "21 oct. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "Promo • Séance 3/4" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 3/4)", tagType: "reuni" }
             ] 
           },
           { name: "Jeudi", date: "22 oct. 2026", courses: [] },
           { 
             name: "Vendredi", date: "23 oct. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1453,42 +1516,42 @@
       {
         id: 7,
         title: "Semaine 7 : 02 – 07 Novembre 2026",
-        sub: "Reprise après Toussaint • Dernier TD 4 de Macro",
+        sub: "Reprise après Toussaint • Séance 4/4 finale de TD Macro",
         days: [
           { 
             name: "Lundi", date: "2 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "3 nov. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 7/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 7/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "4 nov. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "Promo • Séance 4/4 finale" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 4/4 finale)", tagType: "reuni" }
             ] 
           },
           { 
             name: "Jeudi", date: "5 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "6 nov. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1496,41 +1559,36 @@
       {
         id: 8,
         title: "Semaine 8 : 09 – 14 Novembre 2026",
-        sub: "Mercredi 11 nov. Férié • TD Maths noté maintenu le matin",
+        sub: "Mercredi 11 nov. Férié (Armistice 1918) • Aucun cours ce jour-là",
         days: [
           { 
             name: "Lundi", date: "9 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "10 nov. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 8/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 8/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           },
-          { 
-            name: "Mercredi", date: "11 nov. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / I / G204", tag: "Votre TD 02 (Maintenu EDT)" }
-            ] 
-          },
+          { name: "Mercredi", date: "11 nov. 2026", courses: [] },
           { 
             name: "Jeudi", date: "12 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "13 nov. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1538,41 +1596,41 @@
       {
         id: 9,
         title: "Semaine 9 : 16 – 21 Novembre 2026",
-        sub: "Semaine régulière (mercredi après-midi 100% libre dès 12h50)",
+        sub: "Semaine régulière (mercredi après-midi libre dès 12h50)",
         days: [
           { 
             name: "Lundi", date: "16 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "17 nov. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 9/10)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo MIASHS" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 9/10)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "18 nov. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Jeudi", date: "19 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "20 nov. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1580,41 +1638,41 @@
       {
         id: 10,
         title: "Semaine 10 : 23 – 28 Novembre 2026",
-        sub: "Dernier CM Macro & Dernier TD Anglais le mardi 24 nov.",
+        sub: "Dernière séance d'Anglais TD1 et dernier CM de Macro le mardi 24 nov.",
         days: [
           { 
             name: "Lundi", date: "23 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Mardi", date: "24 nov. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Bât Joliot-Curie", tag: "Votre TD 01 (Séance 10/10 finale)" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B - DESCARTES", tag: "Promo • Séance 10/10 finale" }
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 10/10 finale)", tagType: "perso" },
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo (Séance finale)", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "25 nov. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Jeudi", date: "26 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "27 nov. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1627,30 +1685,30 @@
           { 
             name: "Lundi", date: "30 nov. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { name: "Mardi", date: "1 déc. 2026", courses: [] },
           { 
             name: "Mercredi", date: "2 déc. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Jeudi", date: "3 déc. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "4 déc. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1663,30 +1721,30 @@
           { 
             name: "Lundi", date: "7 déc. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { name: "Mardi", date: "8 déc. 2026", courses: [] },
           { 
             name: "Mercredi", date: "9 déc. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Jeudi", date: "10 déc. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "11 déc. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
             ] 
           }
         ]
@@ -1694,35 +1752,35 @@
       {
         id: 13,
         title: "Semaine 13 : 14 – 19 Décembre 2026",
-        sub: "Dernières séances du Semestre 3 • Fin des cours le 18 déc.",
+        sub: "Dernières séances du semestre • Clôture des cours le 18 décembre",
         days: [
           { 
             name: "Lundi", date: "14 déc. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "Promo réunie TD 1 & 2" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02 (Dernier TD)" }
+              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo (Dernier)", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (Dernier)", tagType: "reuni" },
+              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02 (Dernier)", tagType: "perso" }
             ] 
           },
           { name: "Mardi", date: "15 déc. 2026", courses: [] },
           { 
             name: "Mercredi", date: "16 déc. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G / G204", tag: "Votre TD 02 (Dernier TD)" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02 (Dernier)", tagType: "perso" }
             ] 
           },
           { 
             name: "Jeudi", date: "17 déc. 2026", 
             courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Bases de données", room: "AMPHI E - DESCARTES", tag: "Promo MIASHS" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02 (Dernier TD)" }
+              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo (Dernier)", tagType: "cm" },
+              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo (Dernier)", tagType: "cm" },
+              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02 (Dernier)", tagType: "perso" }
             ] 
           },
           { 
             name: "Vendredi", date: "18 déc. 2026", 
             courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "Promo MIASHS (Dernier CM)" }
+              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo (Dernier)", tagType: "cm" }
             ] 
           }
         ]
@@ -1748,8 +1806,8 @@
       });
     }
 
-    const DAY_START_MINUTES = 8 * 60; // La grille commence à 8 h
-    const PIXELS_PER_MINUTE = 60 / 60; // soit 1 pixel par minute (60 px / heure)
+    const DAY_START_MINUTES = 8 * 60; // 8h00
+    const PIXELS_PER_MINUTE = 60 / 60; // 1px par minute
 
     function getCoursePosition(time) {
       const [startText, endText] = time.split('-').map(value => value.trim());
@@ -1796,10 +1854,17 @@
 
         let coursesHtml = '';
         if (count === 0) {
-          coursesHtml = `<div class="screen-empty-day">Aucun cours programmé</div>`;
+          const isFerie = (w.id === 8 && dayIdx === 2);
+          const isTrophee = (w.id === 6 && dayIdx === 3);
+          let message = 'Aucun cours programmé';
+          if (isFerie) message = '🚫 Mercredi 11 Novembre Férié (Armistice 1918) — Université fermée';
+          if (isTrophee) message = '🚫 Trophée SQY Campus — Journée sans cours';
+
+          coursesHtml = `<div class="screen-empty-day">${message}</div>`;
         } else {
           coursesHtml = day.courses.map(c => {
             const position = getCoursePosition(c.time);
+            const pillClass = c.tagType === 'perso' ? 'pill-perso' : (c.tagType === 'reuni' ? 'pill-reuni' : 'pill-cm');
 
             return `
               <div
@@ -1812,7 +1877,7 @@
                 </div>
                 <div class="card-title-text">${c.title}</div>
                 <div class="card-meta-text">📍 ${c.room}</div>
-                <div class="card-tag-pill">${c.tag}</div>
+                <div class="card-tag-pill ${pillClass}">${c.tag}</div>
               </div>
             `;
           }).join('');
