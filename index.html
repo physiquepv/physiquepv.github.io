@@ -10,9 +10,13 @@
   <style>
     :root {
       --bg-body: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f1f5f9;
       --text-dark: #0f172a;
       --text-muted: #64748b;
       --border-color: #cbd5e1;
+      --border-strong: #94a3b8;
+      --grid-line: #e2e8f0;
 
       /* Codes couleurs matières */
       --c-maths: #1d4ed8;
@@ -27,6 +31,44 @@
       --c-socio-bg: #f5f3ff;
       --c-anglais: #b45309;
       --c-anglais-bg: #fffbeb;
+
+      --card-border: #cbd5e1;
+      --today-glow: #2563eb;
+      --today-bg-tag: #dbeafe;
+      --today-color-tag: #1e40af;
+    }
+
+    /* ========================================================
+       VARIABLES DU DARK MODE
+       ======================================================== */
+    [data-theme="dark"] {
+      --bg-body: #090d16;
+      --bg-surface: #131b2e;
+      --bg-subtle: #1c2740;
+      --text-dark: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #263554;
+      --border-strong: #3b4e75;
+      --grid-line: #1c2740;
+
+      /* Teintes matières adaptées pour fond sombre */
+      --c-maths: #3b82f6;
+      --c-maths-bg: #132247;
+      --c-info: #38bdf8;
+      --c-info-bg: #0f2c44;
+      --c-micro: #10b981;
+      --c-micro-bg: #0f3529;
+      --c-macro: #14b8a6;
+      --c-macro-bg: #0d3434;
+      --c-socio: #a855f7;
+      --c-socio-bg: #271847;
+      --c-anglais: #f59e0b;
+      --c-anglais-bg: #3b2509;
+
+      --card-border: #2c3e66;
+      --today-glow: #60a5fa;
+      --today-bg-tag: #1e3a8a;
+      --today-color-tag: #bfdbfe;
     }
 
     * {
@@ -34,6 +76,7 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
     }
 
     body {
@@ -62,7 +105,13 @@
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .screen-header {
+      background: linear-gradient(135deg, #141c2e 0%, #090e1a 100%);
+      border-color: #23314f;
     }
 
     .screen-header h1 {
@@ -110,7 +159,7 @@
 
     /* LÉGENDE PÉDAGOGIQUE */
     .legend-toolbar {
-      background: #ffffff;
+      background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 10px;
       padding: 10px 18px;
@@ -120,11 +169,11 @@
       gap: 14px;
       margin-bottom: 16px;
       font-size: 0.8rem;
-      color: #334155;
+      color: var(--text-dark);
     }
     .legend-title {
       font-weight: 800;
-      color: #0f172a;
+      color: var(--text-dark);
     }
     .legend-item {
       display: inline-flex;
@@ -142,81 +191,120 @@
 
     /* BARRE DE NAVIGATION */
     .nav-toolbar {
-      background: #ffffff;
+      background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 14px 20px;
+      padding: 12px 18px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       margin-bottom: 20px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
 
     .nav-btn {
-      background: #0f172a;
-      color: white;
-      border: none;
-      padding: 10px 18px;
+      background: var(--bg-subtle);
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      padding: 9px 15px;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
       font-family: inherit;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       transition: all 0.2s ease;
     }
     .nav-btn:hover:not(:disabled) {
       background: #2563eb;
+      color: white;
+      border-color: #2563eb;
       transform: translateY(-1px);
     }
     .nav-btn:disabled {
-      background: #cbd5e1;
-      color: #94a3b8;
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      border-color: var(--border-color);
       cursor: not-allowed;
+      opacity: 0.6;
       transform: none;
+    }
+
+    .nav-btn-today {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
+      font-weight: 800;
+    }
+    [data-theme="dark"] .nav-btn-today {
+      background: #172554;
+      border-color: #1e40af;
+      color: #93c5fd;
+    }
+    .nav-btn-today:hover {
+      background: #2563eb !important;
+      color: white !important;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-subtle);
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      padding: 9px 13px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .theme-toggle-btn:hover {
+      border-color: var(--text-muted);
     }
 
     .nav-center {
       text-align: center;
     }
     .nav-title {
-      font-size: 1.22rem;
+      font-size: 1.18rem;
       font-weight: 800;
     }
     .nav-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
 
     .nav-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .print-trigger-btn {
       background: #15803d;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 9px 15px;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 800;
       cursor: pointer;
       font-family: inherit;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       box-shadow: 0 2px 6px rgba(21, 128, 61, 0.25);
-      transition: background 0.2s ease;
     }
     .print-trigger-btn:hover {
       background: #166534;
@@ -236,20 +324,27 @@
     }
 
     .screen-col {
-      background: #ffffff;
+      background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       min-height: 500px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    /* Mise en évidence du jour actif (Aujourd'hui) */
+    .screen-col.is-today {
+      border: 2px solid var(--today-glow) !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18), 0 4px 14px rgba(0,0,0,0.08);
     }
 
     .screen-col-header {
-      background: #f8fafc;
+      background: var(--bg-subtle);
       border-bottom: 1px solid var(--border-color);
-      padding: 14px 12px;
+      padding: 13px 12px;
       text-align: center;
     }
     .col-day-name {
@@ -265,6 +360,18 @@
       display: none;
     }
 
+    .today-pill-indicator {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--today-bg-tag);
+      color: var(--today-color-tag);
+      border: 1px solid var(--today-glow);
+    }
+
     /* Échelle horaire sur bureau */
     .screen-col-body {
       position: relative;
@@ -274,8 +381,8 @@
         to bottom,
         transparent 0,
         transparent 59px,
-        #e2e8f0 59px,
-        #e2e8f0 60px
+        var(--grid-line) 59px,
+        var(--grid-line) 60px
       );
       background-position: 0 12px;
     }
@@ -288,14 +395,17 @@
     }
 
     .screen-card {
-      padding: 6px 10px;
+      padding: 7px 10px;
       border-radius: 8px;
-      border-left: 4px solid #cbd5e1;
+      border-left: 4px solid var(--card-border);
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
       font-size: 0.82rem;
       display: flex;
       flex-direction: column;
       gap: 3px; 
-      background: #f8fafc;
+      background: var(--bg-surface);
       box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
     .screen-card.maths { border-left-color: var(--c-maths); background: var(--c-maths-bg); }
@@ -310,26 +420,26 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: #1e293b;
+      color: var(--text-dark);
       font-size: 0.78rem;
     }
     .card-title-text {
       font-weight: 700;
       font-size: 0.87rem;
-      color: #0f172a;
+      color: var(--text-dark);
       line-height: 1.25;
     }
     .card-meta-text {
       font-size: 0.75rem;
-      color: #64748b;
+      color: var(--text-muted);
     }
     .card-tag-pill {
       font-size: 0.7rem;
       font-weight: 700;
       padding: 2px 6px;
       border-radius: 4px;
-      background: white;
-      border: 1px solid rgba(0,0,0,0.1);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
       width: fit-content;
       margin-top: 2px;
       display: inline-flex;
@@ -340,11 +450,15 @@
     .pill-reuni { color: #6d28d9; border-color: #ddd6fe; background: #f5f3ff; }
     .pill-cm { color: #0f766e; border-color: #99f6e4; background: #f0fdfa; }
 
+    [data-theme="dark"] .pill-perso { color: #93c5fd; border-color: #1e40af; background: #172554; }
+    [data-theme="dark"] .pill-reuni { color: #d8b4fe; border-color: #5b21b6; background: #2e1065; }
+    [data-theme="dark"] .pill-cm { color: #99f6e4; border-color: #115e59; background: #042f2e; }
+
     .screen-empty-day {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #94a3b8;
+      color: var(--text-muted);
       font-style: italic;
       font-size: 0.85rem;
       height: 100%;
@@ -354,24 +468,24 @@
     }
 
     /* ========================================================
-       ADAPTATION SMARTPHONE (TACTILE)
+       ADAPTATION SMARTPHONE (TACTILE & AUTO-SCROLL)
        ======================================================== */
     @media screen and (max-width: 860px) {
       body {
-        padding: 10px 10px 28px 10px;
+        padding: 10px 10px 32px 10px;
       }
 
       .screen-header {
         padding: 14px 16px;
         border-radius: 12px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         gap: 10px;
       }
       .screen-header h1 {
-        font-size: 1.18rem;
+        font-size: 1.15rem;
       }
       .screen-header p {
-        font-size: 0.78rem;
+        font-size: 0.76rem;
       }
 
       .header-badges {
@@ -388,8 +502,8 @@
         display: none;
       }
       .badge {
-        font-size: 0.72rem;
-        padding: 4px 10px;
+        font-size: 0.71rem;
+        padding: 4px 9px;
         flex-shrink: 0;
       }
 
@@ -397,7 +511,7 @@
         padding: 8px 12px;
         font-size: 0.74rem;
         gap: 8px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
       }
 
       .nav-toolbar {
@@ -406,10 +520,11 @@
         grid-template-areas:
           "center center"
           "prev   next"
+          "today  theme"
           "print  print";
         padding: 12px;
         gap: 8px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
       }
 
       .nav-center {
@@ -426,41 +541,45 @@
       #btnPrevWeek {
         grid-area: prev;
         width: 100%;
-        padding: 9px 8px;
-        font-size: 0.82rem;
-      }
-      .nav-actions {
-        display: contents;
       }
       #btnNextWeek {
         grid-area: next;
         width: 100%;
-        padding: 9px 8px;
-        font-size: 0.82rem;
+      }
+
+      .nav-actions {
+        display: contents;
+      }
+
+      #btnTodayShortcut {
+        grid-area: today;
+        width: 100%;
+      }
+      #themeToggleBtn {
+        grid-area: theme;
+        width: 100%;
       }
       .print-trigger-btn {
         grid-area: print;
         width: 100%;
-        margin-top: 4px;
-        padding: 9px;
-        font-size: 0.82rem;
+        margin-top: 2px;
       }
 
       .mobile-day-tabs {
         display: flex;
-        gap: 6px;
+        gap: 5px;
         margin-bottom: 12px;
         position: sticky;
         top: 6px;
-        z-index: 20;
+        z-index: 30;
         background: var(--bg-body);
         padding: 4px 0;
       }
 
       .mobile-day-tab {
         flex: 1;
-        padding: 7px 2px;
-        background: #ffffff;
+        padding: 7px 1px;
+        background: var(--bg-surface);
         border: 1px solid var(--border-color);
         border-radius: 8px;
         font-size: 0.8rem;
@@ -476,6 +595,12 @@
         background: #2563eb;
         color: #ffffff;
         border-color: #2563eb;
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+      }
+
+      .mobile-day-tab.tab-today:not(.active) {
+        border-color: var(--today-glow);
+        color: var(--today-glow);
       }
 
       .screen-grid {
@@ -487,6 +612,7 @@
       .screen-col {
         min-height: auto;
         border-radius: 10px;
+        scroll-margin-top: 56px;
       }
 
       .screen-col.mobile-hidden-day {
@@ -498,22 +624,23 @@
         justify-content: space-between;
         align-items: center;
         text-align: left;
-        padding: 10px 14px;
-        background: #f1f5f9;
+        padding: 11px 14px;
       }
 
       .col-day-badge {
         display: inline-block;
-        font-size: 0.7rem;
+        font-size: 0.72rem;
         font-weight: 700;
         padding: 3px 8px;
         border-radius: 999px;
-        background: #e2e8f0;
-        color: #475569;
+        background: var(--bg-subtle);
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
       }
       .col-day-badge.active-courses {
-        background: #dbeafe;
-        color: #1d4ed8;
+        background: var(--c-maths-bg);
+        color: var(--c-maths);
+        border-color: var(--border-color);
       }
 
       .screen-col-body {
@@ -533,7 +660,7 @@
     }
 
     /* ========================================================
-       2. IMPRESSION RECTO-VERSO (EXACTEMENT 2 PAGES A4 PAYSAGE)
+       2. IMPRESSION RECTO-VERSO (STRICTEMENT BLANC ET NOIR SUR 2 PAGES)
        ======================================================== */
     #printTwoPagesMaster {
       display: none;
@@ -612,23 +739,23 @@
         font-size: 10.5pt !important;
         font-weight: 800;
         text-transform: uppercase;
-        color: #0f172a;
+        color: #0f172a !important;
         margin: 0;
       }
       .p-head p {
         font-size: 8pt !important;
-        color: #334155;
+        color: #334155 !important;
         font-weight: 600;
         margin: 1px 0 0 0;
       }
       .p-badges {
         font-size: 7.3pt !important;
         font-weight: 700;
-        background: #f1f5f9;
-        border: 1px solid #64748b;
+        background: #f1f5f9 !important;
+        border: 1px solid #64748b !important;
         padding: 2.5px 7px;
         border-radius: 4px;
-        color: #0f172a;
+        color: #0f172a !important;
         white-space: nowrap;
       }
 
@@ -646,7 +773,7 @@
         text-transform: uppercase;
         font-weight: 800;
         padding: 3px 4px;
-        border: 1px solid #0f172a;
+        border: 1px solid #0f172a !important;
         font-size: 8.8pt !important;
         text-align: center;
         height: 6.5mm;
@@ -656,10 +783,10 @@
         border: 1px solid #94a3b8 !important;
         padding: 2px 3.5px;
         vertical-align: middle;
-        background: #ffffff;
+        background: #ffffff !important;
+        color: #000000 !important;
       }
 
-      /* Proportions des colonnes */
       .th-sem { width: 9%; }
       .th-lun { width: 21%; }
       .th-mar { width: 19%; }
@@ -675,13 +802,13 @@
         font-size: 9pt !important;
         font-weight: 800;
         display: block;
-        color: #0f172a;
+        color: #0f172a !important;
         line-height: 1.15;
       }
       .p-sem-dates {
         font-size: 7.6pt !important;
         font-weight: 700;
-        color: #334155;
+        color: #334155 !important;
         display: block;
         margin-top: 1px;
       }
@@ -697,33 +824,34 @@
       }
       .p-item:last-child { margin-bottom: 0; }
 
-      .p-item.maths { border-left-color: var(--c-maths); background: var(--c-maths-bg); }
-      .p-item.info { border-left-color: var(--c-info); background: var(--c-info-bg); }
-      .p-item.micro { border-left-color: var(--c-micro); background: var(--c-micro-bg); }
-      .p-item.macro { border-left-color: var(--c-macro); background: var(--c-macro-bg); }
-      .p-item.socio { border-left-color: var(--c-socio); background: var(--c-socio-bg); }
-      .p-item.anglais { border-left-color: var(--c-anglais); background: var(--c-anglais-bg); }
+      .p-item.maths { border-left-color: #1d4ed8 !important; background: #eff6ff !important; }
+      .p-item.info { border-left-color: #0284c7 !important; background: #f0f9ff !important; }
+      .p-item.micro { border-left-color: #059669 !important; background: #ecfdf5 !important; }
+      .p-item.macro { border-left-color: #0f766e !important; background: #f0fdfa !important; }
+      .p-item.socio { border-left-color: #7c3aed !important; background: #f5f3ff !important; }
+      .p-item.anglais { border-left-color: #b45309 !important; background: #fffbeb !important; }
 
       .p-time {
         font-weight: 800;
         font-size: 8.3pt !important;
-        color: #0f172a;
+        color: #0f172a !important;
         margin-right: 2px;
       }
       .p-title {
         font-weight: 700;
         font-size: 8.1pt !important;
+        color: #0f172a !important;
       }
       .p-room {
         font-size: 7.6pt !important;
         font-weight: 600;
-        color: #334155;
+        color: #334155 !important;
       }
       .p-grp {
         font-size: 7.2pt !important;
         font-weight: 800;
         text-transform: uppercase;
-        background: rgba(0,0,0,0.07);
+        background: rgba(0,0,0,0.07) !important;
         padding: 1px 3px;
         border-radius: 3px;
       }
@@ -744,26 +872,25 @@
       }
 
       .p-fixed-group-card {
-        background: #f8fafc;
-        border: 1px solid #cbd5e1;
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
         border-radius: 5px;
         padding: 3.5px 4.5px;
-        box-sizing: border-box;
       }
       .p-fixed-badge-title {
         font-size: 7.1pt;
         font-weight: 800;
         text-transform: uppercase;
-        color: #1e293b;
+        color: #1e293b !important;
         letter-spacing: 0.3px;
         margin-bottom: 2.5px;
-        border-bottom: 1px solid #cbd5e1;
+        border-bottom: 1px solid #cbd5e1 !important;
         padding-bottom: 1px;
         text-align: center;
       }
 
       .p-empty {
-        color: #94a3b8;
+        color: #94a3b8 !important;
         text-align: center;
         font-style: italic;
         font-size: 7.8pt;
@@ -797,7 +924,7 @@
         background: #fef3c7 !important;
         text-align: center;
         font-weight: 800;
-        color: #92400e;
+        color: #92400e !important;
         padding: 3.5px !important;
         font-size: 8pt !important;
         border: 1.5px solid #f59e0b !important;
@@ -826,11 +953,11 @@
     <div class="legend-toolbar">
       <span class="legend-title">Repères :</span>
       <span class="legend-item"><span class="legend-dot dot-perso"></span> <strong>TD spécifique à votre groupe</strong> (Dédoublé : Anglais en TD1 ; Maths, BDD, Micro en TD2)</span>
-      <span class="legend-item"><span class="legend-dot dot-reuni"></span> <strong>TD commun (Promo réunie)</strong> (Socio le lundi, Macro le mercredi : TD1 & TD2 ensemble)</span>
+      <span class="legend-item"><span class="legend-dot dot-reuni"></span> <strong>TD commun (Promo réunie)</strong> (Socio le lundi, Macro le mercredi)</span>
       <span class="legend-item"><span class="legend-dot dot-cm"></span> <strong>CM</strong> (Promo entière)</span>
     </div>
 
-    <!-- BARRE DE NAVIGATION -->
+    <!-- BARRE DE NAVIGATION INTERACTIVE -->
     <div class="nav-toolbar">
       <button class="nav-btn" id="btnPrevWeek" onclick="changeScreenWeek(-1)">
         ◀ Précédente
@@ -845,15 +972,24 @@
         <button class="nav-btn" id="btnNextWeek" onclick="changeScreenWeek(1)">
           Suivante ▶
         </button>
+
+        <button class="nav-btn nav-btn-today" id="btnTodayShortcut" onclick="jumpToCurrentDay()" title="Revenir immédiatement à aujourd'hui">
+          🎯 Aujourd'hui
+        </button>
+
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Basculer entre Mode Clair et Mode Sombre">
+          🌙 Sombre
+        </button>
+
         <button class="print-trigger-btn" onclick="window.print()" title="Imprime l'intégralité du semestre sur exactement 2 pages A4 paysage">
-          🖨️ Imprimer Recto-Verso (2 pages A4)
+          🖨️ Imprimer Recto-Verso (2 p.)
         </button>
       </div>
     </div>
 
     <!-- FILTRE JOUR MOBILE -->
     <div class="mobile-day-tabs" id="mobileDayTabs">
-      <button class="mobile-day-tab active" data-day="all" onclick="setMobileDayFilter('all')">Tous</button>
+      <button class="mobile-day-tab" data-day="all" onclick="setMobileDayFilter('all')">Tous</button>
       <button class="mobile-day-tab" data-day="0" onclick="setMobileDayFilter(0)">Lun</button>
       <button class="mobile-day-tab" data-day="1" onclick="setMobileDayFilter(1)">Mar</button>
       <button class="mobile-day-tab" data-day="2" onclick="setMobileDayFilter(2)">Mer</button>
@@ -1263,7 +1399,7 @@
   </div>
 
   <!-- ========================================================
-       DONNÉES DU PLANNING DYNAMIQUE (CELCAT UVSQ CONFORME)
+       DONNÉES DU PLANNING DYNAMIQUE ET LOGIQUE INTELLIGENTE
        ======================================================== -->
   <script>
     const weeksScreenData = [
@@ -1787,10 +1923,108 @@
       }
     ];
 
+    /* ========================================================
+       GESTION DU THÈME SOMBRE (DARK MODE)
+       ======================================================== */
+    function initTheme() {
+      const savedTheme = localStorage.getItem('miashs_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+
+      document.documentElement.setAttribute('data-theme', theme);
+      updateThemeButtonLabel(theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('miashs_theme', next);
+      updateThemeButtonLabel(next);
+    }
+
+    function updateThemeButtonLabel(theme) {
+      const btn = document.getElementById('themeToggleBtn');
+      if (!btn) return;
+      if (theme === 'dark') {
+        btn.innerHTML = '☀️ Clair';
+        btn.title = 'Passer en Mode Clair';
+      } else {
+        btn.innerHTML = '🌙 Sombre';
+        btn.title = 'Passer en Mode Sombre';
+      }
+    }
+
+    /* ========================================================
+       CALCUL AUTOMATIQUE DE LA SEMAINE & LOGIQUE DU WEEK-END
+       ======================================================== */
+    // Dates des lundis pour chaque semaine du calendrier UVSQ
+    const semesterMondays = [
+      new Date(2026, 8, 14), // S1: 14 sept 2026
+      new Date(2026, 8, 21), // S2: 21 sept 2026
+      new Date(2026, 8, 28), // S3: 28 sept 2026
+      new Date(2026, 9, 5),  // S4: 05 oct 2026
+      new Date(2026, 9, 12), // S5: 12 oct 2026
+      new Date(2026, 9, 19), // S6: 19 oct 2026
+      new Date(2026, 10, 2), // S7: 02 nov 2026 (Après Toussaint)
+      new Date(2026, 10, 9), // S8: 09 nov 2026
+      new Date(2026, 10, 16),// S9: 16 nov 2026
+      new Date(2026, 10, 23),// S10: 23 nov 2026
+      new Date(2026, 10, 30),// S11: 30 nov 2026
+      new Date(2026, 11, 7), // S12: 07 déc 2026
+      new Date(2026, 11, 14) // S13: 14 déc 2026
+    ];
+
+    function calculateTargetSchedule() {
+      const now = new Date();
+      const currentDayOfWeek = now.getDay(); // 0 = Dimanche, 6 = Samedi, 1..5 = Lun..Ven
+      const isWeekend = (currentDayOfWeek === 0 || currentDayOfWeek === 6);
+
+      // Si c'est le week-end, on bascule vers le lundi de la semaine prochaine
+      let targetDate = new Date(now);
+      if (isWeekend) {
+        const daysToAdd = (currentDayOfWeek === 6) ? 2 : 1; // Samedi +2, Dimanche +1
+        targetDate.setDate(now.getDate() + daysToAdd);
+      }
+
+      // Recherche de la semaine correspondant à la targetDate
+      let foundWeekIndex = 0;
+      const targetTimestamp = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()).getTime();
+
+      if (targetTimestamp < semesterMondays[0].getTime()) {
+        foundWeekIndex = 0;
+      } else if (targetTimestamp >= semesterMondays[semesterMondays.length - 1].getTime() + 7 * 86400000) {
+        foundWeekIndex = semesterMondays.length - 1;
+      } else {
+        for (let i = 0; i < semesterMondays.length; i++) {
+          const start = semesterMondays[i].getTime();
+          const nextStart = (i < semesterMondays.length - 1) ? semesterMondays[i + 1].getTime() : start + 7 * 86400000;
+          if (targetTimestamp >= start && targetTimestamp < nextStart) {
+            foundWeekIndex = i;
+            break;
+          }
+        }
+      }
+
+      // Jour ciblé : 0 (Lun) si week-end, sinon 0..4 correspondant au jour de la semaine
+      let targetDayIndex = 0;
+      if (!isWeekend && currentDayOfWeek >= 1 && currentDayOfWeek <= 5) {
+        targetDayIndex = currentDayOfWeek - 1;
+      }
+
+      return {
+        weekIndex: foundWeekIndex,
+        dayIndex: targetDayIndex,
+        isWeekend: isWeekend,
+        realNow: now
+      };
+    }
+
     let currentScreenIndex = 0;
     let currentMobileDayFilter = 'all';
 
-    function setMobileDayFilter(filter) {
+    function setMobileDayFilter(filter, shouldScroll = true) {
       currentMobileDayFilter = filter;
       document.querySelectorAll('.mobile-day-tab').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.day === String(filter));
@@ -1804,6 +2038,25 @@
           col.classList.add('mobile-hidden-day');
         }
       });
+
+      if (shouldScroll && filter !== 'all') {
+        alignScrollToDay(filter);
+      }
+    }
+
+    // Défilement automatique précis vers le jour ciblé
+    function alignScrollToDay(dayIdx) {
+      setTimeout(() => {
+        const col = document.querySelector(`.screen-col[data-day-index="${dayIdx}"]`);
+        if (col && !col.classList.contains('mobile-hidden-day')) {
+          const navOffset = 68; // Hauteur barre mobile sticky
+          const colTop = col.getBoundingClientRect().top + window.pageYOffset - navOffset;
+          window.scrollTo({
+            top: Math.max(0, colTop),
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
     }
 
     const DAY_START_MINUTES = 8 * 60; // 8h00
@@ -1826,7 +2079,7 @@
       };
     }
 
-    function renderScreenTimetable(index) {
+    function renderScreenTimetable(index, targetDayToHighlight = null) {
       currentScreenIndex = index;
       const w = weeksScreenData[index];
 
@@ -1839,10 +2092,18 @@
       const grid = document.getElementById('screenWeekGrid');
       grid.innerHTML = '';
 
+      const targetInfo = calculateTargetSchedule();
+      const isCurrentActiveWeek = (targetInfo.weekIndex === index);
+
       w.days.forEach((day, dayIdx) => {
         const col = document.createElement('div');
         col.className = 'screen-col';
         col.dataset.dayIndex = dayIdx;
+
+        const isTodayCol = (isCurrentActiveWeek && targetInfo.dayIndex === dayIdx);
+        if (isTodayCol) {
+          col.classList.add('is-today');
+        }
 
         if (currentMobileDayFilter !== 'all' && currentMobileDayFilter !== dayIdx) {
           col.classList.add('mobile-hidden-day');
@@ -1883,11 +2144,18 @@
           }).join('');
         }
 
+        let todayBadgeHtml = '';
+        if (isTodayCol) {
+          const tagTxt = targetInfo.isWeekend ? '🚀 Lundi prochain' : '📍 Aujourd\'hui';
+          todayBadgeHtml = `<span class="today-pill-indicator">${tagTxt}</span>`;
+        }
+
         col.innerHTML = `
           <div class="screen-col-header">
             <div>
               <div class="col-day-name">${day.name}</div>
               <div class="col-day-date">${day.date}</div>
+              ${todayBadgeHtml}
             </div>
             <span class="${badgeClass}">${badgeLabel}</span>
           </div>
@@ -1897,20 +2165,46 @@
         `;
         grid.appendChild(col);
       });
+
+      // Mettre en surbrillance l'onglet mobile du jour s'il s'agit de la semaine actuelle
+      document.querySelectorAll('.mobile-day-tab').forEach(tab => {
+        const d = tab.dataset.day;
+        tab.classList.toggle('tab-today', isCurrentActiveWeek && String(d) === String(targetInfo.dayIndex));
+      });
     }
 
     function changeScreenWeek(delta) {
       const nextIndex = currentScreenIndex + delta;
       if (nextIndex >= 0 && nextIndex < weeksScreenData.length) {
         renderScreenTimetable(nextIndex);
+        if (window.innerWidth <= 860 && currentMobileDayFilter !== 'all') {
+          alignScrollToDay(currentMobileDayFilter);
+        }
       }
     }
 
+    // Bouton de raccourci immédiat vers le jour courant
+    function jumpToCurrentDay() {
+      const target = calculateTargetSchedule();
+      renderScreenTimetable(target.weekIndex);
+
+      if (window.innerWidth <= 860) {
+        setMobileDayFilter(target.dayIndex, true);
+      } else {
+        const targetCol = document.querySelector(`.screen-col[data-day-index="${target.dayIndex}"]`);
+        if (targetCol) {
+          targetCol.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    }
+
+    // Raccourcis clavier flèches gauche/droite
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') changeScreenWeek(-1);
       if (e.key === 'ArrowRight') changeScreenWeek(1);
     });
 
+    // Balayage tactile (Swipe)
     let touchStartX = 0;
     let touchStartY = 0;
     const swipeArea = document.getElementById('screenWeekGrid');
@@ -1935,7 +2229,24 @@
       }
     }, { passive: true });
 
-    renderScreenTimetable(currentScreenIndex);
+    /* ========================================================
+       DÉMARRAGE AUTOMATIQUE AU CHARGEMENT DE LA PAGE
+       ======================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+
+      // 1. Détection de la bonne semaine et du jour cible (avec gestion week-end)
+      const target = calculateTargetSchedule();
+      renderScreenTimetable(target.weekIndex);
+
+      // 2. Sur mobile : sélection directe du jour actuel et alignement
+      if (window.innerWidth <= 860) {
+        setMobileDayFilter(target.dayIndex, false);
+        window.addEventListener('load', () => {
+          alignScrollToDay(target.dayIndex);
+        });
+      }
+    });
   </script>
 </body>
 </html>
