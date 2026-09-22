@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -335,7 +336,7 @@
       position: relative;
     }
 
-    /* Mise en évidence du jour actif (Aujourd'hui) */
+    /* Mise en évidence du jour actif */
     .screen-col.is-today {
       border: 2px solid var(--today-glow) !important;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18), 0 4px 14px rgba(0,0,0,0.08);
@@ -376,7 +377,7 @@
     .screen-col-body {
       position: relative;
       flex-grow: 1;
-      min-height: 680px;
+      min-height: 700px;
       background-image: repeating-linear-gradient(
         to bottom,
         transparent 0,
@@ -571,14 +572,14 @@
         margin-bottom: 12px;
         position: sticky;
         top: 6px;
-        z-index: 30;
+        z-index: 40;
         background: var(--bg-body);
-        padding: 4px 0;
+        padding: 6px 0;
       }
 
       .mobile-day-tab {
         flex: 1;
-        padding: 7px 1px;
+        padding: 8px 2px;
         background: var(--bg-surface);
         border: 1px solid var(--border-color);
         border-radius: 8px;
@@ -601,6 +602,7 @@
       .mobile-day-tab.tab-today:not(.active) {
         border-color: var(--today-glow);
         color: var(--today-glow);
+        font-weight: 800;
       }
 
       .screen-grid {
@@ -612,7 +614,7 @@
       .screen-col {
         min-height: auto;
         border-radius: 10px;
-        scroll-margin-top: 56px;
+        scroll-margin-top: 65px;
       }
 
       .screen-col.mobile-hidden-day {
@@ -736,24 +738,24 @@
         flex-shrink: 0;
       }
       .p-head h2 {
-        font-size: 10.5pt !important;
+        font-size: 10.2pt !important;
         font-weight: 800;
         text-transform: uppercase;
         color: #0f172a !important;
         margin: 0;
       }
       .p-head p {
-        font-size: 8pt !important;
+        font-size: 7.9pt !important;
         color: #334155 !important;
         font-weight: 600;
         margin: 1px 0 0 0;
       }
       .p-badges {
-        font-size: 7.3pt !important;
+        font-size: 7.2pt !important;
         font-weight: 700;
         background: #f1f5f9 !important;
         border: 1px solid #64748b !important;
-        padding: 2.5px 7px;
+        padding: 2px 6px;
         border-radius: 4px;
         color: #0f172a !important;
         white-space: nowrap;
@@ -772,11 +774,11 @@
         color: white !important;
         text-transform: uppercase;
         font-weight: 800;
-        padding: 3px 4px;
+        padding: 2px 4px;
         border: 1px solid #0f172a !important;
-        font-size: 8.8pt !important;
+        font-size: 8.5pt !important;
         text-align: center;
-        height: 6.5mm;
+        height: 6mm;
       }
 
       .p-table td {
@@ -799,14 +801,14 @@
         background: #f8fafc !important;
       }
       .p-sem-name {
-        font-size: 9pt !important;
+        font-size: 8.8pt !important;
         font-weight: 800;
         display: block;
         color: #0f172a !important;
         line-height: 1.15;
       }
       .p-sem-dates {
-        font-size: 7.6pt !important;
+        font-size: 7.4pt !important;
         font-weight: 700;
         color: #334155 !important;
         display: block;
@@ -815,12 +817,12 @@
 
       .p-item {
         display: block;
-        padding: 2px 4px;
+        padding: 1.5px 3.5px;
         margin-bottom: 2px;
-        border-radius: 3.5px;
-        border-left: 4px solid #94a3b8;
-        font-size: 8.1pt !important;
-        line-height: 1.2;
+        border-radius: 3px;
+        border-left: 3.5px solid #94a3b8;
+        font-size: 7.8pt !important;
+        line-height: 1.18;
       }
       .p-item:last-child { margin-bottom: 0; }
 
@@ -833,22 +835,22 @@
 
       .p-time {
         font-weight: 800;
-        font-size: 8.3pt !important;
+        font-size: 8pt !important;
         color: #0f172a !important;
         margin-right: 2px;
       }
       .p-title {
         font-weight: 700;
-        font-size: 8.1pt !important;
+        font-size: 7.8pt !important;
         color: #0f172a !important;
       }
       .p-room {
-        font-size: 7.6pt !important;
+        font-size: 7.3pt !important;
         font-weight: 600;
         color: #334155 !important;
       }
       .p-grp {
-        font-size: 7.2pt !important;
+        font-size: 6.9pt !important;
         font-weight: 800;
         text-transform: uppercase;
         background: rgba(0,0,0,0.07) !important;
@@ -865,25 +867,25 @@
       }
 
       .p-macro-highlight {
-        border: 1.5px dashed #0f766e !important;
-        border-left: 4.5px solid #0f766e !important;
+        border: 1.2px dashed #0f766e !important;
+        border-left: 4px solid #0f766e !important;
         background: #ccfbf1 !important;
-        padding: 2.5px 4px !important;
+        padding: 2px 3.5px !important;
       }
 
       .p-fixed-group-card {
         background: #f8fafc !important;
         border: 1px solid #cbd5e1 !important;
         border-radius: 5px;
-        padding: 3.5px 4.5px;
+        padding: 3px 4px;
       }
       .p-fixed-badge-title {
-        font-size: 7.1pt;
+        font-size: 7pt;
         font-weight: 800;
         text-transform: uppercase;
         color: #1e293b !important;
         letter-spacing: 0.3px;
-        margin-bottom: 2.5px;
+        margin-bottom: 2px;
         border-bottom: 1px solid #cbd5e1 !important;
         padding-bottom: 1px;
         text-align: center;
@@ -893,7 +895,7 @@
         color: #94a3b8 !important;
         text-align: center;
         font-style: italic;
-        font-size: 7.8pt;
+        font-size: 7.5pt;
       }
 
       .p-alert-box {
@@ -904,7 +906,7 @@
         text-align: center;
         padding: 5px 3px;
         border-radius: 4px;
-        font-size: 8pt !important;
+        font-size: 7.9pt !important;
         line-height: 1.25;
       }
 
@@ -914,10 +916,10 @@
         color: #166534 !important;
         text-align: center;
         font-weight: 800;
-        font-size: 8.1pt !important;
-        padding: 5px 3px;
+        font-size: 7.9pt !important;
+        padding: 4px 3px;
         border-radius: 5px;
-        line-height: 1.3;
+        line-height: 1.25;
       }
 
       .p-vacances-row {
@@ -944,7 +946,7 @@
       </div>
       <div class="header-badges">
         <span class="badge badge-id">N° Étudiant : 22608239</span>
-        <span class="badge badge-td1">TD 01 : <strong>Anglais (Mar 8h) • Macro & Socio (Promo réunie)</strong></span>
+        <span class="badge badge-td1">Anglais : <strong>Mar 8h & Mer 13h50</strong> • Macro/Socio : <strong>Promo réunie</strong></span>
         <span class="badge badge-td2">TD 02 : <strong>Maths (Mer 9h40) • BDD (Jeu 13h50) • Micro (Lun 15h30)</strong></span>
       </div>
     </div>
@@ -952,7 +954,7 @@
     <!-- LÉGENDE PÉDAGOGIQUE -->
     <div class="legend-toolbar">
       <span class="legend-title">Repères :</span>
-      <span class="legend-item"><span class="legend-dot dot-perso"></span> <strong>TD spécifique à votre groupe</strong> (Dédoublé : Anglais en TD1 ; Maths, BDD, Micro en TD2)</span>
+      <span class="legend-item"><span class="legend-dot dot-perso"></span> <strong>TD spécifique à votre groupe</strong> (Anglais TD1, Maths TD2, BDD TD2, Micro TD2)</span>
       <span class="legend-item"><span class="legend-dot dot-reuni"></span> <strong>TD commun (Promo réunie)</strong> (Socio le lundi, Macro le mercredi)</span>
       <span class="legend-item"><span class="legend-dot dot-cm"></span> <strong>CM</strong> (Promo entière)</span>
     </div>
@@ -973,7 +975,7 @@
           Suivante ▶
         </button>
 
-        <button class="nav-btn nav-btn-today" id="btnTodayShortcut" onclick="jumpToCurrentDay()" title="Revenir immédiatement à aujourd'hui">
+        <button class="nav-btn nav-btn-today" id="btnTodayShortcut" onclick="jumpToCurrentDay(true)" title="Aller immédiatement au jour ciblé">
           🎯 Aujourd'hui
         </button>
 
@@ -1015,7 +1017,7 @@
           <p>Étudiant : <strong>Cédric JEAN-BAPTISTE (22608239)</strong> • <strong>Page 1 / 2 (Recto)</strong></p>
         </div>
         <div class="p-badges">
-          Anglais en <strong>TD 01</strong> (Mar 8h) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio en <strong>TD réuni (TD 1 & 2)</strong>
+          Anglais (Mar 8h & Mer 13h50) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio en <strong>Promo réunie</strong>
         </div>
       </div>
 
@@ -1036,7 +1038,7 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 1</span><span class="p-sem-dates">14 – 19 Sept.</span></td>
             <td>
               <div class="p-item socio"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Socio démographie</span> <span class="p-room">[2203]</span></div>
-              <div class="p-item socio"><span class="p-time">11:20-12:50</span> <span class="p-title">TD Socio démographie</span> <span class="p-grp p-grp-reuni">TD Promo réunie</span> <span class="p-room">[2203]</span></div>
+              <div class="p-item socio"><span class="p-time">11:20-12:50</span> <span class="p-title">TD Socio démographie</span> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[2203]</span></div>
               <div class="p-empty" style="margin-top:2px;">(Pas de TD Micro cette semaine)</div>
             </td>
             <td>
@@ -1046,7 +1048,8 @@
             </td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre 2</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE<br><span style="font-size:7.2pt;">(Anglais TD1 fait le mardi matin !)</span></div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
             </td>
             <td>
               <div class="p-item info"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Bases de données</span> <span class="p-room">[Amphi E]</span></div>
@@ -1057,7 +1060,7 @@
             <td rowspan="6" style="background:#fcfdfd; text-align:center;">
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">VENDREDIS (S1 à S6)</div>
-                <div class="p-empty" style="margin-bottom:6px;">Matin libre<br><span style="font-size:7.1pt;">(TD Maths matin = TD 01)</span></div>
+                <div class="p-empty" style="margin-bottom:6px;">Matin libre</div>
                 <div class="p-item micro" style="padding:10px 4px;">
                   <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
                   <b style="font-size:9.2pt;">CM Microéconomie 2</b><br>
@@ -1083,7 +1086,6 @@
                 <div class="p-item micro">
                   <span class="p-time">15:30-17:00</span> <b>TD Micro 2</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[2206]</span>
                 </div>
-                <div class="p-empty" style="margin-top:3px; font-size:7.1pt;">(13h50 = créneau TD 01)</div>
               </div>
             </td>
 
@@ -1095,7 +1097,7 @@
                   <span class="p-time">08:00-09:30</span> <b>TD Anglais UE2</b> <span class="p-grp p-grp-perso">Votre TD 01</span> <span class="p-room">[E303]</span>
                 </div>
                 <div class="p-item macro">
-                  <span class="p-time">09:40-12:50</span> <b>CM Macro 2</b> <span class="p-room">[Amphi B / 2201]</span>
+                  <span class="p-time">09:40-12:50</span> <b>CM Macro 2</b> <span class="p-room">[Amphi F (Fermat) & B (Descartes)]</span>
                 </div>
                 <div class="p-empty" style="margin-top:6px;">Après-midi entièrement libre</div>
               </div>
@@ -1104,7 +1106,8 @@
             <!-- Mercredi S2 -->
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F] (1/4)</span></div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:2px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F (Fermat)] (1/4)</span></div>
             </td>
 
             <!-- Jeudi fusionné S2 à S5 -->
@@ -1129,7 +1132,8 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 3</span><span class="p-sem-dates">28 Sept. – 03 Oct.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
             </td>
           </tr>
 
@@ -1138,7 +1142,8 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 4</span><span class="p-sem-dates">05 – 10 Oct.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F] (2/4)</span></div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:2px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F (Fermat)] (2/4)</span></div>
             </td>
           </tr>
 
@@ -1147,7 +1152,8 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 5</span><span class="p-sem-dates">12 – 17 Oct.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
             </td>
           </tr>
 
@@ -1156,7 +1162,8 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 6</span><span class="p-sem-dates">19 – 24 Oct.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F] (3/4)</span></div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:2px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F (Fermat)] (3/4)</span></div>
             </td>
             <td>
               <div class="p-alert-box">🚫 AUCUN COURS<br><strong>Trophée SQY Campus</strong></div>
@@ -1181,7 +1188,7 @@
           <p>Étudiant : <strong>Cédric JEAN-BAPTISTE (22608239)</strong> • <strong>Page 2 / 2 (Verso)</strong></p>
         </div>
         <div class="p-badges">
-          Anglais en <strong>TD 01</strong> (Mar 8h) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio en <strong>TD réuni (TD 1 & 2)</strong>
+          Anglais (Mar 8h & Mer 13h50) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio en <strong>Promo réunie</strong>
         </div>
       </div>
 
@@ -1224,7 +1231,7 @@
                   <span class="p-time">08:00-09:30</span> <b>TD Anglais UE2</b> <span class="p-grp p-grp-perso">Votre TD 01</span> <span class="p-room">[E303]</span>
                 </div>
                 <div class="p-item macro">
-                  <span class="p-time">09:40-12:50</span> <b>CM Macro 2</b> <span class="p-room">[Amphi B / 2201]</span>
+                  <span class="p-time">09:40-12:50</span> <b>CM Macro 2</b> <span class="p-room">[Amphi F / B / 2201]</span>
                 </div>
                 <div class="p-empty" style="margin-top:4px;">Après-midi libre</div>
               </div>
@@ -1233,7 +1240,8 @@
             <!-- Mercredi S7 -->
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:3px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F] (Dernier 4/4)</span></div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-item macro p-macro-highlight" style="margin-top:2px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F (Fermat)] (4/4)</span></div>
             </td>
 
             <!-- Jeudi fusionné S7 à S11 -->
@@ -1283,16 +1291,18 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 9</span><span class="p-sem-dates">16 – 21 Nov.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
             </td>
           </tr>
 
-          <!-- S10 : Fin CM Macro & TD Anglais -->
+          <!-- S10 : Fin CM Macro & TD Anglais Mar -->
           <tr>
             <td class="p-sem-col"><span class="p-sem-name">Semaine 10</span><span class="p-sem-dates">23 – 28 Nov.</span></td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
             </td>
           </tr>
 
@@ -1301,12 +1311,13 @@
             <td class="p-sem-col"><span class="p-sem-name">Semaine 11</span><span class="p-sem-dates">30 Nov. – 05 Déc.</span></td>
             <td>
               <div class="p-libere-box" style="padding:6px 2px;">
-                🌴 MARDI LIBÉRÉ<br><span style="font-size:7.2pt;">(Anglais & Macro terminés)</span>
+                🌴 MARDI LIBÉRÉ<br><span style="font-size:7.2pt;">(Anglais Mar & Macro terminés)</span>
               </div>
             </td>
             <td>
               <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
+              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
+              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
             </td>
           </tr>
 
@@ -1343,16 +1354,17 @@
               </div>
             </td>
 
-            <!-- Mercredi S12-S13 : Maths matin -->
+            <!-- Mercredi S12-S13 : Maths + Anglais -->
             <td>
               <div class="p-fixed-group-card">
                 <div class="p-fixed-badge-title">MERCREDIS (09 & 16 DÉC.)</div>
-                <div class="p-item maths" style="padding:6px 4px;">
-                  <span class="p-time">09:40 - 12:50</span><br>
-                  <b style="font-size:9pt;">TD Analyse & Algèbre 2</b><br>
-                  <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span>
+                <div class="p-item maths" style="padding:4px 3px;">
+                  <span class="p-time">09:40 - 12:50</span> <b>TD Maths</b> <span class="p-grp p-grp-perso">TD 02</span> <span class="p-room">[Amphi G]</span>
                 </div>
-                <div class="p-libere-box" style="margin-top:4px; padding:3px;">🌴 APRÈS-MIDI LIBRE DÈS 12h50</div>
+                <div class="p-item anglais" style="padding:4px 3px; margin-top:2px;">
+                  <span class="p-time">13:50 - 15:20</span> <b>TD Anglais</b> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span>
+                </div>
+                <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
               </div>
             </td>
 
@@ -1402,6 +1414,11 @@
        DONNÉES DU PLANNING DYNAMIQUE ET LOGIQUE INTELLIGENTE
        ======================================================== -->
   <script>
+    // Éviter que le navigateur reprenne l'ancienne position de scroll au rechargement
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
     const weeksScreenData = [
       {
         id: 1,
@@ -1425,7 +1442,8 @@
           { 
             name: "Mercredi", date: "16 sept. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
             ] 
           },
           { 
@@ -1460,13 +1478,14 @@
             name: "Mardi", date: "22 sept. 2026", 
             courses: [
               { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 2/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F & B - DESCARTES", tag: "CM Promo", tagType: "cm" }
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "Amphi F (Fermat) & Amphi B (Descartes)", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "23 sept. 2026", 
             courses: [
               { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" },
               { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 1/4)", tagType: "reuni" }
             ] 
           },
@@ -1489,7 +1508,7 @@
       {
         id: 3,
         title: "Semaine 3 : 28 Septembre – 03 Octobre 2026",
-        sub: "Semaine régulière (mercredi après-midi libre dès 12h50)",
+        sub: "Semaine régulière (Anglais mercredi après-midi)",
         days: [
           { 
             name: "Lundi", date: "28 sept. 2026", 
@@ -1509,7 +1528,8 @@
           { 
             name: "Mercredi", date: "30 sept. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
             ] 
           },
           { 
@@ -1531,7 +1551,7 @@
       {
         id: 4,
         title: "Semaine 4 : 05 – 10 Octobre 2026",
-        sub: "Avec TD 2 de Macroéconomie le mercredi après-midi",
+        sub: "Avec Anglais puis TD 2 de Macroéconomie le mercredi après-midi",
         days: [
           { 
             name: "Lundi", date: "5 oct. 2026", 
@@ -1552,7 +1572,8 @@
             name: "Mercredi", date: "7 oct. 2026", 
             courses: [
               { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F (ou salle désignée)", tag: "TD Promo réunie (Séance 2/4)", tagType: "reuni" }
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" },
+              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 2/4)", tagType: "reuni" }
             ] 
           },
           { 
@@ -1574,7 +1595,7 @@
       {
         id: 5,
         title: "Semaine 5 : 12 – 17 Octobre 2026",
-        sub: "Semaine régulière (mercredi après-midi libre dès 12h50)",
+        sub: "Semaine régulière (Anglais mercredi après-midi)",
         days: [
           { 
             name: "Lundi", date: "12 oct. 2026", 
@@ -1588,13 +1609,14 @@
             name: "Mardi", date: "13 oct. 2026", 
             courses: [
               { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 5/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI B & 2204", tag: "CM Promo", tagType: "cm" }
+              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "Amphi B (Descartes) & 2204 (Fermat)", tag: "CM Promo", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "14 oct. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
             ] 
           },
           { 
@@ -1637,6 +1659,7 @@
             name: "Mercredi", date: "21 oct. 2026", 
             courses: [
               { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" },
               { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 3/4)", tagType: "reuni" }
             ] 
           },
@@ -1673,6 +1696,7 @@
             name: "Mercredi", date: "4 nov. 2026", 
             courses: [
               { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" },
               { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 4/4 finale)", tagType: "reuni" }
             ] 
           },
@@ -1732,7 +1756,7 @@
       {
         id: 9,
         title: "Semaine 9 : 16 – 21 Novembre 2026",
-        sub: "Semaine régulière (mercredi après-midi libre dès 12h50)",
+        sub: "Semaine régulière (Anglais mercredi après-midi)",
         days: [
           { 
             name: "Lundi", date: "16 nov. 2026", 
@@ -1752,7 +1776,8 @@
           { 
             name: "Mercredi", date: "18 nov. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
             ] 
           },
           { 
@@ -1774,7 +1799,7 @@
       {
         id: 10,
         title: "Semaine 10 : 23 – 28 Novembre 2026",
-        sub: "Dernière séance d'Anglais TD1 et dernier CM de Macro le mardi 24 nov.",
+        sub: "Dernière séance d'Anglais du mardi et dernier CM de Macro le mardi 24 nov.",
         days: [
           { 
             name: "Lundi", date: "23 nov. 2026", 
@@ -1787,14 +1812,15 @@
           { 
             name: "Mardi", date: "24 nov. 2026", 
             courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 10/10 finale)", tagType: "perso" },
+              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance finale Mar)", tagType: "perso" },
               { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo (Séance finale)", tagType: "cm" }
             ] 
           },
           { 
             name: "Mercredi", date: "25 nov. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
             ] 
           },
           { 
@@ -1816,7 +1842,7 @@
       {
         id: 11,
         title: "Semaine 11 : 30 Novembre – 05 Décembre 2026",
-        sub: "Mardi libéré (Anglais et Macro terminés)",
+        sub: "Mardi libéré (Anglais mardi et Macro terminés)",
         days: [
           { 
             name: "Lundi", date: "30 nov. 2026", 
@@ -1830,7 +1856,8 @@
           { 
             name: "Mercredi", date: "2 déc. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
             ] 
           },
           { 
@@ -1852,7 +1879,7 @@
       {
         id: 12,
         title: "Semaine 12 : 07 – 12 Décembre 2026",
-        sub: "Avant-dernière semaine (Mardi et Mercredi après-midi libérés)",
+        sub: "Avant-dernière semaine (Mardi libéré)",
         days: [
           { 
             name: "Lundi", date: "7 déc. 2026", 
@@ -1866,7 +1893,8 @@
           { 
             name: "Mercredi", date: "9 déc. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
             ] 
           },
           { 
@@ -1902,7 +1930,8 @@
           { 
             name: "Mercredi", date: "16 déc. 2026", 
             courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02 (Dernier)", tagType: "perso" }
+              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02 (Dernier)", tagType: "perso" },
+              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais (Dernier)", tagType: "perso" }
             ] 
           },
           { 
@@ -1957,9 +1986,9 @@
     }
 
     /* ========================================================
-       CALCUL AUTOMATIQUE DE LA SEMAINE & LOGIQUE DU WEEK-END
+       CALCUL AUTOMATIQUE INTELLIGENT DE LA SEMAINE & JOUR
+       (AVEC DÉTECTION DE FIN DE COURS & BASCOULE AU JOUR SUIVANT)
        ======================================================== */
-    // Dates des lundis pour chaque semaine du calendrier UVSQ
     const semesterMondays = [
       new Date(2026, 8, 14), // S1: 14 sept 2026
       new Date(2026, 8, 21), // S2: 21 sept 2026
@@ -1976,53 +2005,111 @@
       new Date(2026, 11, 14) // S13: 14 déc 2026
     ];
 
+    function parseEndMinutes(timeStr) {
+      const parts = timeStr.split('-');
+      if (parts.length < 2) return 0;
+      const endPart = parts[1].trim();
+      const [h, m] = endPart.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function getDayLastMinutes(courses) {
+      if (!courses || courses.length === 0) return 0;
+      let maxM = 0;
+      courses.forEach(c => {
+        const m = parseEndMinutes(c.time);
+        if (m > maxM) maxM = m;
+      });
+      return maxM;
+    }
+
+    // Construction d'une liste chronologique complète de tous les jours du semestre
+    function buildSemesterCalendar() {
+      const calendar = [];
+      weeksScreenData.forEach((w, wIdx) => {
+        const mon = semesterMondays[wIdx];
+        w.days.forEach((day, dIdx) => {
+          const dDate = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + dIdx);
+          calendar.push({
+            weekIndex: wIdx,
+            dayIndex: dIdx,
+            date: dDate,
+            courses: day.courses,
+            hasCourses: day.courses.length > 0,
+            lastMinutes: getDayLastMinutes(day.courses)
+          });
+        });
+      });
+      return calendar;
+    }
+
+    function isSameCalendarDay(d1, d2) {
+      return d1.getFullYear() === d2.getFullYear() &&
+             d1.getMonth() === d2.getMonth() &&
+             d1.getDate() === d2.getDate();
+    }
+
     function calculateTargetSchedule() {
       const now = new Date();
-      const currentDayOfWeek = now.getDay(); // 0 = Dimanche, 6 = Samedi, 1..5 = Lun..Ven
-      const isWeekend = (currentDayOfWeek === 0 || currentDayOfWeek === 6);
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const calendar = buildSemesterCalendar();
 
-      // Si c'est le week-end, on bascule vers le lundi de la semaine prochaine
-      let targetDate = new Date(now);
-      if (isWeekend) {
-        const daysToAdd = (currentDayOfWeek === 6) ? 2 : 1; // Samedi +2, Dimanche +1
-        targetDate.setDate(now.getDate() + daysToAdd);
-      }
+      // Vérifier si aujourd'hui est dans le calendrier des cours
+      const todayIndex = calendar.findIndex(item => isSameCalendarDay(item.date, now));
 
-      // Recherche de la semaine correspondant à la targetDate
-      let foundWeekIndex = 0;
-      const targetTimestamp = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()).getTime();
+      let targetItem = null;
+      let isFutureNextCourse = false;
+      let isTodayOngoing = false;
 
-      if (targetTimestamp < semesterMondays[0].getTime()) {
-        foundWeekIndex = 0;
-      } else if (targetTimestamp >= semesterMondays[semesterMondays.length - 1].getTime() + 7 * 86400000) {
-        foundWeekIndex = semesterMondays.length - 1;
+      if (todayIndex !== -1) {
+        const todayCal = calendar[todayIndex];
+        // Si aujourd'hui a des cours et que l'heure de fin n'est pas passée
+        if (todayCal.hasCourses && currentMinutes < todayCal.lastMinutes) {
+          targetItem = todayCal;
+          isTodayOngoing = true;
+        } else {
+          // La dernière heure est passée (ou journée sans cours) : chercher le PROCHAIN jour de cours !
+          isFutureNextCourse = true;
+          for (let i = todayIndex + 1; i < calendar.length; i++) {
+            if (calendar[i].hasCourses) {
+              targetItem = calendar[i];
+              break;
+            }
+          }
+          if (!targetItem) {
+            // Fin de semestre atteinte
+            targetItem = todayCal;
+          }
+        }
       } else {
-        for (let i = 0; i < semesterMondays.length; i++) {
-          const start = semesterMondays[i].getTime();
-          const nextStart = (i < semesterMondays.length - 1) ? semesterMondays[i + 1].getTime() : start + 7 * 86400000;
-          if (targetTimestamp >= start && targetTimestamp < nextStart) {
-            foundWeekIndex = i;
+        // En dehors des jours de cours prévus (week-end, vacances de Toussaint, etc.)
+        const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        for (let i = 0; i < calendar.length; i++) {
+          if (calendar[i].date.getTime() >= todayMidnight && calendar[i].hasCourses) {
+            targetItem = calendar[i];
+            isFutureNextCourse = true;
             break;
           }
         }
-      }
-
-      // Jour ciblé : 0 (Lun) si week-end, sinon 0..4 correspondant au jour de la semaine
-      let targetDayIndex = 0;
-      if (!isWeekend && currentDayOfWeek >= 1 && currentDayOfWeek <= 5) {
-        targetDayIndex = currentDayOfWeek - 1;
+        if (!targetItem) {
+          // Si avant le semestre ou après le semestre
+          targetItem = (todayMidnight < calendar[0].date.getTime()) ? calendar[0] : calendar[calendar.length - 1];
+        }
       }
 
       return {
-        weekIndex: foundWeekIndex,
-        dayIndex: targetDayIndex,
-        isWeekend: isWeekend,
+        weekIndex: targetItem.weekIndex,
+        dayIndex: targetItem.dayIndex,
+        targetDate: targetItem.date,
+        isFutureNextCourse: isFutureNextCourse,
+        isTodayOngoing: isTodayOngoing,
         realNow: now
       };
     }
 
     let currentScreenIndex = 0;
     let currentMobileDayFilter = 'all';
+    let globalActiveTarget = null;
 
     function setMobileDayFilter(filter, shouldScroll = true) {
       currentMobileDayFilter = filter;
@@ -2040,23 +2127,32 @@
       });
 
       if (shouldScroll && filter !== 'all') {
-        alignScrollToDay(filter);
+        scrollToSpecificDay(filter, true);
       }
     }
 
-    // Défilement automatique précis vers le jour ciblé
-    function alignScrollToDay(dayIdx) {
-      setTimeout(() => {
-        const col = document.querySelector(`.screen-col[data-day-index="${dayIdx}"]`);
-        if (col && !col.classList.contains('mobile-hidden-day')) {
-          const navOffset = 68; // Hauteur barre mobile sticky
-          const colTop = col.getBoundingClientRect().top + window.pageYOffset - navOffset;
-          window.scrollTo({
-            top: Math.max(0, colTop),
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
+    // Défilement automatique précis vers le jour sélectionné
+    function scrollToSpecificDay(dayIdx, smooth = false) {
+      const col = document.querySelector(`.screen-col[data-day-index="${dayIdx}"]`);
+      if (!col) return;
+
+      if (window.innerWidth <= 860) {
+        const tabs = document.getElementById('mobileDayTabs');
+        const offset = tabs ? (tabs.offsetHeight + 10) : 52;
+        const colTop = col.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({
+          top: Math.max(0, Math.round(colTop)),
+          behavior: smooth ? 'smooth' : 'auto'
+        });
+      } else {
+        const nav = document.querySelector('.nav-toolbar');
+        const navBottom = nav ? (nav.getBoundingClientRect().bottom + window.pageYOffset) : 0;
+        const colTop = col.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({
+          top: Math.max(0, Math.round(colTop - 20)),
+          behavior: smooth ? 'smooth' : 'auto'
+        });
+      }
     }
 
     const DAY_START_MINUTES = 8 * 60; // 8h00
@@ -2079,7 +2175,7 @@
       };
     }
 
-    function renderScreenTimetable(index, targetDayToHighlight = null) {
+    function renderScreenTimetable(index) {
       currentScreenIndex = index;
       const w = weeksScreenData[index];
 
@@ -2092,16 +2188,28 @@
       const grid = document.getElementById('screenWeekGrid');
       grid.innerHTML = '';
 
-      const targetInfo = calculateTargetSchedule();
-      const isCurrentActiveWeek = (targetInfo.weekIndex === index);
+      const targetInfo = globalActiveTarget || calculateTargetSchedule();
+      const isTargetWeek = (targetInfo.weekIndex === index);
+
+      // Adaptation du texte du bouton raccourci
+      const btnShortcut = document.getElementById('btnTodayShortcut');
+      if (btnShortcut) {
+        if (targetInfo.isTodayOngoing) {
+          btnShortcut.innerHTML = '🎯 Aujourd\'hui';
+          btnShortcut.title = 'Revenir à la journée en cours';
+        } else {
+          btnShortcut.innerHTML = '🚀 Prochain cours';
+          btnShortcut.title = 'Aller directement au prochain cours programmé';
+        }
+      }
 
       w.days.forEach((day, dayIdx) => {
         const col = document.createElement('div');
         col.className = 'screen-col';
         col.dataset.dayIndex = dayIdx;
 
-        const isTodayCol = (isCurrentActiveWeek && targetInfo.dayIndex === dayIdx);
-        if (isTodayCol) {
+        const isTargetCol = (isTargetWeek && targetInfo.dayIndex === dayIdx);
+        if (isTargetCol) {
           col.classList.add('is-today');
         }
 
@@ -2144,10 +2252,10 @@
           }).join('');
         }
 
-        let todayBadgeHtml = '';
-        if (isTodayCol) {
-          const tagTxt = targetInfo.isWeekend ? '🚀 Lundi prochain' : '📍 Aujourd\'hui';
-          todayBadgeHtml = `<span class="today-pill-indicator">${tagTxt}</span>`;
+        let indicatorHtml = '';
+        if (isTargetCol) {
+          const tagTxt = targetInfo.isTodayOngoing ? '📍 Aujourd\'hui' : '🚀 Prochain cours';
+          indicatorHtml = `<span class="today-pill-indicator">${tagTxt}</span>`;
         }
 
         col.innerHTML = `
@@ -2155,7 +2263,7 @@
             <div>
               <div class="col-day-name">${day.name}</div>
               <div class="col-day-date">${day.date}</div>
-              ${todayBadgeHtml}
+              ${indicatorHtml}
             </div>
             <span class="${badgeClass}">${badgeLabel}</span>
           </div>
@@ -2166,10 +2274,10 @@
         grid.appendChild(col);
       });
 
-      // Mettre en surbrillance l'onglet mobile du jour s'il s'agit de la semaine actuelle
+      // Onglets mobiles
       document.querySelectorAll('.mobile-day-tab').forEach(tab => {
         const d = tab.dataset.day;
-        tab.classList.toggle('tab-today', isCurrentActiveWeek && String(d) === String(targetInfo.dayIndex));
+        tab.classList.toggle('tab-today', isTargetWeek && String(d) === String(targetInfo.dayIndex));
       });
     }
 
@@ -2178,23 +2286,21 @@
       if (nextIndex >= 0 && nextIndex < weeksScreenData.length) {
         renderScreenTimetable(nextIndex);
         if (window.innerWidth <= 860 && currentMobileDayFilter !== 'all') {
-          alignScrollToDay(currentMobileDayFilter);
+          scrollToSpecificDay(currentMobileDayFilter, false);
         }
       }
     }
 
-    // Bouton de raccourci immédiat vers le jour courant
-    function jumpToCurrentDay() {
-      const target = calculateTargetSchedule();
-      renderScreenTimetable(target.weekIndex);
+    // Raccourci immédiat vers le cours actif
+    function jumpToCurrentDay(smooth = true) {
+      globalActiveTarget = calculateTargetSchedule();
+      renderScreenTimetable(globalActiveTarget.weekIndex);
 
       if (window.innerWidth <= 860) {
-        setMobileDayFilter(target.dayIndex, true);
+        setMobileDayFilter(globalActiveTarget.dayIndex, false);
+        scrollToSpecificDay(globalActiveTarget.dayIndex, smooth);
       } else {
-        const targetCol = document.querySelector(`.screen-col[data-day-index="${target.dayIndex}"]`);
-        if (targetCol) {
-          targetCol.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
+        scrollToSpecificDay(globalActiveTarget.dayIndex, smooth);
       }
     }
 
@@ -2230,21 +2336,37 @@
     }, { passive: true });
 
     /* ========================================================
-       DÉMARRAGE AUTOMATIQUE AU CHARGEMENT DE LA PAGE
+       CHARGEMENT ET SCROLL AUTOMATIQUE DIRECT
        ======================================================== */
-    window.addEventListener('DOMContentLoaded', () => {
+    function initializeScheduleWithDirectScroll() {
       initTheme();
 
-      // 1. Détection de la bonne semaine et du jour cible (avec gestion week-end)
-      const target = calculateTargetSchedule();
-      renderScreenTimetable(target.weekIndex);
+      // 1. Calcul du jour ciblé (avec bascule automatique après dernière heure)
+      globalActiveTarget = calculateTargetSchedule();
+      renderScreenTimetable(globalActiveTarget.weekIndex);
 
-      // 2. Sur mobile : sélection directe du jour actuel et alignement
+      // 2. Définition du filtre mobile sur le bon jour
       if (window.innerWidth <= 860) {
-        setMobileDayFilter(target.dayIndex, false);
-        window.addEventListener('load', () => {
-          alignScrollToDay(target.dayIndex);
-        });
+        setMobileDayFilter(globalActiveTarget.dayIndex, false);
+      }
+
+      // 3. Défilement immédiat et verrouillé sur le jour
+      scrollToSpecificDay(globalActiveTarget.dayIndex, false);
+
+      requestAnimationFrame(() => {
+        scrollToSpecificDay(globalActiveTarget.dayIndex, false);
+      });
+
+      // Sécurité après rendu complet des polices
+      setTimeout(() => {
+        scrollToSpecificDay(globalActiveTarget.dayIndex, false);
+      }, 120);
+    }
+
+    window.addEventListener('DOMContentLoaded', initializeScheduleWithDirectScroll);
+    window.addEventListener('load', () => {
+      if (globalActiveTarget) {
+        scrollToSpecificDay(globalActiveTarget.dayIndex, false);
       }
     });
   </script>
