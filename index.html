@@ -1,2374 +1,1234 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Emploi du temps - L2 MIASHS (Cédric JEAN-BAPTISTE)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-body: #f8fafc;
-      --bg-surface: #ffffff;
-      --bg-subtle: #f1f5f9;
-      --text-dark: #0f172a;
-      --text-muted: #64748b;
-      --border-color: #cbd5e1;
-      --border-strong: #94a3b8;
-      --grid-line: #e2e8f0;
-
-      /* Codes couleurs matières */
-      --c-maths: #1d4ed8;
-      --c-maths-bg: #eff6ff;
-      --c-info: #0284c7;
-      --c-info-bg: #f0f9ff;
-      --c-micro: #059669;
-      --c-micro-bg: #ecfdf5;
-      --c-macro: #0f766e;
-      --c-macro-bg: #f0fdfa;
-      --c-socio: #7c3aed;
-      --c-socio-bg: #f5f3ff;
-      --c-anglais: #b45309;
-      --c-anglais-bg: #fffbeb;
-
-      --card-border: #cbd5e1;
-      --today-glow: #2563eb;
-      --today-bg-tag: #dbeafe;
-      --today-color-tag: #1e40af;
-    }
-
-    /* ========================================================
-       VARIABLES DU DARK MODE
-       ======================================================== */
-    [data-theme="dark"] {
-      --bg-body: #090d16;
-      --bg-surface: #131b2e;
-      --bg-subtle: #1c2740;
-      --text-dark: #f1f5f9;
-      --text-muted: #94a3b8;
-      --border-color: #263554;
-      --border-strong: #3b4e75;
-      --grid-line: #1c2740;
-
-      /* Teintes matières adaptées pour fond sombre */
-      --c-maths: #3b82f6;
-      --c-maths-bg: #132247;
-      --c-info: #38bdf8;
-      --c-info-bg: #0f2c44;
-      --c-micro: #10b981;
-      --c-micro-bg: #0f3529;
-      --c-macro: #14b8a6;
-      --c-macro-bg: #0d3434;
-      --c-socio: #a855f7;
-      --c-socio-bg: #271847;
-      --c-anglais: #f59e0b;
-      --c-anglais-bg: #3b2509;
-
-      --card-border: #2c3e66;
-      --today-glow: #60a5fa;
-      --today-bg-tag: #1e3a8a;
-      --today-color-tag: #bfdbfe;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
-    }
-
-    body {
-      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-      background-color: var(--bg-body);
-      color: var(--text-dark);
-      padding: 20px;
-    }
-
-    .app-container {
-      max-width: 1360px;
-      margin: 0 auto;
-    }
-
-    /* ========================================================
-       1. AFFICHAGE ÉCRAN (ORDINATEUR & MOBILE)
-       ======================================================== */
-    .screen-header {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      color: white;
-      padding: 22px 28px;
-      border-radius: 14px;
-      margin-bottom: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-      border: 1px solid var(--border-color);
-    }
-
-    [data-theme="dark"] .screen-header {
-      background: linear-gradient(135deg, #141c2e 0%, #090e1a 100%);
-      border-color: #23314f;
-    }
-
-    .screen-header h1 {
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    .screen-header p {
-      color: #94a3b8;
-      font-size: 0.86rem;
-    }
-
-    .header-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .badge {
-      font-size: 0.76rem;
-      font-weight: 600;
-      padding: 5px 11px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #f8fafc;
-      white-space: nowrap;
-    }
-    .badge-td1 {
-      background: #b45309;
-      border-color: #f59e0b;
-      font-weight: 800;
-    }
-    .badge-td2 {
-      background: #1d4ed8;
-      border-color: #60a5fa;
-      font-weight: 800;
-    }
-    .badge-id {
-      background: #334155;
-      border-color: #475569;
-      font-weight: 800;
-    }
-
-    /* LÉGENDE PÉDAGOGIQUE */
-    .legend-toolbar {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px 18px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-      font-size: 0.8rem;
-      color: var(--text-dark);
-    }
-    .legend-title {
-      font-weight: 800;
-      color: var(--text-dark);
-    }
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-    .dot-perso { background: #2563eb; }
-    .dot-reuni { background: #7c3aed; }
-    .dot-cm { background: #0f766e; }
-
-    /* BARRE DE NAVIGATION */
-    .nav-toolbar {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 12px 18px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-
-    .nav-btn {
-      background: var(--bg-subtle);
-      color: var(--text-dark);
-      border: 1px solid var(--border-color);
-      padding: 9px 15px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-    .nav-btn:hover:not(:disabled) {
-      background: #2563eb;
-      color: white;
-      border-color: #2563eb;
-      transform: translateY(-1px);
-    }
-    .nav-btn:disabled {
-      background: var(--bg-subtle);
-      color: var(--text-muted);
-      border-color: var(--border-color);
-      cursor: not-allowed;
-      opacity: 0.6;
-      transform: none;
-    }
-
-    .nav-btn-today {
-      background: #eff6ff;
-      border-color: #bfdbfe;
-      color: #1d4ed8;
-      font-weight: 800;
-    }
-    [data-theme="dark"] .nav-btn-today {
-      background: #172554;
-      border-color: #1e40af;
-      color: #93c5fd;
-    }
-    .nav-btn-today:hover {
-      background: #2563eb !important;
-      color: white !important;
-    }
-
-    .theme-toggle-btn {
-      background: var(--bg-subtle);
-      color: var(--text-dark);
-      border: 1px solid var(--border-color);
-      padding: 9px 13px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-    }
-    .theme-toggle-btn:hover {
-      border-color: var(--text-muted);
-    }
-
-    .nav-center {
-      text-align: center;
-    }
-    .nav-title {
-      font-size: 1.18rem;
-      font-weight: 800;
-    }
-    .nav-subtitle {
-      font-size: 0.83rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .print-trigger-btn {
-      background: #15803d;
-      color: white;
-      border: none;
-      padding: 9px 15px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 800;
-      cursor: pointer;
-      font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(21, 128, 61, 0.25);
-    }
-    .print-trigger-btn:hover {
-      background: #166534;
-    }
-
-    .mobile-day-tabs {
-      display: none;
-    }
-
-    /* GRILLE HEBDOMADAIRE */
-    .screen-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-      touch-action: pan-y;
-    }
-
-    .screen-col {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      min-height: 500px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-      position: relative;
-    }
-
-    /* Mise en évidence du jour actif */
-    .screen-col.is-today {
-      border: 2px solid var(--today-glow) !important;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18), 0 4px 14px rgba(0,0,0,0.08);
-    }
-
-    .screen-col-header {
-      background: var(--bg-subtle);
-      border-bottom: 1px solid var(--border-color);
-      padding: 13px 12px;
-      text-align: center;
-    }
-    .col-day-name {
-      font-weight: 800;
-      font-size: 0.95rem;
-    }
-    .col-day-date {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .col-day-badge {
-      display: none;
-    }
-
-    .today-pill-indicator {
-      display: inline-block;
-      margin-top: 4px;
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: var(--today-bg-tag);
-      color: var(--today-color-tag);
-      border: 1px solid var(--today-glow);
-    }
-
-    /* Échelle horaire sur bureau */
-    .screen-col-body {
-      position: relative;
-      flex-grow: 1;
-      min-height: 700px;
-      background-image: repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent 59px,
-        var(--grid-line) 59px,
-        var(--grid-line) 60px
-      );
-      background-position: 0 12px;
-    }
-
-    .screen-col-body .screen-card {
-      position: absolute;
-      left: 10px;
-      right: 10px;
-      overflow: hidden;
-    }
-
-    .screen-card {
-      padding: 7px 10px;
-      border-radius: 8px;
-      border-left: 4px solid var(--card-border);
-      border-top: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.82rem;
-      display: flex;
-      flex-direction: column;
-      gap: 3px; 
-      background: var(--bg-surface);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-    .screen-card.maths { border-left-color: var(--c-maths); background: var(--c-maths-bg); }
-    .screen-card.info { border-left-color: var(--c-info); background: var(--c-info-bg); }
-    .screen-card.micro { border-left-color: var(--c-micro); background: var(--c-micro-bg); }
-    .screen-card.macro { border-left-color: var(--c-macro); background: var(--c-macro-bg); }
-    .screen-card.socio { border-left-color: var(--c-socio); background: var(--c-socio-bg); }
-    .screen-card.anglais { border-left-color: var(--c-anglais); background: var(--c-anglais-bg); }
-
-    .card-time-row {
-      font-weight: 800;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--text-dark);
-      font-size: 0.78rem;
-    }
-    .card-title-text {
-      font-weight: 700;
-      font-size: 0.87rem;
-      color: var(--text-dark);
-      line-height: 1.25;
-    }
-    .card-meta-text {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-    .card-tag-pill {
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      width: fit-content;
-      margin-top: 2px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .pill-perso { color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; }
-    .pill-reuni { color: #6d28d9; border-color: #ddd6fe; background: #f5f3ff; }
-    .pill-cm { color: #0f766e; border-color: #99f6e4; background: #f0fdfa; }
-
-    [data-theme="dark"] .pill-perso { color: #93c5fd; border-color: #1e40af; background: #172554; }
-    [data-theme="dark"] .pill-reuni { color: #d8b4fe; border-color: #5b21b6; background: #2e1065; }
-    [data-theme="dark"] .pill-cm { color: #99f6e4; border-color: #115e59; background: #042f2e; }
-
-    .screen-empty-day {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-style: italic;
-      font-size: 0.85rem;
-      height: 100%;
-      min-height: 120px;
-      text-align: center;
-      padding: 20px;
-    }
-
-    /* ========================================================
-       ADAPTATION SMARTPHONE (TACTILE & AUTO-SCROLL)
-       ======================================================== */
-    @media screen and (max-width: 860px) {
-      body {
-        padding: 10px 10px 32px 10px;
-      }
-
-      .screen-header {
-        padding: 14px 16px;
-        border-radius: 12px;
-        margin-bottom: 10px;
-        gap: 10px;
-      }
-      .screen-header h1 {
-        font-size: 1.15rem;
-      }
-      .screen-header p {
-        font-size: 0.76rem;
-      }
-
-      .header-badges {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        gap: 6px;
-        width: 100%;
-        padding-bottom: 4px;
-        scrollbar-width: none;
-      }
-      .header-badges::-webkit-scrollbar {
-        display: none;
-      }
-      .badge {
-        font-size: 0.71rem;
-        padding: 4px 9px;
-        flex-shrink: 0;
-      }
-
-      .legend-toolbar {
-        padding: 8px 12px;
-        font-size: 0.74rem;
-        gap: 8px;
-        margin-bottom: 10px;
-      }
-
-      .nav-toolbar {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-          "center center"
-          "prev   next"
-          "today  theme"
-          "print  print";
-        padding: 12px;
-        gap: 8px;
-        margin-bottom: 10px;
-      }
-
-      .nav-center {
-        grid-area: center;
-        margin-bottom: 4px;
-      }
-      .nav-title {
-        font-size: 1.05rem;
-      }
-      .nav-subtitle {
-        font-size: 0.78rem;
-      }
-
-      #btnPrevWeek {
-        grid-area: prev;
-        width: 100%;
-      }
-      #btnNextWeek {
-        grid-area: next;
-        width: 100%;
-      }
-
-      .nav-actions {
-        display: contents;
-      }
-
-      #btnTodayShortcut {
-        grid-area: today;
-        width: 100%;
-      }
-      #themeToggleBtn {
-        grid-area: theme;
-        width: 100%;
-      }
-      .print-trigger-btn {
-        grid-area: print;
-        width: 100%;
-        margin-top: 2px;
-      }
-
-      .mobile-day-tabs {
-        display: flex;
-        gap: 5px;
-        margin-bottom: 12px;
-        position: sticky;
-        top: 6px;
-        z-index: 40;
-        background: var(--bg-body);
-        padding: 6px 0;
-      }
-
-      .mobile-day-tab {
-        flex: 1;
-        padding: 8px 2px;
-        background: var(--bg-surface);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        cursor: pointer;
-        text-align: center;
-        font-family: inherit;
-        transition: all 0.15s ease;
-      }
-
-      .mobile-day-tab.active {
-        background: #2563eb;
-        color: #ffffff;
-        border-color: #2563eb;
-        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-      }
-
-      .mobile-day-tab.tab-today:not(.active) {
-        border-color: var(--today-glow);
-        color: var(--today-glow);
-        font-weight: 800;
-      }
-
-      .screen-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        margin-bottom: 16px;
-      }
-
-      .screen-col {
-        min-height: auto;
-        border-radius: 10px;
-        scroll-margin-top: 65px;
-      }
-
-      .screen-col.mobile-hidden-day {
-        display: none !important;
-      }
-
-      .screen-col-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        text-align: left;
-        padding: 11px 14px;
-      }
-
-      .col-day-badge {
-        display: inline-block;
-        font-size: 0.72rem;
-        font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 999px;
-        background: var(--bg-subtle);
-        color: var(--text-muted);
-        border: 1px solid var(--border-color);
-      }
-      .col-day-badge.active-courses {
-        background: var(--c-maths-bg);
-        color: var(--c-maths);
-        border-color: var(--border-color);
-      }
-
-      .screen-col-body {
-        position: static;
-        min-height: auto;
-        padding: 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        background: none;
-      }
-
-      .screen-col-body .screen-card {
-        position: static;
-        height: auto !important;
-      }
-    }
-
-    /* ========================================================
-       2. IMPRESSION RECTO-VERSO (STRICTEMENT BLANC ET NOIR SUR 2 PAGES)
-       ======================================================== */
-    #printTwoPagesMaster {
-      display: none;
-    }
-
-    @media print {
-      @page {
-        size: A4 landscape;
-        margin: 4mm 5mm;
-      }
-
-      *, *::before, *::after {
-        box-sizing: border-box !important;
-      }
-
-      html, body {
-        background: #ffffff !important;
-        color: #000000 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100% !important;
-        height: auto !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-
-      .screen-header, .legend-toolbar, .nav-toolbar, .mobile-day-tabs, .screen-grid {
-        display: none !important;
-      }
-
-      #printTwoPagesMaster {
-        display: block !important;
-        width: 100% !important;
-        height: auto !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-
-      .print-page-sheet {
-        box-sizing: border-box !important;
-        width: 100% !important;
-        height: 196mm !important;
-        max-height: 197mm !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: space-between !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        overflow: visible !important;
-      }
-
-      .page-one {
-        page-break-after: always !important;
-        break-after: page !important;
-      }
-      .page-two {
-        page-break-before: always !important;
-        break-before: page !important;
-        page-break-after: avoid !important;
-        break-after: avoid !important;
-      }
-
-      .p-head {
-        border-bottom: 2px solid #0f172a;
-        padding-bottom: 2px;
-        margin-bottom: 3px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        height: 11mm;
-        flex-shrink: 0;
-      }
-      .p-head h2 {
-        font-size: 10.2pt !important;
-        font-weight: 800;
-        text-transform: uppercase;
-        color: #0f172a !important;
-        margin: 0;
-      }
-      .p-head p {
-        font-size: 7.9pt !important;
-        color: #334155 !important;
-        font-weight: 600;
-        margin: 1px 0 0 0;
-      }
-      .p-badges {
-        font-size: 7.2pt !important;
-        font-weight: 700;
-        background: #f1f5f9 !important;
-        border: 1px solid #64748b !important;
-        padding: 2px 6px;
-        border-radius: 4px;
-        color: #0f172a !important;
-        white-space: nowrap;
-      }
-
-      .p-table {
-        width: 100% !important;
-        height: calc(100% - 13mm) !important;
-        border-collapse: collapse !important;
-        table-layout: fixed !important;
-        margin: 0 !important;
-      }
-
-      .p-table th {
-        background: #0f172a !important;
-        color: white !important;
-        text-transform: uppercase;
-        font-weight: 800;
-        padding: 2px 4px;
-        border: 1px solid #0f172a !important;
-        font-size: 8.5pt !important;
-        text-align: center;
-        height: 6mm;
-      }
-
-      .p-table td {
-        border: 1px solid #94a3b8 !important;
-        padding: 2px 3.5px;
-        vertical-align: middle;
-        background: #ffffff !important;
-        color: #000000 !important;
-      }
-
-      .th-sem { width: 9%; }
-      .th-lun { width: 21%; }
-      .th-mar { width: 19%; }
-      .th-mer { width: 21%; }
-      .th-jeu { width: 19%; }
-      .th-ven { width: 11%; }
-
-      .p-sem-col {
-        text-align: center;
-        background: #f8fafc !important;
-      }
-      .p-sem-name {
-        font-size: 8.8pt !important;
-        font-weight: 800;
-        display: block;
-        color: #0f172a !important;
-        line-height: 1.15;
-      }
-      .p-sem-dates {
-        font-size: 7.4pt !important;
-        font-weight: 700;
-        color: #334155 !important;
-        display: block;
-        margin-top: 1px;
-      }
-
-      .p-item {
-        display: block;
-        padding: 1.5px 3.5px;
-        margin-bottom: 2px;
-        border-radius: 3px;
-        border-left: 3.5px solid #94a3b8;
-        font-size: 7.8pt !important;
-        line-height: 1.18;
-      }
-      .p-item:last-child { margin-bottom: 0; }
-
-      .p-item.maths { border-left-color: #1d4ed8 !important; background: #eff6ff !important; }
-      .p-item.info { border-left-color: #0284c7 !important; background: #f0f9ff !important; }
-      .p-item.micro { border-left-color: #059669 !important; background: #ecfdf5 !important; }
-      .p-item.macro { border-left-color: #0f766e !important; background: #f0fdfa !important; }
-      .p-item.socio { border-left-color: #7c3aed !important; background: #f5f3ff !important; }
-      .p-item.anglais { border-left-color: #b45309 !important; background: #fffbeb !important; }
-
-      .p-time {
-        font-weight: 800;
-        font-size: 8pt !important;
-        color: #0f172a !important;
-        margin-right: 2px;
-      }
-      .p-title {
-        font-weight: 700;
-        font-size: 7.8pt !important;
-        color: #0f172a !important;
-      }
-      .p-room {
-        font-size: 7.3pt !important;
-        font-weight: 600;
-        color: #334155 !important;
-      }
-      .p-grp {
-        font-size: 6.9pt !important;
-        font-weight: 800;
-        text-transform: uppercase;
-        background: rgba(0,0,0,0.07) !important;
-        padding: 1px 3px;
-        border-radius: 3px;
-      }
-      .p-grp-perso {
-        background: #dbeafe !important;
-        color: #1e40af !important;
-      }
-      .p-grp-reuni {
-        background: #ede9fe !important;
-        color: #5b21b6 !important;
-      }
-
-      .p-macro-highlight {
-        border: 1.2px dashed #0f766e !important;
-        border-left: 4px solid #0f766e !important;
-        background: #ccfbf1 !important;
-        padding: 2px 3.5px !important;
-      }
-
-      .p-fixed-group-card {
-        background: #f8fafc !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 5px;
-        padding: 3px 4px;
-      }
-      .p-fixed-badge-title {
-        font-size: 7pt;
-        font-weight: 800;
-        text-transform: uppercase;
-        color: #1e293b !important;
-        letter-spacing: 0.3px;
-        margin-bottom: 2px;
-        border-bottom: 1px solid #cbd5e1 !important;
-        padding-bottom: 1px;
-        text-align: center;
-      }
-
-      .p-empty {
-        color: #94a3b8 !important;
-        text-align: center;
-        font-style: italic;
-        font-size: 7.5pt;
-      }
-
-      .p-alert-box {
-        background: #fef2f2 !important;
-        border: 1.5px solid #f87171 !important;
-        color: #991b1b !important;
-        font-weight: 800;
-        text-align: center;
-        padding: 5px 3px;
-        border-radius: 4px;
-        font-size: 7.9pt !important;
-        line-height: 1.25;
-      }
-
-      .p-libere-box {
-        background: #f0fdf4 !important;
-        border: 1.5px dashed #16a34a !important;
-        color: #166534 !important;
-        text-align: center;
-        font-weight: 800;
-        font-size: 7.9pt !important;
-        padding: 4px 3px;
-        border-radius: 5px;
-        line-height: 1.25;
-      }
-
-      .p-vacances-row {
-        background: #fef3c7 !important;
-        text-align: center;
-        font-weight: 800;
-        color: #92400e !important;
-        padding: 3.5px !important;
-        font-size: 8pt !important;
-        border: 1.5px solid #f59e0b !important;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Emploi du temps - L2 MIASHS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --body:#f8fafc;--surface:#fff;--subtle:#f1f5f9;
+  --text:#0f172a;--muted:#64748b;--border:#cbd5e1;--grid:#e2e8f0;
+  --maths:#1d4ed8;--maths-bg:#eff6ff;
+  --info:#0284c7;--info-bg:#f0f9ff;
+  --micro:#059669;--micro-bg:#ecfdf5;
+  --macro:#0f766e;--macro-bg:#f0fdfa;
+  --socio:#7c3aed;--socio-bg:#f5f3ff;
+  --anglais:#b45309;--anglais-bg:#fffbeb;
+  --today:#2563eb;--today-bg:#dbeafe;--today-text:#1e40af
+}
+[data-theme=dark]{
+  --body:#090d16;--surface:#131b2e;--subtle:#1c2740;
+  --text:#f1f5f9;--muted:#94a3b8;--border:#2c3e66;--grid:#1c2740;
+  --maths:#3b82f6;--maths-bg:#132247;
+  --info:#38bdf8;--info-bg:#0f2c44;
+  --micro:#10b981;--micro-bg:#0f3529;
+  --macro:#14b8a6;--macro-bg:#0d3434;
+  --socio:#a855f7;--socio-bg:#271847;
+  --anglais:#f59e0b;--anglais-bg:#3b2509;
+  --today:#60a5fa;--today-bg:#1e3a8a;--today-text:#bfdbfe
+}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+  transition:background-color .25s,border-color .25s,color .2s
+}
+body{
+  padding:20px;
+  color:var(--text);
+  background:var(--body);
+  font-family:"Plus Jakarta Sans",Arial,sans-serif
+}
+button{font:inherit}
+.app{max-width:1360px;margin:auto}
+
+.header{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:22px 28px;
+  margin-bottom:16px;
+  color:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:linear-gradient(135deg,#1e293b,#0f172a);
+  box-shadow:0 4px 14px #0003
+}
+[data-theme=dark] .header{
+  background:linear-gradient(135deg,#141c2e,#090e1a);
+  border-color:#23314f
+}
+.header h1{font-size:1.35rem;font-weight:800;letter-spacing:-.5px}
+.header p{margin-top:3px;color:#94a3b8;font-size:.86rem}
+.badges{display:flex;flex-wrap:wrap;gap:8px}
+.badge{
+  padding:5px 11px;
+  color:#f8fafc;
+  white-space:nowrap;
+  font-size:.76rem;
+  font-weight:700;
+  border:1px solid #fff3;
+  border-radius:999px;
+  background:#ffffff1f
+}
+.badge.orange{background:#b45309;border-color:#f59e0b}
+.badge.blue{background:#1d4ed8;border-color:#60a5fa}
+
+.legend,.nav{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:14px;
+  margin-bottom:16px;
+  padding:10px 18px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface)
+}
+.legend{font-size:.8rem}
+.legend-title{font-weight:800}
+.legend-item{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%}
+.perso-dot{background:#2563eb}
+.reuni-dot{background:#7c3aed}
+.cm-dot{background:#0f766e}
+
+.nav{
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 18px;
+  margin-bottom:20px;
+  border-radius:12px;
+  box-shadow:0 1px 4px #0001
+}
+.nav-center{text-align:center}
+.nav-title{font-size:1.18rem;font-weight:800}
+.nav-subtitle{margin-top:2px;color:var(--muted);font-size:.83rem}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:9px 15px;
+  color:var(--text);
+  font-size:.88rem;
+  font-weight:700;
+  cursor:pointer;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--subtle)
+}
+.btn:hover:not(:disabled){
+  color:#fff;
+  border-color:#2563eb;
+  background:#2563eb;
+  transform:translateY(-1px)
+}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.today-btn{color:#1d4ed8;border-color:#bfdbfe;background:#eff6ff}
+[data-theme=dark] .today-btn{
+  color:#93c5fd;
+  border-color:#1e40af;
+  background:#172554
+}
+.print-btn{
+  color:#fff;
+  font-weight:800;
+  border-color:#15803d;
+  background:#15803d;
+  box-shadow:0 2px 6px #15803d40
+}
+.print-btn:hover{border-color:#166534!important;background:#166534!important}
+.mobile-tabs{display:none}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(220px,1fr));
+  gap:16px;
+  margin-bottom:24px;
+  touch-action:pan-y
+}
+.day{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-height:500px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--surface);
+  box-shadow:0 1px 4px #0001
+}
+.day.target{
+  border:2px solid var(--today);
+  box-shadow:0 0 0 3px #2563eb2e,0 4px 14px #0001
+}
+.day-head{
+  padding:13px 12px;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  background:var(--subtle)
+}
+.day-name{font-size:.95rem;font-weight:800}
+.day-date{margin-top:2px;color:var(--muted);font-size:.8rem}
+.day-count{display:none}
+.target-pill{
+  display:inline-block;
+  margin-top:4px;
+  padding:2px 8px;
+  color:var(--today-text);
+  font-size:.72rem;
+  font-weight:800;
+  border:1px solid var(--today);
+  border-radius:999px;
+  background:var(--today-bg)
+}
+.day-body{
+  position:relative;
+  flex-grow:1;
+  min-height:700px;
+  background-image:repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 59px,
+    var(--grid) 59px,
+    var(--grid) 60px
+  );
+  background-position:0 12px
+}
+.card{
+  position:absolute;
+  left:10px;
+  right:10px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  overflow:hidden;
+  padding:7px 10px;
+  font-size:.82rem;
+  border:1px solid var(--border);
+  border-left:4px solid var(--border);
+  border-radius:8px;
+  background:var(--surface);
+  box-shadow:0 1px 3px #0001
+}
+.card.maths{border-left-color:var(--maths);background:var(--maths-bg)}
+.card.info{border-left-color:var(--info);background:var(--info-bg)}
+.card.micro{border-left-color:var(--micro);background:var(--micro-bg)}
+.card.macro{border-left-color:var(--macro);background:var(--macro-bg)}
+.card.socio{border-left-color:var(--socio);background:var(--socio-bg)}
+.card.anglais{border-left-color:var(--anglais);background:var(--anglais-bg)}
+.card-time{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:var(--text);
+  font-size:.78rem;
+  font-weight:800
+}
+.card-title{color:var(--text);font-size:.87rem;font-weight:700;line-height:1.25}
+.card-room{color:var(--muted);font-size:.75rem}
+.card-tag{
+  display:inline-flex;
+  align-items:center;
+  width:fit-content;
+  margin-top:2px;
+  padding:2px 6px;
+  font-size:.7rem;
+  font-weight:700;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:var(--surface)
+}
+.perso{color:#1d4ed8;border-color:#bfdbfe;background:#eff6ff}
+.reuni{color:#6d28d9;border-color:#ddd6fe;background:#f5f3ff}
+.cm{color:#0f766e;border-color:#99f6e4;background:#f0fdfa}
+[data-theme=dark] .perso{color:#93c5fd;border-color:#1e40af;background:#172554}
+[data-theme=dark] .reuni{color:#d8b4fe;border-color:#5b21b6;background:#2e1065}
+[data-theme=dark] .cm{color:#99f6e4;border-color:#115e59;background:#042f2e}
+.empty{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  min-height:120px;
+  padding:20px;
+  color:var(--muted);
+  text-align:center;
+  font-size:.85rem;
+  font-style:italic
+}
+#print{display:none}
+
+@media(max-width:860px){
+  body{padding:10px 10px 32px}
+  .header{gap:10px;padding:14px 16px;margin-bottom:10px;border-radius:12px}
+  .header h1{font-size:1.15rem}
+  .header p{font-size:.76rem}
+  .badges{
+    width:100%;
+    flex-wrap:nowrap;
+    gap:6px;
+    padding-bottom:4px;
+    overflow-x:auto;
+    scrollbar-width:none
+  }
+  .badges::-webkit-scrollbar{display:none}
+  .badge{flex-shrink:0;padding:4px 9px;font-size:.71rem}
+  .legend{gap:8px;padding:8px 12px;margin-bottom:10px;font-size:.74rem}
+  .nav{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-areas:
+      "center center"
+      "prev next"
+      "today theme"
+      "print print";
+    gap:8px;
+    padding:12px;
+    margin-bottom:10px
+  }
+  .nav-center{grid-area:center;margin-bottom:4px}
+  .nav-title{font-size:1.05rem}
+  .nav-subtitle{font-size:.78rem}
+  #prev{grid-area:prev}
+  #next{grid-area:next}
+  .actions{display:contents}
+  #today{grid-area:today}
+  #theme{grid-area:theme}
+  .print-btn{grid-area:print}
+  .btn{width:100%}
+  .mobile-tabs{
+    position:sticky;
+    top:6px;
+    z-index:40;
+    display:flex;
+    gap:5px;
+    margin-bottom:12px;
+    padding:6px 0;
+    background:var(--body)
+  }
+  .tab{
+    flex:1;
+    padding:8px 2px;
+    color:var(--text);
+    font-size:.8rem;
+    font-weight:700;
+    cursor:pointer;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:var(--surface)
+  }
+  .tab.active{
+    color:#fff;
+    border-color:#2563eb;
+    background:#2563eb;
+    box-shadow:0 2px 6px #2563eb4d
+  }
+  .tab.current:not(.active){color:var(--today);border-color:var(--today)}
+  .grid{grid-template-columns:1fr;gap:12px;margin-bottom:16px}
+  .day{min-height:auto;border-radius:10px;scroll-margin-top:65px}
+  .day.hidden{display:none}
+  .day-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:11px 14px;
+    text-align:left
+  }
+  .day-count{
+    display:inline-block;
+    padding:3px 8px;
+    color:var(--muted);
+    font-size:.72rem;
+    font-weight:700;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--subtle)
+  }
+  .day-count.has{color:var(--maths);background:var(--maths-bg)}
+  .day-body{
+    position:static;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    min-height:auto;
+    padding:12px;
+    background:none
+  }
+  .card{position:static;height:auto!important}
+}
+
+@media print{
+  @page{size:A4 landscape;margin:4mm 5mm}
+  *{box-sizing:border-box!important}
+  html,body{
+    width:100%!important;
+    margin:0!important;
+    padding:0!important;
+    color:#000!important;
+    background:#fff!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important
+  }
+  .app{display:none!important}
+  #print{display:block!important}
+  .print-page{
+    display:flex!important;
+    flex-direction:column;
+    width:100%;
+    height:196mm;
+    overflow:hidden;
+    page-break-inside:avoid;
+    break-inside:avoid
+  }
+  .print-page:first-child{
+    page-break-after:always;
+    break-after:page
+  }
+  .print-head{
+    display:flex;
+    flex-shrink:0;
+    align-items:flex-end;
+    justify-content:space-between;
+    height:11mm;
+    margin-bottom:2mm;
+    padding-bottom:2px;
+    border-bottom:2px solid #0f172a
+  }
+  .print-head h2{
+    color:#0f172a!important;
+    font-size:10pt;
+    font-weight:800;
+    text-transform:uppercase
+  }
+  .print-head p{
+    margin-top:1px;
+    color:#334155!important;
+    font-size:7.5pt;
+    font-weight:600
+  }
+  .print-badge{
+    padding:2px 6px;
+    color:#0f172a!important;
+    white-space:nowrap;
+    font-size:6.8pt;
+    font-weight:700;
+    border:1px solid #64748b;
+    border-radius:4px;
+    background:#f1f5f9!important
+  }
+  .print-table{
+    width:100%;
+    height:181mm;
+    table-layout:fixed;
+    border-collapse:collapse
+  }
+  .print-table th{
+    height:6mm;
+    padding:2px;
+    color:#fff!important;
+    font-size:7.5pt;
+    font-weight:800;
+    text-transform:uppercase;
+    border:1px solid #0f172a;
+    background:#0f172a!important
+  }
+  .print-table th:first-child{width:9%}
+  .print-table td{
+    padding:1.5px 2px;
+    color:#000!important;
+    vertical-align:middle;
+    border:1px solid #94a3b8;
+    background:#fff!important
+  }
+  .print-week{
+    text-align:center;
+    background:#f8fafc!important
+  }
+  .print-week b{
+    display:block;
+    color:#0f172a!important;
+    font-size:7.2pt
+  }
+  .print-week span{
+    display:block;
+    margin-top:2px;
+    color:#334155!important;
+    font-size:6.3pt;
+    font-weight:700
+  }
+  .p-item{
+    display:block;
+    margin-bottom:1.5px;
+    padding:1.5px 2px;
+    color:#0f172a!important;
+    font-size:6.2pt;
+    line-height:1.12;
+    border-left:3px solid #94a3b8;
+    border-radius:2px
+  }
+  .p-item:last-child{margin-bottom:0}
+  .p-item.maths{border-left-color:#1d4ed8;background:#eff6ff!important}
+  .p-item.info{border-left-color:#0284c7;background:#f0f9ff!important}
+  .p-item.micro{border-left-color:#059669;background:#ecfdf5!important}
+  .p-item.macro{border-left-color:#0f766e;background:#f0fdfa!important}
+  .p-item.socio{border-left-color:#7c3aed;background:#f5f3ff!important}
+  .p-item.anglais{border-left-color:#b45309;background:#fffbeb!important}
+  .p-time{font-weight:800}
+  .p-type{font-weight:800;text-transform:uppercase}
+  .p-room{color:#334155!important;font-size:5.7pt;font-weight:600}
+  .p-empty{
+    color:#64748b!important;
+    text-align:center;
+    font-size:6.2pt;
+    font-style:italic
+  }
+  .p-alert{
+    padding:4px 2px;
+    color:#991b1b!important;
+    text-align:center;
+    font-size:6.4pt;
+    font-weight:800;
+    border:1px solid #f87171;
+    border-radius:3px;
+    background:#fef2f2!important
+  }
+}
+</style>
 </head>
+
 <body>
-
-  <div class="app-container">
-
-    <!-- EN-TÊTE ÉCRAN -->
-    <div class="screen-header">
-      <div>
-        <h1>📅 Emploi du temps S3 • Cédric JEAN-BAPTISTE</h1>
-        <p>L2 MIASHS • Université de Versailles Saint-Quentin (UVSQ) • Année 2026/2027</p>
-      </div>
-      <div class="header-badges">
-        <span class="badge badge-id">N° Étudiant : 22608239</span>
-        <span class="badge badge-td1">Anglais : <strong>Mar 8h & Mer 13h50</strong> • Macro/Socio : <strong>Promo réunie</strong></span>
-        <span class="badge badge-td2">TD 02 : <strong>Maths (Mer 9h40) • BDD (Jeu 13h50) • Micro (Lun 15h30)</strong></span>
-      </div>
+<main class="app">
+  <header class="header">
+    <div>
+      <h1>📅 Emploi du temps S3</h1>
+      <p>L2 MIASHS • Université de Versailles Saint-Quentin (UVSQ) • Année 2026/2027</p>
     </div>
 
-    <!-- LÉGENDE PÉDAGOGIQUE -->
-    <div class="legend-toolbar">
-      <span class="legend-title">Repères :</span>
-      <span class="legend-item"><span class="legend-dot dot-perso"></span> <strong>TD spécifique à votre groupe</strong> (Anglais TD1, Maths TD2, BDD TD2, Micro TD2)</span>
-      <span class="legend-item"><span class="legend-dot dot-reuni"></span> <strong>TD commun (Promo réunie)</strong> (Socio le lundi, Macro le mercredi)</span>
-      <span class="legend-item"><span class="legend-dot dot-cm"></span> <strong>CM</strong> (Promo entière)</span>
+    <div class="badges">
+      <span class="badge orange">
+        Anglais : <strong>Mar. 8h et Mer. 13h50</strong> •
+        Macro/Socio : <strong>Promo réunie</strong>
+      </span>
+      <span class="badge blue">
+        TD 02 :
+        <strong>Maths (Mer. 9h40) • BDD (Jeu. 13h50) • Micro (Lun. 15h30)</strong>
+      </span>
+    </div>
+  </header>
+
+  <section class="legend">
+    <span class="legend-title">Repères :</span>
+
+    <span class="legend-item">
+      <span class="dot perso-dot"></span>
+      <strong>TD spécifique à votre groupe</strong>
+      (Anglais TD1, Maths TD2, BDD TD2, Micro TD2)
+    </span>
+
+    <span class="legend-item">
+      <span class="dot reuni-dot"></span>
+      <strong>TD commun</strong>
+      (Socio le lundi, Macro le mercredi)
+    </span>
+
+    <span class="legend-item">
+      <span class="dot cm-dot"></span>
+      <strong>CM</strong> (Promo entière)
+    </span>
+  </section>
+
+  <nav class="nav">
+    <button class="btn" id="prev" type="button" onclick="changeWeek(-1)">
+      ◀ Précédente
+    </button>
+
+    <div class="nav-center">
+      <div class="nav-title" id="weekTitle"></div>
+      <div class="nav-subtitle" id="weekSubtitle"></div>
     </div>
 
-    <!-- BARRE DE NAVIGATION INTERACTIVE -->
-    <div class="nav-toolbar">
-      <button class="nav-btn" id="btnPrevWeek" onclick="changeScreenWeek(-1)">
-        ◀ Précédente
+    <div class="actions">
+      <button class="btn" id="next" type="button" onclick="changeWeek(1)">
+        Suivante ▶
       </button>
 
-      <div class="nav-center">
-        <div class="nav-title" id="screenWeekTitle">Semaine 1 : 14 – 19 Septembre 2026</div>
-        <div class="nav-subtitle" id="screenWeekSub">Lancement du semestre et des TD</div>
-      </div>
+      <button
+        class="btn today-btn"
+        id="today"
+        type="button"
+        onclick="jumpToTarget(true)"
+      >
+        🎯 Aujourd'hui
+      </button>
 
-      <div class="nav-actions">
-        <button class="nav-btn" id="btnNextWeek" onclick="changeScreenWeek(1)">
-          Suivante ▶
-        </button>
+      <button
+        class="btn"
+        id="theme"
+        type="button"
+        onclick="toggleTheme()"
+      >
+        🌙 Sombre
+      </button>
 
-        <button class="nav-btn nav-btn-today" id="btnTodayShortcut" onclick="jumpToCurrentDay(true)" title="Aller immédiatement au jour ciblé">
-          🎯 Aujourd'hui
-        </button>
-
-        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Basculer entre Mode Clair et Mode Sombre">
-          🌙 Sombre
-        </button>
-
-        <button class="print-trigger-btn" onclick="window.print()" title="Imprime l'intégralité du semestre sur exactement 2 pages A4 paysage">
-          🖨️ Imprimer Recto-Verso (2 p.)
-        </button>
-      </div>
+      <button
+        class="btn print-btn"
+        type="button"
+        onclick="window.print()"
+      >
+        🖨️ Imprimer Recto-Verso (2 p.)
+      </button>
     </div>
+  </nav>
 
-    <!-- FILTRE JOUR MOBILE -->
-    <div class="mobile-day-tabs" id="mobileDayTabs">
-      <button class="mobile-day-tab" data-day="all" onclick="setMobileDayFilter('all')">Tous</button>
-      <button class="mobile-day-tab" data-day="0" onclick="setMobileDayFilter(0)">Lun</button>
-      <button class="mobile-day-tab" data-day="1" onclick="setMobileDayFilter(1)">Mar</button>
-      <button class="mobile-day-tab" data-day="2" onclick="setMobileDayFilter(2)">Mer</button>
-      <button class="mobile-day-tab" data-day="3" onclick="setMobileDayFilter(3)">Jeu</button>
-      <button class="mobile-day-tab" data-day="4" onclick="setMobileDayFilter(4)">Ven</button>
-    </div>
-
-    <!-- GRILLE ÉCRAN DYNAMIQUE -->
-    <div class="screen-grid" id="screenWeekGrid"></div>
-
+  <div class="mobile-tabs" id="tabs">
+    <button class="tab" data-day="all" onclick="setDay('all')">Tous</button>
+    <button class="tab" data-day="0" onclick="setDay(0)">Lun</button>
+    <button class="tab" data-day="1" onclick="setDay(1)">Mar</button>
+    <button class="tab" data-day="2" onclick="setDay(2)">Mer</button>
+    <button class="tab" data-day="3" onclick="setDay(3)">Jeu</button>
+    <button class="tab" data-day="4" onclick="setDay(4)">Ven</button>
   </div>
 
-  <!-- ========================================================
-       AFFICHAGE IMPRESSION RECTO-VERSO (2 PAGES A4 PAYSAGE)
-       ======================================================== -->
-  <div id="printTwoPagesMaster">
+  <section class="grid" id="grid"></section>
+</main>
 
-    <!-- PAGE 1 (RECTO) : SEPTEMBRE & OCTOBRE 2026 (SEMAINES 1 À 6) -->
-    <div class="print-page-sheet page-one">
-      <div class="p-head">
-        <div>
-          <h2>UVSQ • L2 MIASHS (S3) — Emploi du temps (Partie 1 : Septembre & Octobre 2026)</h2>
-          <p>Étudiant : <strong>Cédric JEAN-BAPTISTE (22608239)</strong> • <strong>Page 1 / 2 (Recto)</strong></p>
-        </div>
-        <div class="p-badges">
-          Anglais (Mar 8h & Mer 13h50) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio en <strong>Promo réunie</strong>
-        </div>
-      </div>
+<section id="print"></section>
 
-      <table class="p-table">
-        <thead>
-          <tr>
-            <th class="th-sem">Semaine</th>
-            <th class="th-lun">Lundi</th>
-            <th class="th-mar">Mardi</th>
-            <th class="th-mer">Mercredi</th>
-            <th class="th-jeu">Jeudi</th>
-            <th class="th-ven">Vendredi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- S1 : Rentrée 14-19 Septembre -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 1</span><span class="p-sem-dates">14 – 19 Sept.</span></td>
-            <td>
-              <div class="p-item socio"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Socio démographie</span> <span class="p-room">[2203]</span></div>
-              <div class="p-item socio"><span class="p-time">11:20-12:50</span> <span class="p-title">TD Socio démographie</span> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[2203]</span></div>
-              <div class="p-empty" style="margin-top:2px;">(Pas de TD Micro cette semaine)</div>
-            </td>
-            <td>
-              <div class="p-item anglais"><span class="p-time">08:00-09:30</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD 01</span> <span class="p-room">[E303]</span></div>
-              <div class="p-item macro"><span class="p-time">09:40-12:50</span> <span class="p-title">CM Macroéconomie 2</span> <span class="p-room">[Amphi D]</span></div>
-              <div class="p-empty" style="margin-top:2px;">Après-midi libre</div>
-            </td>
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre 2</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
-            </td>
-            <td>
-              <div class="p-item info"><span class="p-time">09:40-11:10</span> <span class="p-title">CM Bases de données</span> <span class="p-room">[Amphi E]</span></div>
-              <div class="p-item maths"><span class="p-time">11:20-12:50</span> <span class="p-title">CM Analyse & Algèbre 2</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-empty" style="margin-top:2px;">(Pas de TD BDD cette semaine)</div>
-            </td>
-            <!-- Vendredi fusionné S1 à S6 -->
-            <td rowspan="6" style="background:#fcfdfd; text-align:center;">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">VENDREDIS (S1 à S6)</div>
-                <div class="p-empty" style="margin-bottom:6px;">Matin libre</div>
-                <div class="p-item micro" style="padding:10px 4px;">
-                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
-                  <b style="font-size:9.2pt;">CM Microéconomie 2</b><br>
-                  <span class="p-room" style="font-size:8.2pt;">Amphi G - Fermat</span>
-                </div>
-              </div>
-            </td>
-          </tr>
+<script>
+if("scrollRestoration" in history) history.scrollRestoration="manual";
 
-          <!-- S2 : TD Macro 1/4 -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 2</span><span class="p-sem-dates">21 – 26 Sept.</span></td>
-            <!-- Lundi fusionné S2 à S6 -->
-            <td rowspan="5">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">TOUS LES LUNDIS (S2 à S6)</div>
-                <div class="p-item socio">
-                  <span class="p-time">09:40-11:10</span> <b>CM Socio</b> <span class="p-room">[2203]</span>
-                </div>
-                <div class="p-item socio">
-                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[2203]</span>
-                </div>
-                <div class="p-item micro">
-                  <span class="p-time">15:30-17:00</span> <b>TD Micro 2</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[2206]</span>
-                </div>
-              </div>
-            </td>
+const DAY_NAMES=["Lundi","Mardi","Mercredi","Jeudi","Vendredi"];
+const MONTHS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
 
-            <!-- Mardi fusionné S2 à S6 -->
-            <td rowspan="5">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">TOUS LES MARDIS (S2 à S6)</div>
-                <div class="p-item anglais">
-                  <span class="p-time">08:00-09:30</span> <b>TD Anglais UE2</b> <span class="p-grp p-grp-perso">Votre TD 01</span> <span class="p-room">[E303]</span>
-                </div>
-                <div class="p-item macro">
-                  <span class="p-time">09:40-12:50</span> <b>CM Macro 2</b> <span class="p-room">[Amphi F (Fermat) & B (Descartes)]</span>
-                </div>
-                <div class="p-empty" style="margin-top:6px;">Après-midi entièrement libre</div>
-              </div>
-            </td>
+const MONDAYS=[
+  [2026,8,14],[2026,8,21],[2026,8,28],
+  [2026,9,5],[2026,9,12],[2026,9,19],
+  [2026,10,2],[2026,10,9],[2026,10,16],
+  [2026,10,23],[2026,10,30],[2026,11,7],
+  [2026,11,14]
+].map(x=>new Date(...x));
 
-            <!-- Mercredi S2 -->
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:2px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F (Fermat)] (1/4)</span></div>
-            </td>
+const TITLES=[
+  "Semaine 1 : 14 – 19 Septembre 2026",
+  "Semaine 2 : 21 – 26 Septembre 2026",
+  "Semaine 3 : 28 Septembre – 03 Octobre 2026",
+  "Semaine 4 : 05 – 10 Octobre 2026",
+  "Semaine 5 : 12 – 17 Octobre 2026",
+  "Semaine 6 : 19 – 24 Octobre 2026",
+  "Semaine 7 : 02 – 07 Novembre 2026",
+  "Semaine 8 : 09 – 14 Novembre 2026",
+  "Semaine 9 : 16 – 21 Novembre 2026",
+  "Semaine 10 : 23 – 28 Novembre 2026",
+  "Semaine 11 : 30 Novembre – 05 Décembre 2026",
+  "Semaine 12 : 07 – 12 Décembre 2026",
+  "Semaine 13 : 14 – 19 Décembre 2026"
+];
 
-            <!-- Jeudi fusionné S2 à S5 -->
-            <td rowspan="4">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">JEUDIS (S2 à S5)</div>
-                <div class="p-item info">
-                  <span class="p-time">09:40-11:10</span> <b>CM Bases de données</b> <span class="p-room">[Amphi E]</span>
-                </div>
-                <div class="p-item maths">
-                  <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre</b> <span class="p-room">[Amphi G]</span>
-                </div>
-                <div class="p-item info">
-                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[RC22]</span>
-                </div>
-              </div>
-            </td>
-          </tr>
+const SUBTITLES=[
+  "Lancement du semestre et des premiers TD",
+  "Lancement des TD BDD et Micro • Séance 1/4 TD Macro",
+  "Semaine régulière • Anglais mercredi après-midi",
+  "Anglais puis TD 2 de Macroéconomie le mercredi",
+  "Semaine régulière • Anglais mercredi après-midi",
+  "TD 3 Macro le mercredi • Jeudi libéré : Trophée SQY Campus",
+  "Reprise après Toussaint • Dernier TD de Macroéconomie",
+  "Mercredi 11 novembre férié • Aucun cours ce jour-là",
+  "Semaine régulière • Anglais mercredi après-midi",
+  "Dernier Anglais du mardi et dernier CM de Macroéconomie",
+  "Mardi libéré • Anglais du mardi et Macro terminés",
+  "Avant-dernière semaine • Mardi libéré",
+  "Dernières séances du semestre • Fin des cours le 18 décembre"
+];
 
-          <!-- S3 -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 3</span><span class="p-sem-dates">28 Sept. – 03 Oct.</span></td>
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
-            </td>
-          </tr>
+const MACRO_ROOMS=[
+  "AMPHI D - DESCARTES",
+  "Amphi F (Fermat) & Amphi B (Descartes)",
+  "2201 & 2204 - FERMAT",
+  "2201 & 2204 - FERMAT",
+  "Amphi B (Descartes) & 2204 (Fermat)",
+  "2201 & 2204 - FERMAT",
+  "2201 & 2204 - FERMAT",
+  "2201 & 2204 - FERMAT",
+  "2201 & 2204 - FERMAT",
+  "2201 & 2204 - FERMAT"
+];
 
-          <!-- S4 : TD Macro 2/4 -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 4</span><span class="p-sem-dates">05 – 10 Oct.</span></td>
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:2px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F (Fermat)] (2/4)</span></div>
-            </td>
-          </tr>
+const course=(time,type,cat,title,room,tag,tagType)=>({
+  time,type,cat,title,room,tag,tagType
+});
 
-          <!-- S5 -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 5</span><span class="p-sem-dates">12 – 17 Oct.</span></td>
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
-            </td>
-          </tr>
+const mondayCourses=week=>{
+  const last=week===12;
 
-          <!-- S6 : TD Macro 3/4 + Jeu Libéré -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 6</span><span class="p-sem-dates">19 – 24 Oct.</span></td>
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:2px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F (Fermat)] (3/4)</span></div>
-            </td>
-            <td>
-              <div class="p-alert-box">🚫 AUCUN COURS<br><strong>Trophée SQY Campus</strong></div>
-            </td>
-          </tr>
+  const courses=[
+    course(
+      "09:40 - 11:10","CM","socio",
+      "Sociologie : démographie","2203 - FERMAT",
+      last?"CM Promo (Dernier)":"CM Promo","cm"
+    ),
+    course(
+      "11:20 - 12:50","TD","socio",
+      "Sociologie : démographie","2203 - FERMAT",
+      last?"TD Promo réunie (Dernier)":"TD Promo réunie (TD 1 & 2)","reuni"
+    )
+  ];
 
-          <!-- VACANCES DE TOUSSAINT -->
-          <tr>
-            <td colspan="6" class="p-vacances-row">
-              🍁 DU 26 OCTOBRE AU 01 NOVEMBRE 2026 : INTERRUPTION DES COURS — VACANCES DE LA TOUSSAINT
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  if(week>0){
+    courses.push(course(
+      "15:30 - 17:00","TD","micro",
+      "Microéconomie 2","2206 - FERMAT",
+      last?"Votre TD 02 (Dernier)":"Votre TD 02","perso"
+    ));
+  }
 
-    <!-- PAGE 2 (VERSO) : NOVEMBRE & DÉCEMBRE 2026 (SEMAINES 7 À 13) -->
-    <div class="print-page-sheet page-two">
-      <div class="p-head">
-        <div>
-          <h2>UVSQ • L2 MIASHS (S3) — Emploi du temps (Partie 2 : Novembre & Décembre 2026)</h2>
-          <p>Étudiant : <strong>Cédric JEAN-BAPTISTE (22608239)</strong> • <strong>Page 2 / 2 (Verso)</strong></p>
-        </div>
-        <div class="p-badges">
-          Anglais (Mar 8h & Mer 13h50) | Maths, BDD & Micro en <strong>TD 02</strong> | Macro & Socio en <strong>Promo réunie</strong>
-        </div>
-      </div>
+  return courses;
+};
 
-      <table class="p-table">
-        <thead>
-          <tr>
-            <th class="th-sem">Semaine</th>
-            <th class="th-lun">Lundi</th>
-            <th class="th-mar">Mardi</th>
-            <th class="th-mer">Mercredi</th>
-            <th class="th-jeu">Jeudi</th>
-            <th class="th-ven">Vendredi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- S7 : Reprise + Dernier TD Macro 4/4 -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 7</span><span class="p-sem-dates">02 – 07 Nov.</span></td>
-            <!-- Lundi fusionné S7 à S11 -->
-            <td rowspan="5">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">LUNDIS (S7 à S11)</div>
-                <div class="p-item socio">
-                  <span class="p-time">09:40-11:10</span> <b>CM Socio</b> <span class="p-room">[2203]</span>
-                </div>
-                <div class="p-item socio">
-                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[2203]</span>
-                </div>
-                <div class="p-item micro">
-                  <span class="p-time">15:30-17:00</span> <b>TD Micro 2</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[2206]</span>
-                </div>
-              </div>
-            </td>
+const tuesdayCourses=week=>{
+  if(week>9) return [];
 
-            <!-- Mardi fusionné S7 à S10 -->
-            <td rowspan="4">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">MARDIS (S7 à S10)</div>
-                <div class="p-item anglais">
-                  <span class="p-time">08:00-09:30</span> <b>TD Anglais UE2</b> <span class="p-grp p-grp-perso">Votre TD 01</span> <span class="p-room">[E303]</span>
-                </div>
-                <div class="p-item macro">
-                  <span class="p-time">09:40-12:50</span> <b>CM Macro 2</b> <span class="p-room">[Amphi F / B / 2201]</span>
-                </div>
-                <div class="p-empty" style="margin-top:4px;">Après-midi libre</div>
-              </div>
-            </td>
+  const englishTag=week===9
+    ?"Votre TD 01 (Séance finale Mar)"
+    :`Votre TD 01 (Séance ${week+1}/10)`;
 
-            <!-- Mercredi S7 -->
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-item macro p-macro-highlight" style="margin-top:2px;"><span class="p-time">15:30-18:40</span> <b>TD Macroéconomie 2</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[Amphi F (Fermat)] (4/4)</span></div>
-            </td>
+  return[
+    course(
+      "08:00 - 09:30","TD","anglais",
+      "Anglais UE2","E303 - Joliot-Curie",
+      englishTag,"perso"
+    ),
+    course(
+      "09:40 - 12:50","CM","macro",
+      "Macroéconomie 2",MACRO_ROOMS[week],
+      week===9?"CM Promo (Séance finale)":"CM Promo","cm"
+    )
+  ];
+};
 
-            <!-- Jeudi fusionné S7 à S11 -->
-            <td rowspan="5">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">JEUDIS (S7 à S11)</div>
-                <div class="p-item info">
-                  <span class="p-time">09:40-11:10</span> <b>CM Bases de données</b> <span class="p-room">[Amphi E]</span>
-                </div>
-                <div class="p-item maths">
-                  <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre</b> <span class="p-room">[Amphi G]</span>
-                </div>
-                <div class="p-item info">
-                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[RC22]</span>
-                </div>
-              </div>
-            </td>
+const wednesdayCourses=week=>{
+  if(week===7) return [];
 
-            <!-- Vendredi fusionné S7 à S11 -->
-            <td rowspan="5" style="text-align:center;">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">VENDREDIS (S7 à S11)</div>
-                <div class="p-empty" style="margin-bottom:6px;">Matin libre</div>
-                <div class="p-item micro" style="padding:10px 4px;">
-                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
-                  <b style="font-size:9.2pt;">CM Microéconomie 2</b><br>
-                  <span class="p-room" style="font-size:8.2pt;">Amphi G - Fermat</span>
-                </div>
-              </div>
-            </td>
-          </tr>
+  const last=week===12;
+  const courses=[
+    course(
+      "09:40 - 12:50","TD","maths",
+      "Analyse 2 & Algèbre linéaire 2","AMPHI G - FERMAT",
+      last?"Votre TD 02 (Dernier)":"Votre TD 02","perso"
+    ),
+    course(
+      "13:50 - 15:20","TD","anglais",
+      "Anglais UE2","E303 - Joliot-Curie",
+      last?"Votre TD Anglais (Dernier)":"Votre TD Anglais","perso"
+    )
+  ];
 
-          <!-- S8 : 11 Novembre Férié -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 8</span><span class="p-sem-dates">09 – 14 Nov.</span></td>
-            <td>
-              <div class="p-alert-box" style="padding:12px 4px;">
-                🚫 11 NOVEMBRE FÉRIÉ<br>
-                <strong>Armistice 1918</strong><br>
-                <span style="font-size:7.2pt; font-weight:600;">Université fermée • Aucun cours</span>
-              </div>
-            </td>
-          </tr>
+  const macroSession={1:1,3:2,5:3,6:4}[week];
 
-          <!-- S9 -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 9</span><span class="p-sem-dates">16 – 21 Nov.</span></td>
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
-            </td>
-          </tr>
+  if(macroSession){
+    courses.push(course(
+      "15:30 - 18:40","TD","macro",
+      "Macroéconomie 2","AMPHI F - FERMAT",
+      `TD Promo réunie (Séance ${macroSession}/4${macroSession===4?" finale":""})`,
+      "reuni"
+    ));
+  }
 
-          <!-- S10 : Fin CM Macro & TD Anglais Mar -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 10</span><span class="p-sem-dates">23 – 28 Nov.</span></td>
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
-            </td>
-          </tr>
+  return courses;
+};
 
-          <!-- S11 : 30 Nov - 05 Déc (Mardi libéré) -->
-          <tr>
-            <td class="p-sem-col"><span class="p-sem-name">Semaine 11</span><span class="p-sem-dates">30 Nov. – 05 Déc.</span></td>
-            <td>
-              <div class="p-libere-box" style="padding:6px 2px;">
-                🌴 MARDI LIBÉRÉ<br><span style="font-size:7.2pt;">(Anglais Mar & Macro terminés)</span>
-              </div>
-            </td>
-            <td>
-              <div class="p-item maths"><span class="p-time">09:40-12:50</span> <span class="p-title">TD Analyse & Algèbre</span> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[Amphi G]</span></div>
-              <div class="p-item anglais" style="margin-top:2px;"><span class="p-time">13:50-15:20</span> <span class="p-title">TD Anglais UE2</span> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span></div>
-              <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
-            </td>
-          </tr>
+const thursdayCourses=week=>{
+  if(week===5) return [];
 
-          <!-- S12 & S13 : FIN DU SEMESTRE (DÉCEMBRE) -->
-          <tr>
-            <td class="p-sem-col">
-              <span class="p-sem-name">Semaines 12 & 13</span>
-              <span class="p-sem-dates">07 – 19 Déc.</span>
-              <span style="font-size:7.2pt; font-weight:800; color:#0f766e; background:#ccfbf1; padding:1.5px 3.5px; border-radius:3px; display:inline-block; margin-top:2px;">
-                Dernières séances
-              </span>
-            </td>
+  const last=week===12;
+  const courses=[
+    course(
+      "09:40 - 11:10","CM","info",
+      week<2?"Initiation aux bases de données":"Initiation bases de données",
+      "AMPHI E - DESCARTES",
+      last?"CM Promo (Dernier)":"CM Promo","cm"
+    ),
+    course(
+      "11:20 - 12:50","CM","maths",
+      "Analyse 2 & Algèbre linéaire 2","AMPHI G - FERMAT",
+      last?"CM Promo (Dernier)":"CM Promo","cm"
+    )
+  ];
 
-            <!-- Lundi S12-S13 -->
-            <td>
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">LUNDIS (07 & 14 DÉC.)</div>
-                <div class="p-item socio">
-                  <span class="p-time">09:40-11:10</span> <b>CM Socio</b> <span class="p-room">[2203]</span>
-                </div>
-                <div class="p-item socio">
-                  <span class="p-time">11:20-12:50</span> <b>TD Socio</b> <span class="p-grp p-grp-reuni">Promo réunie</span> <span class="p-room">[2203]</span>
-                </div>
-                <div class="p-item micro">
-                  <span class="p-time">15:30-17:00</span> <b>TD Micro 2</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[2206]</span>
-                </div>
-              </div>
-            </td>
+  if(week>0){
+    courses.push(course(
+      "13:50 - 17:00","TD Machine","info",
+      "Initiation bases de données","RC22 - DESCARTES",
+      last?"Votre TD 02 (Dernier)":"Votre TD 02","perso"
+    ));
+  }
 
-            <!-- Mardi S12-S13 : Libéré -->
-            <td>
-              <div class="p-libere-box">
-                🌴 MARDIS TOTALEMENT LIBÉRÉS
-              </div>
-            </td>
+  return courses;
+};
 
-            <!-- Mercredi S12-S13 : Maths + Anglais -->
-            <td>
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">MERCREDIS (09 & 16 DÉC.)</div>
-                <div class="p-item maths" style="padding:4px 3px;">
-                  <span class="p-time">09:40 - 12:50</span> <b>TD Maths</b> <span class="p-grp p-grp-perso">TD 02</span> <span class="p-room">[Amphi G]</span>
-                </div>
-                <div class="p-item anglais" style="padding:4px 3px; margin-top:2px;">
-                  <span class="p-time">13:50 - 15:20</span> <b>TD Anglais</b> <span class="p-grp p-grp-perso">Votre TD</span> <span class="p-room">[E303]</span>
-                </div>
-                <div class="p-empty" style="margin-top:2px;">Fin des cours à 15h20</div>
-              </div>
-            </td>
+const fridayCourses=week=>[
+  course(
+    "14:00 - 16:00","CM","micro",
+    "Microéconomie 2","AMPHI G - FERMAT",
+    week===12?"CM Promo (Dernier)":"CM Promo","cm"
+  )
+];
 
-            <!-- Jeudi S12-S13 -->
-            <td>
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">JEUDIS (10 & 17 DÉC.)</div>
-                <div class="p-item info">
-                  <span class="p-time">09:40-11:10</span> <b>CM Bases de données</b> <span class="p-room">[Amphi E]</span>
-                </div>
-                <div class="p-item maths">
-                  <span class="p-time">11:20-12:50</span> <b>CM Analyse & Algèbre</b> <span class="p-room">[Amphi G]</span>
-                </div>
-                <div class="p-item info">
-                  <span class="p-time">13:50-17:00</span> <b>TD Machine BDD</b> <span class="p-grp p-grp-perso">Votre TD 02</span> <span class="p-room">[RC22]</span>
-                </div>
-              </div>
-            </td>
+const formatDate=date=>
+  `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 
-            <!-- Vendredi S12-S13 -->
-            <td style="text-align:center;">
-              <div class="p-fixed-group-card">
-                <div class="p-fixed-badge-title">VENDREDIS (11 & 18 DÉC.)</div>
-                <div class="p-empty" style="margin-bottom:6px;">Matin libre</div>
-                <div class="p-item micro" style="padding:10px 4px;">
-                  <span class="p-time" style="font-size:10.5pt !important;">14:00 - 16:00</span><br>
-                  <b style="font-size:9.2pt;">CM Microéconomie 2</b><br>
-                  <span class="p-room" style="font-size:8.2pt;">Amphi G - Fermat</span>
-                </div>
-              </div>
-            </td>
-          </tr>
+const weeks=MONDAYS.map((monday,week)=>({
+  id:week+1,
+  title:TITLES[week],
+  subtitle:SUBTITLES[week],
+  days:DAY_NAMES.map((name,day)=>{
+    const date=new Date(
+      monday.getFullYear(),
+      monday.getMonth(),
+      monday.getDate()+day
+    );
 
-          <!-- VACANCES DE NOËL -->
-          <tr>
-            <td colspan="6" class="p-vacances-row" style="background:#e0f2fe !important; border-color:#0284c7 !important; color:#0369a1 !important;">
-              🎄 DU 19 DÉCEMBRE 2026 AU 03 JANVIER 2027 : VACANCES DE NOËL & FIN DU SEMESTRE 3
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-  </div>
-
-  <!-- ========================================================
-       DONNÉES DU PLANNING DYNAMIQUE ET LOGIQUE INTELLIGENTE
-       ======================================================== -->
-  <script>
-    // Éviter que le navigateur reprenne l'ancienne position de scroll au rechargement
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-
-    const weeksScreenData = [
-      {
-        id: 1,
-        title: "Semaine 1 : 14 – 19 Septembre 2026",
-        sub: "Lancement du semestre et des premiers TD",
-        days: [
-          { 
-            name: "Lundi", date: "14 sept. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "15 sept. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 1/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "AMPHI D - DESCARTES", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "16 sept. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "17 sept. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation aux bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "18 sept. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: "Semaine 2 : 21 – 26 Septembre 2026",
-        sub: "Lancement des TD BDD & Micro • Séance 1/4 TD Macro",
-        days: [
-          { 
-            name: "Lundi", date: "21 sept. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "22 sept. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 2/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "Amphi F (Fermat) & Amphi B (Descartes)", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "23 sept. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 1/4)", tagType: "reuni" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "24 sept. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation aux bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "25 sept. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: "Semaine 3 : 28 Septembre – 03 Octobre 2026",
-        sub: "Semaine régulière (Anglais mercredi après-midi)",
-        days: [
-          { 
-            name: "Lundi", date: "28 sept. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "29 sept. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 3/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "30 sept. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "1 oct. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "2 oct. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 4,
-        title: "Semaine 4 : 05 – 10 Octobre 2026",
-        sub: "Avec Anglais puis TD 2 de Macroéconomie le mercredi après-midi",
-        days: [
-          { 
-            name: "Lundi", date: "5 oct. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "6 oct. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 4/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "7 oct. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 2/4)", tagType: "reuni" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "8 oct. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "9 oct. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 5,
-        title: "Semaine 5 : 12 – 17 Octobre 2026",
-        sub: "Semaine régulière (Anglais mercredi après-midi)",
-        days: [
-          { 
-            name: "Lundi", date: "12 oct. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "13 oct. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 5/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "Amphi B (Descartes) & 2204 (Fermat)", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "14 oct. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "15 oct. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "16 oct. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 6,
-        title: "Semaine 6 : 19 – 24 Octobre 2026",
-        sub: "TD 3 Macro le mer. 21 • Jeu. 22 libéré (Trophée SQY Campus)",
-        days: [
-          { 
-            name: "Lundi", date: "19 oct. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "20 oct. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 6/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "21 oct. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 3/4)", tagType: "reuni" }
-            ] 
-          },
-          { name: "Jeudi", date: "22 oct. 2026", courses: [] },
-          { 
-            name: "Vendredi", date: "23 oct. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 7,
-        title: "Semaine 7 : 02 – 07 Novembre 2026",
-        sub: "Reprise après Toussaint • Séance 4/4 finale de TD Macro",
-        days: [
-          { 
-            name: "Lundi", date: "2 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "3 nov. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 7/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "4 nov. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" },
-              { time: "15:30 - 18:40", type: "TD", cat: "macro", title: "Macroéconomie 2", room: "AMPHI F - FERMAT", tag: "TD Promo réunie (Séance 4/4 finale)", tagType: "reuni" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "5 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "6 nov. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 8,
-        title: "Semaine 8 : 09 – 14 Novembre 2026",
-        sub: "Mercredi 11 nov. Férié (Armistice 1918) • Aucun cours ce jour-là",
-        days: [
-          { 
-            name: "Lundi", date: "9 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "10 nov. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 8/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { name: "Mercredi", date: "11 nov. 2026", courses: [] },
-          { 
-            name: "Jeudi", date: "12 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "13 nov. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 9,
-        title: "Semaine 9 : 16 – 21 Novembre 2026",
-        sub: "Semaine régulière (Anglais mercredi après-midi)",
-        days: [
-          { 
-            name: "Lundi", date: "16 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "17 nov. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance 9/10)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "18 nov. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "19 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "20 nov. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 10,
-        title: "Semaine 10 : 23 – 28 Novembre 2026",
-        sub: "Dernière séance d'Anglais du mardi et dernier CM de Macro le mardi 24 nov.",
-        days: [
-          { 
-            name: "Lundi", date: "23 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Mardi", date: "24 nov. 2026", 
-            courses: [
-              { time: "08:00 - 09:30", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD 01 (Séance finale Mar)", tagType: "perso" },
-              { time: "09:40 - 12:50", type: "CM", cat: "macro", title: "Macroéconomie 2", room: "2201 & 2204 - FERMAT", tag: "CM Promo (Séance finale)", tagType: "cm" }
-            ] 
-          },
-          { 
-            name: "Mercredi", date: "25 nov. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "26 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "27 nov. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 11,
-        title: "Semaine 11 : 30 Novembre – 05 Décembre 2026",
-        sub: "Mardi libéré (Anglais mardi et Macro terminés)",
-        days: [
-          { 
-            name: "Lundi", date: "30 nov. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { name: "Mardi", date: "1 déc. 2026", courses: [] },
-          { 
-            name: "Mercredi", date: "2 déc. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "3 déc. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "4 déc. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 12,
-        title: "Semaine 12 : 07 – 12 Décembre 2026",
-        sub: "Avant-dernière semaine (Mardi libéré)",
-        days: [
-          { 
-            name: "Lundi", date: "7 déc. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { name: "Mardi", date: "8 déc. 2026", courses: [] },
-          { 
-            name: "Mercredi", date: "9 déc. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "10 déc. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "11 déc. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo", tagType: "cm" }
-            ] 
-          }
-        ]
-      },
-      {
-        id: 13,
-        title: "Semaine 13 : 14 – 19 Décembre 2026",
-        sub: "Dernières séances du semestre • Clôture des cours le 18 décembre",
-        days: [
-          { 
-            name: "Lundi", date: "14 déc. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "CM Promo (Dernier)", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "TD", cat: "socio", title: "Sociologie : démographie", room: "2203 - FERMAT", tag: "TD Promo réunie (Dernier)", tagType: "reuni" },
-              { time: "15:30 - 17:00", type: "TD", cat: "micro", title: "Microéconomie 2", room: "2206 - FERMAT", tag: "Votre TD 02 (Dernier)", tagType: "perso" }
-            ] 
-          },
-          { name: "Mardi", date: "15 déc. 2026", courses: [] },
-          { 
-            name: "Mercredi", date: "16 déc. 2026", 
-            courses: [
-              { time: "09:40 - 12:50", type: "TD", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "Votre TD 02 (Dernier)", tagType: "perso" },
-              { time: "13:50 - 15:20", type: "TD", cat: "anglais", title: "Anglais UE2", room: "E303 - Joliot-Curie", tag: "Votre TD Anglais (Dernier)", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Jeudi", date: "17 déc. 2026", 
-            courses: [
-              { time: "09:40 - 11:10", type: "CM", cat: "info", title: "Initiation bases de données", room: "AMPHI E - DESCARTES", tag: "CM Promo (Dernier)", tagType: "cm" },
-              { time: "11:20 - 12:50", type: "CM", cat: "maths", title: "Analyse 2 & Algèbre linéaire 2", room: "AMPHI G - FERMAT", tag: "CM Promo (Dernier)", tagType: "cm" },
-              { time: "13:50 - 17:00", type: "TD Machine", cat: "info", title: "Initiation bases de données", room: "RC22 - DESCARTES", tag: "Votre TD 02 (Dernier)", tagType: "perso" }
-            ] 
-          },
-          { 
-            name: "Vendredi", date: "18 déc. 2026", 
-            courses: [
-              { time: "14:00 - 16:00", type: "CM", cat: "micro", title: "Microéconomie 2", room: "AMPHI G - FERMAT", tag: "CM Promo (Dernier)", tagType: "cm" }
-            ] 
-          }
-        ]
-      }
+    const builders=[
+      mondayCourses,
+      tuesdayCourses,
+      wednesdayCourses,
+      thursdayCourses,
+      fridayCourses
     ];
 
-    /* ========================================================
-       GESTION DU THÈME SOMBRE (DARK MODE)
-       ======================================================== */
-    function initTheme() {
-      const savedTheme = localStorage.getItem('miashs_theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+    return{
+      name,
+      date:formatDate(date),
+      realDate:date,
+      courses:builders[day](week)
+    };
+  })
+}));
 
-      document.documentElement.setAttribute('data-theme', theme);
-      updateThemeButtonLabel(theme);
+const $=selector=>document.querySelector(selector);
+const $$=selector=>document.querySelectorAll(selector);
+
+let currentWeek=0;
+let mobileFilter="all";
+let activeTarget=null;
+
+function initTheme(){
+  const stored=localStorage.getItem("schedule_theme");
+  const systemDark=matchMedia?.("(prefers-color-scheme:dark)").matches;
+  applyTheme(stored||(systemDark?"dark":"light"));
+}
+
+function applyTheme(theme){
+  document.documentElement.dataset.theme=theme;
+
+  const button=$("#theme");
+  const dark=theme==="dark";
+
+  button.textContent=dark?"☀️ Clair":"🌙 Sombre";
+  button.title=dark?"Passer en mode clair":"Passer en mode sombre";
+}
+
+function toggleTheme(){
+  const next=document.documentElement.dataset.theme==="dark"
+    ?"light"
+    :"dark";
+
+  localStorage.setItem("schedule_theme",next);
+  applyTheme(next);
+}
+
+function endMinutes(time){
+  const end=time.split("-")[1].trim().split(":").map(Number);
+  return end[0]*60+end[1];
+}
+
+function semesterCalendar(){
+  return weeks.flatMap((week,weekIndex)=>
+    week.days.map((day,dayIndex)=>({
+      weekIndex,
+      dayIndex,
+      date:day.realDate,
+      courses:day.courses,
+      last:day.courses.length
+        ?Math.max(...day.courses.map(c=>endMinutes(c.time)))
+        :0
+    }))
+  );
+}
+
+function sameDay(a,b){
+  return a.getFullYear()===b.getFullYear()&&
+         a.getMonth()===b.getMonth()&&
+         a.getDate()===b.getDate();
+}
+
+function calculateTarget(){
+  const now=new Date();
+  const minutes=now.getHours()*60+now.getMinutes();
+  const calendar=semesterCalendar();
+  const todayIndex=calendar.findIndex(item=>sameDay(item.date,now));
+
+  let target;
+  let ongoing=false;
+  let future=false;
+
+  if(todayIndex>=0){
+    const today=calendar[todayIndex];
+
+    if(today.courses.length&&minutes<today.last){
+      target=today;
+      ongoing=true;
+    }else{
+      target=calendar.slice(todayIndex+1).find(x=>x.courses.length);
+      future=!!target;
+      target ||= today;
     }
+  }else{
+    const midnight=new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    ).getTime();
 
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-      const next = current === 'dark' ? 'light' : 'dark';
+    target=calendar.find(x=>
+      x.date.getTime()>=midnight&&x.courses.length
+    );
 
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('miashs_theme', next);
-      updateThemeButtonLabel(next);
+    future=!!target;
+
+    if(!target){
+      target=midnight<calendar[0].date.getTime()
+        ?calendar[0]
+        :calendar.at(-1);
     }
+  }
 
-    function updateThemeButtonLabel(theme) {
-      const btn = document.getElementById('themeToggleBtn');
-      if (!btn) return;
-      if (theme === 'dark') {
-        btn.innerHTML = '☀️ Clair';
-        btn.title = 'Passer en Mode Clair';
-      } else {
-        btn.innerHTML = '🌙 Sombre';
-        btn.title = 'Passer en Mode Sombre';
-      }
-    }
+  return{
+    weekIndex:target.weekIndex,
+    dayIndex:target.dayIndex,
+    ongoing,
+    future
+  };
+}
 
-    /* ========================================================
-       CALCUL AUTOMATIQUE INTELLIGENT DE LA SEMAINE & JOUR
-       (AVEC DÉTECTION DE FIN DE COURS & BASCOULE AU JOUR SUIVANT)
-       ======================================================== */
-    const semesterMondays = [
-      new Date(2026, 8, 14), // S1: 14 sept 2026
-      new Date(2026, 8, 21), // S2: 21 sept 2026
-      new Date(2026, 8, 28), // S3: 28 sept 2026
-      new Date(2026, 9, 5),  // S4: 05 oct 2026
-      new Date(2026, 9, 12), // S5: 12 oct 2026
-      new Date(2026, 9, 19), // S6: 19 oct 2026
-      new Date(2026, 10, 2), // S7: 02 nov 2026 (Après Toussaint)
-      new Date(2026, 10, 9), // S8: 09 nov 2026
-      new Date(2026, 10, 16),// S9: 16 nov 2026
-      new Date(2026, 10, 23),// S10: 23 nov 2026
-      new Date(2026, 10, 30),// S11: 30 nov 2026
-      new Date(2026, 11, 7), // S12: 07 déc 2026
-      new Date(2026, 11, 14) // S13: 14 déc 2026
-    ];
+function position(time){
+  const toMinutes=value=>{
+    const [h,m]=value.trim().split(":").map(Number);
+    return h*60+m;
+  };
 
-    function parseEndMinutes(timeStr) {
-      const parts = timeStr.split('-');
-      if (parts.length < 2) return 0;
-      const endPart = parts[1].trim();
-      const [h, m] = endPart.split(':').map(Number);
-      return h * 60 + m;
-    }
+  const [start,end]=time.split("-").map(toMinutes);
 
-    function getDayLastMinutes(courses) {
-      if (!courses || courses.length === 0) return 0;
-      let maxM = 0;
-      courses.forEach(c => {
-        const m = parseEndMinutes(c.time);
-        if (m > maxM) maxM = m;
-      });
-      return maxM;
-    }
+  return{
+    top:12+start-480,
+    height:end-start-6
+  };
+}
 
-    // Construction d'une liste chronologique complète de tous les jours du semestre
-    function buildSemesterCalendar() {
-      const calendar = [];
-      weeksScreenData.forEach((w, wIdx) => {
-        const mon = semesterMondays[wIdx];
-        w.days.forEach((day, dIdx) => {
-          const dDate = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + dIdx);
-          calendar.push({
-            weekIndex: wIdx,
-            dayIndex: dIdx,
-            date: dDate,
-            courses: day.courses,
-            hasCourses: day.courses.length > 0,
-            lastMinutes: getDayLastMinutes(day.courses)
-          });
-        });
-      });
-      return calendar;
-    }
+function emptyMessage(weekIndex,dayIndex){
+  if(weekIndex===5&&dayIndex===3)
+    return "🚫 Trophée SQY Campus — Journée sans cours";
 
-    function isSameCalendarDay(d1, d2) {
-      return d1.getFullYear() === d2.getFullYear() &&
-             d1.getMonth() === d2.getMonth() &&
-             d1.getDate() === d2.getDate();
-    }
+  if(weekIndex===7&&dayIndex===2)
+    return "🚫 Mercredi 11 novembre férié — Université fermée";
 
-    function calculateTargetSchedule() {
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-      const calendar = buildSemesterCalendar();
+  return "Aucun cours programmé";
+}
 
-      // Vérifier si aujourd'hui est dans le calendrier des cours
-      const todayIndex = calendar.findIndex(item => isSameCalendarDay(item.date, now));
+function cardHTML(c){
+  const p=position(c.time);
 
-      let targetItem = null;
-      let isFutureNextCourse = false;
-      let isTodayOngoing = false;
+  return`
+    <article class="card ${c.cat}"
+      style="top:${p.top}px;height:${p.height}px">
+      <div class="card-time">
+        <span>${c.time}</span>
+        <span>${c.type}</span>
+      </div>
+      <div class="card-title">${c.title}</div>
+      <div class="card-room">📍 ${c.room}</div>
+      <div class="card-tag ${c.tagType}">${c.tag}</div>
+    </article>
+  `;
+}
 
-      if (todayIndex !== -1) {
-        const todayCal = calendar[todayIndex];
-        // Si aujourd'hui a des cours et que l'heure de fin n'est pas passée
-        if (todayCal.hasCourses && currentMinutes < todayCal.lastMinutes) {
-          targetItem = todayCal;
-          isTodayOngoing = true;
-        } else {
-          // La dernière heure est passée (ou journée sans cours) : chercher le PROCHAIN jour de cours !
-          isFutureNextCourse = true;
-          for (let i = todayIndex + 1; i < calendar.length; i++) {
-            if (calendar[i].hasCourses) {
-              targetItem = calendar[i];
-              break;
-            }
-          }
-          if (!targetItem) {
-            // Fin de semestre atteinte
-            targetItem = todayCal;
-          }
-        }
-      } else {
-        // En dehors des jours de cours prévus (week-end, vacances de Toussaint, etc.)
-        const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-        for (let i = 0; i < calendar.length; i++) {
-          if (calendar[i].date.getTime() >= todayMidnight && calendar[i].hasCourses) {
-            targetItem = calendar[i];
-            isFutureNextCourse = true;
-            break;
-          }
-        }
-        if (!targetItem) {
-          // Si avant le semestre ou après le semestre
-          targetItem = (todayMidnight < calendar[0].date.getTime()) ? calendar[0] : calendar[calendar.length - 1];
-        }
-      }
+function renderWeek(index){
+  currentWeek=index;
 
-      return {
-        weekIndex: targetItem.weekIndex,
-        dayIndex: targetItem.dayIndex,
-        targetDate: targetItem.date,
-        isFutureNextCourse: isFutureNextCourse,
-        isTodayOngoing: isTodayOngoing,
-        realNow: now
-      };
-    }
+  const week=weeks[index];
+  const target=activeTarget||calculateTarget();
+  const targetWeek=target.weekIndex===index;
 
-    let currentScreenIndex = 0;
-    let currentMobileDayFilter = 'all';
-    let globalActiveTarget = null;
+  $("#weekTitle").textContent=week.title;
+  $("#weekSubtitle").textContent=
+    `${week.subtitle} • Semaine ${index+1} sur ${weeks.length}`;
 
-    function setMobileDayFilter(filter, shouldScroll = true) {
-      currentMobileDayFilter = filter;
-      document.querySelectorAll('.mobile-day-tab').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.day === String(filter));
-      });
+  $("#prev").disabled=index===0;
+  $("#next").disabled=index===weeks.length-1;
 
-      document.querySelectorAll('.screen-col').forEach(col => {
-        const dIdx = parseInt(col.dataset.dayIndex, 10);
-        if (filter === 'all' || filter === dIdx) {
-          col.classList.remove('mobile-hidden-day');
-        } else {
-          col.classList.add('mobile-hidden-day');
-        }
-      });
+  const shortcut=$("#today");
+  shortcut.textContent=target.ongoing
+    ?"🎯 Aujourd'hui"
+    :"🚀 Prochain cours";
 
-      if (shouldScroll && filter !== 'all') {
-        scrollToSpecificDay(filter, true);
-      }
-    }
+  shortcut.title=target.ongoing
+    ?"Revenir à la journée en cours"
+    :"Aller au prochain cours programmé";
 
-    // Défilement automatique précis vers le jour sélectionné
-    function scrollToSpecificDay(dayIdx, smooth = false) {
-      const col = document.querySelector(`.screen-col[data-day-index="${dayIdx}"]`);
-      if (!col) return;
+  $("#grid").innerHTML=week.days.map((day,dayIndex)=>{
+    const count=day.courses.length;
+    const selected=targetWeek&&target.dayIndex===dayIndex;
+    const hidden=mobileFilter!=="all"&&mobileFilter!==dayIndex;
 
-      if (window.innerWidth <= 860) {
-        const tabs = document.getElementById('mobileDayTabs');
-        const offset = tabs ? (tabs.offsetHeight + 10) : 52;
-        const colTop = col.getBoundingClientRect().top + window.pageYOffset - offset;
-        window.scrollTo({
-          top: Math.max(0, Math.round(colTop)),
-          behavior: smooth ? 'smooth' : 'auto'
-        });
-      } else {
-        const nav = document.querySelector('.nav-toolbar');
-        const navBottom = nav ? (nav.getBoundingClientRect().bottom + window.pageYOffset) : 0;
-        const colTop = col.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({
-          top: Math.max(0, Math.round(colTop - 20)),
-          behavior: smooth ? 'smooth' : 'auto'
-        });
-      }
-    }
+    const indicator=selected
+      ?`<span class="target-pill">${
+        target.ongoing?"📍 Aujourd'hui":"🚀 Prochain cours"
+      }</span>`
+      :"";
 
-    const DAY_START_MINUTES = 8 * 60; // 8h00
-    const PIXELS_PER_MINUTE = 60 / 60; // 1px par minute
+    const content=count
+      ?day.courses.map(cardHTML).join("")
+      :`<div class="empty">${emptyMessage(index,dayIndex)}</div>`;
 
-    function getCoursePosition(time) {
-      const [startText, endText] = time.split('-').map(value => value.trim());
+    return`
+      <section
+        class="day${selected?" target":""}${hidden?" hidden":""}"
+        data-day="${dayIndex}">
+        <header class="day-head">
+          <div>
+            <div class="day-name">${day.name}</div>
+            <div class="day-date">${day.date}</div>
+            ${indicator}
+          </div>
+          <span class="day-count${count?" has":""}">
+            ${count?`${count} cours`:"Libre"}
+          </span>
+        </header>
+        <div class="day-body">${content}</div>
+      </section>
+    `;
+  }).join("");
 
-      function toMinutes(hourText) {
-        const [hours, minutes] = hourText.split(':').map(Number);
-        return hours * 60 + minutes;
-      }
+  $$(".tab").forEach(tab=>{
+    tab.classList.toggle(
+      "current",
+      targetWeek&&tab.dataset.day==target.dayIndex
+    );
+  });
+}
 
-      const start = toMinutes(startText);
-      const end = toMinutes(endText);
+function changeWeek(delta){
+  const next=currentWeek+delta;
 
-      return {
-        top: 12 + (start - DAY_START_MINUTES) * PIXELS_PER_MINUTE,
-        height: (end - start) * PIXELS_PER_MINUTE - 6
-      };
-    }
+  if(next<0||next>=weeks.length) return;
 
-    function renderScreenTimetable(index) {
-      currentScreenIndex = index;
-      const w = weeksScreenData[index];
+  renderWeek(next);
 
-      document.getElementById('screenWeekTitle').textContent = w.title;
-      document.getElementById('screenWeekSub').textContent = `${w.sub} • Semaine ${index + 1} sur ${weeksScreenData.length}`;
+  if(innerWidth<=860&&mobileFilter!=="all")
+    scrollToDay(mobileFilter,false);
+}
 
-      document.getElementById('btnPrevWeek').disabled = (index === 0);
-      document.getElementById('btnNextWeek').disabled = (index === weeksScreenData.length - 1);
+function setDay(day,scroll=true){
+  mobileFilter=day==="all"?"all":Number(day);
 
-      const grid = document.getElementById('screenWeekGrid');
-      grid.innerHTML = '';
+  $$(".tab").forEach(tab=>
+    tab.classList.toggle("active",tab.dataset.day==day)
+  );
 
-      const targetInfo = globalActiveTarget || calculateTargetSchedule();
-      const isTargetWeek = (targetInfo.weekIndex === index);
+  $$(".day").forEach(column=>
+    column.classList.toggle(
+      "hidden",
+      mobileFilter!=="all"&&Number(column.dataset.day)!==mobileFilter
+    )
+  );
 
-      // Adaptation du texte du bouton raccourci
-      const btnShortcut = document.getElementById('btnTodayShortcut');
-      if (btnShortcut) {
-        if (targetInfo.isTodayOngoing) {
-          btnShortcut.innerHTML = '🎯 Aujourd\'hui';
-          btnShortcut.title = 'Revenir à la journée en cours';
-        } else {
-          btnShortcut.innerHTML = '🚀 Prochain cours';
-          btnShortcut.title = 'Aller directement au prochain cours programmé';
-        }
-      }
+  if(scroll&&mobileFilter!=="all")
+    scrollToDay(mobileFilter,true);
+}
 
-      w.days.forEach((day, dayIdx) => {
-        const col = document.createElement('div');
-        col.className = 'screen-col';
-        col.dataset.dayIndex = dayIdx;
+function scrollToDay(day,smooth=false){
+  const column=document.querySelector(`.day[data-day="${day}"]`);
+  if(!column) return;
 
-        const isTargetCol = (isTargetWeek && targetInfo.dayIndex === dayIdx);
-        if (isTargetCol) {
-          col.classList.add('is-today');
-        }
+  const offset=innerWidth<=860
+    ?($("#tabs")?.offsetHeight||42)+10
+    :20;
 
-        if (currentMobileDayFilter !== 'all' && currentMobileDayFilter !== dayIdx) {
-          col.classList.add('mobile-hidden-day');
-        }
+  const top=column.getBoundingClientRect().top+scrollY-offset;
 
-        const count = day.courses.length;
-        const badgeLabel = count === 0 ? 'Libre' : `${count} cours`;
-        const badgeClass = count === 0 ? 'col-day-badge' : 'col-day-badge active-courses';
+  scrollTo({
+    top:Math.max(0,Math.round(top)),
+    behavior:smooth?"smooth":"auto"
+  });
+}
 
-        let coursesHtml = '';
-        if (count === 0) {
-          const isFerie = (w.id === 8 && dayIdx === 2);
-          const isTrophee = (w.id === 6 && dayIdx === 3);
-          let message = 'Aucun cours programmé';
-          if (isFerie) message = '🚫 Mercredi 11 Novembre Férié (Armistice 1918) — Université fermée';
-          if (isTrophee) message = '🚫 Trophée SQY Campus — Journée sans cours';
+function jumpToTarget(smooth=true){
+  activeTarget=calculateTarget();
+  renderWeek(activeTarget.weekIndex);
 
-          coursesHtml = `<div class="screen-empty-day">${message}</div>`;
-        } else {
-          coursesHtml = day.courses.map(c => {
-            const position = getCoursePosition(c.time);
-            const pillClass = c.tagType === 'perso' ? 'pill-perso' : (c.tagType === 'reuni' ? 'pill-reuni' : 'pill-cm');
+  if(innerWidth<=860)
+    setDay(activeTarget.dayIndex,false);
 
-            return `
-              <div
-                class="screen-card ${c.cat}"
-                style="top:${position.top}px; height:${position.height}px;"
-              >
-                <div class="card-time-row">
-                  <span>${c.time}</span>
-                  <span style="font-weight:800; text-transform:uppercase;">${c.type}</span>
-                </div>
-                <div class="card-title-text">${c.title}</div>
-                <div class="card-meta-text">📍 ${c.room}</div>
-                <div class="card-tag-pill ${pillClass}">${c.tag}</div>
-              </div>
+  scrollToDay(activeTarget.dayIndex,smooth);
+}
+
+function printCourse(c){
+  return`
+    <div class="p-item ${c.cat}">
+      <span class="p-time">${c.time}</span>
+      <span class="p-type"> ${c.type}</span><br>
+      <b>${c.title}</b><br>
+      <span class="p-room">${c.room} • ${c.tag}</span>
+    </div>
+  `;
+}
+
+function buildPrintPage(pageWeeks,page,period){
+  return`
+    <section class="print-page">
+      <header class="print-head">
+        <div>
+          <h2>
+            UVSQ • L2 MIASHS S3 — Emploi du temps —
+            ${period}
+          </h2>
+          <p>
+            Étudiant : <strong>Anonyme</strong> •
+            <strong>Page ${page} / 2</strong>
+          </p>
+        </div>
+
+        <div class="print-badge">
+          Anglais TD1 | Maths, BDD et Micro TD2 |
+          Macro et Socio : promo réunie
+        </div>
+      </header>
+
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>Semaine</th>
+            ${DAY_NAMES.map(day=>`<th>${day}</th>`).join("")}
+          </tr>
+        </thead>
+
+        <tbody>
+          ${pageWeeks.map((week,localIndex)=>{
+            const weekIndex=weeks.indexOf(week);
+
+            return`
+              <tr>
+                <td class="print-week">
+                  <b>Semaine ${week.id}</b>
+                  <span>${week.title.split(": ")[1]}</span>
+                </td>
+
+                ${week.days.map((day,dayIndex)=>{
+                  let content;
+
+                  if(day.courses.length){
+                    content=day.courses.map(printCourse).join("");
+                  }else{
+                    const special=
+                      (weekIndex===5&&dayIndex===3)||
+                      (weekIndex===7&&dayIndex===2);
+
+                    content=`
+                      <div class="${special?"p-alert":"p-empty"}">
+                        ${emptyMessage(weekIndex,dayIndex)}
+                      </div>
+                    `;
+                  }
+
+                  return`<td>${content}</td>`;
+                }).join("")}
+              </tr>
             `;
-          }).join('');
-        }
+          }).join("")}
+        </tbody>
+      </table>
+    </section>
+  `;
+}
 
-        let indicatorHtml = '';
-        if (isTargetCol) {
-          const tagTxt = targetInfo.isTodayOngoing ? '📍 Aujourd\'hui' : '🚀 Prochain cours';
-          indicatorHtml = `<span class="today-pill-indicator">${tagTxt}</span>`;
-        }
+function buildPrint(){
+  $("#print").innerHTML=
+    buildPrintPage(
+      weeks.slice(0,6),
+      1,
+      "Septembre et octobre 2026"
+    )+
+    buildPrintPage(
+      weeks.slice(6),
+      2,
+      "Novembre et décembre 2026"
+    );
+}
 
-        col.innerHTML = `
-          <div class="screen-col-header">
-            <div>
-              <div class="col-day-name">${day.name}</div>
-              <div class="col-day-date">${day.date}</div>
-              ${indicatorHtml}
-            </div>
-            <span class="${badgeClass}">${badgeLabel}</span>
-          </div>
-          <div class="screen-col-body">
-            ${coursesHtml}
-          </div>
-        `;
-        grid.appendChild(col);
-      });
+addEventListener("keydown",event=>{
+  if(event.key==="ArrowLeft") changeWeek(-1);
+  if(event.key==="ArrowRight") changeWeek(1);
+});
 
-      // Onglets mobiles
-      document.querySelectorAll('.mobile-day-tab').forEach(tab => {
-        const d = tab.dataset.day;
-        tab.classList.toggle('tab-today', isTargetWeek && String(d) === String(targetInfo.dayIndex));
-      });
-    }
+let startX=0;
+let startY=0;
 
-    function changeScreenWeek(delta) {
-      const nextIndex = currentScreenIndex + delta;
-      if (nextIndex >= 0 && nextIndex < weeksScreenData.length) {
-        renderScreenTimetable(nextIndex);
-        if (window.innerWidth <= 860 && currentMobileDayFilter !== 'all') {
-          scrollToSpecificDay(currentMobileDayFilter, false);
-        }
-      }
-    }
+$("#grid").addEventListener("touchstart",event=>{
+  const touch=event.changedTouches[0];
+  startX=touch.clientX;
+  startY=touch.clientY;
+},{passive:true});
 
-    // Raccourci immédiat vers le cours actif
-    function jumpToCurrentDay(smooth = true) {
-      globalActiveTarget = calculateTargetSchedule();
-      renderScreenTimetable(globalActiveTarget.weekIndex);
+$("#grid").addEventListener("touchend",event=>{
+  const touch=event.changedTouches[0];
+  const dx=touch.clientX-startX;
+  const dy=touch.clientY-startY;
 
-      if (window.innerWidth <= 860) {
-        setMobileDayFilter(globalActiveTarget.dayIndex, false);
-        scrollToSpecificDay(globalActiveTarget.dayIndex, smooth);
-      } else {
-        scrollToSpecificDay(globalActiveTarget.dayIndex, smooth);
-      }
-    }
+  if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.3)
+    changeWeek(dx<0?1:-1);
+},{passive:true});
 
-    // Raccourcis clavier flèches gauche/droite
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') changeScreenWeek(-1);
-      if (e.key === 'ArrowRight') changeScreenWeek(1);
-    });
+function initialize(){
+  initTheme();
+  buildPrint();
 
-    // Balayage tactile (Swipe)
-    let touchStartX = 0;
-    let touchStartY = 0;
-    const swipeArea = document.getElementById('screenWeekGrid');
+  activeTarget=calculateTarget();
+  renderWeek(activeTarget.weekIndex);
 
-    swipeArea.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].clientX;
-      touchStartY = e.changedTouches[0].clientY;
-    }, { passive: true });
+  if(innerWidth<=860)
+    setDay(activeTarget.dayIndex,false);
+  else
+    setDay("all",false);
 
-    swipeArea.addEventListener('touchend', (e) => {
-      const touchEndX = e.changedTouches[0].clientX;
-      const touchEndY = e.changedTouches[0].clientY;
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
+  scrollToDay(activeTarget.dayIndex,false);
 
-      if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
-        if (deltaX < 0) {
-          changeScreenWeek(1);
-        } else {
-          changeScreenWeek(-1);
-        }
-      }
-    }, { passive: true });
+  requestAnimationFrame(()=>
+    scrollToDay(activeTarget.dayIndex,false)
+  );
 
-    /* ========================================================
-       CHARGEMENT ET SCROLL AUTOMATIQUE DIRECT
-       ======================================================== */
-    function initializeScheduleWithDirectScroll() {
-      initTheme();
+  setTimeout(()=>
+    scrollToDay(activeTarget.dayIndex,false),
+    120
+  );
+}
 
-      // 1. Calcul du jour ciblé (avec bascule automatique après dernière heure)
-      globalActiveTarget = calculateTargetSchedule();
-      renderScreenTimetable(globalActiveTarget.weekIndex);
+addEventListener("DOMContentLoaded",initialize);
 
-      // 2. Définition du filtre mobile sur le bon jour
-      if (window.innerWidth <= 860) {
-        setMobileDayFilter(globalActiveTarget.dayIndex, false);
-      }
-
-      // 3. Défilement immédiat et verrouillé sur le jour
-      scrollToSpecificDay(globalActiveTarget.dayIndex, false);
-
-      requestAnimationFrame(() => {
-        scrollToSpecificDay(globalActiveTarget.dayIndex, false);
-      });
-
-      // Sécurité après rendu complet des polices
-      setTimeout(() => {
-        scrollToSpecificDay(globalActiveTarget.dayIndex, false);
-      }, 120);
-    }
-
-    window.addEventListener('DOMContentLoaded', initializeScheduleWithDirectScroll);
-    window.addEventListener('load', () => {
-      if (globalActiveTarget) {
-        scrollToSpecificDay(globalActiveTarget.dayIndex, false);
-      }
-    });
-  </script>
+addEventListener("load",()=>{
+  if(activeTarget)
+    scrollToDay(activeTarget.dayIndex,false);
+});
+</script>
 </body>
 </html>
