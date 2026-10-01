@@ -45,7 +45,7 @@ jobs:
 
       - name: Récupérer le planning CELCAT
         env:
-          EDT_FULL: ${{ (github.event.schedule == '17 3 * * *' || inputs.full) && '1' || '0' }}
+          EDT_FULL: ${{ (github.event.schedule == '17 3 * * *' || github.event_name == 'push' || inputs.full) && '1' || '0' }}
         run: |
           set +e
           node scripts/sync-edt.mjs 2>&1 | tee /tmp/sync.log
