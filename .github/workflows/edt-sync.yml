@@ -69,7 +69,7 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/arena/01a0f695-physiquepv-github-io'
         run: |
           set -euo pipefail
-          if git diff --quiet -- data/edt.json; then
+          if [ -z "$(git status --porcelain -- data/edt.json)" ]; then
             echo "Planning inchangé : rien à publier."
             exit 0
           fi

@@ -275,8 +275,18 @@ async function main() {
 
   // Sécurité : si tout est vide alors qu'on avait des cours, on suspecte un
   // incident côté CELCAT et on ne remplace pas les données valides.
-  if (totalEvents === 0 && previous && Object.values(previous.weeks ?? {}).some((w) => w.events?.length)) {
-    console.error("[edt] toutes les semaines sont vides mais le fichier précédent contenait des cours : abandon par prudence.");
+  if (totalEvents === 0) {
+    if (previous && Object.values(previous.weeks ?? {}).some((w) => w.events?.length)) {
+      console.error(
+        "[edt] toutes les semaines interrogées sont vides alors que le fichier précédent contenait des cours : " +
+          "abandon par prudence (panne CELCAT ou groupe introuvable).",
+      );
+      process.exit(1);
+    }
+    console.error(
+      "[edt] aucun créneau récupéré. Vérifie le code du groupe dans edt.config.json " +
+        `(actuellement « ${config.group} ») et la fenêtre demandée.`,
+    );
     process.exit(1);
   }
 
