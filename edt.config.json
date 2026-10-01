@@ -1,0 +1,25 @@
+{
+  "group": "S3MIASHS",
+  "label": "L2 MIASHS — Semestre 3",
+  "semester": {
+    "start": "2026-09-14",
+    "end": "2026-12-19"
+  },
+  "fetch": {
+    "baseUrl": "https://edt.uvsq.fr",
+    "endpoints": [
+      "/Home/GetCalendarData",
+      "/Calendar/Home/GetCalendarData",
+      "/calendar/Home/GetCalendarData"
+    ],
+    "resourceType": "103",
+    "calViews": ["agendaWeek", "month", "agendaDay"],
+    "colourScheme": "3",
+    "weeksBackIncremental": 1,
+    "weeksAheadIncremental": 2,
+    "marginDaysBefore": 21,
+    "marginDaysAfter": 28,
+    "timeoutMs": 25000,
+    "retries": 3
+  }
+}

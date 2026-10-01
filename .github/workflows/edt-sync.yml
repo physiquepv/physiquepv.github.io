@@ -1,0 +1,81 @@
+name: Sync emploi du temps UVSQ
+
+# Récupère le planning officiel CELCAT (edt.uvsq.fr) et l'écrit dans data/edt.json.
+# Le site (GitHub Pages, statique) ne peut pas appeler CELCAT directement : son
+# API n'autorise pas les requêtes cross-origin (CORS). Cette tâche le fait donc
+# côté serveur, et la page lit ensuite un simple fichier JSON en same-origin.
+
+on:
+  schedule:
+    # Rafraîchissement glissant (semaine en cours + 2 à venir) toutes les 10 min.
+    - cron: "*/10 * * * *"
+    # Rechargement complet du semestre, une fois par jour (~05:17 heure de Paris).
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Recharger tout le semestre (sinon : fenêtre glissante)"
+        type: boolean
+        default: true
+  push:
+    branches: [main]
+    paths-ignore:
+      - "data/**" # évite de boucler sur ses propres commits
+
+permissions:
+  contents: write
+
+concurrency:
+  group: edt-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Récupérer le planning CELCAT
+        env:
+          EDT_FULL: ${{ (github.event.schedule == '17 3 * * *' || inputs.full) && '1' || '0' }}
+        run: node scripts/sync-edt.mjs
+
+      - name: Publier data/edt.json
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/edt.json; then
+            echo "Planning inchangé : rien à publier."
+            exit 0
+          fi
+          git config user.name "edt-sync[bot]"
+          git config user.email "edt-sync@users.noreply.github.com"
+          git add data/edt.json
+          git commit -m "chore(edt): planning synchronisé ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+          if ! git push; then
+            {
+              echo "### ⚠️ Impossible d'écrire data/edt.json"
+              echo
+              echo "Le jeton du workflow n'a pas le droit de pousser. Active-le une fois :"
+              echo "**Settings → Actions → General → Workflow permissions → Read and write permissions**, puis relance ce workflow."
+              echo
+              echo "En attendant, le site continue d'afficher la dernière version publiée de data/edt.json."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning::Push refusé (permissions du GITHUB_TOKEN). Voir Settings → Actions → General → Workflow permissions."
+          fi
+
+      - name: Artefact de diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edt-json
+          path: data/edt.json
+          if-no-files-found: ignore
+          retention-days: 3
