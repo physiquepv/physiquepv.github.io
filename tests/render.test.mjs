@@ -96,11 +96,11 @@ check(cards.some((card) => /Votre TD 02/.test(card.textContent)), "les étiquett
 check(!cards.some((card) => card.classList.contains("cancelled") && /Anglais/.test(card.textContent) && /Mardi|mardi/.test("")), "le créneau d'anglais annulé en permanence est masqué");
 
 console.log("\n— état du bandeau —");
-console.log(`      badge : ${$("#liveStatus").textContent}`);
-console.log(`      bandeau : ${$("#liveBannerTitle").textContent} — ${$("#liveBannerText").textContent.slice(0, 120)}…`);
-check(/planning|Synchro/i.test($("#liveBannerTitle").textContent), "le bandeau décrit la source");
+console.log(`      statut : ${$("#liveStatus").textContent}`);
+check(/planning|synchro|edt\.uvsq/i.test($("#liveStatus").textContent), "le statut décrit la source");
 check(!/hors-ligne/i.test($("#liveStatus").textContent), "pas de mode hors-ligne quand les données sont là");
-check(/2 à vérifier|à vérifier/.test($("#weekSubtitle").textContent) === false, "aucun faux positif « à vérifier » sur cette semaine");
+check(!$(".header") && !$(".subject-legend") && !$("#weekSubtitle"), "les éléments d'en-tête retirés restent absents");
+check($("#refresh") !== null, "le bouton Actualiser reste disponible");
 
 console.log("\n— semaine avec cours disparu (décembre) —");
 let steps = 0;
