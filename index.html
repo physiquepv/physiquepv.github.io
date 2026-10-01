@@ -225,6 +225,32 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 .card.ghost .card-title{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
 .card.ghost::before{content:"❓ À VÉRIFIER";position:absolute;top:6px;right:8px;padding:2px 6px;font-size:.5rem;font-weight:900;letter-spacing:.05em;color:#fff;background:#64748b;border-radius:4px}
 .card-note{margin-top:2px;color:var(--muted);font-size:.6rem;font-weight:600;line-height:1.3}
+/* Mobile : la page ne défile plus, seule la zone du planning (#grid) peut défiler */
+@media screen and (max-width:860px){
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;scroll-behavior:auto}
+body{height:100vh;height:100dvh}
+.app{display:flex;flex-direction:column;height:100%;min-height:0}
+.header,.nav,.mobile-tabs{flex:none}
+.header{padding:14px 18px}
+.header h1{font-size:1.2rem}
+.nav{padding:9px;gap:6px}
+.nav-center{padding:0 4px 3px}
+.btn{min-height:38px}
+.mobile-tabs{position:static;margin:0 0 8px}
+.grid{flex:1 1 0;min-height:0;margin-bottom:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scroll-behavior:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.grid::-webkit-scrollbar{width:6px}
+.grid::-webkit-scrollbar-thumb{border-radius:999px;background:var(--border)}
+}
+@media screen and (max-width:860px) and (max-height:560px){
+.header p{display:none}
+.header{padding:8px 14px}
+.header h1{font-size:1rem}
+.nav{grid-template-columns:repeat(4,1fr);grid-template-areas:"center center center center" "prev next today theme";padding:7px}
+.print-btn{display:none}
+.btn{min-height:34px}
+.mobile-tabs{margin-bottom:6px}
+.tab{min-height:34px}
+}
 </style>
 </head>
 <body>
@@ -1017,7 +1043,10 @@ function changeWeek(delta) {
   const next = state_view.index + delta;
   if (next < 0 || next >= state_view.weeks.length) return;
   renderWeek(next);
-  if (innerWidth <= 860 && state_view.mobileFilter !== "all") scrollToDay(state_view.mobileFilter, false);
+  if (innerWidth <= 860) {
+    if (state_view.mobileFilter !== "all") scrollToDay(state_view.mobileFilter, false);
+    else $("#grid").scrollTop = 0;
+  }
 }
 function setDay(day, scroll = true) {
   state_view.mobileFilter = day === "all" ? "all" : Number(day);
@@ -1028,11 +1057,20 @@ function setDay(day, scroll = true) {
   });
   $$(".day").forEach((column) => column.classList.toggle("hidden", state_view.mobileFilter !== "all" && Number(column.dataset.day) !== state_view.mobileFilter));
   if (scroll && state_view.mobileFilter !== "all") scrollToDay(state_view.mobileFilter, false);
+  else if (scroll && innerWidth <= 860) $("#grid").scrollTop = 0;
 }
 function scrollToDay(day, smooth = false) {
   const column = document.querySelector(`.day[data-day="${day}"]`);
   if (!column) return;
-  const offset = innerWidth <= 860 ? ($("#tabs")?.offsetHeight || 42) + 10 : ($(".nav")?.offsetHeight || 0) + 20;
+  if (innerWidth <= 860) {
+    // Mobile : la page est figée, on ne fait défiler que la zone du planning.
+    const grid = $("#grid");
+    const top = column.getBoundingClientRect().top - grid.getBoundingClientRect().top + grid.scrollTop;
+    if (typeof grid.scrollTo === "function") grid.scrollTo({ top: Math.max(0, top), behavior: smooth ? "smooth" : "auto" });
+    else grid.scrollTop = Math.max(0, top);
+    return;
+  }
+  const offset = ($(".nav")?.offsetHeight || 0) + 20;
   const top = column.getBoundingClientRect().top + scrollY - offset;
   scrollTo({ top: Math.max(0, top), behavior: smooth ? "smooth" : "auto" });
 }
