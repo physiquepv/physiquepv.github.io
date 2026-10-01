@@ -46,7 +46,23 @@ jobs:
       - name: Récupérer le planning CELCAT
         env:
           EDT_FULL: ${{ (github.event.schedule == '17 3 * * *' || inputs.full) && '1' || '0' }}
-        run: node scripts/sync-edt.mjs
+        run: |
+          set +e
+          node scripts/sync-edt.mjs 2>&1 | tee /tmp/sync.log
+          code=${PIPESTATUS[0]}
+          if [ "$code" -ne 0 ]; then
+            if ! grep -q '::error' /tmp/sync.log; then
+              msg=$(tail -c 1200 /tmp/sync.log | tr '\n' ' ' | sed 's/%/%25/g')
+              echo "::error title=Synchro CELCAT en échec::${msg}"
+            fi
+            {
+              echo "### :x: Synchro CELCAT en échec"
+              echo '```'
+              tail -c 3000 /tmp/sync.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$code"
 
       - name: Publier data/edt.json
         if: github.ref == 'refs/heads/main'

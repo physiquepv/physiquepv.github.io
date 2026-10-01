@@ -70,75 +70,106 @@ const HEADERS = {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function postForm(url, fields, cfg) {
+async function postFormOnce(url, fields, cfg, timeoutMs = cfg.timeoutMs) {
   const body = new URLSearchParams(fields).toString();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: HEADERS,
+      body,
+      signal: controller.signal,
+      redirect: "follow",
+    });
+    const text = await res.text();
+    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText} — ${text.slice(0, 100)}`);
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(`réponse non JSON (${text.slice(0, 100)}…)`);
+    }
+    if (!Array.isArray(data)) throw new Error(`payload inattendu : ${typeof data}`);
+    return data;
+  } catch (error) {
+    const cause = error?.cause?.code ?? error?.cause?.message;
+    throw new Error(cause ? `${error.message} (${cause})` : error.message);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function postForm(url, fields, cfg) {
   let lastError;
   for (let attempt = 1; attempt <= cfg.retries; attempt++) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), cfg.timeoutMs);
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: HEADERS,
-        body,
-        signal: controller.signal,
-        redirect: "follow",
-      });
-      const text = await res.text();
-      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText} — ${text.slice(0, 120)}`);
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error(`réponse non JSON (${text.slice(0, 120)}…)`);
-      }
-      if (!Array.isArray(data)) throw new Error(`payload inattendu : ${typeof data}`);
-      return data;
+      return await postFormOnce(url, fields, cfg);
     } catch (error) {
       lastError = error;
-      if (attempt < cfg.retries) await sleep(1500 * attempt);
-    } finally {
-      clearTimeout(timer);
+      if (attempt < cfg.retries) await sleep(1000 * attempt);
     }
   }
   throw new Error(`${url} : ${lastError?.message ?? "échec"}`);
+}
+
+function formFields(monday, calView, cfg) {
+  return [
+    ["start", monday],
+    ["end", addDays(monday, 6)],
+    ["resType", cfg.resourceType],
+    ["calView", calView],
+    ["colourScheme", cfg.colourScheme],
+    ["federationIds[]", cfg.group],
+  ];
+}
+
+/**
+ * Cherche le couple (endpoint, calView) accepté par l'instance CELCAT.
+ * Une seule tentative par combinaison, avec un délai court : en cas de panne on
+ * veut un diagnostic rapide plutôt qu'un job qui tourne 10 minutes.
+ */
+async function probeStrategy(monday, cfg) {
+  const failures = [];
+  let fallback = null;
+  for (const endpoint of cfg.endpoints) {
+    for (const calView of cfg.calViews) {
+      const url = cfg.baseUrl + endpoint;
+      try {
+        const events = await postFormOnce(url, formFields(monday, calView, cfg), cfg, Math.min(cfg.timeoutMs, 12000));
+        if (events.length > 0) {
+          strategy.endpoint = endpoint;
+          strategy.calView = calView;
+          return { endpoint, calView, events };
+        }
+        fallback ??= { endpoint, calView, events };
+      } catch (error) {
+        failures.push(`${endpoint} (${calView}) → ${error.message}`);
+      }
+    }
+  }
+  if (fallback) {
+    strategy.endpoint = fallback.endpoint;
+    strategy.calView = fallback.calView;
+    return fallback;
+  }
+  throw new Error(`aucun endpoint CELCAT utilisable. ${failures.join(" | ")}`);
 }
 
 /** Mémorise le couple (endpoint, calView) qui fonctionne pour les appels suivants. */
 const strategy = { endpoint: null, calView: null };
 
 async function fetchWeekEvents(monday, cfg) {
-  const end = addDays(monday, 6);
-  const attempts = [];
-  const endpoints = strategy.endpoint ? [strategy.endpoint, ...cfg.endpoints.filter((e) => e !== strategy.endpoint)] : cfg.endpoints;
-  const views = strategy.calView ? [strategy.calView, ...cfg.calViews.filter((v) => v !== strategy.calView)] : cfg.calViews;
-
-  for (const endpoint of endpoints) {
-    for (const calView of views) {
-      try {
-        const events = await postForm(
-          cfg.baseUrl + endpoint,
-          [
-            ["start", monday],
-            ["end", end],
-            ["resType", cfg.resourceType],
-            ["calView", calView],
-            ["colourScheme", cfg.colourScheme],
-            ["federationIds[]", cfg.group],
-          ],
-          cfg,
-        );
-        if (events.length > 0) {
-          strategy.endpoint = endpoint;
-          strategy.calView = calView;
-        }
-        return { events, endpoint, calView };
-      } catch (error) {
-        attempts.push(`${endpoint} (${calView}) : ${error.message}`);
-      }
-    }
+  if (!strategy.endpoint) {
+    const probed = await probeStrategy(monday, cfg);
+    return { events: probed.events, endpoint: probed.endpoint, calView: probed.calView };
   }
-  throw new Error(`aucun endpoint CELCAT n'a répondu\n  - ${attempts.join("\n  - ")}`);
+  const events = await postForm(
+    cfg.baseUrl + strategy.endpoint,
+    formFields(monday, strategy.calView, cfg),
+    cfg,
+  );
+  return { events, endpoint: strategy.endpoint, calView: strategy.calView };
 }
 
 /* ----------------------------------------------------------------- lecture */
@@ -202,8 +233,9 @@ async function main() {
   const cfg = { ...config.fetch, group: config.group };
   const keys = weekKeys(cfg);
 
-  console.log(`[edt] groupe ${cfg.group} — ${full ? "semestre complet" : "fenêtre glissante"} — ${keys.length} semaines`);
+  console.log(`[edt] node ${process.version} — groupe ${cfg.group} — ${full ? "semestre complet" : "fenêtre glissante"} — ${keys.length} semaines`);
   console.log(`[edt] fenêtre : ${keys[0]} → ${keys.at(-1)} (aujourd'hui : ${todayParis()})`);
+  console.log(`[edt] cible : ${cfg.baseUrl}${cfg.endpoints[0]}`);
 
   // Repart du fichier existant : les semaines non rafraîchies sont conservées.
   let previous = null;
@@ -289,7 +321,9 @@ async function main() {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((error) => {
-    console.error(`[edt] erreur fatale : ${error?.stack ?? error}`);
+    const message = String(error?.stack ?? error).replace(/\s+/g, " ").slice(0, 1200);
+    console.error(`[edt] erreur fatale : ${message}`);
+    console.error(`::error title=Synchro CELCAT en échec::${message.replaceAll("%", "%25")}`);
     process.exit(1);
   });
 }
