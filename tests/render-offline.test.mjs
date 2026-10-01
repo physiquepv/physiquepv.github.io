@@ -41,8 +41,10 @@ const check = (c, l) => { console.log(`${c ? "  ✓" : "  ✗"} ${l}`); if (!c) 
 console.log("\n— mode hors-ligne (aucune source réseau) —");
 check(dom.window.document.querySelectorAll("#grid .day").length === 5, "la grille reste affichée");
 check(dom.window.document.querySelectorAll("#grid .card").length > 0, "des cours de secours sont affichés");
+check(!$(".header") && !$(".subject-legend") && !$("#weekSubtitle"), "les éléments d'en-tête retirés restent absents");
+check($("#refresh") !== null, "le bouton Actualiser reste disponible");
 check(/Hors-ligne|hors-ligne|secours/i.test($("#liveStatus").textContent), `badge hors-ligne (« ${$("#liveStatus").textContent} »)`);
-check(/hors-ligne|secours/i.test($("#liveBannerTitle").textContent + $("#liveBannerText").textContent), "le bandeau explique le mode dégradé");
+check(/hors-ligne|secours/i.test($("#liveStatus").textContent), "le statut explique le mode dégradé");
 check($("#changes").hidden, "aucune alerte affichée sans données live");
 check($("#print").innerHTML.includes("print-table"), "l'impression de secours fonctionne");
 check(errors.length === 0, `aucune erreur JS (${errors.length})`);
