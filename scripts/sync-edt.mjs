@@ -230,7 +230,7 @@ function hashEvents(weeks) {
 
 async function main() {
   const config = JSON.parse(await readFile(CONFIG_PATH, "utf8"));
-  const cfg = { ...config.fetch, group: config.group };
+  const cfg = { ...config.fetch, group: config.group, semester: config.semester };
   const keys = weekKeys(cfg);
 
   console.log(`[edt] node ${process.version} — groupe ${cfg.group} — ${full ? "semestre complet" : "fenêtre glissante"} — ${keys.length} semaines`);
