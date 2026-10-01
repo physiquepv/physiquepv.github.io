@@ -1,0 +1,914 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-01T08:40:00.969Z",
+  "group": "S3MIASHS",
+  "label": "L2 MIASHS — Semestre 3",
+  "timezone": "Europe/Paris",
+  "semester": {
+    "start": "2026-09-14",
+    "end": "2026-12-19"
+  },
+  "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
+  "fetchedWeeks": [
+    "2026-09-28",
+    "2026-10-05",
+    "2026-10-12"
+  ],
+  "contentHash": "3f19148e-27098",
+  "weeks": {
+    "2026-09-28": {
+      "monday": "2026-09-28",
+      "fetchedAt": "2026-10-01T08:40:00.969Z",
+      "endpoint": "/Home/GetCalendarData",
+      "calView": "agendaWeek",
+      "events": [
+        {
+          "id": "-1742255826:1073733534:17:5784284:7",
+          "start": "2026-09-28T09:40:00",
+          "end": "2026-09-28T11:10:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSSO310N"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5845339:7",
+          "start": "2026-09-28T11:20:00",
+          "end": "2026-09-28T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSSO310N"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784291:7",
+          "start": "2026-09-28T13:50:00",
+          "end": "2026-09-28T15:20:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5800994:7",
+          "start": "2026-09-28T15:30:00",
+          "end": "2026-09-28T17:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5793464:7",
+          "start": "2026-09-29T08:00:00",
+          "end": "2026-09-29T09:30:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nE303- B&#226;t Joliot-Curie [Salle de TD]\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "JOLIOT- CURIE"
+          ],
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784305:7",
+          "start": "2026-09-29T09:40:00",
+          "end": "2026-09-29T11:10:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2201 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5859586:7",
+          "start": "2026-09-29T11:20:00",
+          "end": "2026-09-29T12:50:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2204 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5798251:7",
+          "start": "2026-09-29T13:50:00",
+          "end": "2026-09-29T15:20:00",
+          "allDay": false,
+          "description": "Annulation\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Annulation",
+          "backgroundColor": "#333333",
+          "textColor": "#ffffff",
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779513:7",
+          "start": "2026-09-30T09:40:00",
+          "end": "2026-09-30T12:50:00",
+          "allDay": false,
+          "description": "TD Cartable Num&#233;rique\r\n\r\n<br />\r\n\r\n102 - BUFFON\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />S3 Maths TD 2A OPTION IN311 [S3Maths TD 2A OPTION IN311]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD Cartable Numérique",
+          "backgroundColor": "#FFEBBA",
+          "textColor": "#000000",
+          "sites": [
+            "BUFFON"
+          ],
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5780212:7",
+          "start": "2026-09-30T09:40:00",
+          "end": "2026-09-30T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5793485:7",
+          "start": "2026-09-30T13:50:00",
+          "end": "2026-09-30T15:20:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nE304- B&#226;t Joliot-Curie [Salle de TD]\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "JOLIOT- CURIE"
+          ],
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5874771:7",
+          "start": "2026-10-01T09:40:00",
+          "end": "2026-10-01T11:10:00",
+          "allDay": false,
+          "description": "Annulation\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Annulation",
+          "backgroundColor": "#333333",
+          "textColor": "#ffffff",
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784295:7",
+          "start": "2026-10-01T11:20:00",
+          "end": "2026-10-01T12:50:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779512:7",
+          "start": "2026-10-01T13:50:00",
+          "end": "2026-10-01T17:00:00",
+          "allDay": false,
+          "description": "TD Cartable Num&#233;rique\r\n\r\n<br />\r\n\r\nRC22 - DESCARTES  [CARTABLE NUMERIQUE ]\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD Cartable Numérique",
+          "backgroundColor": "#FFEBBA",
+          "textColor": "#000000",
+          "sites": [
+            "DESCARTES"
+          ],
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5855063:7",
+          "start": "2026-10-02T09:40:00",
+          "end": "2026-10-02T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "GERMAIN"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784249:7",
+          "start": "2026-10-02T14:00:00",
+          "end": "2026-10-02T16:00:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        }
+      ]
+    },
+    "2026-10-05": {
+      "monday": "2026-10-05",
+      "fetchedAt": "2026-10-01T08:40:00.969Z",
+      "endpoint": "/Home/GetCalendarData",
+      "calView": "agendaWeek",
+      "events": [
+        {
+          "id": "-1742255826:1073733534:17:5784284:8",
+          "start": "2026-10-05T09:40:00",
+          "end": "2026-10-05T11:10:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSSO310N"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5845339:8",
+          "start": "2026-10-05T11:20:00",
+          "end": "2026-10-05T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSSO310N"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784291:8",
+          "start": "2026-10-05T13:50:00",
+          "end": "2026-10-05T15:20:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5800994:8",
+          "start": "2026-10-05T15:30:00",
+          "end": "2026-10-05T17:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5793464:8",
+          "start": "2026-10-06T08:00:00",
+          "end": "2026-10-06T09:30:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nE303- B&#226;t Joliot-Curie [Salle de TD]\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "JOLIOT- CURIE"
+          ],
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784305:8",
+          "start": "2026-10-06T09:40:00",
+          "end": "2026-10-06T11:10:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2201 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5859586:8",
+          "start": "2026-10-06T11:20:00",
+          "end": "2026-10-06T12:50:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2204 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5798251:8",
+          "start": "2026-10-06T13:50:00",
+          "end": "2026-10-06T15:20:00",
+          "allDay": false,
+          "description": "Annulation\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Annulation",
+          "backgroundColor": "#333333",
+          "textColor": "#ffffff",
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779513:8",
+          "start": "2026-10-07T09:40:00",
+          "end": "2026-10-07T12:50:00",
+          "allDay": false,
+          "description": "TD Cartable Num&#233;rique\r\n\r\n<br />\r\n\r\n102 - BUFFON\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />S3 Maths TD 2A OPTION IN311 [S3Maths TD 2A OPTION IN311]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD Cartable Numérique",
+          "backgroundColor": "#FFEBBA",
+          "textColor": "#000000",
+          "sites": [
+            "BUFFON"
+          ],
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5780212:8",
+          "start": "2026-10-07T09:40:00",
+          "end": "2026-10-07T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5793485:8",
+          "start": "2026-10-07T13:50:00",
+          "end": "2026-10-07T15:20:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nE304- B&#226;t Joliot-Curie [Salle de TD]\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "JOLIOT- CURIE"
+          ],
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5780729:8",
+          "start": "2026-10-07T15:30:00",
+          "end": "2026-10-07T18:40:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779518:8",
+          "start": "2026-10-08T09:40:00",
+          "end": "2026-10-08T11:10:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI E - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "DESCARTES"
+          ],
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784295:8",
+          "start": "2026-10-08T11:20:00",
+          "end": "2026-10-08T12:50:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779512:8",
+          "start": "2026-10-08T13:50:00",
+          "end": "2026-10-08T17:00:00",
+          "allDay": false,
+          "description": "TD Cartable Num&#233;rique\r\n\r\n<br />\r\n\r\nRC22 - DESCARTES  [CARTABLE NUMERIQUE ]\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD Cartable Numérique",
+          "backgroundColor": "#FFEBBA",
+          "textColor": "#000000",
+          "sites": [
+            "DESCARTES"
+          ],
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5855063:8",
+          "start": "2026-10-09T09:40:00",
+          "end": "2026-10-09T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "GERMAIN"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784249:8",
+          "start": "2026-10-09T14:00:00",
+          "end": "2026-10-09T16:00:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        }
+      ]
+    },
+    "2026-10-12": {
+      "monday": "2026-10-12",
+      "fetchedAt": "2026-10-01T08:40:00.969Z",
+      "endpoint": "/Home/GetCalendarData",
+      "calView": "agendaWeek",
+      "events": [
+        {
+          "id": "-1742255826:1073733534:17:5784284:9",
+          "start": "2026-10-12T09:40:00",
+          "end": "2026-10-12T11:10:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSSO310N"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5845339:9",
+          "start": "2026-10-12T11:20:00",
+          "end": "2026-10-12T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSSO310N"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784291:9",
+          "start": "2026-10-12T13:50:00",
+          "end": "2026-10-12T15:20:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5800994:9",
+          "start": "2026-10-12T15:30:00",
+          "end": "2026-10-12T17:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5793464:9",
+          "start": "2026-10-13T08:00:00",
+          "end": "2026-10-13T09:30:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nE303- B&#226;t Joliot-Curie [Salle de TD]\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "JOLIOT- CURIE"
+          ],
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784305:9",
+          "start": "2026-10-13T09:40:00",
+          "end": "2026-10-13T11:10:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2205 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5859586:9",
+          "start": "2026-10-13T11:20:00",
+          "end": "2026-10-13T12:50:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\n2204 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5798251:9",
+          "start": "2026-10-13T13:50:00",
+          "end": "2026-10-13T15:20:00",
+          "allDay": false,
+          "description": "Annulation\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Annulation",
+          "backgroundColor": "#333333",
+          "textColor": "#ffffff",
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779513:9",
+          "start": "2026-10-14T09:40:00",
+          "end": "2026-10-14T12:50:00",
+          "allDay": false,
+          "description": "TD Cartable Num&#233;rique\r\n\r\n<br />\r\n\r\n102 - BUFFON\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />S3 Maths TD 2A OPTION IN311 [S3Maths TD 2A OPTION IN311]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD Cartable Numérique",
+          "backgroundColor": "#FFEBBA",
+          "textColor": "#000000",
+          "sites": [
+            "BUFFON"
+          ],
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5780212:9",
+          "start": "2026-10-14T09:40:00",
+          "end": "2026-10-14T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5793485:9",
+          "start": "2026-10-14T13:50:00",
+          "end": "2026-10-14T15:20:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nE304- B&#226;t Joliot-Curie [Salle de TD]\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "JOLIOT- CURIE"
+          ],
+          "modules": [
+            "LSANGS3"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779518:9",
+          "start": "2026-10-15T09:40:00",
+          "end": "2026-10-15T11:10:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI E - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "DESCARTES"
+          ],
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784295:9",
+          "start": "2026-10-15T11:20:00",
+          "end": "2026-10-15T12:50:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779512:9",
+          "start": "2026-10-15T13:50:00",
+          "end": "2026-10-15T17:00:00",
+          "allDay": false,
+          "description": "TD Cartable Num&#233;rique\r\n\r\n<br />\r\n\r\nRC22 - DESCARTES  [CARTABLE NUMERIQUE ]\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD Cartable Numérique",
+          "backgroundColor": "#FFEBBA",
+          "textColor": "#000000",
+          "sites": [
+            "DESCARTES"
+          ],
+          "modules": [
+            "LSIN311"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5855063:9",
+          "start": "2026-10-16T09:40:00",
+          "end": "2026-10-16T12:50:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "GERMAIN"
+          ],
+          "modules": [
+            "LSMA302"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5784249:9",
+          "start": "2026-10-16T14:00:00",
+          "end": "2026-10-16T16:00:00",
+          "allDay": false,
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC311*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        }
+      ]
+    }
+  }
+}
