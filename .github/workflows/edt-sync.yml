@@ -65,7 +65,8 @@ jobs:
           exit "$code"
 
       - name: Publier data/edt.json
-        if: github.ref == 'refs/heads/main'
+        # TEMP-TEST: la branche de test publie aussi, pour valider la synchro
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/arena/01a0f695-physiquepv-github-io'
         run: |
           set -euo pipefail
           if git diff --quiet -- data/edt.json; then
