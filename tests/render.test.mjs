@@ -123,6 +123,31 @@ if (/14 Décembre/.test($("#weekTitle").textContent)) {
   check(false, `semaine du 14 décembre attendue, obtenue : ${$("#weekTitle").textContent}`);
 }
 
+console.log("\n— mobile : seule la zone du planning défile —");
+const mobileCss = html.match(/\/\* Mobile : la page ne défile plus[\s\S]*?\n}\n/)?.[0] ?? "";
+check(/html,body\{[^}]*overflow:hidden/.test(mobileCss), "CSS mobile : la page entière ne défile pas (html, body)");
+check(/\.grid\{[^}]*overflow-y:auto/.test(mobileCss), "CSS mobile : le planning (#grid) défile verticalement si nécessaire");
+check(/\.grid\{[^}]*overscroll-behavior:contain/.test(mobileCss), "CSS mobile : le défilement ne se propage pas à la page");
+check(/\.mobile-tabs\{[^}]*position:static/.test(mobileCss), "CSS mobile : les onglets restent fixes hors de la zone défilante");
+{
+  const grid = $("#grid");
+  const pageScrolls = [];
+  const gridScrolls = [];
+  const originalWindowScrollTo = window.scrollTo;
+  window.scrollTo = (...args) => pageScrolls.push(args);
+  grid.scrollTo = (options) => gridScrolls.push(options);
+  const originalWidth = window.innerWidth;
+  window.innerWidth = 480;
+  window.scrollToDay(2, false);
+  check(gridScrolls.length === 1 && pageScrolls.length === 0, "en mobile, scrollToDay fait défiler #grid et non la page");
+  window.innerWidth = 1280;
+  window.scrollToDay(2, false);
+  check(pageScrolls.length === 1, "sur grand écran, le défilement de la page est conservé");
+  window.innerWidth = originalWidth;
+  window.scrollTo = originalWindowScrollTo;
+  delete grid.scrollTo;
+}
+
 console.log("\n— impression —");
 window.dispatchEvent(new window.Event("beforeprint"));
 const printHtml = $("#print").innerHTML;
