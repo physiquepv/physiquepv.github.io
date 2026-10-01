@@ -20,8 +20,8 @@ import { pathToFileURL } from "node:url";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const CONFIG_PATH = path.join(ROOT, "edt.config.json");
-const OUT_PATH = path.join(ROOT, "data", "edt.json");
+const CONFIG_PATH = process.env.EDT_CONFIG ? path.resolve(process.env.EDT_CONFIG) : path.join(ROOT, "edt.config.json");
+const OUT_PATH = process.env.EDT_OUT ? path.resolve(process.env.EDT_OUT) : path.join(ROOT, "data", "edt.json");
 const TZ = "Europe/Paris";
 
 const full = process.argv.includes("--full") || process.env.EDT_FULL === "1";
@@ -230,7 +230,13 @@ function hashEvents(weeks) {
 
 async function main() {
   const config = JSON.parse(await readFile(CONFIG_PATH, "utf8"));
-  const cfg = { ...config.fetch, group: config.group, semester: config.semester };
+  const cfg = {
+    ...config.fetch,
+    group: config.group,
+    semester: config.semester,
+    retries: Number(process.env.EDT_RETRIES ?? config.fetch.retries ?? 3),
+    timeoutMs: Number(process.env.EDT_TIMEOUT_MS ?? config.fetch.timeoutMs ?? 25000),
+  };
   const keys = weekKeys(cfg);
 
   console.log(`[edt] node ${process.version} — groupe ${cfg.group} — ${full ? "semestre complet" : "fenêtre glissante"} — ${keys.length} semaines`);
@@ -269,25 +275,22 @@ async function main() {
   }
 
   if (fetched === 0) {
-    console.error(`[edt] aucun appel réussi, fichier inchangé.\n  - ${errors.join("\n  - ")}`);
-    process.exit(1);
+    throw new Error(`aucun appel réussi, fichier inchangé — ${errors.join(" | ")}`);
   }
 
   // Sécurité : si tout est vide alors qu'on avait des cours, on suspecte un
   // incident côté CELCAT et on ne remplace pas les données valides.
   if (totalEvents === 0) {
     if (previous && Object.values(previous.weeks ?? {}).some((w) => w.events?.length)) {
-      console.error(
-        "[edt] toutes les semaines interrogées sont vides alors que le fichier précédent contenait des cours : " +
+      throw new Error(
+        "toutes les semaines interrogées sont vides alors que le fichier précédent contenait des cours : " +
           "abandon par prudence (panne CELCAT ou groupe introuvable).",
       );
-      process.exit(1);
     }
-    console.error(
-      "[edt] aucun créneau récupéré. Vérifie le code du groupe dans edt.config.json " +
-        `(actuellement « ${config.group} ») et la fenêtre demandée.`,
+    throw new Error(
+      `aucun créneau récupéré : vérifie le code du groupe dans edt.config.json (actuellement « ${config.group} ») ` +
+        "et la fenêtre demandée.",
     );
-    process.exit(1);
   }
 
   const output = {
@@ -338,4 +341,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { todayParis, addDays, mondayOf, weekKeys, slimEvent, hashEvents, postForm };
+export { main, todayParis, addDays, mondayOf, weekKeys, slimEvent, hashEvents, postForm, probeStrategy, fetchWeekEvents };

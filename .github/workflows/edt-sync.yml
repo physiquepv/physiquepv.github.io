@@ -18,7 +18,7 @@ on:
         type: boolean
         default: true
   push:
-    # TEMP-TEST: branche de test, à retirer
+    # TEMP-VALIDATION: branche de test, à retirer avant la fusion
     branches: [main, arena/01a0f695-physiquepv-github-io]
     paths-ignore:
       - "data/**" # évite de boucler sur ses propres commits
@@ -65,7 +65,7 @@ jobs:
           exit "$code"
 
       - name: Publier data/edt.json
-        # TEMP-TEST: la branche de test publie aussi, pour valider la synchro
+        # TEMP-VALIDATION: la branche de test publie aussi, pour valider la synchro réelle
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/arena/01a0f695-physiquepv-github-io'
         run: |
           set -euo pipefail

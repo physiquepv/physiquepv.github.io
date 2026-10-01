@@ -1,0 +1,35 @@
+name: Tests emploi du temps
+
+on:
+  push:
+    paths:
+      - "index.html"
+      - "tests/**"
+      - "scripts/**"
+      - "edt.config.json"
+      - "data/**"
+      - "package.json"
+      - ".github/workflows/edt-tests.yml"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Dépendances de test (jsdom)
+        run: npm install --no-audit --no-fund --no-package-lock
+      - name: Noyau (parsing CELCAT, filtrage du TD, annulations)
+        run: npm test
+      - name: Rendu de la page
+        run: npm run test:render
+      - name: Mode hors-ligne
+        run: npm run test:offline

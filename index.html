@@ -132,7 +132,7 @@ button:focus-visible{outline:3px solid color-mix(in srgb,#2563eb 45%,transparent
 @media(min-width:861px) and (max-width:1180px){body{padding:14px}.grid{grid-template-columns:repeat(5,220px);overflow-x:auto;padding:3px 3px 14px;scroll-snap-type:x proximity;scrollbar-color:var(--border) transparent}.day{scroll-snap-align:start}.grid::-webkit-scrollbar{height:8px}.grid::-webkit-scrollbar-thumb{border-radius:999px;background:var(--border)}}
 @media(max-width:860px){body{padding:10px 10px calc(32px + env(safe-area-inset-bottom))}.header{gap:10px;padding:14px 16px;margin-bottom:10px;border-radius:var(--radius-md)}.header h1{font-size:1.15rem}.header p{font-size:.76rem}.badges{width:100%;flex-wrap:nowrap;gap:6px;padding-bottom:4px;overflow-x:auto;scrollbar-width:none}.badges::-webkit-scrollbar{display:none}.badge{flex-shrink:0;padding:4px 9px;font-size:.71rem}.legend{gap:8px;padding:8px 12px;margin-bottom:10px;font-size:.74rem}.subject-legend{flex-wrap:nowrap;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}.subject-legend::-webkit-scrollbar{display:none}.subject-legend span{flex:none}.nav{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"center center" "prev next" "today theme" "print print" "refresh refresh";gap:8px;padding:12px;margin-bottom:10px}.nav-center{grid-area:center;margin-bottom:4px}.nav-title{font-size:1.05rem}.nav-subtitle{font-size:.78rem}#prev{grid-area:prev}#next{grid-area:next}.actions{display:contents}#today{grid-area:today}#theme{grid-area:theme}.print-btn{grid-area:print}#refresh{grid-area:refresh}.btn{width:100%}.mobile-tabs{position:sticky;top:6px;z-index:40;display:flex;gap:5px;margin-bottom:12px;padding:6px max(0px,env(safe-area-inset-right)) 6px max(0px,env(safe-area-inset-left));background:var(--body);border-bottom:1px solid var(--border);box-shadow:0 8px 18px rgba(15,23,42,.08)}[data-theme=dark] .mobile-tabs{box-shadow:0 8px 18px rgba(0,0,0,.25)}.tab{flex:1;padding:8px 2px;color:var(--text);font-size:.8rem;font-weight:700;cursor:pointer;border:1px solid var(--border);border-radius:8px;background:var(--surface)}.tab.active{color:#fff;border-color:#2563eb;background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 4px 10px rgba(37,99,235,.28);transform:translateY(-1px)}.tab:active{transform:scale(.97)}.tab.current:not(.active){color:var(--today);border-color:var(--today)}.grid{grid-template-columns:1fr;gap:12px;margin-bottom:16px}.day{min-height:auto;border-radius:10px;scroll-margin-top:65px}.day.hidden{display:none}.day-head{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;text-align:left}.day-count{display:inline-block;padding:3px 8px;color:var(--muted);font-size:.72rem;font-weight:700;border:1px solid var(--border);border-radius:999px;background:var(--subtle)}.day-count.has{color:var(--maths);background:var(--maths-bg)}.day-body{position:static;display:flex;flex-direction:column;gap:12px;min-height:auto;padding:12px;background:none}.hour-scale{display:none}.current-time-line{display:none}.card{position:static;height:auto!important;left:auto;right:auto}.card-room{overflow:visible;white-space:normal;text-overflow:clip}}
 @media(max-width:480px){.header{padding:12px 14px}.header h1{font-size:1.05rem}.header p{line-height:1.35}.badge{max-width:88vw;overflow:hidden;text-overflow:ellipsis}.legend{max-height:145px;overflow-y:auto}.nav-title{font-size:.98rem}.btn{padding:9px 8px;font-size:.8rem}}
-@media print{@page{size:A4 landscape;margin:4mm 5mm}*{box-sizing:border-box!important}html,body{width:100%!important;margin:0!important;padding:0!important;color:#000!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.app{display:none!important}#print{display:block!important}.print-page{display:flex!important;flex-direction:column;width:100%;height:196mm;overflow:hidden;page-break-inside:avoid;break-inside:avoid}.print-page:first-child{page-break-after:always;break-after:page}.print-head{display:flex;flex-shrink:0;align-items:flex-end;justify-content:space-between;height:11mm;margin-bottom:2mm;padding-bottom:2px;border-bottom:2px solid #0f172a}.print-head h2{color:#0f172a!important;font-size:10pt;font-weight:800;text-transform:uppercase}.print-head p{margin-top:1px;color:#334155!important;font-size:7.5pt;font-weight:600}.print-badge{padding:2px 6px;color:#0f172a!important;white-space:nowrap;font-size:6.8pt;font-weight:700;border:1px solid #64748b;border-radius:4px;background:#f1f5f9!important}.print-table{width:100%;height:181mm;table-layout:fixed;border-collapse:collapse}.print-table th{height:6mm;padding:2px;color:#fff!important;font-size:7.5pt;font-weight:800;text-transform:uppercase;border:1px solid #0f172a;background:#0f172a!important}.print-table th:first-child{width:9%}.print-table td{padding:1.5px 2px;color:#000!important;vertical-align:middle;border:1px solid #94a3b8;background:#fff!important}.print-week{text-align:center;background:#f8fafc!important}.print-week b{display:block;color:#0f172a!important;font-size:7.2pt}.print-week span{display:block;margin-top:2px;color:#334155!important;font-size:6.3pt;font-weight:700}.p-item{display:block;margin-bottom:1.5px;padding:1.5px 2px;color:#0f172a!important;font-size:6.2pt;line-height:1.12;border-left:3px solid #94a3b8;border-radius:2px}.p-item:last-child{margin-bottom:0}.p-item.maths{border-left-color:#1d4ed8;background:#eff6ff!important}.p-item.info{border-left-color:#0284c7;background:#f0f9ff!important}.p-item.micro{border-left-color:#059669;background:#ecfdf5!important}.p-item.macro{border-left-color:#0f766e;background:#f0fdfa!important}.p-item.socio{border-left-color:#7c3aed;background:#f5f3ff!important}.p-item.anglais{border-left-color:#b45309;background:#fffbeb!important}.p-time{font-weight:800}.p-type{font-weight:800;text-transform:uppercase}.p-room{color:#334155!important;font-size:5.7pt;font-weight:600}.p-empty{color:#64748b!important;text-align:center;font-size:6.2pt;font-style:italic}.p-alert{padding:4px 2px;color:#991b1b!important;text-align:center;font-size:6.4pt;font-weight:800;border:1px solid #f87171;border-radius:3px;background:#fef2f2!important}}
+@media print{@page{size:A4 landscape;margin:4mm 5mm}*{box-sizing:border-box!important}html,body{width:100%!important;margin:0!important;padding:0!important;color:#000!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.app{display:none!important}#print{display:block!important}.print-page{display:flex!important;flex-direction:column;width:100%;height:196mm;overflow:hidden;page-break-inside:avoid;break-inside:avoid}.print-page:first-child{page-break-after:always;break-after:page}.print-head{display:flex;flex-shrink:0;align-items:flex-end;justify-content:space-between;height:11mm;margin-bottom:2mm;padding-bottom:2px;border-bottom:2px solid #0f172a}.print-head h2{color:#0f172a!important;font-size:10pt;font-weight:800;text-transform:uppercase}.print-head p{margin-top:1px;color:#334155!important;font-size:7.5pt;font-weight:600}.print-badge{padding:2px 6px;color:#0f172a!important;white-space:nowrap;font-size:6.8pt;font-weight:700;border:1px solid #64748b;border-radius:4px;background:#f1f5f9!important}.print-table{width:100%;height:181mm;table-layout:fixed;border-collapse:collapse}.print-table th{height:6mm;padding:2px;color:#fff!important;font-size:7.5pt;font-weight:800;text-transform:uppercase;border:1px solid #0f172a;background:#0f172a!important}.print-table th:first-child{width:9%}.print-table td{padding:1.5px 2px;color:#000!important;vertical-align:middle;border:1px solid #94a3b8;background:#fff!important}.print-week{text-align:center;background:#f8fafc!important}.print-week b{display:block;color:#0f172a!important;font-size:7.2pt}.print-week span{display:block;margin-top:2px;color:#334155!important;font-size:6.3pt;font-weight:700}.p-item{display:block;margin-bottom:1.5px;padding:1.5px 2px;color:#0f172a!important;font-size:6.2pt;line-height:1.12;border-left:3px solid #94a3b8;border-radius:2px}.p-item:last-child{margin-bottom:0}.p-item.maths{border-left-color:#1d4ed8;background:#eff6ff!important}.p-item.info{border-left-color:#0284c7;background:#f0f9ff!important}.p-item.micro{border-left-color:#059669;background:#ecfdf5!important}.p-item.macro{border-left-color:#0f766e;background:#f0fdfa!important}.p-item.socio{border-left-color:#7c3aed;background:#f5f3ff!important}.p-item.anglais{border-left-color:#b45309;background:#fffbeb!important}.p-time{font-weight:800}.p-type{font-weight:800;text-transform:uppercase}.p-room{color:#334155!important;font-size:5.7pt;font-weight:600}.p-empty{color:#64748b!important;text-align:center;font-size:6.2pt;font-style:italic}.p-item.cancelled{border-left-color:#dc2626;background:#fef2f2!important}.p-item.ghost{border-left-color:#94a3b8;border-left-style:dashed;opacity:.85}.p-alert{padding:4px 2px;color:#991b1b!important;text-align:center;font-size:6.4pt;font-weight:800;border:1px solid #f87171;border-radius:3px;background:#fef2f2!important}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 <style>
@@ -263,6 +263,20 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 .live-banner{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 14px;border:1px solid var(--border-soft);border-radius:12px;background:var(--surface);font-size:.78rem;box-shadow:var(--shadow-xs)}
 .live-banner strong{font-weight:800}
 .sync-btn{margin-left:auto}
+.changes{display:flex;flex-direction:column;gap:4px;margin:-6px 0 16px;padding:12px 16px;color:#7f1d1d;font-size:.79rem;line-height:1.5;border:1px solid #fecaca;border-radius:14px;background:#fef2f2;box-shadow:var(--shadow-xs)}
+[data-theme=dark] .changes{color:#fecaca;border-color:#7f1d1d;background:#2a1212}
+.changes strong{font-weight:800}
+.changes ul{margin:4px 0 0;padding-left:18px}
+.changes li{margin:3px 0}
+.changes em{font-style:normal;font-weight:700}
+.card.ghost{opacity:.62;border-style:dashed;border-left-color:#94a3b8!important;background:color-mix(in srgb,var(--subtle) 75%,transparent)!important;position:relative}
+.card.ghost .card-title{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
+.card.ghost::before{content:"❓ À VÉRIFIER";position:absolute;top:6px;right:8px;padding:2px 6px;font-size:.5rem;font-weight:900;letter-spacing:.05em;color:#fff;background:#64748b;border-radius:4px}
+.card-note{margin-top:2px;color:var(--muted);font-size:.6rem;font-weight:600;line-height:1.3}
+.badge.green{background:#15803d;border-color:#22c55e}
+.badge.grey{background:#475569;border-color:#94a3b8}
+.day-count.warn{color:#b91c1c;border-color:#fecaca;background:#fef2f2}
+[data-theme=dark] .day-count.warn{color:#fecaca;border-color:#7f1d1d;background:#2a1212}
 </style>
 </head>
 <body>
@@ -271,7 +285,7 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 <header class="header">
 <div>
 <h1>Emploi du temps · Semestre 3 · LIVE</h1>
-<p>L2 MIASHS • UVSQ • Année 2026/2027 • Synchronisé avec <strong>edt.uvsq.fr</strong> (S3MIASHS)</p>
+<p>L2 MIASHS • UVSQ • Année 2026/2027 • Synchronisé automatiquement avec <strong>edt.uvsq.fr</strong> (groupe S3MIASHS) toutes les 10 minutes</p>
 </div>
 <div class="badges">
 <span class="badge orange" id="liveStatus">🔄 Connexion à Celcat...</span>
@@ -285,12 +299,15 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 <button class="btn sync-btn" id="refresh" onclick="refreshCurrentWeek(true)">🔄 Actualiser</button>
 </div>
 
+<div class="changes" id="changes" hidden></div>
+
 <section class="legend">
 <span class="legend-title">Repères :</span>
 <span class="legend-item"><span class="dot perso-dot"></span><strong>TD spécifique</strong></span>
 <span class="legend-item"><span class="dot reuni-dot"></span><strong>TD commun</strong></span>
 <span class="legend-item"><span class="dot cm-dot"></span><strong>CM</strong></span>
 <span class="legend-item" style="border-color:#fecaca;background:#fef2f2;color:#991b1b">⚠️ Annulé / Prof absent</span>
+<span class="legend-item" style="border-color:#cbd5e1;background:var(--subtle);color:var(--muted)">❓ Retiré du planning officiel</span>
 <span class="subject-legend" aria-label="Couleurs"><span><i style="--subject:#1d4ed8"></i>Maths</span><span><i style="--subject:#0284c7"></i>BDD</span><span><i style="--subject:#059669"></i>Micro</span><span><i style="--subject:#0f766e"></i>Macro</span><span><i style="--subject:#7c3aed"></i>Socio</span><span><i style="--subject:#b45309"></i>Anglais</span></span>
 </section>
 
@@ -323,211 +340,1010 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 <section id="print"></section>
 <script>
 if("scrollRestoration" in history) history.scrollRestoration="manual";
-const DAY_NAMES=["Lundi","Mardi","Mercredi","Jeudi","Vendredi"];
-const MONTHS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
-const HOURS=Array.from({length:12},(_,i)=>i+8);
-const TIMELINE={start:8*60,end:19*60,top:14,pixelsPerMinute:1.3};
-function hourScaleHTML(){return `<div class="hour-scale" aria-hidden="true">${HOURS.map(hour=>{const minutes=hour*60;const top=TIMELINE.top+(minutes-TIMELINE.start)*TIMELINE.pixelsPerMinute;return `<span style="top:${top}px">${String(hour).padStart(2,"0")}:00</span>`;}).join("")}</div>`;}
-const MONDAYS=[[2026,8,14],[2026,8,21],[2026,8,28],[2026,9,5],[2026,9,12],[2026,9,19],[2026,10,2],[2026,10,9],[2026,10,16],[2026,10,23],[2026,10,30],[2026,11,7],[2026,11,14]].map(x=>new Date(...x));
-const TITLES=["Semaine 1 : 14 – 19 Septembre 2026","Semaine 2 : 21 – 26 Septembre 2026","Semaine 3 : 28 Septembre – 03 Octobre 2026","Semaine 4 : 05 – 10 Octobre 2026","Semaine 5 : 12 – 17 Octobre 2026","Semaine 6 : 19 – 24 Octobre 2026","Semaine 7 : 02 – 07 Novembre 2026","Semaine 8 : 09 – 14 Novembre 2026","Semaine 9 : 16 – 21 Novembre 2026","Semaine 10 : 23 – 28 Novembre 2026","Semaine 11 : 30 Novembre – 05 Décembre 2026","Semaine 12 : 07 – 12 Décembre 2026","Semaine 13 : 14 – 19 Décembre 2026"];
-const SUBTITLES=["Lancement du semestre","Lancement des TD BDD et Micro • Séance 1/4 TD Macro","Semaine régulière","Anglais puis TD 2 de Macro","Semaine régulière","TD 3 Macro • Jeudi libéré","Reprise après Toussaint • Dernier TD Macro","Mercredi 11 nov férié","Semaine régulière","Dernier Anglais mardi et dernier CM Macro","Mardi libéré","Avant-dernière semaine","Dernières séances"];
-const MACRO_ROOMS=["AMPHI D - DESCARTES","Amphi F (Fermat) & Amphi B (Descartes)","2201 & 2204 - FERMAT","2201 & 2204 - FERMAT","Amphi B (Descartes) & 2204 (Fermat)","2201 & 2204 - FERMAT","2201 & 2204 - FERMAT","2201 & 2204 - FERMAT","2201 & 2204 - FERMAT","2201 & 2204 - FERMAT"];
-const course=(time,type,cat,title,room,tag,tagType)=>({time,type,cat,title,room,tag,tagType,isCancelled:false});
-const mondayCourses=week=>{const last=week===12;const courses=[course("09:40 - 11:10","CM","socio","Sociologie : démographie","2203 - FERMAT",last?"CM Promo (Dernier)":"CM Promo","cm"),course("11:20 - 12:50","TD","socio","Sociologie : démographie","2203 - FERMAT",last?"TD Promo réunie (Dernier)":"TD Promo réunie (TD 1 & 2)","reuni")];if(week>0){courses.push(course("15:30 - 17:00","TD","micro","Microéconomie 2","2206 - FERMAT",last?"Votre TD 02 (Dernier)":"Votre TD 02","perso"));}return courses;};
-const tuesdayCourses=week=>{if(week>9) return [];const englishTag=week===9?"Votre TD 01 (Séance finale Mar)":`Votre TD 01 (Séance ${week+1}/10)`;return[course("08:00 - 09:30","TD","anglais","Anglais UE2","E303 - Joliot-Curie",englishTag,"perso"),course("09:40 - 12:50","CM","macro","Macroéconomie 2",MACRO_ROOMS[week],week===9?"CM Promo (Séance finale)":"CM Promo","cm")];};
-const wednesdayCourses=week=>{if(week===7) return [];const last=week===12;const courses=[course("09:40 - 12:50","TD","maths","Analyse 2 & Algèbre linéaire 2","AMPHI G - FERMAT",last?"Votre TD 02 (Dernier)":"Votre TD 02","perso"),course("13:50 - 15:20","TD","anglais","Anglais UE2","E303 - Joliot-Curie",last?"Votre TD Anglais (Dernier)":"Votre TD Anglais","perso")];const macroSession={1:1,3:2,5:3,6:4}[week];if(macroSession){courses.push(course("15:30 - 18:40","TD","macro","Macroéconomie 2","AMPHI F - FERMAT",`TD Promo réunie (Séance ${macroSession}/4${macroSession===4?" finale":""})`,"reuni"));}return courses;};
-const thursdayCourses=week=>{if(week===5) return [];const last=week===12;const courses=[course("09:40 - 11:10","CM","info",week<2?"Initiation aux bases de données":"Initiation bases de données","AMPHI E - DESCARTES",last?"CM Promo (Dernier)":"CM Promo","cm"),course("11:20 - 12:50","CM","maths","Analyse 2 & Algèbre linéaire 2","AMPHI G - FERMAT",last?"CM Promo (Dernier)":"CM Promo","cm")];if(week>0){courses.push(course("13:50 - 17:00","TD Machine","info","Initiation bases de données","RC22 - DESCARTES",last?"Votre TD 02 (Dernier)":"Votre TD 02","perso"));}return courses;};
-const fridayCourses=week=>[course("14:00 - 16:00","CM","micro","Microéconomie 2","AMPHI G - FERMAT",week===12?"CM Promo (Dernier)":"CM Promo","cm")];
-const formatDate=date=>`${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
-const formatISO=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-const fallbackWeeks=MONDAYS.map((monday,week)=>({id:week+1,title:TITLES[week],subtitle:SUBTITLES[week],days:DAY_NAMES.map((name,day)=>{const date=new Date(monday.getFullYear(),monday.getMonth(),monday.getDate()+day);const builders=[mondayCourses,tuesdayCourses,wednesdayCourses,thursdayCourses,fridayCourses];return{name,date:formatDate(date),realDate:date,courses:builders[day](week)};})}));
-const $=s=>document.querySelector(s); const $$=s=>document.querySelectorAll(s);
-let currentWeek=0; let mobileFilter="all"; let activeTarget=null;
-let liveCache={};
+/* ==========================================================================
+   Emploi du temps L2 MIASHS — UVSQ
+   Source officielle : edt.uvsq.fr (CELCAT), groupe S3MIASHS
+   --------------------------------------------------------------------------
+   Comment ça marche :
+   1. Un workflow GitHub Actions interroge CELCAT toutes les 10 minutes
+      (impossible depuis le navigateur : CELCAT n'autorise pas le CORS) et
+      publie le planning brut dans data/edt.json.
+   2. Cette page lit data/edt.json, filtre les cours du groupe (promo +
+      TD 02), détecte les annulations / absences de prof et affiche la
+      semaine correspondant à la date du jour.
+   3. Si le fichier est indisponible, elle tente un appel direct (puis via
+      des proxys publics). En dernier recours seulement, l'emploi du temps
+      de secours codé en dur est utilisé (badge « hors-ligne »).
+   ========================================================================== */
+"use strict";
 
-// --- LIVE LOGIC ---
-const FORMATION_ID="S3MIASHS";
-const API_URL="https://edt.uvsq.fr/Home/GetCalendarData";
-const PROXY_URLS=["https://corsproxy.io/?","https://api.allorigins.win/raw?url="];
+/* ===== CORE-START ===== (noyau testable sans DOM : voir tests/edt.test.mjs) */
+/* ---------------------------------------------------------------- config */
+const params = new URLSearchParams(typeof location !== "undefined" ? location.search : "");
+const CONFIG = {
+  group: params.get("group") || "S3MIASHS",
+  myTd: params.get("td") || "S3MIASHS TD 2",
+  label: "L2 MIASHS — Semestre 3",
+  semester: { start: "2026-09-14", end: "2026-12-19" },
+  apiUrl: "https://edt.uvsq.fr/Home/GetCalendarData",
+  dataUrl: "data/edt.json",
+  cacheKey: "edt_live_cache_v2",
+  dataMaxAgeMs: 30 * 60 * 1000,
+  refreshMs: 5 * 60 * 1000,
+  requestTimeoutMs: 9000,
+  proxies: [
+    { name: "allorigins", wrap: (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` },
+    { name: "corsfix", wrap: (url) => `https://proxy.corsfix.com/?${url}` },
+    { name: "cors.lol", wrap: (url) => `https://api.cors.lol/?url=${encodeURIComponent(url)}` },
+    { name: "x2u", wrap: (url) => `https://cors.x2u.in/${url}` },
+  ],
+};
 
-function decodeHtml(html){const txt=document.createElement('textarea'); txt.innerHTML=html; return txt.value;}
-function parseCelcatEvent(ev){
-  const start=new Date(ev.start); const end=new Date(ev.end);
-  const rawDesc=ev.description||""; let decoded=""; try{decoded=decodeHtml(rawDesc);}catch{decoded=rawDesc;}
-  const lines=decoded.split(/<br\s*\/?>/i).map(l=>l.replace(/<[^>]*>/g,"").trim()).filter(Boolean);
-  const lower=(rawDesc+" "+(ev.eventCategory||"")).toLowerCase();
-  const isCancelled=/annul|absent|supprim|report|ferm[ée]|indisponible|congrès/i.test(lower) || (ev.backgroundColor && ["#ff0000","#ff000080","red"].includes(ev.backgroundColor.toLowerCase()));
-  // room
-  let room=""; for(const l of lines){ if(/fermat|descartes|joliot|curie|amphi|e303|rc\d+|salle|b[0-9]{3,}|220[0-9]/i.test(l) && l.length<80){ room=l; break; } }
-  if(!room && ev.location) room=ev.location;
-  // subject
-  let subject=ev.modules && ev.modules[0] ? ev.modules[0] : "";
-  const knownKeywords=["analyse","algèbre","maths","bdd","base de données","microéconomie","macroéconomie","sociologie","démographie","anglais","initiation"];
-  if(!subject){ for(const l of lines){ if(knownKeywords.some(k=>l.toLowerCase().includes(k))){ subject=l; break; } } }
-  if(!subject) subject=lines.find(l=>l.length>4 && l!==room) || "Cours";
-  // clean subject from group code
-  subject=subject.replace(/S3MIASHS\s*[-–]?\s*/i,"").trim();
-  // teacher
-  let teacher=""; for(let i=lines.length-1;i>=0;i--){ const l=lines[i]; if(l===room||l===subject) continue; if(/^[A-ZÉÈÇÂÊÎÔÛÄËÏÖÜ ]{3,30}$/.test(l) || /[A-Z][a-z]+\s+[A-Z]+/.test(l) || /prof|enseignant/i.test(l)){ teacher=l; break; } }
-  if(!teacher && lines.length>=3){ const last=lines[lines.length-1]; if(last!==room && last!==subject && last.length<40) teacher=last; }
-  let type=ev.eventCategory||""; if(!type){ const m=lines.join(" ").match(/(CM|TD|TP|TD Machine)/i); if(m) type=m[0]; } type=type.replace(/<[^>]*>/g,"").trim()||"CM";
-  let cat="info"; const ls=subject.toLowerCase(); if(ls.includes("analyse")||ls.includes("algèbre")||ls.includes("maths")) cat="maths"; else if(ls.includes("base de données")||ls.includes("bdd")||ls.includes("initiation")) cat="info"; else if(ls.includes("micro")) cat="micro"; else if(ls.includes("macro")) cat="macro"; else if(ls.includes("socio")||ls.includes("démographie")) cat="socio"; else if(ls.includes("anglais")) cat="anglais";
-  let tag=teacher||""; let tagType="perso"; if(/promo|réunie|commun/i.test(rawDesc)) tagType="reuni"; if(/^cm$/i.test(type)) tagType="cm";
-  if(isCancelled){ tag=(tag?tag+" • ":"")+"Annulé / Prof absent"; }
-  const time=`${String(start.getHours()).padStart(2,"0")}:${String(start.getMinutes()).padStart(2,"0")} - ${String(end.getHours()).padStart(2,"0")}:${String(end.getMinutes()).padStart(2,"0")}`;
-  return {time,type,cat,title:subject,room,tag,tagType,start,end,isCancelled,rawLines:lines,original:ev};
-}
-async function fetchCelcat(startStr,endStr){
-  const params=new URLSearchParams(); params.set("start",startStr); params.set("end",endStr); params.set("resType","103"); params.set("calView","agendaWeek"); params.append("federationIds[]",FORMATION_ID);
-  // attempt direct
-  const attempts=[
-    {url:API_URL, body:params.toString(), method:"POST"},
-    {url:"https://corsproxy.io/?"+encodeURIComponent(API_URL), body:params.toString(), method:"POST"},
-    {url:API_URL+"?"+params.toString(), body:null, method:"GET"}
-  ];
-  for(const att of attempts){
-    try{
-      const resp=await fetch(att.url,{method:att.method, headers: att.method==="POST"?{"Content-Type":"application/x-www-form-urlencoded; charset=UTF-8"}:{}, body: att.method==="POST"?att.body:undefined});
-      if(!resp.ok) continue;
-      const text=await resp.text();
-      let data; try{ data=JSON.parse(text); }catch{ continue; }
-      if(Array.isArray(data)) return data;
-    }catch(e){ console.warn("fetch attempt failed", att.url, e); continue; }
-  }
-  throw new Error("Celcat inaccessible (CORS ou réseau)");
-}
-async function fetchLiveWeek(weekIndex, force=false){
-  const monday=MONDAYS[weekIndex];
-  const startStr=formatISO(monday);
-  const endDate=new Date(monday); endDate.setDate(monday.getDate()+6);
-  const endStr=formatISO(endDate);
-  const cacheKey=`edt_live_${FORMATION_ID}_${startStr}`;
-  if(!force){
-    const cached=localStorage.getItem(cacheKey);
-    if(cached){ try{ const obj=JSON.parse(cached); if(Date.now()-obj.ts<10*60*1000) return obj.data; }catch{} }
-  }
-  const data=await fetchCelcat(startStr,endStr);
-  localStorage.setItem(cacheKey, JSON.stringify({ts:Date.now(), data}));
-  return data;
-}
-function buildDaysFromEvents(events, monday){
-  const days=[];
-  for(let d=0; d<5; d++){
-    const date=new Date(monday.getFullYear(), monday.getMonth(), monday.getDate()+d);
-    const dayEvents=events.filter(ev=>{ const s=new Date(ev.start); return s.getFullYear()===date.getFullYear() && s.getMonth()===date.getMonth() && s.getDate()===date.getDate(); }).map(parseCelcatEvent).sort((a,b)=>a.start-b.start);
-    days.push({name:DAY_NAMES[d], date:formatDate(date), realDate:date, courses:dayEvents});
-  }
-  return days;
-}
+const DAY_NAMES = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+const MONTHS_LONG = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+const MONTHS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+const HOURS = Array.from({ length: 12 }, (_, i) => i + 8);
+const TIMELINE = { start: 8 * 60, end: 19 * 60, top: 14, pixelsPerMinute: 1.3 };
 
-// --- THEME ---
-function initTheme(){const stored=localStorage.getItem("schedule_theme");const systemDark=matchMedia?.("(prefers-color-scheme:dark)").matches;applyTheme(stored||(systemDark?"dark":"light"));}
-function applyTheme(theme){document.documentElement.dataset.theme=theme;const button=$("#theme");const dark=theme==="dark";button.textContent=dark?"☀ Clair":"🌙 Sombre";button.title=dark?"Passer en mode clair":"Passer en mode sombre";}
-function toggleTheme(){const next=document.documentElement.dataset.theme==="dark"?"light":"dark";localStorage.setItem("schedule_theme",next);applyTheme(next);}
-function endMinutes(time){const end=time.split("-")[1].trim().split(":").map(Number);return end[0]*60+end[1];}
-function semesterCalendar(weeksSrc){return weeksSrc.flatMap((week,weekIndex)=>week.days.map((day,dayIndex)=>({weekIndex,dayIndex,date:day.realDate,courses:day.courses,last:day.courses.length?Math.max(...day.courses.map(c=>endMinutes(c.time))):0})));}
-function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
-function calculateTarget(weeksSrc){const now=new Date();const minutes=now.getHours()*60+now.getMinutes();const calendar=semesterCalendar(weeksSrc);const todayIndex=calendar.findIndex(item=>sameDay(item.date,now));let target;let ongoing=false;let future=false;if(todayIndex>=0){const today=calendar[todayIndex];if(today.courses.length&&minutes<today.last){target=today;ongoing=true;}else{target=calendar.slice(todayIndex+1).find(x=>x.courses.length);future=!!target;target ||=today;}}else{const midnight=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();target=calendar.find(x=>x.date.getTime()>=midnight&&x.courses.length);future=!!target;if(!target){target=midnight<calendar[0].date.getTime()?calendar[0]:calendar.at(-1);}}return{weekIndex:target.weekIndex,dayIndex:target.dayIndex,ongoing,future};}
-function position(time){const toMinutes=value=>{const [hours,minutes]=value.trim().split(":").map(Number);return hours*60+minutes;};const [start,end]=time.split("-").map(toMinutes);const top=TIMELINE.top+(start-TIMELINE.start)*TIMELINE.pixelsPerMinute;const height=(end-start)*TIMELINE.pixelsPerMinute-8;return{top:Math.round(top),height:Math.max(64,Math.round(height))};}
-function currentTimeLine(day){const now=new Date();if(!sameDay(day.realDate,now)) return "";const minutes=now.getHours()*60+now.getMinutes();if(minutes<TIMELINE.start||minutes>TIMELINE.end) return "";const top=TIMELINE.top+(minutes-TIMELINE.start)*TIMELINE.pixelsPerMinute;return `<div class="current-time-line" style="top:${Math.round(top)}px" role="presentation" aria-label="Heure actuelle"></div>`;}
-function startMinutes(time){const [h,m]=time.split("-")[0].trim().split(":").map(Number);return h*60+m;}
-function isCourseRunning(course,day){const now=new Date();if(!sameDay(day.realDate,now)) return false;const minutes=now.getHours()*60+now.getMinutes();return minutes>=startMinutes(course.time)&&minutes<endMinutes(course.time);}
-function emptyMessage(weekIndex,dayIndex){if(weekIndex===5&&dayIndex===3) return "🚫 Trophée SQY Campus — Journée sans cours";if(weekIndex===7&&dayIndex===2) return "🚫 Mercredi 11 novembre férié — Université fermée";return "🌴 Journée libre — Aucun cours programmé";}
-function cardHTML(c,day){
-  const p=position(c.time);
-  const cancelled=c.isCancelled?" cancelled":"";
-  const running=isCourseRunning(c,day)?" running":"";
-  return `<article class="card ${c.cat}${cancelled}${running}" style="top:${p.top}px;height:${p.height}px" tabindex="0" title="${c.title} — ${c.time} — ${c.room} — ${c.tag}"><div class="card-time"><span>${c.time}</span><span class="course-type">${c.type}</span></div><div class="card-title">${c.title}</div><div class="card-room" title="${c.room}">📍 ${c.room}</div><div class="card-tag ${c.tagType}">${c.tag||"Groupe "+FORMATION_ID}</div></article>`;
+/* repères de date */
+const pad2 = (n) => String(n).padStart(2, "0");
+const formatISO = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const parseISO = (iso) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d);
+};
+function addDaysISO(iso, days) {
+  const d = parseISO(iso);
+  d.setDate(d.getDate() + days);
+  return formatISO(d);
 }
-async function renderWeek(index, force=false){
-  currentWeek=index;
-  const fallback=fallbackWeeks[index];
-  const monday=MONDAYS[index];
-  $("#weekTitle").textContent=TITLES[index];
-  $("#weekSubtitle").textContent=force?"Actualisation depuis edt.uvsq.fr...":"Chargement live...";
-  $("#weekProgress").style.width=`${((index+1)/fallbackWeeks.length)*100}%`;
-  $("#prev").disabled=index===0; $("#next").disabled=index===fallbackWeeks.length-1;
-  // show skeleton loading
-  $("#grid").innerHTML=fallback.days.map((day,dayIndex)=>`<section class="day" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date">${day.date}</div></div><span class="day-count">Chargement...</span></header><div class="day-body"><div class="empty">⏳ Récupération sur edt.uvsq.fr...</div></div></section>`).join("");
-  let events=null; let liveDays=null; let error=null; let usedLive=false;
-  try{
-    events=await fetchLiveWeek(index, force);
-    liveDays=buildDaysFromEvents(events, monday);
-    usedLive=true;
-    liveCache[index]=liveDays;
-    $("#liveStatus").textContent=`🟢 Live Celcat • ${events.length} créneaux`;
-    $("#liveStatus").className="badge blue";
-    $("#liveBannerTitle").textContent="Synchronisé avec Celcat";
-    $("#liveBannerText").textContent=`${events.length} cours récupérés pour cette semaine. Les annulations et changements de salle sont à jour. Dernière synchro: ${new Date().toLocaleTimeString()}`;
-    $("#weekSubtitle").textContent=`Données officielles UVSQ • ${events.length} créneaux • Semaine ${index+1}/${fallbackWeeks.length} • Prof absents détectés automatiquement`;
-  }catch(e){
-    console.error(e); error=e;
-    const cachedWeek=localStorage.getItem(`edt_week_cache_${index}`);
-    if(cachedWeek){
-      try{
-        const obj=JSON.parse(cachedWeek);
-        liveDays=obj.days.map(d=>({ ...d, realDate:new Date(d.realDate), courses: d.courses.map(c=>({ ...c, start:new Date(c.start), end:new Date(c.end) })) }));
-        usedLive=true;
-        $("#liveStatus").textContent=`🟠 Cache local • ${liveDays.flatMap(d=>d.courses).length} cours`;
-        $("#liveStatus").className="badge orange";
-        $("#liveBannerText").textContent=`Mode hors-ligne : Celcat inaccessible (${e.message}). Affichage du cache local.`;
-        $("#weekSubtitle").textContent=`Cache local • Semaine ${index+1}/${fallbackWeeks.length} • Erreur: ${e.message}`;
-      }catch{}
+function mondayOf(iso) {
+  const d = parseISO(iso);
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  return formatISO(d);
+}
+const todayISO = () => formatISO(new Date());
+const formatDate = (d) => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+const formatDateShort = (d) => `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}`;
+const minutesOf = (time) => { const [h, m] = time.split(":").map(Number); return h * 60 + m; };
+const startMinutes = (slot) => minutesOf(slot.split("-")[0].trim());
+const endMinutes = (slot) => minutesOf(slot.split("-")[1].trim());
+const slotOf = (startMin, endMin) => `${pad2(Math.floor(startMin / 60))}:${pad2(startMin % 60)} - ${pad2(Math.floor(endMin / 60))}:${pad2(endMin % 60)}`;
+const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const stripAccents = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+/* ======================================================================
+   EMPLOI DU TEMPS DE SECOURS (dernier recours hors-ligne)
+   ====================================================================== */
+const MONDAYS = [[2026, 8, 14], [2026, 8, 21], [2026, 8, 28], [2026, 9, 5], [2026, 9, 12], [2026, 9, 19], [2026, 10, 2], [2026, 10, 9], [2026, 10, 16], [2026, 10, 23], [2026, 10, 30], [2026, 11, 7], [2026, 11, 14]].map((x) => new Date(...x));
+const TITLES = ["Semaine 1 : 14 – 19 Septembre 2026", "Semaine 2 : 21 – 26 Septembre 2026", "Semaine 3 : 28 Septembre – 03 Octobre 2026", "Semaine 4 : 05 – 10 Octobre 2026", "Semaine 5 : 12 – 17 Octobre 2026", "Semaine 6 : 19 – 24 Octobre 2026", "Semaine 7 : 02 – 07 Novembre 2026", "Semaine 8 : 09 – 14 Novembre 2026", "Semaine 9 : 16 – 21 Novembre 2026", "Semaine 10 : 23 – 28 Novembre 2026", "Semaine 11 : 30 Novembre – 05 Décembre 2026", "Semaine 12 : 07 – 12 Décembre 2026", "Semaine 13 : 14 – 19 Décembre 2026"];
+const SUBTITLES = ["Lancement du semestre", "Lancement des TD BDD et Micro • Séance 1/4 TD Macro", "Semaine régulière", "Anglais puis TD 2 de Macro", "Semaine régulière", "TD 3 Macro • Jeudi libéré", "Reprise après Toussaint • Dernier TD Macro", "Mercredi 11 nov férié", "Semaine régulière", "Dernier Anglais mardi et dernier CM Macro", "Mardi libéré", "Avant-dernière semaine", "Dernières séances"];
+const MACRO_ROOMS = ["AMPHI D - DESCARTES", "Amphi F (Fermat) & Amphi B (Descartes)", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT", "Amphi B (Descartes) & 2204 (Fermat)", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT"];
+const course = (time, type, cat, title, room, tag, tagType) => ({ time, type, cat, title, room, tag, tagType, isCancelled: false });
+const mondayCourses = (week) => { const last = week === 12; const courses = [course("09:40 - 11:10", "CM", "socio", "Sociologie : démographie", "2203 - FERMAT", last ? "CM Promo (Dernier)" : "CM Promo", "cm"), course("11:20 - 12:50", "TD", "socio", "Sociologie : démographie", "2203 - FERMAT", last ? "TD Promo réunie (Dernier)" : "TD Promo réunie (TD 1 & 2)", "reuni")]; if (week > 0) { courses.push(course("15:30 - 17:00", "TD", "micro", "Microéconomie 2", "2206 - FERMAT", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso")); } return courses; };
+const tuesdayCourses = (week) => { if (week > 9) return []; const englishTag = week === 9 ? "Votre TD 01 (Séance finale Mar)" : `Votre TD 01 (Séance ${week + 1}/10)`; return [course("08:00 - 09:30", "TD", "anglais", "Anglais UE2", "E303 - Joliot-Curie", englishTag, "perso"), course("09:40 - 12:50", "CM", "macro", "Macroéconomie 2", MACRO_ROOMS[week] ?? MACRO_ROOMS[0], week === 9 ? "CM Promo (Séance finale)" : "CM Promo", "cm")]; };
+const wednesdayCourses = (week) => { if (week === 7) return []; const last = week === 12; const courses = [course("09:40 - 12:50", "TD", "maths", "Analyse 2 & Algèbre linéaire 2", "AMPHI G - FERMAT", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso"), course("13:50 - 15:20", "TD", "anglais", "Anglais UE2", "E303 - Joliot-Curie", last ? "Votre TD Anglais (Dernier)" : "Votre TD Anglais", "perso")]; const macroSession = { 1: 1, 3: 2, 5: 3, 6: 4 }[week]; if (macroSession) { courses.push(course("15:30 - 18:40", "TD", "macro", "Macroéconomie 2", "AMPHI F - FERMAT", `TD Promo réunie (Séance ${macroSession}/4${macroSession === 4 ? " finale" : ""})`, "reuni")); } return courses; };
+const thursdayCourses = (week) => { if (week === 5) return []; const last = week === 12; const courses = [course("09:40 - 11:10", "CM", "info", week < 2 ? "Initiation aux bases de données" : "Initiation bases de données", "AMPHI E - DESCARTES", last ? "CM Promo (Dernier)" : "CM Promo", "cm"), course("11:20 - 12:50", "CM", "maths", "Analyse 2 & Algèbre linéaire 2", "AMPHI G - FERMAT", last ? "CM Promo (Dernier)" : "CM Promo", "cm")]; if (week > 0) { courses.push(course("13:50 - 17:00", "TD Machine", "info", "Initiation bases de données", "RC22 - DESCARTES", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso")); } return courses; };
+const fridayCourses = (week) => [course("14:00 - 16:00", "CM", "micro", "Microéconomie 2", "AMPHI G - FERMAT", week === 12 ? "CM Promo (Dernier)" : "CM Promo", "cm")];
+const fallbackWeeks = MONDAYS.map((monday, week) => ({
+  id: week + 1,
+  title: TITLES[week],
+  subtitle: SUBTITLES[week],
+  monday: formatISO(monday),
+  source: "reference",
+  days: DAY_NAMES.map((name, day) => {
+    const date = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + day);
+    const builders = [mondayCourses, tuesdayCourses, wednesdayCourses, thursdayCourses, fridayCourses];
+    return { name, date: formatDate(date), realDate: date, courses: builders[day](week) };
+  }),
+}));
+const REFERENCE_BY_MONDAY = new Map(fallbackWeeks.map((week) => [week.monday, week]));
+
+/* ======================================================================
+   NOYAU DE DONNÉES (indépendant du DOM — testé par tests/edt.test.mjs)
+   ====================================================================== */
+
+/** Format CELCAT : les 6 rubriques sont séparées par « \r\n\r\n<br />\r\n\r\n ». */
+const SECTION_SEP = /(?:\r?\n){2}\s*<br\s*\/?>\s*(?:\r?\n){2}/i;
+const FAMILIES = [
+  ["maths", /analys|alg[eè]bre|alg\b|math|lsma/i],
+  ["socio", /socio|d[ée]mograph|lsso/i],
+  ["micro", /micro|lsec311/i],
+  ["macro", /macro|lsec312/i],
+  ["anglais", /anglais|lsang|langue/i],
+  ["info", /base de donn|bdd|initiation|informatique|num[ée]rique|lsin/i],
+];
+const ROOM_RE = /fermat|descartes|joliot|curie|germain|buffon|amphi|moodle|distanciel|cartable|salle|^\s*(?:rc|e|b|g|a|f|c|d)\s?-?\s?\d{2,4}\b|^\s*\d{3,5}\s*[-\u2013]\s*[a-z]/i;
+const NAMED_ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: "\u00a0", eacute: "é", egrave: "è", agrave: "à", ecirc: "ê", ccedil: "ç", ugrave: "ù", ocirc: "ô", icirc: "î", acirc: "â", ucirc: "û", euml: "ë", iuml: "ï", egrave: "è", deg: "°", hellip: "…", rsquo: "’", lsquo: "‘", laquo: "«", raquo: "»", mdash: "—", ndash: "–", middot: "·", euro: "€", times: "×", copy: "©", uuml: "ü", ouml: "ö", auml: "ä", ccedil: "ç", oelig: "œ", nbsp: "\u00a0" };
+function decodeEntities(value) {
+  return String(value ?? "").replace(/&(#[xX]?[0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);/g, (match, entity) => {
+    if (entity[0] === "#") {
+      const code = entity[1] === "x" || entity[1] === "X" ? parseInt(entity.slice(2), 16) : Number(entity.slice(1));
+      return Number.isFinite(code) && code > 0 ? String.fromCodePoint(code) : match;
     }
-    if(!liveDays){
-      liveDays=fallback.days;
-      usedLive=false;
-      $("#liveStatus").textContent="🔴 Hors-ligne • version codée en dur";
-      $("#liveStatus").className="badge orange";
-      $("#liveBannerTitle").textContent="Mode hors-ligne";
-      $("#liveBannerText").textContent=`Impossible de joindre edt.uvsq.fr (${e.message}). Affichage de la version de secours codée en dur. Vérifie ta connexion ou utilise un VPN UVSQ. Le code réessaiera automatiquement.`;
-      $("#weekSubtitle").textContent=fallback.subtitle+" • (hors-ligne)";
+    return NAMED_ENTITIES[entity.toLowerCase()] ?? match;
+  });
+}
+
+function cleanFragment(fragment) {
+  return decodeEntities(String(fragment ?? "").replace(/<br\s*\/?>/gi, "\n"))
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s*\n\s*/g, "\n")
+    .split("\n")
+    .map((line) => line.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
+function stripResourceSuffix(value) {
+  return String(value).replace(/\s*\[[^\]]*\]\s*$/, "").trim();
+}
+function stripCapacity(value) {
+  return String(value).replace(/\s*\(\s*\d+\s*\/\s*\d+\s*\)\s*/g, " ").replace(/\s+/g, " ").trim();
+}
+function normalizeModuleName(value) {
+  const name = stripResourceSuffix(value).replace(/^(?:[A-Z0-9_*]{4,}\s*[-–]\s*)+/, "");
+  return name.replace(/\s{2,}/g, " ").trim();
+}
+function familyOf(text) {
+  const haystack = stripAccents(String(text ?? "")).toLowerCase();
+  for (const [family, re] of FAMILIES) if (re.test(haystack)) return family;
+  return "info";
+}
+
+/** Transforme un événement CELCAT brut en cours normalisé (sans DOM). */
+const parseCache = new WeakMap();
+function parseEvent(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  const hit = parseCache.get(raw);
+  if (hit !== undefined) return hit;
+  const result = parseEventUncached(raw);
+  parseCache.set(raw, result);
+  return result;
+}
+
+/** Découpe la description CELCAT en rubriques (le <br /> sépare les rubriques). */
+function splitSections(description) {
+  return String(description ?? "")
+    .split(/<br\s*\/?>/i)
+    .map((fragment) => cleanFragment(fragment));
+}
+
+/**
+ * Classe une ligne de description : « module » (matière), « group » (groupe
+ * d'étudiants), « room » (salle) ou « note ». Les codes de matière fournis par
+ * l'API (raw.modules, ex. LSIN311) sont le signal le plus fiable.
+ */
+function classifyLine(line, moduleCodes) {
+  // Une salle peut se terminer par un suffixe entre crochets
+  // (« 2203 - FERMAT [Salle de TD] ») : on la reconnaît avant tout.
+  if (ROOM_RE.test(line)) return "room";
+  const bracket = (line.match(/\[([^\]]+)\]\s*$/) || [, ""])[1].trim();
+  if (bracket) {
+    const clean = (value) => stripAccents(value).toUpperCase().replace(/\*/g, "").trim();
+    const isModuleCode = moduleCodes.some((code) => clean(String(code)) === clean(bracket));
+    if (isModuleCode && !/MIASHS|TD\s?\d/i.test(line)) return "module";
+    return "group";
+  }
+  return "note";
+}
+
+function parseEventUncached(raw) {
+  const start = String(raw.start ?? "");
+  const end = String(raw.end ?? "");
+  if (!start || !end || start.length < 16 || end.length < 16) return null;
+  const moduleCodes = Array.isArray(raw.modules) ? raw.modules.map((code) => String(code)) : [];
+  const sections = splitSections(raw.description);
+  const buckets = { module: [], group: [], room: [], note: [] };
+  for (const section of sections) {
+    const lines = section.filter(Boolean);
+    if (!lines.length) continue;
+    const kind = classifyLine(lines[0], moduleCodes);
+    for (const line of lines) buckets[kind].push(line);
+  }
+  const type = (sections[0]?.filter(Boolean)[0] || "").trim() || stripResourceSuffix(String(raw.eventCategory ?? "")).trim();
+  const modules = buckets.module.map((line) => stripCapacity(normalizeModuleName(line))).filter(Boolean);
+  const rooms = buckets.room.map((line) => stripCapacity(stripResourceSuffix(line))).filter(Boolean);
+  const notes = buckets.note.join(" · ");
+
+  const background = String(raw.backgroundColor ?? "").toLowerCase();
+  const cancelled = /annul|supprim|absent|indispon|report[ée]|gr[eè]ve|emp[eê]ch|ferm[eé]/i.test(`${type} ${raw.eventCategory ?? ""} ${notes}`) || ["#333333", "#333", "#ff0000", "#ff000080", "red"].includes(background);
+  const title = modules[0] || stripResourceSuffix(moduleCodes[0] || "") || type || "Cours";
+  const startMin = minutesOf(start.slice(11, 16));
+  const endMin = minutesOf(end.slice(11, 16));
+  return {
+    id: String(raw.id ?? `${start}-${end}-${title}`),
+    date: start.slice(0, 10),
+    startMin,
+    endMin,
+    time: slotOf(startMin, endMin),
+    type: type || "Cours",
+    title,
+    cat: familyOf(`${title} ${moduleCodes.join(" ")} ${type}`),
+    codes: moduleCodes,
+    room: rooms.join(" / "),
+    groups: buckets.group,
+    note: notes,
+    cancelled,
+    source: "live",
+  };
+}
+
+/** Code entre crochets d'une ligne de ressource CELCAT (« L2 MIASHS S3 TD 2 [S3MIASHS TD 2] »). */
+function resourceCode(line) {
+  const match = String(line).match(/\[([^\]]+)\]\s*$/);
+  return (match ? match[1] : String(line)).trim();
+}
+function normalizeGroupCode(code) {
+  return stripAccents(String(code ?? ""))
+    .toUpperCase()
+    .replace(/\s+/g, " ")
+    .replace(/\bTD\s?0?(\d)\b/g, "TD $1")
+    .trim();
+}
+
+/** Ne garde que les cours de la promo (CM / TD réunies) et du TD de l'étudiant. */
+function isMyCourse(parsed, config = CONFIG) {
+  if (!parsed.groups.length) return true;
+  const wanted = new Set([normalizeGroupCode(config.group), normalizeGroupCode(config.myTd)]);
+  return parsed.groups.some((group) => wanted.has(normalizeGroupCode(resourceCode(group))));
+}
+
+/** Étiquette affichée sur la carte (« CM Promo », « Votre TD », « TD Promo »…). */
+function tagForLiveCourse(item) {
+  if (item.cancelled) return { tag: "Annulé — prof absent / séance supprimée", tagType: "cancelled" };
+  const codes = item.groups.map((group) => normalizeGroupCode(resourceCode(group)));
+  const promo = codes.includes(normalizeGroupCode(CONFIG.group));
+  const mine = codes.includes(normalizeGroupCode(CONFIG.myTd));
+  if (/^CM/i.test(item.type)) return { tag: "CM Promo", tagType: "cm" };
+  if (mine && promo) return { tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" };
+  if (mine) return { tag: `Votre ${item.type}`.trim(), tagType: "perso" };
+  return { tag: `${CONFIG.group} • promo`, tagType: "reuni" };
+}
+
+/** Regroupe des événements bruts par semaine (clé = lundi ISO). */
+function weeksFromEvents(events, fetchedAt = new Date().toISOString()) {
+  const weeks = {};
+  for (const raw of events) {
+    const parsed = parseEvent(raw);
+    if (!parsed) continue;
+    const monday = mondayOf(parsed.date);
+    weeks[monday] ??= { monday, fetchedAt, events: [] };
+    weeks[monday].events.push(raw);
+  }
+  return weeks;
+}
+
+function overlaps(a, b, minimum = 30) {
+  return Math.min(a.endMin, b.endMin) - Math.max(a.startMin, b.startMin) >= minimum;
+}
+const sameFamily = (courseA, courseB) => courseA.cat === courseB.cat;
+
+/**
+ * Construit les jours d'une semaine :
+ *  - source live  : événements CELCAT filtrés + cours « fantômes » (dans la
+ *                   référence mais absents du planning officiel) ;
+ *  - source réf.  : emploi du temps codé en dur (mode hors-ligne).
+ * Renseigne aussi le rapport de la semaine (annulations, disparitions…).
+ */
+function buildWeek(weekKey, rawEvents, reference, options = {}) {
+  const live = options.live !== false;
+  const week = reference ?? null;
+  const referenceDays = week ? week.days : [];
+  const parsed = (rawEvents ?? [])
+    .map((raw) => parseEvent(raw))
+    .filter(Boolean)
+    .filter((item) => isMyCourse(item));
+  // Un cours « fantôme » n'a de sens que si la semaine a bien été récupérée :
+  // une semaine vide (vacances, panne) ne doit pas transformer la référence.
+  const ghostEnabled = parsed.length > 0;
+
+  const days = [];
+  const report = { cancellations: [], missing: [], extra: [], total: 0, cancelledCount: 0 };
+
+  for (let d = 0; d < 5; d++) {
+    const dateISO = addDaysISO(weekKey, d);
+    const realDate = parseISO(dateISO);
+    const dayLive = parsed.filter((item) => item.date === dateISO).sort((a, b) => a.startMin - b.startMin);
+    const dayReference = referenceDays[d]?.courses ?? [];
+    const courses = [];
+
+    if (!live) {
+      for (const ref of dayReference) courses.push(referenceCourse(ref, dateISO));
+      days.push({ name: DAY_NAMES[d], date: formatDate(realDate), realDate, courses, live: false });
+      continue;
+    }
+
+    const used = new Set();
+    for (const ref of dayReference) {
+      const refStart = startMinutes(ref.time);
+      const refEnd = endMinutes(ref.time);
+      const refWindow = { startMin: refStart, endMin: refEnd, cat: ref.cat };
+      const matches = dayLive.filter((item) => item.date === dateISO && !used.has(item.id) && sameFamily(refWindow, item) && overlaps(refWindow, item));
+      if (matches.length) {
+        for (const match of matches) {
+          used.add(match.id);
+          courses.push(mergeCourse(match, ref, dateISO));
+        }
+      } else if (ghostEnabled) {
+        // Cours prévu au planning de secours, absent du planning officiel.
+        courses.push({ ...referenceCourse(ref, dateISO), ghost: true, source: "ghost" });
+        report.missing.push({ date: dateISO, time: ref.time, title: ref.title, type: ref.type, tag: ref.tag });
+      }
+    }
+
+    for (const item of dayLive) {
+      if (used.has(item.id)) continue;
+      const recurringCancelled = item.cancelled && options.recurringCancellations?.has(recurringKey(item));
+      if (recurringCancelled) continue; // créneau suspendu en permanence : pas une information
+      courses.push(liveCourse(item, dateISO));
+      if (item.cancelled) {
+        report.cancellations.push({ date: dateISO, time: item.time, title: item.title, type: item.type, room: item.room });
+      } else {
+        report.extra.push({ date: dateISO, title: item.title, time: item.time });
+      }
+    }
+
+    courses.sort((a, b) => startMinutes(a.time) - startMinutes(b.time));
+    report.total += courses.length;
+    report.cancelledCount += courses.filter((c) => c.isCancelled).length;
+    days.push({ name: DAY_NAMES[d], date: formatDate(realDate), realDate, courses, live: true });
+  }
+
+  for (const courseItem of days.flatMap((day) => day.courses)) {
+    if (courseItem.isCancelled && courseItem.source === "live-reference") {
+      report.cancellations.unshift({ date: courseItem.date, time: courseItem.time, title: courseItem.title, type: courseItem.type, room: courseItem.room, matched: true });
     }
   }
-  // cache week for print
-  if(liveDays && usedLive){
-    try{ localStorage.setItem(`edt_week_cache_${index}`, JSON.stringify({ts:Date.now(), days: liveDays.map(d=>({ ...d, realDate: d.realDate.toISOString(), courses: d.courses.map(c=>({ ...c, start:c.start.toISOString(), end:c.end.toISOString() })) })) })); }catch{}
+
+  return { days, report, live };
+}
+
+function referenceCourse(ref, dateISO) {
+  const start = startMinutes(ref.time);
+  return {
+    id: `ref-${dateISO}-${start}-${ref.title}`,
+    date: dateISO,
+    time: ref.time,
+    startMin: start,
+    endMin: endMinutes(ref.time),
+    type: ref.type,
+    title: ref.title,
+    cat: ref.cat,
+    room: ref.room,
+    tag: ref.tag,
+    tagType: ref.tagType,
+    isCancelled: false,
+    ghost: false,
+    source: "reference",
+  };
+}
+
+function mergeCourse(item, ref, dateISO) {
+  const inherited = referenceCourse(ref, dateISO);
+  return {
+    ...liveCourse(item, dateISO),
+    title: inherited.title || item.title,
+    type: item.type.toLowerCase().startsWith("annul") ? inherited.type : item.type,
+    tag: item.cancelled ? `${inherited.tag} • annulée` : inherited.tag,
+    tagType: item.cancelled ? "cancelled" : inherited.tagType,
+    note: item.note,
+    source: "live-reference",
+  };
+}
+
+function liveCourse(item, dateISO) {
+  const { tag, tagType } = tagForLiveCourse(item);
+  return {
+    id: item.id,
+    date: dateISO,
+    time: item.time,
+    startMin: item.startMin,
+    endMin: item.endMin,
+    type: item.type,
+    title: item.title,
+    cat: item.cat,
+    room: item.room,
+    tag,
+    tagType,
+    isCancelled: item.cancelled,
+    ghost: false,
+    note: item.note,
+    groups: item.groups,
+    source: "live",
+  };
+}
+
+const weekdayIndex = (dateISO) => (parseISO(dateISO).getDay() + 6) % 7;
+/** Clé d'un créneau annulé de façon récurrente : jour de semaine | heure | matière. */
+const recurringKey = (item) => `${weekdayIndex(item.date)}|${item.time.split(" ")[0]}|${item.title}`;
+
+/**
+ * Repère les créneaux « annulés en permanence » (ex. le TD d'anglais du mardi
+ * 13:50 du TD 02, supprimé chaque semaine) : même jour + heure + matière
+ * annulés dans au moins 3 semaines différentes. Ce ne sont pas des nouvelles,
+ * on ne les affiche donc pas.
+ */
+function findRecurringCancellations(weeks) {
+  const counts = new Map();
+  for (const week of Object.values(weeks ?? {})) {
+    for (const raw of week.events ?? []) {
+      const item = parseEvent(raw);
+      if (!item || !item.cancelled || !isMyCourse(item)) continue;
+      const key = recurringKey(item);
+      const entry = counts.get(key) ?? new Set();
+      entry.add(item.date);
+      counts.set(key, entry);
+    }
   }
-  const weekToRender={ id:index+1, title:TITLES[index], days: liveDays };
-  const target=activeTarget||calculateTarget([weekToRender]);
-  const targetWeek=target.weekIndex===index;
-  $("#grid").innerHTML=weekToRender.days.map((day,dayIndex)=>{
-    const count=day.courses.length; const selected=targetWeek&&target.dayIndex===dayIndex; const futureTarget=selected&&!target.ongoing; const hidden=mobileFilter!=="all"&&mobileFilter!==dayIndex;
-    const indicator=selected?`<span class="target-pill">${target.ongoing?"📍 Aujourd'hui":"🚀 Prochain cours"}</span>`:"";
+  const weekCount = Object.keys(weeks ?? {}).length;
+  const threshold = weekCount >= 6 ? 3 : Math.max(2, weekCount);
+  const recurring = new Set();
+  for (const [key, dates] of counts) if (dates.size >= threshold) recurring.add(key);
+  return recurring;
+}
+
+/* ===== CORE-END ===== */
+
+/* ======================================================================
+   SOURCES DE DONNÉES
+   ====================================================================== */
+const state = {
+  weeks: {},          // { 'YYYY-MM-DD': { monday, fetchedAt, events[] } }
+  source: "none",     // file | live | cache | reference
+  generatedAt: null,
+  loadedAt: null,
+};
+
+/** Aligne la configuration de la page sur edt.config.json (si accessible). */
+async function applyRemoteConfig() {
+  try {
+    const remote = await fetchJson(`edt.config.json?v=${Math.floor(Date.now() / 600000)}`, {}, 5000);
+    if (!params.get("group") && remote?.group) CONFIG.group = String(remote.group).trim();
+    if (!params.get("td") && remote?.tdGroup) CONFIG.myTd = String(remote.tdGroup).trim();
+    if (remote?.semester?.start && remote?.semester?.end) CONFIG.semester = { start: remote.semester.start, end: remote.semester.end };
+    if (remote?.label) CONFIG.label = String(remote.label);
+    updateFormationBadge();
+  } catch {
+    /* edt.config.json absent (file://) : on garde les valeurs par défaut du code */
+  }
+}
+
+async function fetchJson(url, init = {}, timeoutMs = CONFIG.requestTimeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { ...init, signal: controller.signal, cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function loadDataFile() {
+  const json = await fetchJson(`${CONFIG.dataUrl}?v=${Math.floor(Date.now() / 60000)}`);
+  if (!json || typeof json.weeks !== "object") throw new Error("data/edt.json illisible");
+  return json;
+}
+
+async function loadFromCache() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(`${CONFIG.cacheKey}_${CONFIG.group}`) || "null");
+    if (!cached?.weeks) return null;
+    return cached;
+  } catch {
+    return null;
+  }
+}
+
+function saveToCache() {
+  try {
+    localStorage.setItem(`${CONFIG.cacheKey}_${CONFIG.group}`, JSON.stringify({ ts: Date.now(), weeks: state.weeks, generatedAt: state.generatedAt, source: state.source }));
+  } catch { /* quota / mode privé */ }
+}
+
+/** Appel direct à CELCAT + repli par proxys publics (best effort). */
+async function loadLiveEvents(startISO, endISO) {
+  const body = new URLSearchParams({ start: startISO, end: endISO, resType: "103", calView: "agendaWeek", colourScheme: "3" });
+  body.append("federationIds[]", CONFIG.group);
+  const direct = `${CONFIG.apiUrl}?${body.toString()}`;
+  // Chaque tentative ne « gagne » que si elle renvoie bien une liste d'événements.
+  const validEvents = (promise) =>
+    promise.then((payload) => {
+      if (!Array.isArray(payload) || payload.length === 0) throw new Error("réponse CELCAT inattendue");
+      return payload;
+    });
+  const attempts = [
+    fetchJson(direct, { method: "GET" }),
+    fetchJson(CONFIG.apiUrl, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" }, body: body.toString() }),
+    ...CONFIG.proxies.map((proxy) => fetchJson(proxy.wrap(direct), { method: "GET" })),
+  ].map(validEvents);
+  return await Promise.any(attempts);
+}
+
+/** Récupère les semaines autour de la semaine affichée (par petits paquets). */
+async function refreshFromLive(weekKey) {
+  const start = addDaysISO(weekKey, -7);
+  const end = addDaysISO(weekKey, 13);
+  const events = await loadLiveEvents(start, end);
+  const weeks = weeksFromEvents(events);
+  const before = JSON.stringify(state.weeks);
+  for (const [monday, week] of Object.entries(weeks)) state.weeks[monday] = week;
+  return { changed: before !== JSON.stringify(state.weeks), count: events.length };
+}
+
+async function fetchSyncStatus() {
+  const host = location.hostname;
+  if (!host.endsWith(".github.io")) return null;
+  const owner = host.split(".")[0];
+  const url = `https://api.github.com/repos/${owner}/${host}/actions/workflows/edt-sync.yml/runs?per_page=1&status=success`;
+  try {
+    const json = await fetchJson(url, {}, 6000);
+    const run = json?.workflow_runs?.[0];
+    if (!run) return null;
+    return new Date(run.updated_at || run.created_at);
+  } catch {
+    return null;
+  }
+}
+
+/* ======================================================================
+   RENDU
+   ====================================================================== */
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
+let state_view = { weeks: [], index: 0, mobileFilter: "all", target: null };
+
+function hourScaleHTML() {
+  return `<div class="hour-scale" aria-hidden="true">${HOURS.map((hour) => {
+    const top = TIMELINE.top + (hour * 60 - TIMELINE.start) * TIMELINE.pixelsPerMinute;
+    return `<span style="top:${top}px">${pad2(hour)}:00</span>`;
+  }).join("")}</div>`;
+}
+
+function position(slot) {
+  const start = startMinutes(slot);
+  const end = endMinutes(slot);
+  return { top: Math.round(TIMELINE.top + (start - TIMELINE.start) * TIMELINE.pixelsPerMinute), height: Math.max(64, Math.round((end - start) * TIMELINE.pixelsPerMinute - 8)) };
+}
+
+function sameDay(a, b) { return a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+
+function currentTimeLine(day) {
+  const now = new Date();
+  if (!sameDay(day.realDate, now)) return "";
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  if (minutes < TIMELINE.start || minutes > TIMELINE.end) return "";
+  const top = TIMELINE.top + (minutes - TIMELINE.start) * TIMELINE.pixelsPerMinute;
+  return `<div class="current-time-line" style="top:${Math.round(top)}px" role="presentation" aria-label="Heure actuelle"></div>`;
+}
+
+function isCourseRunning(item, day) {
+  const now = new Date();
+  if (!sameDay(day.realDate, now)) return false;
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  return minutes >= item.startMin && minutes < item.endMin && !item.ghost;
+}
+
+function cardHTML(item, day) {
+  const p = position(item.time);
+  const classes = ["card", item.cat];
+  if (item.isCancelled) classes.push("cancelled");
+  if (item.ghost) classes.push("ghost");
+  if (isCourseRunning(item, day)) classes.push("running");
+  const details = [item.title, item.time, item.room, item.tag, item.note].filter(Boolean).join(" — ");
+  const room = item.room ? `<div class="card-room" title="${escapeHtml(item.room)}">📍 ${escapeHtml(item.room)}</div>` : `<div class="card-room">📍 ${item.isCancelled ? "salle non précisée" : "lieu non précisé"}</div>`;
+  const tag = item.tag ? `<div class="card-tag ${escapeHtml(item.tagType || "")}">${escapeHtml(item.tag)}</div>` : "";
+  return `<article class="${classes.join(" ")}" style="top:${p.top}px;height:${p.height}px" tabindex="0" title="${escapeHtml(details)}"><div class="card-time"><span>${escapeHtml(item.time)}</span><span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-title">${escapeHtml(item.title)}</div>${room}${tag}${item.note ? `<div class="card-note">${escapeHtml(item.note)}</div>` : ""}</article>`;
+}
+
+function emptyMessage(weekKey, dayIndex, live) {
+  const date = addDaysISO(weekKey, dayIndex);
+  if (date === "2026-10-22") return "🚫 Trophée SQY Campus — journée sans cours";
+  if (date === "2026-11-11") return "🚫 Mercredi 11 novembre — université fermée";
+  if (!live) return "🌴 Journée libre — aucun cours programmé";
+  return "✅ Aucun cours au planning officiel pour cette journée";
+}
+
+/** Numéro de la semaine dans le semestre (1 = semaine du début du semestre). */
+function weekNumber(weekKey) {
+  const semStart = mondayOf(CONFIG.semester.start);
+  if (weekKey < semStart || weekKey > CONFIG.semester.end) return null;
+  return Math.round((parseISO(weekKey) - parseISO(semStart)) / (7 * 86400000)) + 1;
+}
+
+/**
+ * Libellé d'une semaine, calculé à partir de sa date réelle (plus de titres
+ * écrits à la main : ils deviendraient faux dès que le planning change).
+ * Hors période universitaire, la semaine est simplement datée.
+ */
+function weekLabel(weekKey) {
+  const reference = REFERENCE_BY_MONDAY.get(weekKey);
+  const start = parseISO(weekKey);
+  const end = parseISO(addDaysISO(weekKey, 4));
+  const number = weekNumber(weekKey);
+  const dates = `${pad2(start.getDate())} ${MONTHS_LONG[start.getMonth()]} – ${pad2(end.getDate())} ${MONTHS_LONG[end.getMonth()]} ${end.getFullYear()}`;
+  return {
+    title: number ? `Semaine ${number} : ${dates}` : `Semaine du ${dates}`,
+    subtitle: reference?.subtitle ?? "",
+    index: fallbackWeeks.findIndex((week) => week.monday === weekKey),
+  };
+}
+
+function currentWeekKey() {
+  return mondayOf(todayISO());
+}
+
+/** Liste des semaines affichables : semestre + données live + semaine du jour. */
+function buildWeekList() {
+  const keys = new Set(fallbackWeeks.map((week) => week.monday));
+  for (let cursor = mondayOf(CONFIG.semester.start); cursor <= CONFIG.semester.end; cursor = addDaysISO(cursor, 7)) keys.add(cursor);
+  for (const [monday, week] of Object.entries(state.weeks)) if (week.events?.length && monday >= addDaysISO(CONFIG.semester.start, -14) && monday <= addDaysISO(CONFIG.semester.end, 14)) keys.add(monday);
+  keys.add(currentWeekKey());
+  return [...keys].sort();
+}
+
+function weekSource(weekKey) {
+  const live = state.weeks[weekKey];
+  if (live?.events?.length) return "live";
+  if (live) return "live-empty";
+  return REFERENCE_BY_MONDAY.has(weekKey) ? "reference" : "none";
+}
+
+/** Semaine affichée : données live + fantômes, ou référence en secours. */
+function buildWeekView(weekKey, recurring) {
+  const source = weekSource(weekKey);
+  const reference = REFERENCE_BY_MONDAY.get(weekKey) ?? null;
+  if (source === "live") return buildWeek(weekKey, state.weeks[weekKey].events, reference, { live: true, recurringCancellations: recurring });
+  if (source === "live-empty") return buildWeek(weekKey, [], reference, { live: true, recurringCancellations: recurring });
+  const built = buildWeek(weekKey, [], reference, { live: false });
+  return { ...built, live: false, report: { cancellations: [], missing: [], extra: [], total: built.days.flatMap((d) => d.courses).length, cancelledCount: 0 } };
+}
+
+function findTarget() {
+  const now = new Date();
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  const keys = state_view.weeks;
+  const todayKey = currentWeekKey();
+  const todayIndex = keys.indexOf(todayKey);
+  if (todayIndex >= 0) {
+    const view = buildWeekView(todayKey, null);
+    const today = view.days.find((day) => sameDay(day.realDate, now));
+    const todayCourses = (today?.courses ?? []).filter((item) => !item.isCancelled && !item.ghost);
+    if (todayCourses.length && !todayCourses.every((item) => item.endMin <= minutes)) {
+      return { weekIndex: todayIndex, dayIndex: DAY_NAMES.indexOf(today.name), ongoing: true };
+    }
+  }
+  for (let w = Math.max(0, todayIndex); w < keys.length; w++) {
+    const view = buildWeekView(keys[w], null);
+    for (const day of view.days) {
+      const dateKey = formatISO(day.realDate);
+      if (dateKey < todayISO()) continue;
+      if (!day.courses.some((item) => !item.isCancelled && !item.ghost)) continue;
+      const ongoing = w === todayIndex && sameDay(day.realDate, now);
+      return { weekIndex: w, dayIndex: DAY_NAMES.indexOf(day.name), ongoing, future: !ongoing };
+    }
+  }
+  const last = keys.length - 1;
+  return { weekIndex: last, dayIndex: 0, ongoing: false, future: true };
+}
+
+function changeBadge(kind, text) {
+  const badge = $("#liveStatus");
+  if (!badge) return;
+  badge.textContent = text;
+  badge.className = `badge ${kind}`;
+}
+
+function renderChanges(report) {
+  const box = $("#changes");
+  if (!box) return;
+  const items = [];
+  for (const cancellation of report.cancellations) {
+    const date = parseISO(cancellation.date);
+    items.push(`<li><strong>${DAY_NAMES[(date.getDay() + 6) % 7]} ${formatDateShort(date)} ${escapeHtml(cancellation.time)}</strong> — ${escapeHtml(cancellation.title)} : séance annulée${cancellation.room ? ` (salle prévue : ${escapeHtml(cancellation.room)})` : ""}</li>`);
+  }
+  for (const missing of report.missing) {
+    const date = parseISO(missing.date);
+    items.push(`<li><strong>${DAY_NAMES[(date.getDay() + 6) % 7]} ${formatDateShort(date)} ${escapeHtml(missing.time)}</strong> — ${escapeHtml(missing.title)} : ne figure plus au planning officiel <em>(à vérifier)</em></li>`);
+  }
+  if (!items.length) {
+    box.hidden = true;
+    box.innerHTML = "";
+    return;
+  }
+  const alert = report.cancellations.length;
+  box.hidden = false;
+  box.innerHTML = `<strong>${alert ? `⚠️ ${alert} séance${alert > 1 ? "s" : ""} annulée${alert > 1 ? "s" : ""}` : "ℹ️ Changements détectés"}</strong>${report.missing.length ? ` • ${report.missing.length} cours à vérifier` : ""}<ul>${items.join("")}</ul>`;
+}
+
+function renderWeek(index, options = {}) {
+  const keys = state_view.weeks;
+  index = Math.max(0, Math.min(index, keys.length - 1));
+  state_view.index = index;
+  const weekKey = keys[index];
+  const recurring = options.recurring ?? state_view.recurring;
+  state_view.recurring = recurring;
+  const view = buildWeekView(weekKey, recurring);
+  const label = weekLabel(weekKey);
+  const source = weekSource(weekKey);
+
+  $("#weekTitle").textContent = label.title;
+  $("#weekProgress").style.width = `${((index + 1) / keys.length) * 100}%`;
+  $("#prev").disabled = index === 0;
+  $("#next").disabled = index >= keys.length - 1;
+
+  const fromOfficial = source === "live" || source === "live-empty";
+  const liveCount = view.days.flatMap((day) => day.courses).filter((item) => item.source !== "reference" && !item.ghost).length;
+  const subtitleParts = [];
+  subtitleParts.push(`${CONFIG.label} • groupe ${CONFIG.group}`);
+  if (fromOfficial) {
+    subtitleParts.push(liveCount ? `${liveCount} créneaux au planning officiel` : "aucun créneau au planning officiel");
+  } else {
+    subtitleParts.push("emploi du temps de secours");
+    if (label.subtitle) subtitleParts.push(label.subtitle);
+  }
+  if (view.report.cancellations.length) subtitleParts.push(`${view.report.cancellations.length} annulation${view.report.cancellations.length > 1 ? "s" : ""}`);
+  if (view.report.missing.length) subtitleParts.push(`${view.report.missing.length} à vérifier`);
+  subtitleParts.push(`semaine ${index + 1}/${keys.length}`);
+  $("#weekSubtitle").textContent = subtitleParts.join(" • ");
+  renderChanges(view.report);
+
+  const target = options.target ?? findTarget();
+  state_view.target = target;
+  const targetWeek = target.weekIndex === index;
+
+  $("#grid").innerHTML = view.days.map((day, dayIndex) => {
+    const count = day.courses.length;
+    const selected = targetWeek && target.dayIndex === dayIndex;
+    const futureTarget = selected && !target.ongoing;
+    const hidden = state_view.mobileFilter !== "all" && state_view.mobileFilter !== dayIndex;
+    const indicator = selected ? `<span class="target-pill">${target.ongoing ? "📍 Aujourd'hui" : "🚀 Prochain cours"}</span>` : "";
     let content;
-    if(count){
-      content=day.courses.map(c=>cardHTML(c,day)).join("");
-    }else{
-      const msg = usedLive ? "✅ Aucun cours sur Celcat (journée libre ou cours annulés)" : emptyMessage(index,dayIndex);
-      content=`<div class="empty">${msg}</div>`;
+    if (count) {
+      content = day.courses.map((item) => cardHTML(item, day)).join("");
+    } else {
+      content = `<div class="empty">${escapeHtml(emptyMessage(weekKey, dayIndex, view.live))}</div>`;
     }
-    return `<section class="day${selected?" target":""}${futureTarget?" future-target":""}${hidden?" hidden":""}" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date"><time datetime="${day.realDate.toISOString().slice(0,10)}">${day.date}</time></div>${indicator}</div><span class="day-count${count?" has":""}">${count?`${count} cours${liveDays.flatMap(d=>d.courses).some(c=>c.isCancelled)?" • annulation":""}`:"Libre"}</span></header><div class="day-body">${count?hourScaleHTML():""}${currentTimeLine(day)}${content}</div></section>`;
+    const countLabel = count ? `${count} cours${view.report.cancellations.some((c) => c.date === formatISO(day.realDate)) ? " ⚠️" : ""}` : "libre";
+    return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date"><time datetime="${formatISO(day.realDate)}">${day.date}</time></div>${indicator}</div><span class="day-count${count ? " has" : ""}">${countLabel}</span></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
   }).join("");
-  if(!matchMedia("(prefers-reduced-motion:reduce)").matches){ $("#grid").animate([{opacity:.35,transform:"translateY(5px)"},{opacity:1,transform:"translateY(0)"}],{duration:180,easing:"ease-out"}); }
-  $$(".tab").forEach(tab=>{ tab.classList.toggle("current", targetWeek&&tab.dataset.day==target.dayIndex); });
-  buildPrintFromCache();
+
+  if (!matchMedia("(prefers-reduced-motion:reduce)").matches) {
+    $("#grid").animate([{ opacity: 0.4, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 180, easing: "ease-out" });
+  }
+  $$(".tab").forEach((tab) => tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex)));
 }
-function changeWeek(delta){const next=currentWeek+delta; if(next<0||next>=fallbackWeeks.length) return; renderWeek(next); if(innerWidth<=860&&mobileFilter!=="all") scrollToDay(mobileFilter,false);}
-function setDay(day,scroll=true){mobileFilter=day==="all"?"all":Number(day);$$(".tab").forEach(tab=>{const active=tab.dataset.day==day;tab.classList.toggle("active",active);tab.setAttribute("aria-pressed",String(active));});$$(".day").forEach(column=>column.classList.toggle("hidden",mobileFilter!=="all"&&Number(column.dataset.day)!==mobileFilter)); if(scroll&&mobileFilter!=="all") scrollToDay(mobileFilter,true);}
-function scrollToDay(day,smooth=false){const column=document.querySelector(`.day[data-day="${day}"]`); if(!column) return; const offset=innerWidth<=860?($("#tabs")?.offsetHeight||42)+10:($(".nav")?.offsetHeight||0)+20; const top=column.getBoundingClientRect().top+scrollY-offset; scrollTo({top:Math.max(0,Math.round(top)),behavior:smooth?"smooth":"auto"});}
-function jumpToTarget(smooth=true){ const allWeeksForTarget = Object.keys(liveCache).length ? Object.values(liveCache).map((days,idx)=>({days, id:idx})) : fallbackWeeks; // fallback for target calc
-  // calculate target using current rendered week if possible else fallback
-  let weeksForCalc = fallbackWeeks; if(liveCache[currentWeek]){ weeksForCalc = fallbackWeeks.map((fw, i)=> i===currentWeek ? { ...fw, days: liveCache[i]||fw.days } : fw); }
-  activeTarget=calculateTarget(weeksForCalc); renderWeek(activeTarget.weekIndex); if(innerWidth<=860) setDay(activeTarget.dayIndex,false); scrollToDay(activeTarget.dayIndex,smooth);
+
+function updateStatus() {
+  const source = state.source;
+  const generated = state.generatedAt ? new Date(state.generatedAt) : null;
+  const age = generated ? Date.now() - generated.getTime() : Infinity;
+  const minutes = Number.isFinite(age) ? Math.round(age / 60000) : null;
+  if (source === "reference") {
+    changeBadge("orange", "🔴 Hors-ligne • emploi du temps de secours");
+    $("#liveBannerTitle").textContent = "Mode hors-ligne";
+    $("#liveBannerText").textContent = "Impossible de lire le planning officiel (data/edt.json absent ou réseau bloqué) : affichage de la version de secours codée en dur. Réessai automatique toutes les 5 minutes.";
+    return;
+  }
+  const origin = source === "file" ? "planning publié par la synchro GitHub" : source === "live" ? "edt.uvsq.fr (mise à jour directe)" : "cache local";
+  const fresh = minutes !== null && minutes <= 60;
+  changeBadge(fresh || source === "live" ? "green" : "orange", `${fresh || source === "live" ? "🟢" : "🟠"} ${CONFIG.group} • ${origin}`);
+  $("#liveBannerTitle").textContent = source === "live" ? "Synchronisé avec edt.uvsq.fr" : "Planning officiel UVSQ";
+  const stamp = generated ? `Dernière mise à jour des données : ${minutes <= 90 ? `il y a ${Math.max(1, minutes)} min` : generated.toLocaleString("fr-FR")}.` : "";
+  const checked = state.checkedAt ? ` Vérifié côté serveur ${state.checkedAt.toLocaleString("fr-FR")}.` : "";
+  $("#liveBannerText").textContent = `Groupe ${CONFIG.group} (promo + ${CONFIG.myTd.replace(`${CONFIG.group} `, "")}). ${stamp}${checked} Les annulations et absences de professeurs apparaissent automatiquement.`;
 }
-function refreshCurrentWeek(force=true){ renderWeek(currentWeek, force); }
-function printCourse(c){ return `<div class="p-item ${c.cat}${c.isCancelled?" cancelled":""}"><span class="p-time">${c.time}</span><span class="p-type"> ${c.type}${c.isCancelled?" • ANNULÉ":""}</span><br><b>${c.title}</b><br><span class="p-room">${c.room} • ${c.tag}</span></div>`; }
-function buildPrintPage(pageWeeks,page,period){ return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — LIVE — ${period}</h2><p>Source: edt.uvsq.fr • Groupe S3MIASHS • <strong>Page ${page} / 2</strong> • ${new Date().toLocaleString()}</p></div><div class="print-badge">Live Celcat • Annulations incluses</div></header><table class="print-table"><thead><tr><th>Semaine</th>${DAY_NAMES.map(day=>`<th>${day}</th>`).join("")}</tr></thead><tbody>${pageWeeks.map((week,localIndex)=>{ const weekIndex=fallbackWeeks.indexOf(week); const days = liveCache[weekIndex] || week.days; return `<tr><td class="print-week"><b>Semaine ${week.id}</b><span>${week.title.split(": ")[1]}</span></td>${days.map((day,dayIndex)=>{ let content; if(day.courses.length){ content=day.courses.map(printCourse).join(""); }else{ const special=(weekIndex===5&&dayIndex===3)||(weekIndex===7&&dayIndex===2); content=`<div class="${special?"p-alert":"p-empty"}">${emptyMessage(weekIndex,dayIndex)}</div>`; } return `<td>${content}</td>`; }).join("")}</tr>`; }).join("")}</tbody></table></section>`; }
-function buildPrintFromCache(){ const weeksForPrint = fallbackWeeks.map((fw,i)=> liveCache[i] ? { ...fw, days: liveCache[i] } : fw ); $("#print").innerHTML=buildPrintPage(weeksForPrint.slice(0,6),1,"Septembre-Octobre 2026")+buildPrintPage(weeksForPrint.slice(6),2,"Novembre-Décembre 2026"); }
-function buildPrint(){ buildPrintFromCache(); }
-addEventListener("keydown",event=>{ if(event.key==="ArrowLeft") changeWeek(-1); if(event.key==="ArrowRight") changeWeek(1); });
-let startX=0; let startY=0; $("#grid").addEventListener("touchstart",event=>{ const touch=event.changedTouches[0]; startX=touch.clientX; startY=touch.clientY; },{passive:true}); $("#grid").addEventListener("touchend",event=>{ const touch=event.changedTouches[0]; const dx=touch.clientX-startX; const dy=touch.clientY-startY; if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.3) changeWeek(dx<0?1:-1); },{passive:true});
-function initialize(){ initTheme(); buildPrint(); activeTarget=calculateTarget(fallbackWeeks); renderWeek(activeTarget.weekIndex); if(innerWidth<=860) setDay(activeTarget.dayIndex,false); else setDay("all",false); scrollToDay(activeTarget.dayIndex,false); requestAnimationFrame(()=>scrollToDay(activeTarget.dayIndex,false)); setTimeout(()=>scrollToDay(activeTarget.dayIndex,false),120); }
-addEventListener("DOMContentLoaded",initialize);
-addEventListener("load",()=>{ if(activeTarget) scrollToDay(activeTarget.dayIndex,false); });
-setInterval(()=>{ if(document.visibilityState==="visible") renderWeek(currentWeek); },60000);
-// auto refresh live every 5 min
-setInterval(()=>{ if(document.visibilityState==="visible") fetchLiveWeek(currentWeek,true).then(data=>{ liveCache[currentWeek]=buildDaysFromEvents(data, MONDAYS[currentWeek]); buildPrintFromCache(); }).catch(()=>{}); }, 5*60*1000);
+
+/* ------------------------------------------------------------------ print */
+function printCourse(item) {
+  const flag = item.ghost ? " • À VÉRIFIER" : item.isCancelled ? " • ANNULÉ" : "";
+  const classes = ["p-item", item.cat];
+  if (item.isCancelled) classes.push("cancelled");
+  if (item.ghost) classes.push("ghost");
+  return `<div class="${classes.join(" ")}"><span class="p-time">${escapeHtml(item.time)}</span><span class="p-type"> ${escapeHtml(item.type)}${flag}</span><br><b>${escapeHtml(item.title)}</b><br><span class="p-room">${escapeHtml(item.room || "lieu non précisé")} • ${escapeHtml(item.tag || "")}</span></div>`;
+}
+
+function buildPrintPage(pageWeeks, page, total, period) {
+  const rows = pageWeeks.map(({ weekKey, number }) => {
+    const view = buildWeekView(weekKey, state_view.recurring);
+    const cells = view.days.map((day, dayIndex) => {
+      if (day.courses.length) return `<td>${day.courses.map(printCourse).join("")}</td>`;
+      const message = emptyMessage(weekKey, dayIndex, view.live);
+      const special = /Trophée|fermée/.test(message);
+      return `<td><div class="${special ? "p-alert" : "p-empty"}">${escapeHtml(message)}</div></td>`;
+    }).join("");
+    const start = parseISO(weekKey);
+    const end = parseISO(addDaysISO(weekKey, 4));
+    const label = number ? `Semaine ${number}` : weekKey < mondayOf(CONFIG.semester.start) ? "Avant-semestre" : "Hors semestre";
+    return `<tr><td class="print-week"><b>${label}</b><span>${start.getDate()}/${pad2(start.getMonth() + 1)} – ${end.getDate()}/${pad2(end.getMonth() + 1)}</span></td>${cells}</tr>`;
+  }).join("");
+  return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — ${escapeHtml(period)}</h2><p>Source : edt.uvsq.fr • Groupe ${CONFIG.group} • <strong>Page ${page} / ${total}</strong> • ${new Date().toLocaleString("fr-FR")}</p></div><div class="print-badge">Planning officiel • annulations et absences signalées</div></header><table class="print-table"><thead><tr><th>Semaine</th>${DAY_NAMES.map((day) => `<th>${day}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></section>`;
+}
+
+function buildPrint() {
+  if (!state_view.weeks.length) return;
+  const numbered = state_view.weeks.map((weekKey) => ({ weekKey, number: weekNumber(weekKey) }));
+  const half = Math.ceil(numbered.length / 2);
+  $("#print").innerHTML =
+    buildPrintPage(numbered.slice(0, half), 1, 2, "1re partie") +
+    buildPrintPage(numbered.slice(half), 2, 2, "2e partie");
+}
+
+/* ------------------------------------------------------------- thème/UI */
+function initTheme() {
+  const stored = localStorage.getItem("schedule_theme");
+  const systemDark = matchMedia?.("(prefers-color-scheme:dark)").matches;
+  applyTheme(stored || (systemDark ? "dark" : "light"));
+}
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  const button = $("#theme");
+  const dark = theme === "dark";
+  button.textContent = dark ? "☀ Clair" : "🌙 Sombre";
+  button.title = dark ? "Passer en mode clair" : "Passer en mode sombre";
+}
+function toggleTheme() {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  localStorage.setItem("schedule_theme", next);
+  applyTheme(next);
+}
+function changeWeek(delta) {
+  const next = state_view.index + delta;
+  if (next < 0 || next >= state_view.weeks.length) return;
+  renderWeek(next);
+  if (innerWidth <= 860 && state_view.mobileFilter !== "all") scrollToDay(state_view.mobileFilter, false);
+}
+function setDay(day, scroll = true) {
+  state_view.mobileFilter = day === "all" ? "all" : Number(day);
+  $$(".tab").forEach((tab) => {
+    const active = tab.dataset.day === String(day);
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-pressed", String(active));
+  });
+  $$(".day").forEach((column) => column.classList.toggle("hidden", state_view.mobileFilter !== "all" && Number(column.dataset.day) !== state_view.mobileFilter));
+  if (scroll && state_view.mobileFilter !== "all") scrollToDay(state_view.mobileFilter, false);
+}
+function scrollToDay(day, smooth = false) {
+  const column = document.querySelector(`.day[data-day="${day}"]`);
+  if (!column) return;
+  const offset = innerWidth <= 860 ? ($("#tabs")?.offsetHeight || 42) + 10 : ($(".nav")?.offsetHeight || 0) + 20;
+  const top = column.getBoundingClientRect().top + scrollY - offset;
+  scrollTo({ top: Math.max(0, top), behavior: smooth ? "smooth" : "auto" });
+}
+function jumpToTarget(smooth = true) {
+  const target = findTarget();
+  renderWeek(target.weekIndex, { target });
+  if (innerWidth <= 860 && state_view.mobileFilter !== "all") setDay(target.dayIndex, false);
+  scrollToDay(target.dayIndex, smooth);
+}
+function refreshCurrentWeek() {
+  loadEverything({ force: true }).then(() => renderWeek(state_view.index));
+}
+
+/* -------------------------------------------------------------- données */
+let loadPromise = null;
+
+async function loadEverything(options = {}) {
+  if (loadPromise && !options.force) return loadPromise;
+  loadPromise = (async () => {
+    await applyRemoteConfig();
+    const cached = await loadFromCache();
+    if (cached?.weeks && Object.keys(cached.weeks).length) {
+      state.weeks = cached.weeks;
+      state.generatedAt = cached.generatedAt ?? null;
+      state.source = "cache";
+      state_view.recurring = findRecurringCancellations(state.weeks);
+      state_view.weeks = buildWeekList();
+      renderWeek(state_view.index);
+      updateStatus();
+    }
+
+    const syncAt = await fetchSyncStatus();
+    if (syncAt) {
+      state.checkedAt = syncAt;
+      updateStatus();
+    }
+
+    try {
+      const file = await loadDataFile();
+      if (!params.get("group") && file.group) CONFIG.group = String(file.group).trim();
+      const hadData = Object.keys(state.weeks).length > 0;
+      const same = JSON.stringify(file.weeks) === JSON.stringify(state.weeks);
+      state.weeks = file.weeks ?? {};
+      state.generatedAt = file.generatedAt ?? null;
+      state.source = "file";
+      state_view.recurring = findRecurringCancellations(state.weeks);
+      state_view.weeks = buildWeekList();
+      saveToCache();
+      if (!hadData) {
+        const index = state_view.weeks.indexOf(currentWeekKey());
+        renderWeek(index >= 0 ? index : state_view.index);
+      } else if (!same) {
+        renderWeek(state_view.index); // met à jour la semaine affichée sans changer de page
+      }
+      updateStatus();
+      buildPrint();
+    } catch (error) {
+      console.warn("[edt] data/edt.json indisponible :", error.message);
+      if (!Object.keys(state.weeks).length) {
+        state.source = "reference";
+        updateStatus();
+      }
+    }
+
+    const lastKnown = Math.max(syncAt?.getTime() ?? 0, state.generatedAt ? new Date(state.generatedAt).getTime() : 0);
+    const stale = options.force || !lastKnown || Date.now() - lastKnown > CONFIG.dataMaxAgeMs;
+    if (stale) {
+      try {
+        const { changed } = await refreshFromLive(currentWeekKey());
+        state.source = "live";
+        state_view.recurring = findRecurringCancellations(state.weeks);
+        state_view.weeks = buildWeekList();
+        saveToCache();
+        if (changed || options.force) renderWeek(state_view.index);
+        updateStatus();
+        buildPrint();
+      } catch (error) {
+        console.warn("[edt] appel direct CELCAT impossible (CORS) :", error.message);
+      }
+    }
+    return state;
+  })().finally(() => { loadPromise = null; });
+  return loadPromise;
+}
+
+/* ----------------------------------------------------------- démarrage */
+function updateFormationBadge() {
+  const badge = $("#formationBadge");
+  if (badge) badge.textContent = `Groupe ${CONFIG.group} • ${CONFIG.myTd.replace(`${CONFIG.group} `, "")} • edt.uvsq.fr`;
+}
+
+function initialize() {
+  initTheme();
+  updateFormationBadge();
+  state_view.weeks = buildWeekList();
+  const requested = params.get("week");
+  const startIndex = requested && state_view.weeks.includes(mondayOf(requested)) ? state_view.weeks.indexOf(mondayOf(requested)) : Math.max(0, state_view.weeks.indexOf(currentWeekKey()));
+  const target = findTarget();
+  renderWeek(requested ? startIndex : target.weekIndex, { target });
+  buildPrint();
+  if (innerWidth <= 860) setDay(target.weekIndex === state_view.index ? target.dayIndex : 0, false);
+  else setDay("all", false);
+  requestAnimationFrame(() => scrollToDay(state_view.target?.dayIndex ?? 0, false));
+  loadEverything().then(() => {
+    if (!requested) {
+      const fresh = findTarget();
+      if (fresh.weekIndex !== state_view.index || fresh.dayIndex !== state_view.target?.dayIndex) renderWeek(fresh.weekIndex, { target: fresh });
+      requestAnimationFrame(() => scrollToDay(state_view.target?.dayIndex ?? 0, false));
+    }
+  });
+}
+
+addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft") changeWeek(-1);
+  if (event.key === "ArrowRight") changeWeek(1);
+});
+let startX = 0;
+let startY = 0;
+$("#grid").addEventListener("touchstart", (event) => { const touch = event.changedTouches[0]; startX = touch.clientX; startY = touch.clientY; }, { passive: true });
+$("#grid").addEventListener("touchend", (event) => {
+  const touch = event.changedTouches[0];
+  const dx = touch.clientX - startX;
+  const dy = touch.clientY - startY;
+  if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) changeWeek(dx < 0 ? 1 : -1);
+}, { passive: true });
+$("#refresh")?.addEventListener("click", () => refreshCurrentWeek());
+addEventListener("beforeprint", () => buildPrint());
+addEventListener("DOMContentLoaded", initialize);
+addEventListener("load", () => { if (state_view.target) scrollToDay(state_view.target.dayIndex, false); });
+setInterval(() => { if (document.visibilityState === "visible") renderWeek(state_view.index); }, 60000);
+setInterval(() => { if (document.visibilityState === "visible") loadEverything({ force: true }).then(() => renderWeek(state_view.index)).catch(() => {}); }, CONFIG.refreshMs);
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { parseEvent, isMyCourse, tagForLiveCourse, buildWeek, weeksFromEvents, findRecurringCancellations, mondayOf, addDaysISO, slotOf, familyOf, normalizeModuleName, normalizeGroupCode, decodeEntities };
+}
+
 </script>
 </body>
 </html>

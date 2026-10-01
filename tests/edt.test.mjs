@@ -1,0 +1,172 @@
+#!/usr/bin/env node
+/**
+ * Tests du noyau de l'emploi du temps (index.html, section CORE-START/END).
+ *
+ *   node tests/edt.test.mjs
+ *
+ * Les cas s'appuient sur data/edt.json, c'est-à-dire sur la réponse réelle de
+ * CELCAT (groupe S3MIASHS), pour vérifier que le parsing, le filtrage du TD et
+ * la détection des annulations correspondent bien au planning officiel.
+ */
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+import assert from "node:assert/strict";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+/* --------------------------------------------------------------- helpers */
+function loadCore(source) {
+  const start = source.indexOf("CORE-START");
+  const end = source.indexOf("CORE-END");
+  assert.ok(start > 0 && end > start, "marqueurs CORE-START / CORE-END introuvables");
+  const code = source.slice(source.indexOf("*/", start) + 2, source.lastIndexOf("/*", source.indexOf("CORE-END")));
+  const factory = new Function(`${code}; return { parseEvent, isMyCourse, buildWeek, weeksFromEvents, findRecurringCancellations, normalizeGroupCode, decodeEntities, mondayOf, addDaysISO, slotOf, familyOf, CONFIG, fallbackWeeks };`);
+  return factory();
+}
+
+const tests = [];
+const test = (name, fn) => tests.push({ name, fn });
+
+/* ------------------------------------------------------------------ tests */
+test("decodeEntities gère les entités numériques et nommées", (core) => {
+  assert.equal(core.decodeEntities("Initiation aux bases de donn&#233;es"), "Initiation aux bases de données");
+  assert.equal(core.decodeEntities("Physique &amp; Chimie"), "Physique & Chimie");
+});
+
+test("parseEvent lit un CM réel (type, matière, salle, groupes)", (core, data) => {
+  const raw = data.weeks["2026-09-28"].events.find((event) => event.start === "2026-09-28T09:40:00");
+  const parsed = core.parseEvent(raw);
+  assert.equal(parsed.type, "CM");
+  assert.equal(parsed.title, "Sociologie : démographie");
+  assert.equal(parsed.room, "2203 - FERMAT");
+  assert.equal(parsed.cancelled, false);
+  assert.equal(parsed.date, "2026-09-28");
+  assert.equal(parsed.time, "09:40 - 11:10");
+  assert.equal(parsed.cat, "socio");
+  assert.equal(parsed.groups.length, 1);
+  assert.match(parsed.groups[0], /S3MIASHS/);
+});
+
+test("parseEvent reconnaît une annulation (#333333, catégorie « Annulation »)", (core, data) => {
+  const raw = Object.values(data.weeks).flatMap((week) => week.events).find((event) => event.eventCategory === "Annulation");
+  const parsed = core.parseEvent(raw);
+  assert.equal(parsed.cancelled, true);
+  assert.equal(parsed.title, "Anglais UE2");
+  assert.equal(parsed.room, "");
+});
+
+test("isMyCourse garde la promo et le TD 02, écarte les autres TD", (core, data) => {
+  const events = Object.values(data.weeks).flatMap((week) => week.events);
+  const td1 = events.find((event) => event.description.includes("[S3MIASHS TD 1]") && !event.description.includes("TD 2"));
+  const td2 = events.find((event) => event.description.includes("[S3MIASHS TD 2]") && !event.description.includes("TD 1"));
+  const promo = events.find((event) => event.description.includes("( S3MIASHS )"));
+  assert.equal(core.isMyCourse(core.parseEvent(td1)), false, "un TD du groupe 1 ne doit pas s'afficher");
+  assert.equal(core.isMyCourse(core.parseEvent(td2)), true, "le TD 02 doit s'afficher");
+  assert.equal(core.isMyCourse(core.parseEvent(promo)), true, "les cours de promo doivent s'afficher");
+});
+
+test("buildWeek filtre et étiquette correctement la semaine du 28/09", (core, data) => {
+  const raw = data.weeks["2026-09-28"].events;
+  const reference = core.fallbackWeeks.find((week) => week.monday === "2026-09-28");
+  const recurring = core.findRecurringCancellations(data.weeks);
+  const view = core.buildWeek("2026-09-28", raw, reference, { live: true, recurringCancellations: recurring });
+  const [monday, tuesday, wednesday, thursday, friday] = view.days;
+
+  assert.deepEqual(monday.courses.map((course) => course.title), ["Sociologie : démographie", "Sociologie : démographie", "Microéconomie 2"]);
+  assert.equal(monday.courses[2].tag, "Votre TD 02"); // étiquette héritée de la référence
+  assert.equal(monday.courses[1].tag, "TD Promo réunie (TD 1 & 2)");
+  assert.ok(!monday.courses.some((course) => course.time.startsWith("13:50")), "le TD du groupe 1 ne doit pas apparaître");
+
+  assert.deepEqual(tuesday.courses.map((course) => course.time), ["08:00 - 09:30", "09:40 - 11:10", "11:20 - 12:50"]);
+  assert.ok(!tuesday.courses.some((course) => course.isCancelled), "le créneau d'anglais annulé en permanence est masqué");
+  assert.ok(tuesday.courses.some((course) => course.title === "Macroéconomie 2" && course.tag === "CM Promo"));
+
+  assert.equal(thursday.courses.length, 3);
+  assert.ok(thursday.courses.some((course) => course.type === "TD Cartable Numérique" && course.room.includes("RC22")));
+  assert.equal(friday.courses.length, 1);
+  assert.equal(wednesday.courses.length, 2);
+  assert.ok(wednesday.courses.some((course) => course.title === "Analyse 2 & Algèbre linéaire 2" && course.room.includes("AMPHI G")), "le TD de maths du TD 02 est bien présent");
+  assert.equal(view.report.cancellations.length, 1);
+  assert.equal(view.days.flatMap((day) => day.courses).length, 12);
+});
+
+test("buildWeek signale une annulation qui touche un cours prévu", (core, data) => {
+  const raw = data.weeks["2026-09-28"].events;
+  const reference = core.fallbackWeeks.find((week) => week.monday === "2026-09-28");
+  const view = core.buildWeek("2026-09-28", raw, reference, { live: true, recurringCancellations: core.findRecurringCancellations(data.weeks) });
+  const cancellations = view.report.cancellations;
+  assert.equal(cancellations.length, 1, "le CM de BDD du jeudi 1er octobre est annulé");
+  assert.equal(cancellations[0].title, "Initiation bases de données");
+  assert.equal(cancellations[0].date, "2026-10-01");
+  const card = view.days[3].courses.find((course) => course.isCancelled);
+  assert.ok(card, "la carte annulée est affichée");
+  assert.equal(card.type, "CM");
+  assert.equal(card.tagType, "cancelled");
+  assert.match(card.tag, /annul/i);
+});
+
+test("les vacances de la Toussaint restent vides (pas de faux fantômes)", (core, data) => {
+  const empty = data.weeks["2026-10-26"];
+  assert.ok(empty);
+  assert.equal(empty.events.length, 0);
+  const reference = core.fallbackWeeks.find((week) => week.monday === "2026-10-26") ?? null;
+  const view = core.buildWeek("2026-10-26", empty.events, reference, { live: true });
+  assert.equal(view.report.missing.length, 0);
+  assert.equal(view.days.flatMap((day) => day.courses).length, 0);
+});
+
+test("un cours disparu du planning est signalé comme à vérifier", (core, data) => {
+  const raw = data.weeks["2026-12-07"].events;
+  const reference = core.fallbackWeeks.find((week) => week.monday === "2026-12-07");
+  const view = core.buildWeek("2026-12-07", raw, reference, { live: true, recurringCancellations: core.findRecurringCancellations(data.weeks) });
+  assert.ok(view.report.missing.some((missing) => missing.title === "Anglais UE2" && missing.date === "2026-12-09"));
+  assert.ok(view.days[2].courses.some((course) => course.ghost && course.title === "Anglais UE2"));
+});
+
+test("sans données live, la semaine de secours est utilisée telle quelle", (core) => {
+  const reference = core.fallbackWeeks[0];
+  const view = core.buildWeek("2026-09-14", [], reference, { live: false });
+  assert.equal(view.live, false);
+  assert.equal(view.days[0].courses.length, 2);
+  assert.ok(view.days[0].courses.every((course) => course.source === "reference" && !course.ghost));
+});
+
+test("CONFIG cible bien le groupe S3MIASHS et son TD", (core) => {
+  assert.equal(core.CONFIG.group, "S3MIASHS");
+  assert.equal(core.CONFIG.myTd, "S3MIASHS TD 2");
+  assert.equal(core.normalizeGroupCode("S3MIASHS TD 02"), core.normalizeGroupCode("S3MIASHS TD 2"));
+});
+
+test("weeksFromEvents regroupe par lundi", (core, data) => {
+  const weeks = core.weeksFromEvents(data.weeks["2026-10-05"].events);
+  assert.deepEqual(Object.keys(weeks), ["2026-10-05"]);
+  assert.equal(weeks["2026-10-05"].events.length, 17);
+});
+
+test("mondayOf / addDaysISO sont justes (bords de mois et d'année)", (core) => {
+  assert.equal(core.mondayOf("2026-10-01"), "2026-09-28");
+  assert.equal(core.mondayOf("2026-10-04"), "2026-09-28");
+  assert.equal(core.mondayOf("2026-10-05"), "2026-10-05");
+  assert.equal(core.addDaysISO("2026-12-31", 1), "2027-01-01");
+  assert.equal(core.addDaysISO("2026-03-01", -1), "2026-02-28");
+  assert.equal(core.slotOf(9 * 60 + 40, 11 * 60 + 10), "09:40 - 11:10");
+});
+
+/* ------------------------------------------------------------------ runner */
+const html = await readFile(path.join(ROOT, "index.html"), "utf8");
+const data = JSON.parse(await readFile(path.join(ROOT, "data", "edt.json"), "utf8"));
+const core = loadCore(html);
+
+let failures = 0;
+for (const { name, fn } of tests) {
+  try {
+    await fn(core, data);
+    console.log(`  ✓ ${name}`);
+  } catch (error) {
+    failures++;
+    console.error(`  ✗ ${name}\n      ${error.message.split("\n").join("\n      ")}`);
+  }
+}
+console.log(`\n${tests.length - failures}/${tests.length} tests réussis`);
+process.exit(failures ? 1 : 0);

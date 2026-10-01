@@ -1,5 +1,6 @@
 {
   "group": "S3MIASHS",
+  "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
   "semester": {
     "start": "2026-09-14",
@@ -13,7 +14,11 @@
       "/calendar/Home/GetCalendarData"
     ],
     "resourceType": "103",
-    "calViews": ["agendaWeek", "month", "agendaDay"],
+    "calViews": [
+      "agendaWeek",
+      "month",
+      "agendaDay"
+    ],
     "colourScheme": "3",
     "weeksBackIncremental": 1,
     "weeksAheadIncremental": 2,
