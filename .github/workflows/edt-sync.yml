@@ -18,7 +18,8 @@ on:
         type: boolean
         default: true
   push:
-    branches: [main]
+    # TEMP-TEST: branche de test, à retirer
+    branches: [main, arena/01a0f695-physiquepv-github-io]
     paths-ignore:
       - "data/**" # évite de boucler sur ses propres commits
 
