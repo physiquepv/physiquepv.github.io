@@ -18,8 +18,7 @@ on:
         type: boolean
         default: true
   push:
-    # TEMP-VALIDATION: branche de test, à retirer avant la fusion
-    branches: [main, arena/01a0f695-physiquepv-github-io]
+    branches: [main]
     paths-ignore:
       - "data/**" # évite de boucler sur ses propres commits
 
@@ -65,8 +64,7 @@ jobs:
           exit "$code"
 
       - name: Publier data/edt.json
-        # TEMP-VALIDATION: la branche de test publie aussi, pour valider la synchro réelle
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/arena/01a0f695-physiquepv-github-io'
+        if: github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           if [ -z "$(git status --porcelain -- data/edt.json)" ]; then

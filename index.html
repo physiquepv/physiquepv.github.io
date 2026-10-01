@@ -296,7 +296,7 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 <div class="live-banner" id="liveBanner">
 <span class="live-dot"></span>
 <div><strong id="liveBannerTitle">Mode Live actif</strong> — <span id="liveBannerText">Récupération de l'emploi du temps officiel. Les profs absents et salles changées apparaissent automatiquement.</span></div>
-<button class="btn sync-btn" id="refresh" onclick="refreshCurrentWeek(true)">🔄 Actualiser</button>
+<button class="btn sync-btn" id="refresh">🔄 Actualiser</button>
 </div>
 
 <div class="changes" id="changes" hidden></div>
@@ -791,6 +791,7 @@ const state = {
   weeks: {},          // { 'YYYY-MM-DD': { monday, fetchedAt, events[] } }
   source: "none",     // file | live | cache | reference
   generatedAt: null,
+  checkedAt: null,   // dernière exécution réussie de la synchro GitHub
   loadedAt: null,
 };
 
@@ -1217,8 +1218,22 @@ function jumpToTarget(smooth = true) {
   if (innerWidth <= 860 && state_view.mobileFilter !== "all") setDay(target.dayIndex, false);
   scrollToDay(target.dayIndex, smooth);
 }
+/** Bouton « Actualiser » : relit data/edt.json et retente CELCAT en direct. */
 function refreshCurrentWeek() {
-  loadEverything({ force: true }).then(() => renderWeek(state_view.index));
+  const button = $("#refresh");
+  const label = button?.textContent;
+  if (button) {
+    button.disabled = true;
+    button.textContent = "⏳ Actualisation…";
+  }
+  return loadEverything({ force: true, tryLive: true })
+    .catch(() => {})
+    .finally(() => {
+      if (button) {
+        button.disabled = false;
+        button.textContent = label || "🔄 Actualiser";
+      }
+    });
 }
 
 /* -------------------------------------------------------------- données */
@@ -1273,8 +1288,8 @@ async function loadEverything(options = {}) {
     }
 
     const lastKnown = Math.max(syncAt?.getTime() ?? 0, state.generatedAt ? new Date(state.generatedAt).getTime() : 0);
-    const stale = options.force || !lastKnown || Date.now() - lastKnown > CONFIG.dataMaxAgeMs;
-    if (stale) {
+    const stale = !lastKnown || Date.now() - lastKnown > CONFIG.dataMaxAgeMs;
+    if (stale || options.tryLive) {
       try {
         const { changed } = await refreshFromLive(currentWeekKey());
         state.source = "live";
