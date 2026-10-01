@@ -25,7 +25,7 @@ index.html                              filtrage du TD 02, annulations, affichag
    avec l'emploi du temps de référence intégré, puis affiche la semaine du jour.
 3. Si le fichier est indisponible, la page tente un appel direct (puis via des
    proxys publics) ; en dernier recours seulement, elle affiche l'emploi du temps
-   de secours codé en dur et le signale (badge « hors-ligne »).
+   de secours codé en dur, sans statut global à l'écran.
 
 ## Fichiers
 
@@ -60,8 +60,9 @@ sans rien modifier (`index.html?group=S3MIASHS`).
 ## Détection des annulations / absences
 
 - **Annulation officielle** : CELCAT publie un créneau dont la catégorie est
-  `Annulation` (fond `#333333`). Il est affiché en rouge avec la mention
-  « annulée » et repris dans l'encart d'alerte en haut de page.
+  `Annulation` (fond `#333333`). Le cours est affiché en rouge et l'information
+  « annulée » reste directement sur sa carte ; aucun encart récapitulatif global
+  n'est affiché.
 - **Cours retiré du planning** : si un cours de l'emploi du temps de référence
   n'existe plus dans le flux officiel, il apparaît en pointillés avec le badge
   « ❓ à vérifier » (utile quand une séance disparaît sans explication).
@@ -95,7 +96,7 @@ npm run test:all     # les trois
 | Symptôme | Cause probable | Solution |
 | --- | --- | --- |
 | Le planning ne change pas | Workflow en échec ou permissions de lecture seule | Onglet **Actions** → regarder le résumé du run (l'erreur exacte y est écrite) |
-| Badge 🔴 « hors-ligne » | `data/edt.json` inaccessible | Vérifier que le fichier est bien publié sur `main` |
+| Le planning de secours s'affiche | `data/edt.json` inaccessible et CELCAT indisponible | Vérifier que le fichier est bien publié sur `main` et consulter le dernier run Actions |
 | Un cours manque / en trop | Groupe ou TD mal configuré | Corriger `group` / `tdGroup` dans `edt.config.json` |
 | L'UVSQ change d'API | L'URL ou le format CELCAT a évolué | Adapter `scripts/sync-edt.mjs` (endpoints listés dans `edt.config.json`) |
 

@@ -45,7 +45,7 @@ try{
   --shadow-md:0 8px 24px rgba(0,0,0,.32)
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body,.header,.legend,.nav,.day,.day-head,.card,.btn,.tab,.card-tag,.course-type{transition:background-color .25s ease,border-color .25s ease,color .2s ease}
+body,.header,.nav,.day,.day-head,.card,.btn,.tab,.card-tag,.course-type{transition:background-color .25s ease,border-color .25s ease,color .2s ease}
 body{padding:20px;color:var(--text);background:var(--body);font-family:"Plus Jakarta Sans",Arial,sans-serif}
 button{font:inherit}
 button:focus-visible{outline:3px solid color-mix(in srgb,#2563eb 45%,transparent);outline-offset:3px}
@@ -55,25 +55,11 @@ button:focus-visible{outline:3px solid color-mix(in srgb,#2563eb 45%,transparent
 .header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:22px 28px;margin-bottom:16px;color:#fff;border:1px solid var(--border);border-radius:14px;background:linear-gradient(135deg,#1e293b,#0f172a);box-shadow:0 4px 14px #0003}
 [data-theme=dark] .header{background:linear-gradient(135deg,#141c2e,#090e1a);border-color:#23314f}
 .header h1{font-size:1.35rem;font-weight:800;letter-spacing:-.5px}
-.header p{margin-top:3px;color:#94a3b8;font-size:.86rem}
-.badges{display:flex;flex-wrap:wrap;gap:8px}
-.badge{padding:5px 11px;color:#f8fafc;white-space:nowrap;font-size:.76rem;font-weight:700;border:1px solid #fff3;border-radius:999px;background:#ffffff1f}
-.badge.orange{background:#b45309;border-color:#f59e0b}
-.badge.blue{background:#1d4ed8;border-color:#60a5fa}
-.legend,.nav{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:16px;padding:10px 18px;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
-.legend{font-size:.8rem}
-.legend-title{font-weight:800}
-.legend-item{display:inline-flex;align-items:center;gap:6px}
-.dot{width:10px;height:10px;border-radius:50%}
-.perso-dot{background:#2563eb}
-.reuni-dot{background:#7c3aed}
-.cm-dot{background:#0f766e}
+.header p{margin-top:3px;color:#94a3b8;font-size:.86rem}.nav{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:16px;padding:10px 18px;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
 .nav{justify-content:space-between;gap:12px;padding:12px 18px;margin-bottom:20px;border-radius:var(--radius-md);box-shadow:var(--shadow-sm)}
 @media(min-width:861px){.nav{position:sticky;top:10px;z-index:50;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}}
 .nav-center{text-align:center}
 .nav-title{font-size:1.18rem;font-weight:800}
-.week-progress{width:min(280px,70vw);height:4px;margin:8px auto 0;overflow:hidden;border-radius:999px;background:var(--border)}
-.week-progress span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#2563eb,#38bdf8);transition:width .3s ease}
 .actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 15px;color:var(--text);font-size:.88rem;font-weight:700;cursor:pointer;border:1px solid var(--border);border-radius:8px;background:var(--subtle)}
 .btn:hover:not(:disabled){color:#fff;border-color:#2563eb;background:#2563eb;transform:translateY(-1px)}
@@ -126,8 +112,8 @@ button:focus-visible{outline:3px solid color-mix(in srgb,#2563eb 45%,transparent
 .empty{display:flex;align-items:center;justify-content:center;height:100%;min-height:120px;margin:12px;padding:20px;color:var(--muted);text-align:center;font-size:.85rem;font-style:italic;border:1px dashed var(--border);border-radius:10px;background:var(--subtle)}
 #print{display:none}
 @media(min-width:861px) and (max-width:1180px){body{padding:14px}.grid{grid-template-columns:repeat(5,220px);overflow-x:auto;padding:3px 3px 14px;scroll-snap-type:x proximity;scrollbar-color:var(--border) transparent}.day{scroll-snap-align:start}.grid::-webkit-scrollbar{height:8px}.grid::-webkit-scrollbar-thumb{border-radius:999px;background:var(--border)}}
-@media(max-width:860px){body{padding:10px 10px calc(32px + env(safe-area-inset-bottom))}.header{gap:10px;padding:14px 16px;margin-bottom:10px;border-radius:var(--radius-md)}.header h1{font-size:1.15rem}.header p{font-size:.76rem}.badges{width:100%;flex-wrap:nowrap;gap:6px;padding-bottom:4px;overflow-x:auto;scrollbar-width:none}.badges::-webkit-scrollbar{display:none}.badge{flex-shrink:0;padding:4px 9px;font-size:.71rem}.legend{gap:8px;padding:8px 12px;margin-bottom:10px;font-size:.74rem}.nav{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"center center" "prev next" "today theme" "print print" "refresh refresh";gap:8px;padding:12px;margin-bottom:10px}.nav-center{grid-area:center;margin-bottom:4px}.nav-title{font-size:1.05rem}#prev{grid-area:prev}#next{grid-area:next}.actions{display:contents}#today{grid-area:today}#theme{grid-area:theme}.print-btn{grid-area:print}#refresh{grid-area:refresh}.btn{width:100%}.mobile-tabs{position:sticky;top:6px;z-index:40;display:flex;gap:5px;margin-bottom:12px;padding:6px max(0px,env(safe-area-inset-right)) 6px max(0px,env(safe-area-inset-left));background:var(--body);border-bottom:1px solid var(--border);box-shadow:0 8px 18px rgba(15,23,42,.08)}[data-theme=dark] .mobile-tabs{box-shadow:0 8px 18px rgba(0,0,0,.25)}.tab{flex:1;padding:8px 2px;color:var(--text);font-size:.8rem;font-weight:700;cursor:pointer;border:1px solid var(--border);border-radius:8px;background:var(--surface)}.tab.active{color:#fff;border-color:#2563eb;background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 4px 10px rgba(37,99,235,.28);transform:translateY(-1px)}.tab:active{transform:scale(.97)}.tab.current:not(.active){color:var(--today);border-color:var(--today)}.grid{grid-template-columns:1fr;gap:12px;margin-bottom:16px}.day{min-height:auto;border-radius:10px;scroll-margin-top:65px}.day.hidden{display:none}.day-head{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;text-align:left}.day-count{display:inline-block;padding:3px 8px;color:var(--muted);font-size:.72rem;font-weight:700;border:1px solid var(--border);border-radius:999px;background:var(--subtle)}.day-count.has{color:var(--maths);background:var(--maths-bg)}.day-body{position:static;display:flex;flex-direction:column;gap:12px;min-height:auto;padding:12px;background:none}.hour-scale{display:none}.current-time-line{display:none}.card{position:static;height:auto!important;left:auto;right:auto}.card-room{overflow:visible;white-space:normal;text-overflow:clip}}
-@media(max-width:480px){.header{padding:12px 14px}.header h1{font-size:1.05rem}.header p{line-height:1.35}.badge{max-width:88vw;overflow:hidden;text-overflow:ellipsis}.legend{max-height:145px;overflow-y:auto}.nav-title{font-size:.98rem}.btn{padding:9px 8px;font-size:.8rem}}
+@media(max-width:860px){body{padding:10px 10px calc(32px + env(safe-area-inset-bottom))}.header{gap:10px;padding:14px 16px;margin-bottom:10px;border-radius:var(--radius-md)}.header h1{font-size:1.15rem}.header p{font-size:.76rem}.nav{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"center center" "prev next" "today theme" "print print";gap:8px;padding:12px;margin-bottom:10px}.nav-center{grid-area:center;margin-bottom:4px}.nav-title{font-size:1.05rem}#prev{grid-area:prev}#next{grid-area:next}.actions{display:contents}#today{grid-area:today}#theme{grid-area:theme}.print-btn{grid-area:print}.btn{width:100%}.mobile-tabs{position:sticky;top:6px;z-index:40;display:flex;gap:5px;margin-bottom:12px;padding:6px max(0px,env(safe-area-inset-right)) 6px max(0px,env(safe-area-inset-left));background:var(--body);border-bottom:1px solid var(--border);box-shadow:0 8px 18px rgba(15,23,42,.08)}[data-theme=dark] .mobile-tabs{box-shadow:0 8px 18px rgba(0,0,0,.25)}.tab{flex:1;padding:8px 2px;color:var(--text);font-size:.8rem;font-weight:700;cursor:pointer;border:1px solid var(--border);border-radius:8px;background:var(--surface)}.tab.active{color:#fff;border-color:#2563eb;background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 4px 10px rgba(37,99,235,.28);transform:translateY(-1px)}.tab:active{transform:scale(.97)}.tab.current:not(.active){color:var(--today);border-color:var(--today)}.grid{grid-template-columns:1fr;gap:12px;margin-bottom:16px}.day{min-height:auto;border-radius:10px;scroll-margin-top:65px}.day.hidden{display:none}.day-head{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;text-align:left}.day-count{display:inline-block;padding:3px 8px;color:var(--muted);font-size:.72rem;font-weight:700;border:1px solid var(--border);border-radius:999px;background:var(--subtle)}.day-count.has{color:var(--maths);background:var(--maths-bg)}.day-body{position:static;display:flex;flex-direction:column;gap:12px;min-height:auto;padding:12px;background:none}.hour-scale{display:none}.current-time-line{display:none}.card{position:static;height:auto!important;left:auto;right:auto}.card-room{overflow:visible;white-space:normal;text-overflow:clip}}
+@media(max-width:480px){.header{padding:12px 14px}.header h1{font-size:1.05rem}.header p{line-height:1.35}.nav-title{font-size:.98rem}.btn{padding:9px 8px;font-size:.8rem}}
 @media print{@page{size:A4 landscape;margin:4mm 5mm}*{box-sizing:border-box!important}html,body{width:100%!important;margin:0!important;padding:0!important;color:#000!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.app{display:none!important}#print{display:block!important}.print-page{display:flex!important;flex-direction:column;width:100%;height:196mm;overflow:hidden;page-break-inside:avoid;break-inside:avoid}.print-page:first-child{page-break-after:always;break-after:page}.print-head{display:flex;flex-shrink:0;align-items:flex-end;justify-content:space-between;height:11mm;margin-bottom:2mm;padding-bottom:2px;border-bottom:2px solid #0f172a}.print-head h2{color:#0f172a!important;font-size:10pt;font-weight:800;text-transform:uppercase}.print-head p{margin-top:1px;color:#334155!important;font-size:7.5pt;font-weight:600}.print-badge{padding:2px 6px;color:#0f172a!important;white-space:nowrap;font-size:6.8pt;font-weight:700;border:1px solid #64748b;border-radius:4px;background:#f1f5f9!important}.print-table{width:100%;height:181mm;table-layout:fixed;border-collapse:collapse}.print-table th{height:6mm;padding:2px;color:#fff!important;font-size:7.5pt;font-weight:800;text-transform:uppercase;border:1px solid #0f172a;background:#0f172a!important}.print-table th:first-child{width:9%}.print-table td{padding:1.5px 2px;color:#000!important;vertical-align:middle;border:1px solid #94a3b8;background:#fff!important}.print-week{text-align:center;background:#f8fafc!important}.print-week b{display:block;color:#0f172a!important;font-size:7.2pt}.print-week span{display:block;margin-top:2px;color:#334155!important;font-size:6.3pt;font-weight:700}.p-item{display:block;margin-bottom:1.5px;padding:1.5px 2px;color:#0f172a!important;font-size:6.2pt;line-height:1.12;border-left:3px solid #94a3b8;border-radius:2px}.p-item:last-child{margin-bottom:0}.p-item.maths{border-left-color:#1d4ed8;background:#eff6ff!important}.p-item.info{border-left-color:#0284c7;background:#f0f9ff!important}.p-item.micro{border-left-color:#059669;background:#ecfdf5!important}.p-item.macro{border-left-color:#0f766e;background:#f0fdfa!important}.p-item.socio{border-left-color:#7c3aed;background:#f5f3ff!important}.p-item.anglais{border-left-color:#b45309;background:#fffbeb!important}.p-time{font-weight:800}.p-type{font-weight:800;text-transform:uppercase}.p-room{color:#334155!important;font-size:5.7pt;font-weight:600}.p-empty{color:#64748b!important;text-align:center;font-size:6.2pt;font-style:italic}.p-item.cancelled{border-left-color:#dc2626;background:#fef2f2!important}.p-item.ghost{border-left-color:#94a3b8;border-left-style:dashed;opacity:.85}.p-alert{padding:4px 2px;color:#991b1b!important;text-align:center;font-size:6.4pt;font-weight:800;border:1px solid #f87171;border-radius:3px;background:#fef2f2!important}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
@@ -138,7 +124,7 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable}
 body{min-height:100vh;padding:24px;color:var(--text);line-height:1.5;background:radial-gradient(circle at 5% 0%,rgba(99,102,241,.12),transparent 28rem),radial-gradient(circle at 95% 5%,rgba(14,165,233,.09),transparent 30rem),linear-gradient(180deg,#f8faff 0,var(--body) 360px);background-attachment:fixed}
 [data-theme="dark"] body{background:radial-gradient(circle at 5% 0%,rgba(99,102,241,.15),transparent 28rem),radial-gradient(circle at 95% 5%,rgba(14,165,233,.08),transparent 30rem),linear-gradient(180deg,#0b101b 0,var(--body) 380px);background-attachment:fixed}
 ::selection{color:#fff;background:var(--primary)}
-button,.card,.day,.header,.legend,.nav,.tab{-webkit-font-smoothing:antialiased}
+button,.card,.day,.header,.nav,.tab{-webkit-font-smoothing:antialiased}
 button:focus-visible,.card:focus-visible{outline:3px solid var(--primary-ring);outline-offset:3px}
 .app{position:relative;z-index:1;width:100%;max-width:1520px;margin:0 auto}
 .header{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;min-height:132px;margin-bottom:16px;padding:28px 30px;overflow:hidden;color:#fff;border:1px solid rgba(255,255,255,.14);border-radius:var(--radius-xl);background:radial-gradient(circle at 82% 20%,rgba(96,165,250,.32),transparent 22rem),radial-gradient(circle at 15% 120%,rgba(139,92,246,.38),transparent 25rem),linear-gradient(135deg,#111827 0%,#172554 52%,#312e81 100%);box-shadow:0 25px 65px rgba(30,41,59,.22),inset 0 1px 0 rgba(255,255,255,.12)}
@@ -148,24 +134,9 @@ button:focus-visible,.card:focus-visible{outline:3px solid var(--primary-ring);o
 [data-theme="dark"] .header{border-color:rgba(148,163,184,.14);background:radial-gradient(circle at 82% 20%,rgba(59,130,246,.2),transparent 22rem),radial-gradient(circle at 15% 120%,rgba(124,58,237,.22),transparent 25rem),linear-gradient(135deg,#0b101a 0%,#111a30 55%,#211d51 100%)}
 .header h1{margin:0;color:#fff;font-size:clamp(1.45rem,2.2vw,2.15rem);font-weight:800;line-height:1.15;letter-spacing:-.045em;text-wrap:balance}
 .header p{max-width:720px;margin-top:9px;color:#cbd5e1;font-size:.93rem;font-weight:500;line-height:1.55}
-.badges{display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:590px}
-.badge{max-width:100%;padding:8px 13px;overflow:hidden;color:#f8fafc;font-size:.73rem;font-weight:600;line-height:1.45;text-overflow:ellipsis;white-space:normal;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.badge strong{color:#fff;font-weight:800}
-.badge.orange{border-color:rgba(251,191,36,.32);background:rgba(180,83,9,.28)}
-.badge.blue{border-color:rgba(96,165,250,.32);background:rgba(29,78,216,.28)}
-.legend{display:flex;align-items:center;gap:10px 12px;margin-bottom:16px;padding:12px 14px;color:var(--text-soft);font-size:.76rem;border:1px solid var(--border-soft);border-radius:var(--radius-lg);background:var(--surface-soft);box-shadow:var(--shadow-xs);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-.legend-title{padding:5px 8px;color:var(--text);font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
-.legend-item{display:inline-flex;align-items:center;gap:7px;min-height:32px;padding:5px 10px;border:1px solid var(--border-soft);border-radius:999px;background:var(--surface)}
-.legend-item strong{color:var(--text);font-weight:750}
-.dot{width:9px;height:9px;flex:none;border-radius:50%;box-shadow:0 0 0 4px color-mix(in srgb,currentColor 12%,transparent)}
-.perso-dot{color:#2563eb;background:#2563eb}
-.reuni-dot{color:#7c3aed;background:#7c3aed}
-.cm-dot{color:#0f766e;background:#0f766e}
 .nav{display:grid;grid-template-columns:auto minmax(260px,1fr) auto;align-items:center;gap:16px;margin-bottom:18px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-lg);background:color-mix(in srgb,var(--surface) 86%,transparent);box-shadow:var(--shadow-md);backdrop-filter:blur(20px) saturate(1.25);-webkit-backdrop-filter:blur(20px) saturate(1.25)}
 .nav-center{min-width:0;text-align:center}
 .nav-title{overflow:hidden;color:var(--text);font-size:clamp(1rem,1.4vw,1.22rem);font-weight:800;line-height:1.3;letter-spacing:-.025em;text-overflow:ellipsis;white-space:nowrap}
-.week-progress{width:min(330px,75%);height:5px;margin:9px auto 0;overflow:hidden;border-radius:999px;background:var(--border-soft);box-shadow:inset 0 1px 2px rgba(15,23,42,.08)}
-.week-progress span{position:relative;display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6366f1,#3b82f6,#06b6d4);box-shadow:0 0 10px rgba(59,130,246,.35)}
 .actions{display:flex;align-items:center;justify-content:flex-end;gap:7px}
 .btn{position:relative;min-height:42px;padding:9px 13px;color:var(--text-soft);font-size:.78rem;font-weight:750;line-height:1;white-space:nowrap;cursor:pointer;border:1px solid var(--border);border-radius:11px;background:var(--surface);box-shadow:var(--shadow-xs);transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 .btn:hover:not(:disabled){color:var(--primary);border-color:color-mix(in srgb,var(--primary) 40%,var(--border));background:var(--primary-soft);box-shadow:0 6px 15px var(--primary-ring),inset 0 1px 0 rgba(255,255,255,.18);transform:translateY(-2px)}
@@ -214,10 +185,10 @@ button:focus-visible,.card:focus-visible{outline:3px solid var(--primary-ring);o
 .tab{transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 @media screen and (min-width:861px){.nav{position:sticky;top:12px;z-index:100}}
 @media screen and (min-width:861px) and (max-width:1280px){body{padding:16px}.header{padding:24px}.grid{grid-template-columns:repeat(5,235px);gap:12px;padding:4px 4px 16px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-color:var(--border) transparent}.day{scroll-snap-align:start}.grid::-webkit-scrollbar{height:9px}.grid::-webkit-scrollbar-track{border-radius:999px;background:transparent}.grid::-webkit-scrollbar-thumb{border:2px solid var(--body);border-radius:999px;background:var(--border)}.actions{max-width:430px;flex-wrap:wrap}.btn{min-height:39px;padding:8px 10px;font-size:.72rem}}
-@media screen and (max-width:860px){html{scrollbar-gutter:auto}body{padding:10px max(10px,env(safe-area-inset-right)) calc(26px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:radial-gradient(circle at 20% 0%,rgba(99,102,241,.12),transparent 22rem),var(--body)}.header{display:block;min-height:0;margin-bottom:10px;padding:20px;border-radius:20px}.header::before{top:-130px;right:-110px}.header::after{display:none}.header h1{font-size:1.35rem}.header p{margin-top:7px;font-size:.78rem}.badges{display:flex;flex-direction:row;align-items:stretch;width:100%;max-width:none;margin-top:16px;padding-bottom:3px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none}.badges::-webkit-scrollbar{display:none}.badge{flex:0 0 min(82vw,420px);padding:8px 11px;font-size:.67rem;scroll-snap-align:start}.legend{flex-wrap:nowrap;gap:7px;margin-bottom:10px;padding:8px;overflow-x:auto;border-radius:15px;scrollbar-width:none}.legend::-webkit-scrollbar{display:none}.legend-title,.legend-item{flex:none}.legend-title{padding:4px 7px}.legend-item{min-height:31px;padding:4px 9px;font-size:.68rem}.legend-item strong{font-weight:750}.nav{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"center center" "prev next" "today theme" "print print" "refresh refresh";gap:8px;margin-bottom:10px;padding:11px;border-radius:17px}.nav-center{grid-area:center;padding:3px 4px 7px}.nav-title{font-size:1rem;white-space:normal}.week-progress{width:min(300px,85%)}#prev{grid-area:prev}#next{grid-area:next}.actions{display:contents}#today{grid-area:today}#theme{grid-area:theme}.print-btn{grid-area:print}#refresh{grid-area:refresh}.btn{width:100%;min-height:43px;font-size:.75rem;border-radius:10px}.mobile-tabs{position:sticky;top:6px;z-index:90;display:flex;gap:5px;margin:0 -2px 10px;padding:6px;border:1px solid var(--border);border-radius:15px;background:color-mix(in srgb,var(--surface) 88%,transparent);box-shadow:var(--shadow-md);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.tab{min-width:47px;min-height:40px;padding:7px 4px;color:var(--muted);font-size:.7rem;font-weight:800;border:1px solid transparent;border-radius:9px;background:transparent;box-shadow:none}.tab:hover{color:var(--text);background:var(--subtle)}.tab.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 6px 15px rgba(79,70,229,.28);transform:none}.tab.current:not(.active){color:var(--primary);border-color:color-mix(in srgb,var(--primary) 28%,transparent);background:var(--primary-soft)}.grid{grid-template-columns:1fr;gap:10px;padding:0;overflow:visible}.day{min-height:0;border-radius:17px;scroll-margin-top:68px}.day:hover{transform:none}.day-head{min-height:68px;padding:12px 14px}.day-name{font-size:.9rem}.day-date{font-size:.69rem}.day-count{display:inline-flex;min-height:25px;font-size:.61rem}.day-body{position:static;display:flex;flex-direction:column;gap:9px;min-height:auto;padding:11px;background:var(--surface)}.hour-scale,.current-time-line{display:none}.card{position:relative;left:auto;right:auto;top:auto!important;width:100%;height:auto!important;min-height:104px;gap:5px;padding:11px 12px;border-left-width:5px;border-radius:12px}.card:hover{transform:none}.card-time{font-size:.76rem}.course-type{padding:4px 6px;font-size:.56rem}.card-title{display:block;overflow:visible;font-size:.86rem;line-height:1.35;-webkit-line-clamp:unset}.card-room{overflow:visible;font-size:.7rem;line-height:1.4;white-space:normal;text-overflow:clip}.card-tag{min-height:22px;padding:3px 7px;overflow:visible;font-size:.62rem;white-space:normal}.card.running::after{position:static;align-self:flex-end;margin-top:-24px}.empty{position:static;inset:auto;min-height:130px;margin:0;padding:22px}}
-@media screen and (max-width:480px){body{padding-inline:8px}.header{padding:17px;border-radius:18px}.header h1{font-size:1.2rem}.header p{font-size:.72rem}.badge{flex-basis:88vw}.nav{padding:9px}.nav-title{font-size:.92rem}.btn{padding:8px 6px;font-size:.69rem}.mobile-tabs{gap:3px;padding:5px}.tab{min-width:0;min-height:39px;font-size:.66rem}.day-head{padding:11px 12px}.card{min-height:100px;padding:10px}}
+@media screen and (max-width:860px){html{scrollbar-gutter:auto}body{padding:10px max(10px,env(safe-area-inset-right)) calc(26px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:radial-gradient(circle at 20% 0%,rgba(99,102,241,.12),transparent 22rem),var(--body)}.header{display:block;min-height:0;margin-bottom:10px;padding:20px;border-radius:20px}.header::before{top:-130px;right:-110px}.header::after{display:none}.header h1{font-size:1.35rem}.header p{margin-top:7px;font-size:.78rem}.nav{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"center center" "prev next" "today theme" "print print";gap:8px;margin-bottom:10px;padding:11px;border-radius:17px}.nav-center{grid-area:center;padding:3px 4px 7px}.nav-title{font-size:1rem;white-space:normal}#prev{grid-area:prev}#next{grid-area:next}.actions{display:contents}#today{grid-area:today}#theme{grid-area:theme}.print-btn{grid-area:print}.btn{width:100%;min-height:43px;font-size:.75rem;border-radius:10px}.mobile-tabs{position:sticky;top:6px;z-index:90;display:flex;gap:5px;margin:0 -2px 10px;padding:6px;border:1px solid var(--border);border-radius:15px;background:color-mix(in srgb,var(--surface) 88%,transparent);box-shadow:var(--shadow-md);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.tab{min-width:47px;min-height:40px;padding:7px 4px;color:var(--muted);font-size:.7rem;font-weight:800;border:1px solid transparent;border-radius:9px;background:transparent;box-shadow:none}.tab:hover{color:var(--text);background:var(--subtle)}.tab.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 6px 15px rgba(79,70,229,.28);transform:none}.tab.current:not(.active){color:var(--primary);border-color:color-mix(in srgb,var(--primary) 28%,transparent);background:var(--primary-soft)}.grid{grid-template-columns:1fr;gap:10px;padding:0;overflow:visible}.day{min-height:0;border-radius:17px;scroll-margin-top:68px}.day:hover{transform:none}.day-head{min-height:68px;padding:12px 14px}.day-name{font-size:.9rem}.day-date{font-size:.69rem}.day-count{display:inline-flex;min-height:25px;font-size:.61rem}.day-body{position:static;display:flex;flex-direction:column;gap:9px;min-height:auto;padding:11px;background:var(--surface)}.hour-scale,.current-time-line{display:none}.card{position:relative;left:auto;right:auto;top:auto!important;width:100%;height:auto!important;min-height:104px;gap:5px;padding:11px 12px;border-left-width:5px;border-radius:12px}.card:hover{transform:none}.card-time{font-size:.76rem}.course-type{padding:4px 6px;font-size:.56rem}.card-title{display:block;overflow:visible;font-size:.86rem;line-height:1.35;-webkit-line-clamp:unset}.card-room{overflow:visible;font-size:.7rem;line-height:1.4;white-space:normal;text-overflow:clip}.card-tag{min-height:22px;padding:3px 7px;overflow:visible;font-size:.62rem;white-space:normal}.card.running::after{position:static;align-self:flex-end;margin-top:-24px}.empty{position:static;inset:auto;min-height:130px;margin:0;padding:22px}}
+@media screen and (max-width:480px){body{padding-inline:8px}.header{padding:17px;border-radius:18px}.header h1{font-size:1.2rem}.header p{font-size:.72rem}.nav{padding:9px}.nav-title{font-size:.92rem}.btn{padding:8px 6px;font-size:.69rem}.mobile-tabs{gap:3px;padding:5px}.tab{min-width:0;min-height:39px;font-size:.66rem}.day-head{padding:11px 12px}.card{min-height:100px;padding:10px}}
 @media screen and (min-width:1600px){.app{max-width:1580px}.grid{gap:15px}.day{min-height:790px}.card-title{font-size:.82rem}}
-@media (prefers-contrast:more){:root{--border:#aeb9c8;--grid:#cdd5df}[data-theme="dark"]{--border:#52627a;--grid:#3c4a5f}.card,.day,.nav,.legend{border-width:2px}}
+@media (prefers-contrast:more){:root{--border:#aeb9c8;--grid:#cdd5df}[data-theme="dark"]{--border:#52627a;--grid:#3c4a5f}.card,.day,.nav{border-width:2px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.card,.day,.tab{transform:none!important}}
 body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 .app,#print{position:relative;z-index:2}
@@ -249,53 +220,20 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 [data-theme=dark] .card.cancelled{background:#2a1212!important}
 .card.cancelled .card-title{text-decoration:line-through}
 .card.cancelled::before{content:"⚠️ ANNULÉ";position:absolute;top:6px;right:8px;padding:2px 6px;font-size:.52rem;font-weight:900;letter-spacing:.06em;color:#fff;background:#ef4444;border-radius:4px}
-.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.18);animation:livePulse 2s infinite}
-@keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
-.live-banner{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 14px;border:1px solid var(--border-soft);border-radius:12px;background:var(--surface);font-size:.78rem;box-shadow:var(--shadow-xs)}
-.live-banner strong{font-weight:800}
-.sync-btn{flex:0 0 auto;margin-left:auto}
-.live-banner .badge{min-width:0;overflow:hidden;text-overflow:ellipsis}
-.changes{display:flex;flex-direction:column;gap:4px;margin:-6px 0 16px;padding:12px 16px;color:#7f1d1d;font-size:.79rem;line-height:1.5;border:1px solid #fecaca;border-radius:14px;background:#fef2f2;box-shadow:var(--shadow-xs)}
-[data-theme=dark] .changes{color:#fecaca;border-color:#7f1d1d;background:#2a1212}
-.changes strong{font-weight:800}
-.changes ul{margin:4px 0 0;padding-left:18px}
-.changes li{margin:3px 0}
-.changes em{font-style:normal;font-weight:700}
+
 .card.ghost{opacity:.62;border-style:dashed;border-left-color:#94a3b8!important;background:color-mix(in srgb,var(--subtle) 75%,transparent)!important;position:relative}
 .card.ghost .card-title{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
 .card.ghost::before{content:"❓ À VÉRIFIER";position:absolute;top:6px;right:8px;padding:2px 6px;font-size:.5rem;font-weight:900;letter-spacing:.05em;color:#fff;background:#64748b;border-radius:4px}
 .card-note{margin-top:2px;color:var(--muted);font-size:.6rem;font-weight:600;line-height:1.3}
-.badge.green{background:#15803d;border-color:#22c55e}
-.badge.grey{background:#475569;border-color:#94a3b8}
-.day-count.warn{color:#b91c1c;border-color:#fecaca;background:#fef2f2}
-[data-theme=dark] .day-count.warn{color:#fecaca;border-color:#7f1d1d;background:#2a1212}
 </style>
 </head>
 <body>
 <div class="ambient-bg" aria-hidden="true"><span class="ambient-orb ambient-orb-1"></span><span class="ambient-orb ambient-orb-2"></span><span class="ambient-orb ambient-orb-3"></span></div>
 <main class="app">
-<div class="live-banner" id="liveBanner">
-<span class="live-dot" aria-hidden="true"></span>
-<span class="badge orange" id="liveStatus" role="status" aria-live="polite">🔄 Connexion à Celcat...</span>
-<button class="btn sync-btn" id="refresh" type="button">🔄 Actualiser</button>
-</div>
-
-<div class="changes" id="changes" hidden></div>
-
-<section class="legend">
-<span class="legend-title">Repères :</span>
-<span class="legend-item"><span class="dot perso-dot"></span><strong>TD spécifique</strong></span>
-<span class="legend-item"><span class="dot reuni-dot"></span><strong>TD commun</strong></span>
-<span class="legend-item"><span class="dot cm-dot"></span><strong>CM</strong></span>
-<span class="legend-item" style="border-color:#fecaca;background:#fef2f2;color:#991b1b">⚠️ Annulé / Prof absent</span>
-<span class="legend-item" style="border-color:#cbd5e1;background:var(--subtle);color:var(--muted)">❓ Retiré du planning officiel</span>
-</section>
-
 <nav class="nav">
 <button class="btn" id="prev" type="button" onclick="changeWeek(-1)">◀ Précédente</button>
 <div class="nav-center" aria-live="polite" aria-atomic="true">
 <div class="nav-title" id="weekTitle"></div>
-<div class="week-progress" aria-hidden="true"><span id="weekProgress"></span></div>
 </div>
 <div class="actions">
 <button class="btn" id="next" type="button" onclick="changeWeek(1)">Suivante ▶</button>
@@ -332,7 +270,7 @@ if("scrollRestoration" in history) history.scrollRestoration="manual";
       semaine correspondant à la date du jour.
    3. Si le fichier est indisponible, elle tente un appel direct (puis via
       des proxys publics). En dernier recours seulement, l'emploi du temps
-      de secours codé en dur est utilisé (badge « hors-ligne »).
+      de secours codé en dur est utilisé.
    ========================================================================== */
 "use strict";
 
@@ -383,7 +321,6 @@ function mondayOf(iso) {
 }
 const todayISO = () => formatISO(new Date());
 const formatDate = (d) => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-const formatDateShort = (d) => `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}`;
 const minutesOf = (time) => { const [h, m] = time.split(":").map(Number); return h * 60 + m; };
 const startMinutes = (slot) => minutesOf(slot.split("-")[0].trim());
 const endMinutes = (slot) => minutesOf(slot.split("-")[1].trim());
@@ -600,7 +537,6 @@ const sameFamily = (courseA, courseB) => courseA.cat === courseB.cat;
  *  - source live  : événements CELCAT filtrés + cours « fantômes » (dans la
  *                   référence mais absents du planning officiel) ;
  *  - source réf.  : emploi du temps codé en dur (mode hors-ligne).
- * Renseigne aussi le rapport de la semaine (annulations, disparitions…).
  */
 function buildWeek(weekKey, rawEvents, reference, options = {}) {
   const live = options.live !== false;
@@ -615,7 +551,6 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
   const ghostEnabled = parsed.length > 0;
 
   const days = [];
-  const report = { cancellations: [], missing: [], extra: [], total: 0, cancelledCount: 0 };
 
   for (let d = 0; d < 5; d++) {
     const dateISO = addDaysISO(weekKey, d);
@@ -644,7 +579,6 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
       } else if (ghostEnabled) {
         // Cours prévu au planning de secours, absent du planning officiel.
         courses.push({ ...referenceCourse(ref, dateISO), ghost: true, source: "ghost" });
-        report.missing.push({ date: dateISO, time: ref.time, title: ref.title, type: ref.type, tag: ref.tag });
       }
     }
 
@@ -653,26 +587,13 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
       const recurringCancelled = item.cancelled && options.recurringCancellations?.has(recurringKey(item));
       if (recurringCancelled) continue; // créneau suspendu en permanence : pas une information
       courses.push(liveCourse(item, dateISO));
-      if (item.cancelled) {
-        report.cancellations.push({ date: dateISO, time: item.time, title: item.title, type: item.type, room: item.room });
-      } else {
-        report.extra.push({ date: dateISO, title: item.title, time: item.time });
-      }
     }
 
     courses.sort((a, b) => startMinutes(a.time) - startMinutes(b.time));
-    report.total += courses.length;
-    report.cancelledCount += courses.filter((c) => c.isCancelled).length;
     days.push({ name: DAY_NAMES[d], date: formatDate(realDate), realDate, courses, live: true });
   }
 
-  for (const courseItem of days.flatMap((day) => day.courses)) {
-    if (courseItem.isCancelled && courseItem.source === "live-reference") {
-      report.cancellations.unshift({ date: courseItem.date, time: courseItem.time, title: courseItem.title, type: courseItem.type, room: courseItem.room, matched: true });
-    }
-  }
-
-  return { days, report, live };
+  return { days, live };
 }
 
 function referenceCourse(ref, dateISO) {
@@ -766,10 +687,7 @@ function findRecurringCancellations(weeks) {
    ====================================================================== */
 const state = {
   weeks: {},          // { 'YYYY-MM-DD': { monday, fetchedAt, events[] } }
-  source: "none",     // file | live | cache | reference
   generatedAt: null,
-  checkedAt: null,   // dernière exécution réussie de la synchro GitHub
-  loadedAt: null,
 };
 
 /** Aligne la configuration de la page sur edt.config.json (si accessible). */
@@ -815,7 +733,7 @@ async function loadFromCache() {
 
 function saveToCache() {
   try {
-    localStorage.setItem(`${CONFIG.cacheKey}_${CONFIG.group}`, JSON.stringify({ ts: Date.now(), weeks: state.weeks, generatedAt: state.generatedAt, source: state.source }));
+    localStorage.setItem(`${CONFIG.cacheKey}_${CONFIG.group}`, JSON.stringify({ ts: Date.now(), weeks: state.weeks, generatedAt: state.generatedAt }));
   } catch { /* quota / mode privé */ }
 }
 
@@ -971,8 +889,7 @@ function buildWeekView(weekKey, recurring) {
   const reference = REFERENCE_BY_MONDAY.get(weekKey) ?? null;
   if (source === "live") return buildWeek(weekKey, state.weeks[weekKey].events, reference, { live: true, recurringCancellations: recurring });
   if (source === "live-empty") return buildWeek(weekKey, [], reference, { live: true, recurringCancellations: recurring });
-  const built = buildWeek(weekKey, [], reference, { live: false });
-  return { ...built, live: false, report: { cancellations: [], missing: [], extra: [], total: built.days.flatMap((d) => d.courses).length, cancelledCount: 0 } };
+  return buildWeek(weekKey, [], reference, { live: false });
 }
 
 function findTarget() {
@@ -1003,35 +920,6 @@ function findTarget() {
   return { weekIndex: last, dayIndex: 0, ongoing: false, future: true };
 }
 
-function changeBadge(kind, text) {
-  const badge = $("#liveStatus");
-  if (!badge) return;
-  badge.textContent = text;
-  badge.className = `badge ${kind}`;
-}
-
-function renderChanges(report) {
-  const box = $("#changes");
-  if (!box) return;
-  const items = [];
-  for (const cancellation of report.cancellations) {
-    const date = parseISO(cancellation.date);
-    items.push(`<li><strong>${DAY_NAMES[(date.getDay() + 6) % 7]} ${formatDateShort(date)} ${escapeHtml(cancellation.time)}</strong> — ${escapeHtml(cancellation.title)} : séance annulée${cancellation.room ? ` (salle prévue : ${escapeHtml(cancellation.room)})` : ""}</li>`);
-  }
-  for (const missing of report.missing) {
-    const date = parseISO(missing.date);
-    items.push(`<li><strong>${DAY_NAMES[(date.getDay() + 6) % 7]} ${formatDateShort(date)} ${escapeHtml(missing.time)}</strong> — ${escapeHtml(missing.title)} : ne figure plus au planning officiel <em>(à vérifier)</em></li>`);
-  }
-  if (!items.length) {
-    box.hidden = true;
-    box.innerHTML = "";
-    return;
-  }
-  const alert = report.cancellations.length;
-  box.hidden = false;
-  box.innerHTML = `<strong>${alert ? `⚠️ ${alert} séance${alert > 1 ? "s" : ""} annulée${alert > 1 ? "s" : ""}` : "ℹ️ Changements détectés"}</strong>${report.missing.length ? ` • ${report.missing.length} cours à vérifier` : ""}<ul>${items.join("")}</ul>`;
-}
-
 function renderWeek(index, options = {}) {
   const keys = state_view.weeks;
   index = Math.max(0, Math.min(index, keys.length - 1));
@@ -1043,10 +931,8 @@ function renderWeek(index, options = {}) {
   const label = weekLabel(weekKey);
 
   $("#weekTitle").textContent = label.title;
-  $("#weekProgress").style.width = `${((index + 1) / keys.length) * 100}%`;
   $("#prev").disabled = index === 0;
   $("#next").disabled = index >= keys.length - 1;
-  renderChanges(view.report);
 
   const target = options.target ?? findTarget();
   state_view.target = target;
@@ -1064,7 +950,7 @@ function renderWeek(index, options = {}) {
     } else {
       content = `<div class="empty">${escapeHtml(emptyMessage(weekKey, dayIndex, view.live))}</div>`;
     }
-    const countLabel = count ? `${count} cours${view.report.cancellations.some((c) => c.date === formatISO(day.realDate)) ? " ⚠️" : ""}` : "libre";
+    const countLabel = count ? `${count} cours` : "libre";
     return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date"><time datetime="${formatISO(day.realDate)}">${day.date}</time></div>${indicator}</div><span class="day-count${count ? " has" : ""}">${countLabel}</span></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
   }).join("");
 
@@ -1072,21 +958,6 @@ function renderWeek(index, options = {}) {
     $("#grid").animate([{ opacity: 0.4, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 180, easing: "ease-out" });
   }
   $$(".tab").forEach((tab) => tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex)));
-}
-
-function updateStatus() {
-  const source = state.source;
-  const generated = state.generatedAt ? new Date(state.generatedAt) : null;
-  const age = generated ? Date.now() - generated.getTime() : Infinity;
-  const minutes = Number.isFinite(age) ? Math.round(age / 60000) : null;
-  if (source === "reference") {
-    changeBadge("orange", "🔴 Hors-ligne • emploi du temps de secours");
-    return;
-  }
-  const origin = source === "file" ? "synchro GitHub" : source === "live" ? "edt.uvsq.fr" : "cache local";
-  const fresh = minutes !== null && minutes <= 60;
-  const stamp = generated && minutes <= 90 ? ` • il y a ${Math.max(1, minutes)} min` : "";
-  changeBadge(fresh || source === "live" ? "green" : "orange", `${fresh || source === "live" ? "🟢" : "🟠"} ${CONFIG.group} • ${origin}${stamp}`);
 }
 
 /* ------------------------------------------------------------------ print */
@@ -1171,24 +1042,6 @@ function jumpToTarget(smooth = true) {
   if (innerWidth <= 860 && state_view.mobileFilter !== "all") setDay(target.dayIndex, false);
   scrollToDay(target.dayIndex, smooth);
 }
-/** Bouton « Actualiser » : relit data/edt.json et retente CELCAT en direct. */
-function refreshCurrentWeek() {
-  const button = $("#refresh");
-  const label = button?.textContent;
-  if (button) {
-    button.disabled = true;
-    button.textContent = "⏳ Actualisation…";
-  }
-  return loadEverything({ force: true, tryLive: true })
-    .catch(() => {})
-    .finally(() => {
-      if (button) {
-        button.disabled = false;
-        button.textContent = label || "🔄 Actualiser";
-      }
-    });
-}
-
 /* -------------------------------------------------------------- données */
 let loadPromise = null;
 
@@ -1200,18 +1053,12 @@ async function loadEverything(options = {}) {
     if (cached?.weeks && Object.keys(cached.weeks).length) {
       state.weeks = cached.weeks;
       state.generatedAt = cached.generatedAt ?? null;
-      state.source = "cache";
       state_view.recurring = findRecurringCancellations(state.weeks);
       state_view.weeks = buildWeekList();
       renderWeek(state_view.index);
-      updateStatus();
     }
 
     const syncAt = await fetchSyncStatus();
-    if (syncAt) {
-      state.checkedAt = syncAt;
-      updateStatus();
-    }
 
     try {
       const file = await loadDataFile();
@@ -1220,7 +1067,6 @@ async function loadEverything(options = {}) {
       const same = JSON.stringify(file.weeks) === JSON.stringify(state.weeks);
       state.weeks = file.weeks ?? {};
       state.generatedAt = file.generatedAt ?? null;
-      state.source = "file";
       state_view.recurring = findRecurringCancellations(state.weeks);
       state_view.weeks = buildWeekList();
       saveToCache();
@@ -1230,27 +1076,20 @@ async function loadEverything(options = {}) {
       } else if (!same) {
         renderWeek(state_view.index); // met à jour la semaine affichée sans changer de page
       }
-      updateStatus();
       buildPrint();
     } catch (error) {
       console.warn("[edt] data/edt.json indisponible :", error.message);
-      if (!Object.keys(state.weeks).length) {
-        state.source = "reference";
-        updateStatus();
-      }
     }
 
     const lastKnown = Math.max(syncAt?.getTime() ?? 0, state.generatedAt ? new Date(state.generatedAt).getTime() : 0);
     const stale = !lastKnown || Date.now() - lastKnown > CONFIG.dataMaxAgeMs;
-    if (stale || options.tryLive) {
+    if (stale) {
       try {
         const { changed } = await refreshFromLive(currentWeekKey());
-        state.source = "live";
         state_view.recurring = findRecurringCancellations(state.weeks);
         state_view.weeks = buildWeekList();
         saveToCache();
         if (changed || options.force) renderWeek(state_view.index);
-        updateStatus();
         buildPrint();
       } catch (error) {
         console.warn("[edt] appel direct CELCAT impossible (CORS) :", error.message);
@@ -1295,7 +1134,6 @@ $("#grid").addEventListener("touchend", (event) => {
   const dy = touch.clientY - startY;
   if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) changeWeek(dx < 0 ? 1 : -1);
 }, { passive: true });
-$("#refresh")?.addEventListener("click", () => refreshCurrentWeek());
 addEventListener("beforeprint", () => buildPrint());
 addEventListener("DOMContentLoaded", initialize);
 addEventListener("load", () => { if (state_view.target) scrollToDay(state_view.target.dayIndex, false); });

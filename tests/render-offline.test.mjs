@@ -1,7 +1,7 @@
 /**
  * Test du mode dégradé : aucune source réseau disponible (ni data/edt.json ni
- * CELCAT). La page doit continuer à fonctionner avec l'emploi du temps de
- * secours codé en dur, en le signalant clairement.
+ * CELCAT). La page continue à fonctionner avec l'emploi du temps de secours,
+ * sans badge d'état global.
  *
  *   npm run test:offline
  */
@@ -20,6 +20,7 @@ try {
 }
 const html = await readFile(path.join(ROOT, "index.html"), "utf8");
 const errors = [];
+const scheduledIntervals = [];
 const vc = new VirtualConsole();
 vc.on("jsdomError", (e) => errors.push(e.message));
 vc.on("error", (...a) => errors.push(a.join(" ")));
@@ -30,6 +31,11 @@ const dom = new JSDOM(html, {
     window.matchMedia = (q) => ({ matches: false, media: q, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} });
     window.Element.prototype.animate = () => ({ finished: Promise.resolve(), cancel() {} });
     window.scrollTo = () => {};
+    const originalSetInterval = window.setInterval.bind(window);
+    window.setInterval = (callback, delay, ...args) => {
+      scheduledIntervals.push({ callback, delay: Number(delay) });
+      return originalSetInterval(callback, delay, ...args);
+    };
     window.fetch = async (url) => { throw new Error(`hors-ligne: ${url}`); };
   },
 });
@@ -41,12 +47,12 @@ const check = (c, l) => { console.log(`${c ? "  ✓" : "  ✗"} ${l}`); if (!c) 
 console.log("\n— mode hors-ligne (aucune source réseau) —");
 check(dom.window.document.querySelectorAll("#grid .day").length === 5, "la grille reste affichée");
 check(dom.window.document.querySelectorAll("#grid .card").length > 0, "des cours de secours sont affichés");
-check(!$(".header") && !$(".subject-legend") && !$("#weekSubtitle"), "les éléments d'en-tête retirés restent absents");
-check($("#refresh") !== null, "le bouton Actualiser reste disponible");
-check(/Hors-ligne|hors-ligne|secours/i.test($("#liveStatus").textContent), `badge hors-ligne (« ${$("#liveStatus").textContent} »)`);
-check(/hors-ligne|secours/i.test($("#liveStatus").textContent), "le statut explique le mode dégradé");
-check($("#changes").hidden, "aucune alerte affichée sans données live");
+check(!$(".legend") && !$("#changes"), "la section Repères et l'encart global sont absents");
+check(!$("#liveBanner") && !$("#liveStatus"), "aucun statut de synchronisation n'est affiché");
+check(!$("#refresh") && !$(".week-progress"), "le bouton manuel et la progression de semaine sont absents");
 check($("#print").innerHTML.includes("print-table"), "l'impression de secours fonctionne");
+const backgroundRefresh = scheduledIntervals.find(({ delay }) => delay === 5 * 60 * 1000);
+check(Boolean(backgroundRefresh) && /loadEverything/.test(String(backgroundRefresh?.callback)), "la synchro automatique reste planifiée même hors ligne");
 check(errors.length === 0, `aucune erreur JS (${errors.length})`);
 errors.slice(0, 3).forEach((e) => console.log("      " + e));
 console.log(fails.length ? `\n❌ ${fails.length} échec(s)` : "\n✅ tout est vert");

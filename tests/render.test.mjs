@@ -1,7 +1,7 @@
 /**
  * Test de rendu (jsdom) : charge index.html, alimente data/edt.json et vérifie
- * ce que l'utilisateur voit réellement (semaine courante, annulations, filtrage
- * du TD, encart d'alerte, impression, mode hors-ligne).
+ * ce que l'utilisateur voit réellement (semaine courante, annulations sur les
+ * cartes, filtrage du TD, contrôles retirés, synchro automatique, impression).
  *
  *   npm run test:render      (nécessite : npm install)
  *
@@ -25,6 +25,7 @@ const html = await readFile(path.join(ROOT, "index.html"), "utf8");
 const data = JSON.parse(await readFile(path.join(ROOT, "data", "edt.json"), "utf8"));
 
 const errors = [];
+const scheduledIntervals = [];
 const virtualConsole = new VirtualConsole();
 virtualConsole.on("jsdomError", (error) => errors.push(`jsdomError: ${error.message}`));
 virtualConsole.on("error", (...args) => errors.push(`console.error: ${args.join(" ")}`));
@@ -39,6 +40,11 @@ const dom = new JSDOM(html, {
     window.matchMedia = (query) => ({ matches: false, media: query, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} });
     window.Element.prototype.animate = function animate() { return { finished: Promise.resolve(), cancel() {} }; };
     window.scrollTo = () => {};
+    const originalSetInterval = window.setInterval.bind(window);
+    window.setInterval = (callback, delay, ...args) => {
+      scheduledIntervals.push({ callback, delay: Number(delay) });
+      return originalSetInterval(callback, delay, ...args);
+    };
     window.fetch = async (url) => {
       const target = String(url);
       if (target.includes("data/edt.json")) {
@@ -72,6 +78,15 @@ console.log(`      titre affiché : ${title}`);
 check(/28 Septembre/.test(title), "la semaine du 28/09/2026 est affichée (aujourd'hui = 1er octobre)");
 check(/Semaine 3/.test(title), "elle porte le numéro de la semaine de référence (3)");
 
+console.log("\n— interface simplifiée —");
+check(!$(".legend") && !/Repères\s*:/i.test(window.document.body.textContent), "la section « Repères » a été supprimée");
+check(!$("#changes") && !/1 séance annulée/i.test(window.document.body.textContent), "aucun encart global ni liste d'annulations");
+check(!$("#liveBanner") && !$("#liveStatus") && !/synchro GitHub/i.test(window.document.body.textContent), "le statut de synchronisation n'est plus affiché");
+check(!$(".week-progress") && !$("#weekProgress"), "la barre de progression hebdomadaire a été supprimée");
+check(!$("#refresh") && !/Actualiser|refreshCurrentWeek/.test(html), "le bouton et le code de rafraîchissement manuel ont été supprimés");
+const backgroundRefresh = scheduledIntervals.find(({ delay }) => delay === 5 * 60 * 1000);
+check(Boolean(backgroundRefresh) && /loadEverything/.test(String(backgroundRefresh?.callback)), "la synchronisation automatique en arrière-plan reste planifiée toutes les cinq minutes");
+
 console.log("\n— annulation détectée (CM de BDD du 1er octobre) —");
 const cancelled = window.document.querySelectorAll("#grid .card.cancelled");
 check(cancelled.length === 1, `1 carte annulée affichée (${cancelled.length})`);
@@ -79,28 +94,18 @@ if (cancelled.length) {
   const card = cancelled[0];
   console.log(`      ${card.querySelector(".card-time").textContent} — ${card.querySelector(".card-title").textContent} — ${card.querySelector(".card-tag")?.textContent}`);
   check(/Initiation bases de données/.test(card.textContent), "la matière annulée est la bonne");
-  check(/annul/i.test(card.querySelector(".card-tag")?.textContent ?? ""), "l'étiquette mentionne l'annulation");
+  check(/annul/i.test(card.querySelector(".card-tag")?.textContent ?? ""), "l'étiquette de la carte mentionne l'annulation");
 }
-const changes = $("#changes");
-check(!changes.hidden && changes.textContent.includes("Initiation bases de données"), "l'encart d'alerte liste l'annulation");
-check(/1 séance annulée/.test(changes.textContent), "l'encart annonce « 1 séance annulée »");
+const dayCounts = [...window.document.querySelectorAll("#grid .day-count")];
+check(dayCounts.every((count) => !count.textContent.includes("⚠")), "le nombre de cours ne contient plus de marqueur d'avertissement");
 
 console.log("\n— filtrage du groupe —");
-const grid = $("#grid").textContent;
-check(!/TD 1\b/.test(grid) || true, "…");
 const cards = [...window.document.querySelectorAll("#grid .card")];
 const micro = cards.filter((card) => /Microéconomie/.test(card.textContent) && /15:30/.test(card.textContent));
 check(micro.length === 1, "le TD de micro du TD 02 (15:30) est présent");
 check(!cards.some((card) => /13:50/.test(card.querySelector(".card-time").textContent) && /Microéconomie/.test(card.textContent)), "le TD de micro du TD 01 (13:50) est masqué");
 check(cards.some((card) => /Votre TD 02/.test(card.textContent)), "les étiquettes « Votre TD 02 » sont conservées");
-check(!cards.some((card) => card.classList.contains("cancelled") && /Anglais/.test(card.textContent) && /Mardi|mardi/.test("")), "le créneau d'anglais annulé en permanence est masqué");
-
-console.log("\n— état du bandeau —");
-console.log(`      statut : ${$("#liveStatus").textContent}`);
-check(/planning|synchro|edt\.uvsq/i.test($("#liveStatus").textContent), "le statut décrit la source");
-check(!/hors-ligne/i.test($("#liveStatus").textContent), "pas de mode hors-ligne quand les données sont là");
-check(!$(".header") && !$(".subject-legend") && !$("#weekSubtitle"), "les éléments d'en-tête retirés restent absents");
-check($("#refresh") !== null, "le bouton Actualiser reste disponible");
+check(!cards.some((card) => card.classList.contains("cancelled") && /Anglais/.test(card.textContent)), "le créneau d'anglais annulé en permanence est masqué");
 
 console.log("\n— semaine avec cours disparu (décembre) —");
 let steps = 0;
@@ -110,8 +115,10 @@ for (; steps < 40 && !/14 Décembre/.test($("#weekTitle").textContent); steps++)
 }
 console.log(`      atteinte en ${steps} clic(s) : ${$("#weekTitle").textContent}`);
 if (/14 Décembre/.test($("#weekTitle").textContent)) {
-  check(window.document.querySelectorAll("#grid .card.ghost").length >= 1, "le cours disparu est signalé comme « à vérifier »");
-  check($("#changes").textContent.includes("ne figure plus"), "l'encart explique le cours manquant");
+  const ghost = window.document.querySelector("#grid .card.ghost");
+  check(ghost !== null, "le cours disparu est signalé directement sur sa carte");
+  check(/Anglais UE2/.test(ghost?.textContent ?? ""), "la bonne matière manquante est identifiée");
+  check(!$("#changes"), "aucun encart global ne réapparaît pour un cours manquant");
 } else {
   check(false, `semaine du 14 décembre attendue, obtenue : ${$("#weekTitle").textContent}`);
 }

@@ -87,7 +87,7 @@ test("buildWeek filtre et étiquette correctement la semaine du 28/09", (core, d
   assert.equal(friday.courses.length, 1);
   assert.equal(wednesday.courses.length, 2);
   assert.ok(wednesday.courses.some((course) => course.title === "Analyse 2 & Algèbre linéaire 2" && course.room.includes("AMPHI G")), "le TD de maths du TD 02 est bien présent");
-  assert.equal(view.report.cancellations.length, 1);
+  assert.equal(view.days.flatMap((day) => day.courses).filter((course) => course.isCancelled).length, 1);
   assert.equal(view.days.flatMap((day) => day.courses).length, 12);
 });
 
@@ -95,12 +95,10 @@ test("buildWeek signale une annulation qui touche un cours prévu", (core, data)
   const raw = data.weeks["2026-09-28"].events;
   const reference = core.fallbackWeeks.find((week) => week.monday === "2026-09-28");
   const view = core.buildWeek("2026-09-28", raw, reference, { live: true, recurringCancellations: core.findRecurringCancellations(data.weeks) });
-  const cancellations = view.report.cancellations;
-  assert.equal(cancellations.length, 1, "le CM de BDD du jeudi 1er octobre est annulé");
-  assert.equal(cancellations[0].title, "Initiation bases de données");
-  assert.equal(cancellations[0].date, "2026-10-01");
   const card = view.days[3].courses.find((course) => course.isCancelled);
   assert.ok(card, "la carte annulée est affichée");
+  assert.equal(card.title, "Initiation bases de données");
+  assert.equal(card.date, "2026-10-01");
   assert.equal(card.type, "CM");
   assert.equal(card.tagType, "cancelled");
   assert.match(card.tag, /annul/i);
@@ -112,7 +110,7 @@ test("les vacances de la Toussaint restent vides (pas de faux fantômes)", (core
   assert.equal(empty.events.length, 0);
   const reference = core.fallbackWeeks.find((week) => week.monday === "2026-10-26") ?? null;
   const view = core.buildWeek("2026-10-26", empty.events, reference, { live: true });
-  assert.equal(view.report.missing.length, 0);
+  assert.ok(view.days.flatMap((day) => day.courses).every((course) => !course.ghost));
   assert.equal(view.days.flatMap((day) => day.courses).length, 0);
 });
 
@@ -120,8 +118,9 @@ test("un cours disparu du planning est signalé comme à vérifier", (core, data
   const raw = data.weeks["2026-12-07"].events;
   const reference = core.fallbackWeeks.find((week) => week.monday === "2026-12-07");
   const view = core.buildWeek("2026-12-07", raw, reference, { live: true, recurringCancellations: core.findRecurringCancellations(data.weeks) });
-  assert.ok(view.report.missing.some((missing) => missing.title === "Anglais UE2" && missing.date === "2026-12-09"));
-  assert.ok(view.days[2].courses.some((course) => course.ghost && course.title === "Anglais UE2"));
+  const ghost = view.days[2].courses.find((course) => course.ghost && course.title === "Anglais UE2");
+  assert.ok(ghost, "le cours absent reste directement signalé sur sa carte");
+  assert.equal(ghost.date, "2026-12-09");
 });
 
 test("sans données live, la semaine de secours est utilisée telle quelle", (core) => {
