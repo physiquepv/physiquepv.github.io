@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-05T10:34:20.014Z",
+  "generatedAt": "2026-10-05T17:13:39.983Z",
   "group": "S3MIASHS",
   "label": "L2 MIASHS — Semestre 3",
   "timezone": "Europe/Paris",
@@ -10,29 +10,11 @@
   },
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
-    "2026-08-24",
-    "2026-08-31",
-    "2026-09-07",
-    "2026-09-14",
-    "2026-09-21",
-    "2026-09-28",
     "2026-10-05",
     "2026-10-12",
-    "2026-10-19",
-    "2026-10-26",
-    "2026-11-02",
-    "2026-11-09",
-    "2026-11-16",
-    "2026-11-23",
-    "2026-11-30",
-    "2026-12-07",
-    "2026-12-14",
-    "2026-12-21",
-    "2026-12-28",
-    "2027-01-04",
-    "2027-01-11"
+    "2026-10-19"
   ],
-  "contentHash": "15fe2b56-112123",
+  "contentHash": "b5b9bd90-112123",
   "weeks": {
     "2026-09-28": {
       "monday": "2026-09-28",
@@ -326,7 +308,7 @@
     },
     "2026-10-05": {
       "monday": "2026-10-05",
-      "fetchedAt": "2026-10-05T10:34:20.014Z",
+      "fetchedAt": "2026-10-05T17:13:39.983Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -527,8 +509,8 @@
         },
         {
           "id": "-1742255826:1073733534:17:5780729:8",
-          "start": "2026-10-07T16:30:00",
-          "end": "2026-10-07T18:00:00",
+          "start": "2026-10-07T15:30:00",
+          "end": "2026-10-07T17:00:00",
           "allDay": false,
           "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
@@ -637,7 +619,7 @@
     },
     "2026-10-12": {
       "monday": "2026-10-12",
-      "fetchedAt": "2026-10-05T10:34:20.014Z",
+      "fetchedAt": "2026-10-05T17:13:39.983Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -838,8 +820,8 @@
         },
         {
           "id": "-1742255826:1073733534:17:5780729:9",
-          "start": "2026-10-14T16:30:00",
-          "end": "2026-10-14T18:00:00",
+          "start": "2026-10-14T15:30:00",
+          "end": "2026-10-14T17:00:00",
           "allDay": false,
           "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
@@ -1535,7 +1517,7 @@
     },
     "2026-10-19": {
       "monday": "2026-10-19",
-      "fetchedAt": "2026-10-05T10:34:20.014Z",
+      "fetchedAt": "2026-10-05T17:13:39.983Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1736,8 +1718,8 @@
         },
         {
           "id": "-1742255826:1073733534:17:5780729:10",
-          "start": "2026-10-21T16:30:00",
-          "end": "2026-10-21T18:00:00",
+          "start": "2026-10-21T15:30:00",
+          "end": "2026-10-21T17:00:00",
           "allDay": false,
           "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
