@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-05T08:16:58.459Z",
+  "generatedAt": "2026-10-05T10:34:20.014Z",
   "group": "S3MIASHS",
   "label": "L2 MIASHS — Semestre 3",
   "timezone": "Europe/Paris",
@@ -10,15 +10,33 @@
   },
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
+    "2026-08-24",
+    "2026-08-31",
+    "2026-09-07",
+    "2026-09-14",
+    "2026-09-21",
+    "2026-09-28",
     "2026-10-05",
     "2026-10-12",
-    "2026-10-19"
+    "2026-10-19",
+    "2026-10-26",
+    "2026-11-02",
+    "2026-11-09",
+    "2026-11-16",
+    "2026-11-23",
+    "2026-11-30",
+    "2026-12-07",
+    "2026-12-14",
+    "2026-12-21",
+    "2026-12-28",
+    "2027-01-04",
+    "2027-01-11"
   ],
-  "contentHash": "156c5690-108800",
+  "contentHash": "15fe2b56-112123",
   "weeks": {
     "2026-09-28": {
       "monday": "2026-09-28",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -308,7 +326,7 @@
     },
     "2026-10-05": {
       "monday": "2026-10-05",
-      "fetchedAt": "2026-10-05T08:16:58.459Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -509,8 +527,8 @@
         },
         {
           "id": "-1742255826:1073733534:17:5780729:8",
-          "start": "2026-10-07T15:30:00",
-          "end": "2026-10-07T18:40:00",
+          "start": "2026-10-07T16:30:00",
+          "end": "2026-10-07T18:00:00",
           "allDay": false,
           "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
@@ -619,7 +637,7 @@
     },
     "2026-10-12": {
       "monday": "2026-10-12",
-      "fetchedAt": "2026-10-05T08:16:58.459Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -819,6 +837,24 @@
           "faculty": "UFR des Sciences"
         },
         {
+          "id": "-1742255826:1073733534:17:5780729:9",
+          "start": "2026-10-14T16:30:00",
+          "end": "2026-10-14T18:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
           "id": "-1742255826:1073733534:17:5779518:9",
           "start": "2026-10-15T09:40:00",
           "end": "2026-10-15T11:10:00",
@@ -912,21 +948,21 @@
     },
     "2026-08-24": {
       "monday": "2026-08-24",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-08-31": {
       "monday": "2026-08-31",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-09-07": {
       "monday": "2026-09-07",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -970,7 +1006,7 @@
     },
     "2026-09-14": {
       "monday": "2026-09-14",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1191,7 +1227,7 @@
     },
     "2026-09-21": {
       "monday": "2026-09-21",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1499,7 +1535,7 @@
     },
     "2026-10-19": {
       "monday": "2026-10-19",
-      "fetchedAt": "2026-10-05T08:16:58.459Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1700,8 +1736,8 @@
         },
         {
           "id": "-1742255826:1073733534:17:5780729:10",
-          "start": "2026-10-21T15:30:00",
-          "end": "2026-10-21T18:40:00",
+          "start": "2026-10-21T16:30:00",
+          "end": "2026-10-21T18:00:00",
           "allDay": false,
           "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
@@ -1771,14 +1807,14 @@
     },
     "2026-10-26": {
       "monday": "2026-10-26",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-11-02": {
       "monday": "2026-11-02",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1979,8 +2015,8 @@
         },
         {
           "id": "-1742255826:1073733534:17:5780729:12",
-          "start": "2026-11-04T15:30:00",
-          "end": "2026-11-04T18:40:00",
+          "start": "2026-11-04T16:30:00",
+          "end": "2026-11-04T18:00:00",
           "allDay": false,
           "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
@@ -2090,7 +2126,7 @@
     },
     "2026-11-09": {
       "monday": "2026-11-09",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2236,6 +2272,24 @@
           "faculty": "UFR des Sciences"
         },
         {
+          "id": "-1742255826:1073733534:17:5780729:13",
+          "start": "2026-11-11T16:30:00",
+          "end": "2026-11-11T18:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
           "id": "-1742255826:1073733534:17:5779518:13",
           "start": "2026-11-12T09:40:00",
           "end": "2026-11-12T11:10:00",
@@ -2329,7 +2383,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2529,6 +2583,24 @@
           "faculty": "UFR des Sciences"
         },
         {
+          "id": "-1742255826:1073733534:17:5780729:14",
+          "start": "2026-11-18T16:30:00",
+          "end": "2026-11-18T18:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
           "id": "-1742255826:1073733534:17:5779518:14",
           "start": "2026-11-19T09:40:00",
           "end": "2026-11-19T11:10:00",
@@ -2622,7 +2694,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2822,6 +2894,24 @@
           "faculty": "UFR des Sciences"
         },
         {
+          "id": "-1742255826:1073733534:17:5780729:15",
+          "start": "2026-11-25T16:30:00",
+          "end": "2026-11-25T18:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
           "id": "-1742255826:1073733534:17:5779518:15",
           "start": "2026-11-26T09:40:00",
           "end": "2026-11-26T11:10:00",
@@ -2915,7 +3005,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3046,6 +3136,24 @@
           "faculty": "UFR des Sciences"
         },
         {
+          "id": "-1742255826:1073733534:17:5780729:16",
+          "start": "2026-12-02T16:30:00",
+          "end": "2026-12-02T18:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
           "id": "-1742255826:1073733534:17:5779518:16",
           "start": "2026-12-03T09:40:00",
           "end": "2026-12-03T11:10:00",
@@ -3139,7 +3247,7 @@
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3252,6 +3360,24 @@
           "faculty": "UFR des Sciences"
         },
         {
+          "id": "-1742255826:1073733534:17:5780729:17",
+          "start": "2026-12-09T16:30:00",
+          "end": "2026-12-09T18:00:00",
+          "allDay": false,
+          "description": "TD\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "textColor": "#000000",
+          "sites": [
+            "FERMAT"
+          ],
+          "modules": [
+            "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
           "id": "-1742255826:1073733534:17:5874379:17",
           "start": "2026-12-10T09:40:00",
           "end": "2026-12-10T11:10:00",
@@ -3346,7 +3472,7 @@
     },
     "2026-12-14": {
       "monday": "2026-12-14",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3568,28 +3694,28 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T10:34:20.014Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
