@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-01T08:41:40.011Z",
+  "generatedAt": "2026-10-05T08:16:58.459Z",
   "group": "S3MIASHS",
   "label": "L2 MIASHS — Semestre 3",
   "timezone": "Europe/Paris",
@@ -10,29 +10,11 @@
   },
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
-    "2026-08-24",
-    "2026-08-31",
-    "2026-09-07",
-    "2026-09-14",
-    "2026-09-21",
-    "2026-09-28",
     "2026-10-05",
     "2026-10-12",
-    "2026-10-19",
-    "2026-10-26",
-    "2026-11-02",
-    "2026-11-09",
-    "2026-11-16",
-    "2026-11-23",
-    "2026-11-30",
-    "2026-12-07",
-    "2026-12-14",
-    "2026-12-21",
-    "2026-12-28",
-    "2027-01-04",
-    "2027-01-11"
+    "2026-10-19"
   ],
-  "contentHash": "52a6db04-106999",
+  "contentHash": "156c5690-108800",
   "weeks": {
     "2026-09-28": {
       "monday": "2026-09-28",
@@ -326,7 +308,7 @@
     },
     "2026-10-05": {
       "monday": "2026-10-05",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T08:16:58.459Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -637,7 +619,7 @@
     },
     "2026-10-12": {
       "monday": "2026-10-12",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T08:16:58.459Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1517,7 +1499,7 @@
     },
     "2026-10-19": {
       "monday": "2026-10-19",
-      "fetchedAt": "2026-10-01T08:41:40.011Z",
+      "fetchedAt": "2026-10-05T08:16:58.459Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1730,6 +1712,21 @@
           ],
           "modules": [
             "LSEC312*"
+          ],
+          "department": "VER",
+          "faculty": "UFR des Sciences"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5879344:10",
+          "start": "2026-10-22T08:00:00",
+          "end": "2026-10-22T19:00:00",
+          "allDay": false,
+          "description": "Journ&#233;e banalis&#233;e\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\nEVENT [EVENT]\r\n\r\n<br />\r\n\r\nL1 Biologie Informatique S1 - S1BICM-01 [S1BICM-01]<br />L1 Biologie Informatique S1 TD 01 - S1BITD-01 [S1BITD-01]<br />L1 Biologie Informatique S1 TD 02 - S1BITD-02 [S1BITD-02]<br />L1 Biologie Informatique S1 TD 03 - S1BITD-03 [S1BITD-03]<br />L1 Biologie Informatique S1 TD 04 - S1BITD-04 [S1BITD-04]<br />L1 Biologie Informatique S1 TP A - S1BITP-A [S1BITP-A]<br />L1 Biologie Informatique S1 TP B - S1BITP-B [S1BITP-B]<br />L1 Biologie Informatique S1 TP C - S1BITP-C [S1BITP-C]<br />L1 Biologie Informatique S1 TP D - S1BITP-D [S1BITP-D]<br />L1 Biologie Informatique S1 TP E - S1BITP-E [S1BITP-E]<br />L1 Biologie Informatique S1 TP F - S1BITP-F [S1BITP-F]<br />L1 Biologie Informatique S1 TP G - S1BITP-G [S1BITP-G]<br />L1 Biologie Informatique S1 TP H - S1BITP-H [S1BITP-H]<br />L1 Biologie Informatique S1 TP I - S1BITP-I [S1BITP-I]<br />L1 Biologie Informatique S1 TP J - S1BITP-J [S1BITP-J]<br />L1 Chimie Biologie S1 Amphi 1 - S1CBCM-01 [S1CBCM-01]<br />L1 Chimie Biologie S1 Amphi 1 TD 01 - S1CBTD-01 [S1CBTD-01]<br />L1 Chimie Biologie S1 Amphi 1 TD 02 - S1CBTD-02 [S1CBTD-02]<br />L1 Chimie Biologie S1 Amphi 1 TD 02 TP D - S1CBTP-D [S1CBTP-D]<br />L1 Chimie Biologie S1 Amphi 1 TD 03 - S1CBTD-03 [S1CBTD-03]<br />(339 autres...)\r\n\r\n<br />\r\n\r\n4&#232;me &#233;dition du troph&#233;e des &#233;tudiants- https://www.uvsq.fr/trophee-des-etudiants-de-sqy2026\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Journée banalisée",
+          "backgroundColor": "#FF75EE",
+          "textColor": "#000000",
+          "modules": [
+            "EVENT"
           ],
           "department": "VER",
           "faculty": "UFR des Sciences"
