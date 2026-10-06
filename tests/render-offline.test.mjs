@@ -51,8 +51,7 @@ check(!$(".legend") && !$("#changes"), "la section Repères et l'encart global s
 check(!$("#liveBanner") && !$("#liveStatus"), "aucun statut de synchronisation n'est affiché");
 check(!$("#refresh") && !$(".week-progress"), "le bouton manuel et la progression de semaine sont absents");
 check($("#print").innerHTML.includes("print-table"), "l'impression de secours fonctionne");
-const backgroundRefresh = scheduledIntervals.find(({ delay }) => delay === 5 * 60 * 1000);
-check(Boolean(backgroundRefresh) && /loadEverything/.test(String(backgroundRefresh?.callback)), "la synchro automatique reste planifiée même hors ligne");
+check(!scheduledIntervals.some(({ delay }) => delay === 5 * 60 * 1000 || delay === 60 * 1000), "aucune actualisation automatique après le chargement");
 check(errors.length === 0, `aucune erreur JS (${errors.length})`);
 errors.slice(0, 3).forEach((e) => console.log("      " + e));
 console.log(fails.length ? `\n❌ ${fails.length} échec(s)` : "\n✅ tout est vert");

@@ -834,14 +834,18 @@ async function loadDataFile() {
   return json;
 }
 
-async function loadFromCache() {
+function readCacheSync() {
   try {
     const cached = JSON.parse(localStorage.getItem(`${CONFIG.cacheKey}_${CONFIG.group}`) || "null");
-    if (!cached?.weeks) return null;
+    if (!cached?.weeks || !Object.keys(cached.weeks).length) return null;
     return cached;
   } catch {
     return null;
   }
+}
+
+async function loadFromCache() {
+  return readCacheSync();
 }
 
 function saveToCache() {
@@ -900,7 +904,7 @@ async function fetchSyncStatus() {
    ====================================================================== */
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
-let state_view = { weeks: [], index: 0, mobileFilter: "all", target: null };
+let state_view = { weeks: [], index: 0, weekKey: null, mobileFilter: "all", target: null };
 
 function hourScaleHTML() {
   return `<div class="hour-scale" aria-hidden="true">${HOURS.map((hour) => {
@@ -1106,9 +1110,11 @@ function findTarget() {
 
 function renderWeek(index, options = {}) {
   const keys = state_view.weeks;
+  if (options.weekKey && keys.includes(options.weekKey)) index = keys.indexOf(options.weekKey);
   index = Math.max(0, Math.min(index, keys.length - 1));
   state_view.index = index;
   const weekKey = keys[index];
+  state_view.weekKey = weekKey;
   const recurring = options.recurring ?? state_view.recurring;
   state_view.recurring = recurring;
   const view = buildWeekView(weekKey, recurring);
@@ -1138,7 +1144,7 @@ function renderWeek(index, options = {}) {
     return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date"><time datetime="${formatISO(day.realDate)}">${day.date}</time></div>${indicator}</div><span class="day-count${count ? " has" : ""}">${countLabel}</span></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
   }).join("");
 
-  if (!matchMedia("(prefers-reduced-motion:reduce)").matches) {
+  if (options.animate !== false && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
     $("#grid").animate([{ opacity: 0.4, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 180, easing: "ease-out" });
   }
   $$(".tab").forEach((tab) => tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex)));
@@ -1301,81 +1307,76 @@ function jumpToTarget(smooth = true) {
 /* -------------------------------------------------------------- données */
 let loadPromise = null;
 
+function displayedWeekKey() {
+  if (state_view.weekKey && state_view.weeks.includes(state_view.weekKey)) return state_view.weekKey;
+  const current = currentWeekKey();
+  return state_view.weeks.includes(current) ? current : state_view.weeks[0];
+}
+
+/** Recharge les cours de la semaine déjà ouverte, sans en changer. */
+function refreshDisplayedWeek() {
+  const key = displayedWeekKey();
+  state_view.weeks = buildWeekList();
+  const index = Math.max(0, state_view.weeks.indexOf(key));
+  const shown = state_view.weeks[index];
+  const target = shown === currentWeekKey()
+    ? { weekIndex: index, dayIndex: todayColumnIndex(), ongoing: true }
+    : state_view.target;
+  renderWeek(index, { animate: false, weekKey: shown, target });
+}
+
 async function loadEverything(options = {}) {
   if (loadPromise && !options.force) return loadPromise;
   loadPromise = (async () => {
     await applyRemoteConfig();
-    const cached = await loadFromCache();
-    if (cached?.weeks && Object.keys(cached.weeks).length) {
-      state.weeks = cached.weeks;
-      state.generatedAt = cached.generatedAt ?? null;
-      state_view.recurring = findRecurringCancellations(state.weeks);
-      state_view.weeks = buildWeekList();
-      renderWeek(state_view.index);
-    }
-
-    const syncAt = await fetchSyncStatus();
-
+    const before = JSON.stringify(state.weeks);
     try {
       const file = await loadDataFile();
       if (!params.get("group") && file.group) CONFIG.group = String(file.group).trim();
-      const hadData = Object.keys(state.weeks).length > 0;
-      const same = JSON.stringify(file.weeks) === JSON.stringify(state.weeks);
       state.weeks = file.weeks ?? {};
       state.generatedAt = file.generatedAt ?? null;
       state_view.recurring = findRecurringCancellations(state.weeks);
-      state_view.weeks = buildWeekList();
       saveToCache();
-      if (!hadData) {
-        const index = state_view.weeks.indexOf(currentWeekKey());
-        renderWeek(index >= 0 ? index : state_view.index);
-      } else if (!same) {
-        renderWeek(state_view.index); // met à jour la semaine affichée sans changer de page
-      }
       buildPrint();
     } catch (error) {
       console.warn("[edt] data/edt.json indisponible :", error.message);
     }
-
-    const lastKnown = Math.max(syncAt?.getTime() ?? 0, state.generatedAt ? new Date(state.generatedAt).getTime() : 0);
-    const stale = !lastKnown || Date.now() - lastKnown > CONFIG.dataMaxAgeMs;
-    if (stale) {
-      try {
-        const { changed } = await refreshFromLive(currentWeekKey());
-        state_view.recurring = findRecurringCancellations(state.weeks);
-        state_view.weeks = buildWeekList();
-        saveToCache();
-        if (changed || options.force) renderWeek(state_view.index);
-        buildPrint();
-      } catch (error) {
-        console.warn("[edt] appel direct CELCAT impossible (CORS) :", error.message);
-      }
-    }
-    return state;
+    state_view.weeks = buildWeekList();
+    return { changed: JSON.stringify(state.weeks) !== before };
   })().finally(() => { loadPromise = null; });
   return loadPromise;
 }
 
 /* ----------------------------------------------------------- démarrage */
+function todayColumnIndex() {
+  const day = (new Date().getDay() + 6) % 7;
+  return day <= 4 ? day : 0;
+}
+
 function initialize() {
   initTheme();
   initTdSelector();
   syncResetButton();
+  const cached = readCacheSync();
+  if (cached?.weeks) {
+    state.weeks = cached.weeks;
+    state.generatedAt = cached.generatedAt ?? null;
+    state_view.recurring = findRecurringCancellations(state.weeks);
+  }
   state_view.weeks = buildWeekList();
   const requested = params.get("week");
-  const startIndex = requested && state_view.weeks.includes(mondayOf(requested)) ? state_view.weeks.indexOf(mondayOf(requested)) : Math.max(0, state_view.weeks.indexOf(currentWeekKey()));
-  const target = findTarget();
-  renderWeek(requested ? startIndex : target.weekIndex, { target });
+  const wanted = requested ? mondayOf(requested) : currentWeekKey();
+  const weekKey = state_view.weeks.includes(wanted) ? wanted : currentWeekKey();
+  const weekIndex = Math.max(0, state_view.weeks.indexOf(weekKey));
+  const todayColumn = todayColumnIndex();
+  renderWeek(weekIndex, { animate: false, weekKey, target: { weekIndex, dayIndex: todayColumn, ongoing: true } });
   buildPrint();
-  if (innerWidth <= 860) setDay(target.weekIndex === state_view.index ? target.dayIndex : 0, false);
+  if (innerWidth <= 860) setDay(todayColumn, false);
   else setDay("all", false);
-  requestAnimationFrame(() => scrollToDay(state_view.target?.dayIndex ?? 0, false));
-  loadEverything().then(() => {
-    if (!requested) {
-      const fresh = findTarget();
-      if (fresh.weekIndex !== state_view.index || fresh.dayIndex !== state_view.target?.dayIndex) renderWeek(fresh.weekIndex, { target: fresh });
-      requestAnimationFrame(() => scrollToDay(state_view.target?.dayIndex ?? 0, false));
-    }
+  requestAnimationFrame(() => scrollToDay(todayColumn, false));
+  // Un seul chargement, au démarrage. La semaine ouverte ne change plus ensuite.
+  loadEverything().then((result) => {
+    if (result?.changed) refreshDisplayedWeek();
   });
 }
 
@@ -1480,9 +1481,6 @@ $("#grid").addEventListener("contextmenu", (event) => {
 });
 addEventListener("beforeprint", () => buildPrint());
 addEventListener("DOMContentLoaded", initialize);
-addEventListener("load", () => { if (state_view.target) scrollToDay(state_view.target.dayIndex, false); });
-setInterval(() => { if (document.visibilityState === "visible") renderWeek(state_view.index); }, 60000);
-setInterval(() => { if (document.visibilityState === "visible") loadEverything({ force: true }).then(() => renderWeek(state_view.index)).catch(() => {}); }, CONFIG.refreshMs);
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = { parseEvent, isMyCourse, tagForLiveCourse, buildWeek, weeksFromEvents, findRecurringCancellations, mondayOf, addDaysISO, slotOf, familyOf, normalizeModuleName, normalizeGroupCode, decodeEntities };

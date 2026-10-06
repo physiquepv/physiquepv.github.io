@@ -75,8 +75,11 @@ check($("#grid .day") !== null, "la grille affiche des journées");
 check(window.document.querySelectorAll("#grid .day").length === 5, "5 colonnes (lundi → vendredi)");
 const title = $("#weekTitle").textContent;
 console.log(`      titre affiché : ${title}`);
-check(/28 Septembre/.test(title), "la semaine du 28/09/2026 est affichée (aujourd'hui = 1er octobre)");
-check(/Semaine 3/.test(title), "elle porte le numéro de la semaine de référence (3)");
+const now = new Date();
+const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
+const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+const todayLabel = `${String(monday.getDate()).padStart(2, "0")} ${months[monday.getMonth()]}`;
+check(title.includes(todayLabel), `la semaine du jour est affichée tout de suite (${todayLabel})`);
 
 console.log("\n— interface simplifiée —");
 check(!$(".legend") && !/Repères\s*:/i.test(window.document.body.textContent), "la section « Repères » a été supprimée");
@@ -84,10 +87,11 @@ check(!$("#changes") && !/1 séance annulée/i.test(window.document.body.textCon
 check(!$("#liveBanner") && !$("#liveStatus") && !/synchro GitHub/i.test(window.document.body.textContent), "le statut de synchronisation n'est plus affiché");
 check(!$(".week-progress") && !$("#weekProgress"), "la barre de progression hebdomadaire a été supprimée");
 check(!$("#refresh") && !/Actualiser|refreshCurrentWeek/.test(html), "le bouton et le code de rafraîchissement manuel ont été supprimés");
-const backgroundRefresh = scheduledIntervals.find(({ delay }) => delay === 5 * 60 * 1000);
-check(Boolean(backgroundRefresh) && /loadEverything/.test(String(backgroundRefresh?.callback)), "la synchronisation automatique en arrière-plan reste planifiée toutes les cinq minutes");
+check(!scheduledIntervals.some(({ delay }) => delay === 5 * 60 * 1000 || delay === 60 * 1000), "aucune actualisation automatique après le chargement");
 
 console.log("\n— annulation détectée (CM de BDD du 1er octobre) —");
+let back = 0;
+for (; back < 8 && !/28 Septembre/.test($("#weekTitle").textContent); back++) $("#prev").click();
 const cancelled = window.document.querySelectorAll("#grid .card.cancelled");
 check(cancelled.length === 1, `1 carte annulée affichée (${cancelled.length})`);
 if (cancelled.length) {

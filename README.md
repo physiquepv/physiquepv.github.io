@@ -24,7 +24,7 @@ index.html                              filtrage du TD 02, annulations, affichag
 2. La page lit ce fichier, garde les cours de la promo et du **TD choisi**
    (TD 1 ou TD 2, mémorisé dans le navigateur ; `tdGroup` est seulement le
    défaut), compare avec l'emploi du temps de référence du TD affiché, puis
-   affiche la semaine du jour.
+   affiche tout de suite la semaine du jour, et n'en change plus ensuite.
 3. Si le fichier est indisponible, la page tente un appel direct (puis via des
    proxys publics) ; en dernier recours seulement, elle affiche l'emploi du temps
    de secours codé en dur, sans statut global à l'écran.
