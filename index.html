@@ -207,7 +207,7 @@ button:focus-visible,.card:focus-visible{outline:3px solid var(--primary-ring);o
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.card,.day,.tab{transform:none!important}}
 body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 .app,#print{position:relative;z-index:2}
-.ambient-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,rgba(248,250,252,.2),rgba(241,245,249,.35))}
+.ambient-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(170deg,#4a9ede 0%,#6fb4e9 14%,#9bcef3 32%,#c2e0fa 52%,#e2effb 72%,#f5fafe 100%);background-size:200% 280%;animation:skyDrift 64s ease-in-out infinite}
 .ambient-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 0%,transparent 40%,color-mix(in srgb,var(--body) 35%,transparent) 100%)}
 .ambient-orb{position:absolute;display:block;border-radius:50%;opacity:.42;filter:blur(8px);will-change:transform}
 .ambient-orb-1{top:-12rem;left:-10rem;width:36rem;height:36rem;background:radial-gradient(circle,rgba(99,102,241,.22) 0%,rgba(129,140,248,.12) 42%,transparent 72%);animation:ambientFloatOne 28s ease-in-out infinite alternate}
@@ -224,11 +224,26 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 [data-theme="dark"] .ambient-orb-2{background:radial-gradient(circle,rgba(14,165,233,.16),rgba(8,145,178,.05) 48%,transparent 72%)}
 [data-theme="dark"] .ambient-orb-3{background:radial-gradient(circle,rgba(139,92,246,.14),rgba(109,40,217,.04) 48%,transparent 72%)}
 @keyframes starsTwinkle{0%{opacity:.25;transform:translate3d(0,0,0)}50%{opacity:.39}100%{opacity:.3;transform:translate3d(-5px,4px,0)}}
+[data-theme="dark"] .ambient-bg{animation:none}
+/* Ciel (mode clair) : dégradé bleu qui dérive en boucle + nuages */
+@keyframes skyDrift{0%{background-position:0% 0%}50%{background-position:100% 100%}100%{background-position:0% 0%}}
+.sky-clouds{position:absolute;top:-8%;left:-25%;width:150%;height:72%;opacity:.5;background-image:radial-gradient(closest-side,rgba(255,255,255,.94),rgba(255,255,255,0) 74%),radial-gradient(closest-side,rgba(255,255,255,.8),rgba(255,255,255,0) 72%),radial-gradient(closest-side,rgba(255,255,255,.68),rgba(255,255,255,0) 70%),radial-gradient(closest-side,rgba(255,255,255,.56),rgba(255,255,255,0) 68%);background-repeat:no-repeat;background-size:26rem 8rem,38rem 11rem,20rem 6.5rem,32rem 9.5rem;background-position:4% 28%,44% 8%,76% 46%,22% 64%;-webkit-mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.5) 58%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.5) 58%,transparent 100%);animation:cloudDrift 130s ease-in-out infinite alternate}
+@keyframes cloudDrift{from{transform:translate3d(-4vw,0,0)}to{transform:translate3d(4vw,-2vh,0)}}
+[data-theme="dark"] .sky-clouds{display:none}
+/* Étoiles filantes (mode sombre) */
+.meteor{position:absolute;top:0;left:0;display:none;width:2px;height:2px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(255,255,255,.5);opacity:0;will-change:transform,opacity}
+.meteor::before{content:"";position:absolute;top:50%;right:1px;width:11rem;height:1px;border-radius:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(191,219,254,.9));transform:translateY(-50%)}
+[data-theme="dark"] .meteor{display:block;animation:meteorFall 9s ease-in infinite}
+[data-theme="dark"] .meteor-1{top:5%;left:8%;animation-duration:9s;animation-delay:2s}
+[data-theme="dark"] .meteor-2{top:15%;left:36%;animation-duration:12s;animation-delay:7.5s}
+[data-theme="dark"] .meteor-3{top:2%;left:64%;animation-duration:10.5s;animation-delay:14s}
+[data-theme="dark"] .meteor-4{top:26%;left:20%;animation-duration:13.5s;animation-delay:21s}
+@keyframes meteorFall{0%{opacity:0;transform:translate3d(0,0,0) rotate(38deg) scale(.8)}3%{opacity:.95}14%{opacity:.85}26%{opacity:0;transform:translate3d(52vw,40vh,0) rotate(38deg) scale(1)}100%{opacity:0;transform:translate3d(52vw,40vh,0) rotate(38deg) scale(1)}}
 @media screen and (min-width:861px){.day-body{min-height:890px;background-image:linear-gradient(90deg,color-mix(in srgb,var(--subtle) 55%,transparent) 0,transparent 45px),repeating-linear-gradient(to bottom,transparent 0,transparent 77px,var(--grid) 77px,var(--grid) 78px);background-position:0 14px}.day{min-height:970px}.card{left:47px;right:8px;gap:3px;padding:7px 9px;overflow:hidden}.card-title{display:block;overflow:visible;color:var(--text);font-size:.79rem;font-weight:750;line-height:1.28;letter-spacing:-.015em;overflow-wrap:anywhere;word-break:normal;-webkit-box-orient:initial;-webkit-line-clamp:unset}.card-time{min-height:15px;gap:6px;font-size:.7rem}.card-room{font-size:.65rem;line-height:1.25}.card-tag{min-height:18px;margin-top:0;padding:2px 5px;font-size:.56rem;line-height:1.25;white-space:normal}.card:hover,.card:focus-visible{z-index:40}}
 @media screen and (min-width:861px) and (max-width:1450px){.grid{grid-template-columns:repeat(5,260px);gap:14px;padding:5px 5px 17px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-color:var(--border) transparent}.day{scroll-snap-align:start}.grid::-webkit-scrollbar{height:10px}.grid::-webkit-scrollbar-track{border-radius:999px;background:transparent}.grid::-webkit-scrollbar-thumb{border:2px solid var(--body);border-radius:999px;background:var(--border)}.grid::-webkit-scrollbar-thumb:hover{background:var(--muted)}}
 @media screen and (min-width:1451px){.grid{grid-template-columns:repeat(5,minmax(260px,1fr))}}
 @media screen and (max-width:860px){.day{min-height:0}.day-body{min-height:0;background:var(--surface)}.card-title{display:block;overflow:visible;font-size:.86rem;line-height:1.38;overflow-wrap:anywhere;-webkit-box-orient:initial;-webkit-line-clamp:unset}.ambient-orb{opacity:.25}[data-theme="dark"] .ambient-bg::before{opacity:.24}}
-@media (prefers-reduced-motion:reduce){.ambient-orb,[data-theme="dark"] .ambient-bg::before{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.ambient-orb,.meteor,.sky-clouds,.ambient-bg,[data-theme="dark"] .ambient-bg::before{animation:none!important}}
 @media print{.ambient-bg{display:none!important}}
 /* LIVE additions */
 .card.cancelled{opacity:.72;border-left-color:#ef4444!important;background:#fef2f2!important;position:relative}
@@ -261,7 +276,7 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 </style>
 </head>
 <body>
-<div class="ambient-bg" aria-hidden="true"><span class="ambient-orb ambient-orb-1"></span><span class="ambient-orb ambient-orb-2"></span><span class="ambient-orb ambient-orb-3"></span></div>
+<div class="ambient-bg" aria-hidden="true"><span class="sky-clouds"></span><span class="meteor meteor-1"></span><span class="meteor meteor-2"></span><span class="meteor meteor-3"></span><span class="meteor meteor-4"></span><span class="ambient-orb ambient-orb-1"></span><span class="ambient-orb ambient-orb-2"></span><span class="ambient-orb ambient-orb-3"></span></div>
 <main class="app">
 <nav class="nav">
 <button class="btn" id="prev" type="button" onclick="changeWeek(-1)">◀ Précédente</button>
@@ -1152,7 +1167,7 @@ function renderWeek(index, options = {}) {
 
 /* ------------------------------------------------------------------ print */
 function printCourse(item) {
-  const flag = item.ghost ? " • À VÉRIFIER" : item.isCancelled ? " • ANNULÉ" : "";
+  const flag = item.isCancelled ? " • ANNULÉ" : "";
   const classes = ["p-item", item.cat];
   if (item.isCancelled) classes.push("cancelled");
   if (item.ghost) classes.push("ghost");
