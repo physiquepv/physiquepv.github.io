@@ -21,8 +21,10 @@ index.html                              filtrage du TD 02, annulations, affichag
 
 1. **GitHub Actions** interroge CELCAT côté serveur (pas de CORS) et écrit le
    planning brut de tout le semestre dans `data/edt.json`.
-2. La page lit ce fichier, garde les cours de la promo et du **TD 02**, compare
-   avec l'emploi du temps de référence intégré, puis affiche la semaine du jour.
+2. La page lit ce fichier, garde les cours de la promo et du **TD choisi**
+   (TD 1 ou TD 2, mémorisé dans le navigateur ; `tdGroup` est seulement le
+   défaut), compare avec l'emploi du temps de référence du TD affiché, puis
+   affiche tout de suite la semaine du jour, et n'en change plus ensuite.
 3. Si le fichier est indisponible, la page tente un appel direct (puis via des
    proxys publics) ; en dernier recours seulement, elle affiche l'emploi du temps
    de secours codé en dur, sans statut global à l'écran.
@@ -31,7 +33,7 @@ index.html                              filtrage du TD 02, annulations, affichag
 
 | Fichier | Rôle |
 | --- | --- |
-| `index.html` | Tout le site : styles, données de secours et logique. La section `CORE-START … CORE-END` contient le noyau testable (parsing CELCAT, filtrage, fusion). |
+| `index.html` | Tout le site : styles, données de secours et logique. La section `CORE-START … CORE-END` contient le noyau testable (parsing CELCAT, filtrage du TD choisi, fusion). |
 | `edt.config.json` | **Configuration** : groupe CELCAT, TD de l'étudiant, semestre, paramètres d'appel. |
 | `scripts/sync-edt.mjs` | Récupère CELCAT et écrit `data/edt.json` (uniquement si le planning a changé). |
 | `.github/workflows/edt-sync.yml` | Synchro automatique (10 min + 1×/jour) et manuelle. |
@@ -63,12 +65,14 @@ sans rien modifier (`index.html?group=S3MIASHS`).
   `Annulation` (fond `#333333`). Le cours est affiché en rouge et l'information
   « annulée » reste directement sur sa carte ; aucun encart récapitulatif global
   n'est affiché.
-- **Cours retiré du planning** : si un cours de l'emploi du temps de référence
-  n'existe plus dans le flux officiel, il apparaît en pointillés avec le badge
-  « ❓ à vérifier » (utile quand une séance disparaît sans explication).
+- **Le site officiel fait foi** : une séance absente de edt.uvsq.fr n'est pas
+  réinventée, et n'affiche plus de badge « à vérifier ».
 - **Créneaux suspendus** : un créneau annulé *chaque semaine* (ex. le TD
   d'anglais du mardi 13:50 du TD 02) n'est pas une information : il est masqué
   au lieu de générer une fausse alerte.
+- **Matières masquées** : maintenir une carte propose de la retirer à partir de
+  cette semaine, pour tous ses créneaux et les semaines suivantes. **Reset**
+  les réaffiche. Le choix reste dans le navigateur.
 
 ## Mise en place (une seule fois)
 
@@ -97,7 +101,7 @@ npm run test:all     # les trois
 | --- | --- | --- |
 | Le planning ne change pas | Workflow en échec ou permissions de lecture seule | Onglet **Actions** → regarder le résumé du run (l'erreur exacte y est écrite) |
 | Le planning de secours s'affiche | `data/edt.json` inaccessible et CELCAT indisponible | Vérifier que le fichier est bien publié sur `main` et consulter le dernier run Actions |
-| Un cours manque / en trop | Groupe ou TD mal configuré | Corriger `group` / `tdGroup` dans `edt.config.json` |
+| Un cours manque / en trop | Mauvais TD sélectionné, ou groupe mal configuré | Choisir TD 1 ou TD 2 dans le sélecteur de la page (le choix est mémorisé). Le défaut se règle avec `tdGroup` dans `edt.config.json` |
 | L'UVSQ change d'API | L'URL ou le format CELCAT a évolué | Adapter `scripts/sync-edt.mjs` (endpoints listés dans `edt.config.json`) |
 
 Les tests `npm test` s'appuient sur `data/edt.json` : si le format CELCAT évolue,

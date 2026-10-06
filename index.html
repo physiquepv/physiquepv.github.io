@@ -147,14 +147,19 @@ button:focus-visible,.card:focus-visible{outline:3px solid var(--primary-ring);o
 .print-btn:hover:not(:disabled){color:#fff;border-color:#047857;background:linear-gradient(135deg,#047857,#065f46);box-shadow:0 9px 22px rgba(5,150,105,.26)}
 
 /* ---- TD selector ---- */
-.td-selector{position:relative;display:inline-flex;align-items:center;gap:5px;min-height:42px;padding:0 10px 0 11px;color:var(--text-soft);font-size:.78rem;font-weight:750;line-height:1;white-space:nowrap;cursor:pointer;border:1px solid var(--border);border-radius:11px;background:var(--surface);box-shadow:var(--shadow-xs);transition:color .18s ease,border-color .18s ease,background-color .18s ease,box-shadow .18s ease,transform .18s ease}
-.td-selector:hover{color:var(--primary);border-color:color-mix(in srgb,var(--primary) 40%,var(--border));background:var(--primary-soft);box-shadow:0 6px 15px var(--primary-ring);transform:translateY(-2px)}
+.td-selector{position:relative;display:inline-flex;align-items:stretch;min-height:42px;padding:0;color:var(--text-soft);font-size:.78rem;font-weight:750;line-height:1;white-space:nowrap;border:1px solid var(--border);border-radius:11px;background:var(--surface);box-shadow:var(--shadow-xs);transition:color .18s ease,border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
+.td-selector:hover{color:var(--primary);border-color:color-mix(in srgb,var(--primary) 40%,var(--border));background:var(--primary-soft);box-shadow:0 6px 15px var(--primary-ring)}
 .td-selector:focus-within{color:var(--primary);border-color:color-mix(in srgb,var(--primary) 50%,var(--border));box-shadow:0 0 0 3px var(--primary-ring)}
-.td-selector-icon{font-size:.85rem;line-height:1;pointer-events:none}
-.td-select{appearance:none;-webkit-appearance:none;-moz-appearance:none;background:transparent;border:none;color:inherit;font:inherit;font-weight:750;font-size:.78rem;cursor:pointer;padding:0 16px 0 2px;outline:none;min-width:42px}
+.td-selector-btn{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;width:calc(100% + 2px);min-height:44px;margin:-1px;padding:0 26px 0 11px;color:inherit;font:inherit;font-weight:750;line-height:1;white-space:nowrap;cursor:pointer;border:0;border-radius:inherit;background:transparent;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.td-selector-btn:focus{outline:none}
+.td-selector-icon,.td-selector-value,.td-selector-arrow{pointer-events:none}
+.td-selector-icon{font-size:.85rem;line-height:1}
+.td-selector-value{min-width:2.6em;text-align:center}
+.td-select{position:absolute;z-index:1;inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);margin:0;padding:0;color:transparent;font-size:16px;border:0;background:transparent;opacity:0;pointer-events:none}
 .td-select option{color:var(--text);background:var(--surface)}
-.td-selector-arrow{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.6rem;pointer-events:none;color:var(--muted);transition:color .18s ease}
+.td-selector-arrow{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.6rem;color:var(--muted);transition:color .18s ease}
 .td-selector:hover .td-selector-arrow{color:var(--primary)}
+@media(max-width:860px){.td-selector-btn{width:calc(100% + 2px);min-height:45px}}
 .grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:start;gap:12px;margin-bottom:30px}
 .day{position:relative;min-width:0;min-height:770px;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-sm);transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
 @media (hover:hover){.day:hover{border-color:color-mix(in srgb,var(--primary) 18%,var(--border));box-shadow:var(--shadow-md);transform:translateY(-2px)}}
@@ -195,7 +200,7 @@ button:focus-visible,.card:focus-visible{outline:3px solid var(--primary-ring);o
 .tab{transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 @media screen and (min-width:861px){.nav{position:sticky;top:12px;z-index:100}}
 @media screen and (min-width:861px) and (max-width:1280px){body{padding:16px}.header{padding:24px}.grid{grid-template-columns:repeat(5,235px);gap:12px;padding:4px 4px 16px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-color:var(--border) transparent}.day{scroll-snap-align:start}.grid::-webkit-scrollbar{height:9px}.grid::-webkit-scrollbar-track{border-radius:999px;background:transparent}.grid::-webkit-scrollbar-thumb{border:2px solid var(--body);border-radius:999px;background:var(--border)}.actions{max-width:430px;flex-wrap:wrap}.btn{min-height:39px;padding:8px 10px;font-size:.72rem}}
-@media screen and (max-width:860px){html{scrollbar-gutter:auto}body{padding:10px max(10px,env(safe-area-inset-right)) calc(26px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:radial-gradient(circle at 20% 0%,rgba(99,102,241,.12),transparent 22rem),var(--body)}.header{display:block;min-height:0;margin-bottom:10px;padding:20px;border-radius:20px}.header::before{top:-130px;right:-110px}.header::after{display:none}.header h1{font-size:1.35rem}.header p{margin-top:7px;font-size:.78rem}.nav{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"center center" "prev next" "td td" "today theme" "print print";gap:8px;margin-bottom:10px;padding:11px;border-radius:17px}.nav-center{grid-area:center;padding:3px 4px 7px}.nav-title{font-size:1rem;white-space:normal}#prev{grid-area:prev}#next{grid-area:next}.actions{display:contents}#today{grid-area:today}#theme{grid-area:theme}.td-selector{grid-area:td;width:100%;justify-content:center;min-height:43px;border-radius:10px;font-size:.75rem}.td-select{font-size:.75rem}.print-btn{grid-area:print}.btn{width:100%;min-height:43px;font-size:.75rem;border-radius:10px}.mobile-tabs{position:sticky;top:6px;z-index:90;display:flex;gap:5px;margin:0 -2px 10px;padding:6px;border:1px solid var(--border);border-radius:15px;background:color-mix(in srgb,var(--surface) 88%,transparent);box-shadow:var(--shadow-md);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.tab{min-width:47px;min-height:40px;padding:7px 4px;color:var(--muted);font-size:.7rem;font-weight:800;border:1px solid transparent;border-radius:9px;background:transparent;box-shadow:none}.tab:hover{color:var(--text);background:var(--subtle)}.tab.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 6px 15px rgba(79,70,229,.28);transform:none}.tab.current:not(.active){color:var(--primary);border-color:color-mix(in srgb,var(--primary) 28%,transparent);background:var(--primary-soft)}.grid{grid-template-columns:1fr;gap:10px;padding:0;overflow:visible}.day{min-height:0;border-radius:17px;scroll-margin-top:68px}.day:hover{transform:none}.day-head{min-height:68px;padding:12px 14px}.day-name{font-size:.9rem}.day-date{font-size:.69rem}.day-count{display:inline-flex;min-height:25px;font-size:.61rem}.day-body{position:static;display:flex;flex-direction:column;gap:9px;min-height:auto;padding:11px;background:var(--surface)}.hour-scale,.current-time-line{display:none}.card{position:relative;left:auto;right:auto;top:auto!important;width:100%;height:auto!important;min-height:104px;gap:5px;padding:11px 12px;border-left-width:5px;border-radius:12px}.card:hover{transform:none}.card-time{font-size:.76rem}.course-type{padding:4px 6px;font-size:.56rem}.card-title{display:block;overflow:visible;font-size:.86rem;line-height:1.35;-webkit-line-clamp:unset}.card-room{overflow:visible;font-size:.7rem;line-height:1.4;white-space:normal;text-overflow:clip}.card-tag{min-height:22px;padding:3px 7px;overflow:visible;font-size:.62rem;white-space:normal}.card.running::after{position:static;align-self:flex-end;margin-top:-24px}.empty{position:static;inset:auto;min-height:130px;margin:0;padding:22px}}
+@media screen and (max-width:860px){html{scrollbar-gutter:auto}body{padding:10px max(10px,env(safe-area-inset-right)) calc(26px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:radial-gradient(circle at 20% 0%,rgba(99,102,241,.12),transparent 22rem),var(--body)}.header{display:block;min-height:0;margin-bottom:10px;padding:20px;border-radius:20px}.header::before{top:-130px;right:-110px}.header::after{display:none}.header h1{font-size:1.35rem}.header p{margin-top:7px;font-size:.78rem}.nav{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"center center" "prev next" "td td" "today theme" "print print";gap:8px;margin-bottom:10px;padding:11px;border-radius:17px}.nav-center{grid-area:center;padding:3px 4px 7px}.nav-title{font-size:1rem;white-space:normal}#prev{grid-area:prev}#next{grid-area:next}.actions{display:contents}#today{grid-area:today}#theme{grid-area:theme}.td-selector{grid-area:td;width:100%;justify-content:center;min-height:43px;border-radius:10px;font-size:.75rem}.td-selector-btn{width:calc(100% + 2px);min-height:45px}.print-btn{grid-area:print}.btn{width:100%;min-height:43px;font-size:.75rem;border-radius:10px}.mobile-tabs{position:sticky;top:6px;z-index:90;display:flex;gap:5px;margin:0 -2px 10px;padding:6px;border:1px solid var(--border);border-radius:15px;background:color-mix(in srgb,var(--surface) 88%,transparent);box-shadow:var(--shadow-md);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.tab{min-width:47px;min-height:40px;padding:7px 4px;color:var(--muted);font-size:.7rem;font-weight:800;border:1px solid transparent;border-radius:9px;background:transparent;box-shadow:none}.tab:hover{color:var(--text);background:var(--subtle)}.tab.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 6px 15px rgba(79,70,229,.28);transform:none}.tab.current:not(.active){color:var(--primary);border-color:color-mix(in srgb,var(--primary) 28%,transparent);background:var(--primary-soft)}.grid{grid-template-columns:1fr;gap:10px;padding:0;overflow:visible}.day{min-height:0;border-radius:17px;scroll-margin-top:68px}.day:hover{transform:none}.day-head{min-height:68px;padding:12px 14px}.day-name{font-size:.9rem}.day-date{font-size:.69rem}.day-count{display:inline-flex;min-height:25px;font-size:.61rem}.day-body{position:static;display:flex;flex-direction:column;gap:9px;min-height:auto;padding:11px;background:var(--surface)}.hour-scale,.current-time-line{display:none}.card{position:relative;left:auto;right:auto;top:auto!important;width:100%;height:auto!important;min-height:104px;gap:5px;padding:11px 12px;border-left-width:5px;border-radius:12px}.card:hover{transform:none}.card-time{font-size:.76rem}.course-type{padding:4px 6px;font-size:.56rem}.card-title{display:block;overflow:visible;font-size:.86rem;line-height:1.35;-webkit-line-clamp:unset}.card-room{overflow:visible;font-size:.7rem;line-height:1.4;white-space:normal;text-overflow:clip}.card-tag{min-height:22px;padding:3px 7px;overflow:visible;font-size:.62rem;white-space:normal}.card.running::after{position:static;align-self:flex-end;margin-top:-24px}.empty{position:static;inset:auto;min-height:130px;margin:0;padding:22px}}
 @media screen and (max-width:480px){body{padding-inline:8px}.header{padding:17px;border-radius:18px}.header h1{font-size:1.2rem}.header p{font-size:.72rem}.nav{padding:9px}.nav-title{font-size:.92rem}.btn{padding:8px 6px;font-size:.69rem}.mobile-tabs{gap:3px;padding:5px}.tab{min-width:0;min-height:39px;font-size:.66rem}.day-head{padding:11px 12px}.card{min-height:100px;padding:10px}}
 @media screen and (min-width:1600px){.app{max-width:1580px}.grid{gap:15px}.day{min-height:790px}.card-title{font-size:.82rem}}
 @media (prefers-contrast:more){:root{--border:#aeb9c8;--grid:#cdd5df}[data-theme="dark"]{--border:#52627a;--grid:#3c4a5f}.card,.day,.nav{border-width:2px}}
@@ -235,6 +240,24 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 .card.ghost .card-title{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
 .card.ghost::before{content:"❓ À VÉRIFIER";position:absolute;top:6px;right:8px;padding:2px 6px;font-size:.5rem;font-weight:900;letter-spacing:.05em;color:#fff;background:#64748b;border-radius:4px}
 .card-note{margin-top:2px;color:var(--muted);font-size:.6rem;font-weight:600;line-height:1.3}
+.td-tools{display:inline-flex;align-items:stretch;gap:7px}
+.reset-btn{width:auto;min-width:42px;padding:0 10px;color:var(--muted)}
+.reset-btn:not(:disabled){color:#b45309;border-color:#fcd34d;background:#fffbeb}
+[data-theme=dark] .reset-btn:not(:disabled){color:#fbbf24;border-color:#92400e;background:#3b2509}
+.card{-webkit-touch-callout:none;user-select:none}
+.card.arming{box-shadow:0 0 0 3px var(--primary-ring),0 8px 18px rgba(79,70,229,.16)}
+.hold-dialog{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:16px;background:rgba(15,23,42,.42)}
+.hold-dialog[hidden]{display:none}
+.hold-panel{width:min(420px,100%);margin-bottom:8px;padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--surface);box-shadow:var(--shadow-lg)}
+.hold-kicker{color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.hold-panel h3{margin:4px 0 8px;font-size:1rem;line-height:1.3}
+.hold-panel p{color:var(--text-soft);font-size:.82rem;line-height:1.45}
+.hold-actions{display:flex;gap:8px;margin-top:14px}
+.hold-actions .btn{flex:1}
+.hold-delete{color:#fff;border-color:#dc2626;background:#dc2626}
+.hold-delete:hover{color:#fff;border-color:#b91c1c;background:#b91c1c}
+@media screen and (max-width:860px){.td-tools{grid-area:td;display:flex;align-items:stretch;gap:8px;width:100%}.td-tools .td-selector{width:auto;flex:1 1 auto;min-width:0}.td-tools .reset-btn{width:auto;flex:0 0 auto;padding:0 10px;white-space:nowrap}}
+@media print{.hold-dialog,.reset-btn{display:none!important}}
 </style>
 </head>
 <body>
@@ -248,14 +271,20 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 <div class="actions">
 <button class="btn" id="next" type="button" onclick="changeWeek(1)">Suivante ▶</button>
 <button class="btn today-btn" id="today" type="button" onclick="jumpToTarget(true)">🎯 Aujourd'hui</button>
-<label class="td-selector" id="tdSelectorWrap">
-<span class="td-selector-icon">👥</span>
-<select id="tdSelect" class="td-select" aria-label="Choisir son groupe de TD">
-<option value="S3MIASHS TD 1">TD 1</option>
-<option value="S3MIASHS TD 2">TD 2</option>
-</select>
+<div class="td-tools">
+<div class="td-selector" id="tdSelectorWrap">
+<button type="button" class="td-selector-btn" id="tdSelectorBtn" aria-haspopup="listbox" aria-controls="tdSelect" aria-label="Choisir son groupe de TD">
+<span class="td-selector-icon" aria-hidden="true">👥</span>
+<span class="td-selector-value" id="tdSelectLabel">TD 2</span>
 <span class="td-selector-arrow" aria-hidden="true">▾</span>
-</label>
+</button>
+<select id="tdSelect" class="td-select" tabindex="-1" aria-label="Groupe de TD">
+<option value="S3MIASHS TD 1">TD 1</option>
+<option value="S3MIASHS TD 2" selected>TD 2</option>
+</select>
+</div>
+<button class="btn reset-btn" id="resetHidden" type="button" title="Réafficher les matières masquées. Maintiens une carte pour en masquer une." disabled>↺ Reset</button>
+</div>
 <button class="btn" id="theme" type="button" onclick="toggleTheme()">🌙 Sombre</button>
 <button class="btn print-btn" type="button" onclick="window.print()">🖨 Imprimer</button>
 </div>
@@ -271,6 +300,17 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 </div>
 
 <section class="grid" id="grid" aria-label="Emploi du temps de la semaine"></section>
+<div id="holdDialog" class="hold-dialog" hidden>
+<div class="hold-panel" role="dialog" aria-modal="true" aria-labelledby="holdTitle">
+<p class="hold-kicker">Masquer une matière</p>
+<h3 id="holdTitle"></h3>
+<p id="holdDetail"></p>
+<div class="hold-actions">
+<button type="button" class="btn" id="holdCancel">Annuler</button>
+<button type="button" class="btn hold-delete" id="holdDelete">Supprimer</button>
+</div>
+</div>
+</div>
 </main>
 <section id="print"></section>
 <script>
@@ -284,7 +324,8 @@ if("scrollRestoration" in history) history.scrollRestoration="manual";
       (impossible depuis le navigateur : CELCAT n'autorise pas le CORS) et
       publie le planning brut dans data/edt.json.
    2. Cette page lit data/edt.json, filtre les cours du groupe (promo +
-      TD 02), détecte les annulations / absences de prof et affiche la
+      TD choisi dans le sélecteur), détecte les annulations / absences de
+      prof et affiche la
       semaine correspondant à la date du jour.
    3. Si le fichier est indisponible, elle tente un appel direct (puis via
       des proxys publics). En dernier recours seulement, l'emploi du temps
@@ -352,12 +393,54 @@ const stripAccents = (value) => String(value ?? "").normalize("NFD").replace(/[\
 const MONDAYS = [[2026, 8, 14], [2026, 8, 21], [2026, 8, 28], [2026, 9, 5], [2026, 9, 12], [2026, 9, 19], [2026, 10, 2], [2026, 10, 9], [2026, 10, 16], [2026, 10, 23], [2026, 10, 30], [2026, 11, 7], [2026, 11, 14]].map((x) => new Date(...x));
 const TITLES = ["Semaine 1 : 14 – 19 Septembre 2026", "Semaine 2 : 21 – 26 Septembre 2026", "Semaine 3 : 28 Septembre – 03 Octobre 2026", "Semaine 4 : 05 – 10 Octobre 2026", "Semaine 5 : 12 – 17 Octobre 2026", "Semaine 6 : 19 – 24 Octobre 2026", "Semaine 7 : 02 – 07 Novembre 2026", "Semaine 8 : 09 – 14 Novembre 2026", "Semaine 9 : 16 – 21 Novembre 2026", "Semaine 10 : 23 – 28 Novembre 2026", "Semaine 11 : 30 Novembre – 05 Décembre 2026", "Semaine 12 : 07 – 12 Décembre 2026", "Semaine 13 : 14 – 19 Décembre 2026"];
 const MACRO_ROOMS = ["AMPHI D - DESCARTES", "Amphi F (Fermat) & Amphi B (Descartes)", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT", "Amphi B (Descartes) & 2204 (Fermat)", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT", "2201 & 2204 - FERMAT"];
-const course = (time, type, cat, title, room, tag, tagType) => ({ time, type, cat, title, room, tag, tagType, isCancelled: false });
-const mondayCourses = (week) => { const last = week === 12; const courses = [course("09:40 - 11:10", "CM", "socio", "Sociologie : démographie", "2203 - FERMAT", last ? "CM Promo (Dernier)" : "CM Promo", "cm"), course("11:20 - 12:50", "TD", "socio", "Sociologie : démographie", "2203 - FERMAT", last ? "TD Promo réunie (Dernier)" : "TD Promo réunie (TD 1 & 2)", "reuni")]; if (week > 0) { courses.push(course("15:30 - 17:00", "TD", "micro", "Microéconomie 2", "2206 - FERMAT", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso")); } return courses; };
-const tuesdayCourses = (week) => { if (week > 9) return []; const englishTag = week === 9 ? "Votre TD 01 (Séance finale Mar)" : `Votre TD 01 (Séance ${week + 1}/10)`; return [course("08:00 - 09:30", "TD", "anglais", "Anglais UE2", "E303 - Joliot-Curie", englishTag, "perso"), course("09:40 - 12:50", "CM", "macro", "Macroéconomie 2", MACRO_ROOMS[week] ?? MACRO_ROOMS[0], week === 9 ? "CM Promo (Séance finale)" : "CM Promo", "cm")]; };
-const wednesdayCourses = (week) => { if (week === 7) return []; const last = week === 12; const courses = [course("09:40 - 12:50", "TD", "maths", "Analyse 2 & Algèbre linéaire 2", "AMPHI G - FERMAT", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso"), course("13:50 - 15:20", "TD", "anglais", "Anglais UE2", "E303 - Joliot-Curie", last ? "Votre TD Anglais (Dernier)" : "Votre TD Anglais", "perso")]; const macroSession = { 1: 1, 3: 2, 5: 3, 6: 4 }[week]; if (macroSession) { courses.push(course("15:30 - 18:40", "TD", "macro", "Macroéconomie 2", "AMPHI F - FERMAT", `TD Promo réunie (Séance ${macroSession}/4${macroSession === 4 ? " finale" : ""})`, "reuni")); } return courses; };
-const thursdayCourses = (week) => { if (week === 5) return []; const last = week === 12; const courses = [course("09:40 - 11:10", "CM", "info", week < 2 ? "Initiation aux bases de données" : "Initiation bases de données", "AMPHI E - DESCARTES", last ? "CM Promo (Dernier)" : "CM Promo", "cm"), course("11:20 - 12:50", "CM", "maths", "Analyse 2 & Algèbre linéaire 2", "AMPHI G - FERMAT", last ? "CM Promo (Dernier)" : "CM Promo", "cm")]; if (week > 0) { courses.push(course("13:50 - 17:00", "TD Machine", "info", "Initiation bases de données", "RC22 - DESCARTES", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso")); } return courses; };
-const fridayCourses = (week) => [course("14:00 - 16:00", "CM", "micro", "Microéconomie 2", "AMPHI G - FERMAT", week === 12 ? "CM Promo (Dernier)" : "CM Promo", "cm")];
+const course = (time, type, cat, title, room, tag, tagType, forTd = "") => ({ time, type, cat, title, room, tag, tagType, forTd: forTd ? String(forTd) : "", isCancelled: false });
+const mondayCourses = (week) => {
+  const last = week === 12;
+  const courses = [
+    course("09:40 - 11:10", "CM", "socio", "Sociologie : démographie", "2203 - FERMAT", last ? "CM Promo (Dernier)" : "CM Promo", "cm"),
+    course("11:20 - 12:50", "TD", "socio", "Sociologie : démographie", "2203 - FERMAT", last ? "TD Promo réunie (Dernier)" : "TD Promo réunie (TD 1 & 2)", "reuni"),
+  ];
+  if (week > 0) {
+    courses.push(course("13:50 - 15:20", "TD", "micro", "Microéconomie 2", "2206 - FERMAT", last ? "Votre TD 01 (Dernier)" : "Votre TD 01", "perso", "1"));
+    courses.push(course("15:30 - 17:00", "TD", "micro", "Microéconomie 2", "2206 - FERMAT", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso", "2"));
+  }
+  return courses;
+};
+const tuesdayCourses = (week) => {
+  if (week > 9) return [];
+  const englishTag = week === 9 ? "Votre TD 01 (Séance finale Mar)" : `Votre TD 01 (Séance ${week + 1}/10)`;
+  return [
+    course("08:00 - 09:30", "TD", "anglais", "Anglais UE2", "E303 - Joliot-Curie", englishTag, "perso"),
+    course("09:40 - 12:50", "CM", "macro", "Macroéconomie 2", MACRO_ROOMS[week] ?? MACRO_ROOMS[0], week === 9 ? "CM Promo (Séance finale)" : "CM Promo", "cm"),
+  ];
+};
+const wednesdayCourses = (week) => {
+  if (week === 7) return [];
+  const last = week === 12;
+  const courses = [
+    course("09:40 - 12:50", "TD", "maths", "Analyse 2 & Algèbre linéaire 2", "AMPHI G - FERMAT", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso", "2"),
+    course("13:50 - 15:20", "TD", "anglais", "Anglais UE2", "E303 - Joliot-Curie", last ? "Votre TD Anglais (Dernier)" : "Votre TD Anglais", "perso"),
+  ];
+  if (week > 0) courses.push(course("09:40 - 12:50", "TD Cartable Numérique", "info", "Initiation aux bases de données", "102 - BUFFON", last ? "Votre TD 01 (Dernier)" : "Votre TD 01", "perso", "1"));
+  const macroSession = { 1: 1, 3: 2, 5: 3, 6: 4 }[week];
+  if (macroSession) courses.push(course("15:30 - 18:40", "TD", "macro", "Macroéconomie 2", "AMPHI F - FERMAT", `TD Promo réunie (Séance ${macroSession}/4${macroSession === 4 ? " finale" : ""})`, "reuni"));
+  return courses;
+};
+const thursdayCourses = (week) => {
+  if (week === 5) return [];
+  const last = week === 12;
+  const courses = [
+    course("09:40 - 11:10", "CM", "info", week < 2 ? "Initiation aux bases de données" : "Initiation bases de données", "AMPHI E - DESCARTES", last ? "CM Promo (Dernier)" : "CM Promo", "cm"),
+    course("11:20 - 12:50", "CM", "maths", "Analyse 2 & Algèbre linéaire 2", "AMPHI G - FERMAT", last ? "CM Promo (Dernier)" : "CM Promo", "cm"),
+  ];
+  if (week > 0) courses.push(course("13:50 - 17:00", "TD Machine", "info", "Initiation bases de données", "RC22 - DESCARTES", last ? "Votre TD 02 (Dernier)" : "Votre TD 02", "perso", "2"));
+  if (week > 1) courses.push(course("13:50 - 17:00", "TD Cartable Numérique", "info", "Initiation aux bases de données", "RC22 - DESCARTES", last ? "Votre TD 01 (Dernier)" : "Votre TD 01", "perso", "1"));
+  return courses;
+};
+const fridayCourses = (week) => [
+  course("09:40 - 12:50", "TD", "maths", "Analyse 2 & Algèbre linéaire 2", "G105 - GERMAIN", week === 12 ? "Votre TD 01 (Dernier)" : "Votre TD 01", "perso", "1"),
+  course("14:00 - 16:00", "CM", "micro", "Microéconomie 2", "AMPHI G - FERMAT", week === 12 ? "CM Promo (Dernier)" : "CM Promo", "cm"),
+];
 const fallbackWeeks = MONDAYS.map((monday, week) => ({
   id: week + 1,
   title: TITLES[week],
@@ -474,7 +557,8 @@ function parseEventUncached(raw) {
   }
   const type = (sections[0]?.filter(Boolean)[0] || "").trim() || stripResourceSuffix(String(raw.eventCategory ?? "")).trim();
   const modules = buckets.module.map((line) => stripCapacity(normalizeModuleName(line))).filter(Boolean);
-  const rooms = buckets.room.map((line) => stripCapacity(stripResourceSuffix(line))).filter(Boolean);
+  // « TD Cartable Numérique » contient « cartable » et était pris pour une salle.
+  const rooms = buckets.room.map((line) => stripCapacity(stripResourceSuffix(line))).filter((room) => room && room !== type);
   const notes = buckets.note.join(" · ");
 
   const background = String(raw.backgroundColor ?? "").toLowerCase();
@@ -520,6 +604,22 @@ function isMyCourse(parsed, config = CONFIG) {
   return parsed.groups.some((group) => wanted.has(normalizeGroupCode(resourceCode(group))));
 }
 
+/** Numéro du TD sélectionné (« S3MIASHS TD 2 » → « 2 »). */
+function selectedTdNumber(config = CONFIG) {
+  const match = normalizeGroupCode(config.myTd).match(/\bTD\s+(\d+)\b/);
+  return match ? match[1] : "";
+}
+
+/**
+ * L'emploi du temps de secours contient les créneaux des deux TD.
+ * On ne garde que les cours communs et ceux du TD affiché : sinon le TD 1
+ * hérite des fantômes et des étiquettes « Votre TD 02 ».
+ */
+function referenceMatchesTd(ref, config = CONFIG) {
+  if (!ref?.forTd) return true;
+  return String(ref.forTd) === selectedTdNumber(config);
+}
+
 /** Étiquette affichée sur la carte (« CM Promo », « Votre TD », « TD Promo »…). */
 function tagForLiveCourse(item) {
   if (item.cancelled) return { tag: "Annulé — prof absent / séance supprimée", tagType: "cancelled" };
@@ -551,10 +651,9 @@ function overlaps(a, b, minimum = 30) {
 const sameFamily = (courseA, courseB) => courseA.cat === courseB.cat;
 
 /**
- * Construit les jours d'une semaine :
- *  - source live  : événements CELCAT filtrés + cours « fantômes » (dans la
- *                   référence mais absents du planning officiel) ;
- *  - source réf.  : emploi du temps codé en dur (mode hors-ligne).
+ * Construit les jours d'une semaine à partir du planning officiel CELCAT.
+ * La référence codée en dur ne sert qu'à étiqueter un cours déjà publié,
+ * ou en dernier recours hors-ligne. Elle n'invente pas de séance « à vérifier ».
  */
 function buildWeek(weekKey, rawEvents, reference, options = {}) {
   const live = options.live !== false;
@@ -564,9 +663,6 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
     .map((raw) => parseEvent(raw))
     .filter(Boolean)
     .filter((item) => isMyCourse(item));
-  // Un cours « fantôme » n'a de sens que si la semaine a bien été récupérée :
-  // une semaine vide (vacances, panne) ne doit pas transformer la référence.
-  const ghostEnabled = parsed.length > 0;
 
   const days = [];
 
@@ -574,11 +670,12 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
     const dateISO = addDaysISO(weekKey, d);
     const realDate = parseISO(dateISO);
     const dayLive = parsed.filter((item) => item.date === dateISO).sort((a, b) => a.startMin - b.startMin);
-    const dayReference = referenceDays[d]?.courses ?? [];
+    const dayReference = (referenceDays[d]?.courses ?? []).filter((ref) => referenceMatchesTd(ref));
     const courses = [];
 
     if (!live) {
       for (const ref of dayReference) courses.push(referenceCourse(ref, dateISO));
+      courses.sort((a, b) => startMinutes(a.time) - startMinutes(b.time));
       days.push({ name: DAY_NAMES[d], date: formatDate(realDate), realDate, courses, live: false });
       continue;
     }
@@ -594,9 +691,6 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
           used.add(match.id);
           courses.push(mergeCourse(match, ref, dateISO));
         }
-      } else if (ghostEnabled) {
-        // Cours prévu au planning de secours, absent du planning officiel.
-        courses.push({ ...referenceCourse(ref, dateISO), ghost: true, source: "ghost" });
       }
     }
 
@@ -714,6 +808,7 @@ async function applyRemoteConfig() {
     const remote = await fetchJson(`edt.config.json?v=${Math.floor(Date.now() / 600000)}`, {}, 5000);
     if (!params.get("group") && remote?.group) CONFIG.group = String(remote.group).trim();
     if (!params.get("td") && !localStorage.getItem("schedule_td") && remote?.tdGroup) CONFIG.myTd = String(remote.tdGroup).trim();
+    if (typeof syncTdSelector === "function") syncTdSelector();
     if (remote?.semester?.start && remote?.semester?.end) CONFIG.semester = { start: remote.semester.start, end: remote.semester.end };
     if (remote?.label) CONFIG.label = String(remote.label);
   } catch {
@@ -739,14 +834,18 @@ async function loadDataFile() {
   return json;
 }
 
-async function loadFromCache() {
+function readCacheSync() {
   try {
     const cached = JSON.parse(localStorage.getItem(`${CONFIG.cacheKey}_${CONFIG.group}`) || "null");
-    if (!cached?.weeks) return null;
+    if (!cached?.weeks || !Object.keys(cached.weeks).length) return null;
     return cached;
   } catch {
     return null;
   }
+}
+
+async function loadFromCache() {
+  return readCacheSync();
 }
 
 function saveToCache() {
@@ -805,7 +904,7 @@ async function fetchSyncStatus() {
    ====================================================================== */
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
-let state_view = { weeks: [], index: 0, mobileFilter: "all", target: null };
+let state_view = { weeks: [], index: 0, weekKey: null, mobileFilter: "all", target: null };
 
 function hourScaleHTML() {
   return `<div class="hour-scale" aria-hidden="true">${HOURS.map((hour) => {
@@ -847,7 +946,7 @@ function cardHTML(item, day) {
   const details = [item.title, item.time, item.room, item.tag, item.note].filter(Boolean).join(" — ");
   const room = item.room ? `<div class="card-room" title="${escapeHtml(item.room)}">📍 ${escapeHtml(item.room)}</div>` : `<div class="card-room">📍 ${item.isCancelled ? "salle non précisée" : "lieu non précisé"}</div>`;
   const tag = item.tag ? `<div class="card-tag ${escapeHtml(item.tagType || "")}">${escapeHtml(item.tag)}</div>` : "";
-  return `<article class="${classes.join(" ")}" style="top:${p.top}px;height:${p.height}px" tabindex="0" title="${escapeHtml(details)}"><div class="card-time"><span>${escapeHtml(item.time)}</span><span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-title">${escapeHtml(item.title)}</div>${room}${tag}${item.note ? `<div class="card-note">${escapeHtml(item.note)}</div>` : ""}</article>`;
+  return `<article class="${classes.join(" ")}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="top:${p.top}px;height:${p.height}px" tabindex="0" title="${escapeHtml(details)} — maintenir pour masquer"><div class="card-time"><span>${escapeHtml(item.time)}</span><span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-title">${escapeHtml(item.title)}</div>${room}${tag}${item.note ? `<div class="card-note">${escapeHtml(item.note)}</div>` : ""}</article>`;
 }
 
 function emptyMessage(weekKey, dayIndex, live) {
@@ -901,13 +1000,84 @@ function weekSource(weekKey) {
   return REFERENCE_BY_MONDAY.has(weekKey) ? "reference" : "none";
 }
 
-/** Semaine affichée : données live + fantômes, ou référence en secours. */
+/** Semaine affichée : planning officiel, ou référence seulement hors-ligne. */
 function buildWeekView(weekKey, recurring) {
   const source = weekSource(weekKey);
   const reference = REFERENCE_BY_MONDAY.get(weekKey) ?? null;
-  if (source === "live") return buildWeek(weekKey, state.weeks[weekKey].events, reference, { live: true, recurringCancellations: recurring });
-  if (source === "live-empty") return buildWeek(weekKey, [], reference, { live: true, recurringCancellations: recurring });
-  return buildWeek(weekKey, [], reference, { live: false });
+  const view = source === "live"
+    ? buildWeek(weekKey, state.weeks[weekKey].events, reference, { live: true, recurringCancellations: recurring })
+    : source === "live-empty"
+      ? buildWeek(weekKey, [], reference, { live: true, recurringCancellations: recurring })
+      : buildWeek(weekKey, [], reference, { live: false });
+  return withoutHidden(view);
+}
+
+const HIDDEN_KEY = "schedule_hidden";
+
+/** Identité stable d'une matière (CM et TD, titres légèrement différents). */
+function subjectKey(item) {
+  const title = stripAccents(item?.title || "").toLowerCase().replace(/&/g, " et ");
+  const stem = title.replace(/\b(aux|de|des|du|et|ue2|le|la|les)\b/g, " ").replace(/\d+/g, " ").replace(/[^a-z]+/g, " ").replace(/\s+/g, " ").trim();
+  return `${item?.cat || familyOf(item?.title)}|${stem}`;
+}
+
+function loadHidden() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(HIDDEN_KEY) || "[]");
+    return Array.isArray(raw) ? raw.filter((rule) => rule && rule.key && rule.from) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHidden(list) {
+  try { localStorage.setItem(HIDDEN_KEY, JSON.stringify(list)); } catch {}
+  syncResetButton();
+}
+
+function isCourseHidden(item, hidden = loadHidden()) {
+  if (!item?.date || !hidden.length) return false;
+  const key = subjectKey(item);
+  return hidden.some((rule) => rule.key === key && item.date >= rule.from);
+}
+
+function withoutHidden(view) {
+  const hidden = loadHidden();
+  if (!hidden.length || !view?.days) return view;
+  return {
+    ...view,
+    days: view.days.map((day) => ({
+      ...day,
+      courses: day.courses.filter((item) => !isCourseHidden(item, hidden)),
+    })),
+  };
+}
+
+function hideSubjectFrom(item) {
+  const key = subjectKey(item);
+  const hidden = loadHidden();
+  const previous = hidden.find((rule) => rule.key === key);
+  const from = previous && previous.from < item.date ? previous.from : item.date;
+  saveHidden([...hidden.filter((rule) => rule.key !== key), { key, from, title: item.title }]);
+}
+
+function resetHidden() {
+  if (!loadHidden().length) return;
+  if (!confirm("Réafficher toutes les matières masquées ?")) return;
+  saveHidden([]);
+  renderWeek(state_view.index);
+  buildPrint();
+}
+
+function syncResetButton() {
+  const button = $("#resetHidden");
+  if (!button) return;
+  const hidden = loadHidden();
+  button.disabled = hidden.length === 0;
+  button.textContent = "↺ Reset";
+  button.title = hidden.length
+    ? `Réafficher ${hidden.map((rule) => rule.title).filter(Boolean).join(", ")}`
+    : "Maintiens une matière pour la masquer. Reset réaffiche tout.";
 }
 
 function findTarget() {
@@ -940,9 +1110,11 @@ function findTarget() {
 
 function renderWeek(index, options = {}) {
   const keys = state_view.weeks;
+  if (options.weekKey && keys.includes(options.weekKey)) index = keys.indexOf(options.weekKey);
   index = Math.max(0, Math.min(index, keys.length - 1));
   state_view.index = index;
   const weekKey = keys[index];
+  state_view.weekKey = weekKey;
   const recurring = options.recurring ?? state_view.recurring;
   state_view.recurring = recurring;
   const view = buildWeekView(weekKey, recurring);
@@ -972,7 +1144,7 @@ function renderWeek(index, options = {}) {
     return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date"><time datetime="${formatISO(day.realDate)}">${day.date}</time></div>${indicator}</div><span class="day-count${count ? " has" : ""}">${countLabel}</span></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
   }).join("");
 
-  if (!matchMedia("(prefers-reduced-motion:reduce)").matches) {
+  if (options.animate !== false && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
     $("#grid").animate([{ opacity: 0.4, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 180, easing: "ease-out" });
   }
   $$(".tab").forEach((tab) => tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex)));
@@ -1001,7 +1173,9 @@ function buildPrintPage(pageWeeks, page, total, period) {
     const label = number ? `Semaine ${number}` : weekKey < mondayOf(CONFIG.semester.start) ? "Avant-semestre" : "Hors semestre";
     return `<tr><td class="print-week"><b>${label}</b><span>${start.getDate()}/${pad2(start.getMonth() + 1)} – ${end.getDate()}/${pad2(end.getMonth() + 1)}</span></td>${cells}</tr>`;
   }).join("");
-  return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — ${escapeHtml(period)}</h2><p>Source : edt.uvsq.fr • Groupe ${CONFIG.group} • <strong>Page ${page} / ${total}</strong> • ${new Date().toLocaleString("fr-FR")}</p></div><div class="print-badge">Planning officiel • annulations et absences signalées</div></header><table class="print-table"><thead><tr><th>Semaine</th>${DAY_NAMES.map((day) => `<th>${day}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></section>`;
+  const tdNum = selectedTdNumber();
+  const tdLabel = tdNum ? `TD ${tdNum.padStart(2, "0")}` : "";
+  return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — ${escapeHtml(period)}</h2><p>Source : edt.uvsq.fr • Groupe ${escapeHtml(CONFIG.group)}${tdLabel ? ` • ${tdLabel}` : ""} • <strong>Page ${page} / ${total}</strong> • ${new Date().toLocaleString("fr-FR")}</p></div><div class="print-badge">Planning officiel • annulations et absences signalées</div></header><table class="print-table"><thead><tr><th>Semaine</th>${DAY_NAMES.map((day) => `<th>${day}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></section>`;
 }
 
 function buildPrint() {
@@ -1032,12 +1206,58 @@ function toggleTheme() {
   applyTheme(next);
 }
 
+function tdShortLabel(value) {
+  const number = selectedTdNumber({ myTd: value });
+  return number ? `TD ${number}` : "TD";
+}
+
+/** Met à jour le libellé visible du sélecteur (le <select> natif reste hors écran). */
+function syncTdSelector() {
+  const select = $("#tdSelect");
+  const label = $("#tdSelectLabel");
+  const button = $("#tdSelectorBtn");
+  if (!select && !label) return;
+  if (select && [...select.options].some((option) => option.value === CONFIG.myTd)) select.value = CONFIG.myTd;
+  const current = select?.value || CONFIG.myTd;
+  if (label) label.textContent = tdShortLabel(current);
+  if (button) button.setAttribute("aria-label", `Choisir son groupe de TD, actuellement ${tdShortLabel(current)}`);
+}
+
+/**
+ * Ouvre la liste native depuis n'importe quel point du bouton, bords compris.
+ * Le <select> seul ne couvrait que le texte : un clic sur l'icône ou la bordure
+ * ne faisait rien.
+ */
+function openTdSelector() {
+  const select = $("#tdSelect");
+  const button = $("#tdSelectorBtn");
+  if (!select) return;
+  // pointer-events est remis le temps du geste : certains navigateurs refusent
+  // showPicker() sur un contrôle qui ne peut pas recevoir de clic.
+  select.style.pointerEvents = "auto";
+  if (typeof select.showPicker === "function") {
+    try {
+      select.showPicker();
+      select.style.pointerEvents = "none";
+      return;
+    } catch { /* repli : le select lui-même reçoit le clic */ }
+  }
+  if (button) button.style.pointerEvents = "none";
+  select.style.zIndex = "5";
+  select.focus({ preventScroll: true });
+  select.click();
+}
+
 /** Change le groupe de TD affiché, mémorise le choix et rafraîchit le planning. */
 function changeTd(tdValue) {
   if (!tdValue || !/^S3MIASHS TD [12]$/.test(tdValue)) return;
-  if (tdValue === CONFIG.myTd) return;
+  if (tdValue === CONFIG.myTd) {
+    syncTdSelector();
+    return;
+  }
   CONFIG.myTd = tdValue;
   try { localStorage.setItem("schedule_td", tdValue); } catch {}
+  syncTdSelector();
   // Re-filtre les annulations récurrentes (dépendent du TD) et re-rend
   state_view.recurring = findRecurringCancellations(state.weeks);
   const target = findTarget();
@@ -1048,9 +1268,11 @@ function changeTd(tdValue) {
 /** Initialise le sélecteur de TD avec la valeur courante. */
 function initTdSelector() {
   const select = $("#tdSelect");
+  const button = $("#tdSelectorBtn");
   if (!select) return;
-  select.value = CONFIG.myTd;
-  select.addEventListener("change", (e) => changeTd(e.target.value));
+  syncTdSelector();
+  select.addEventListener("change", (event) => changeTd(event.target.value));
+  button?.addEventListener("click", () => openTdSelector());
 }
 
 function changeWeek(delta) {
@@ -1085,84 +1307,84 @@ function jumpToTarget(smooth = true) {
 /* -------------------------------------------------------------- données */
 let loadPromise = null;
 
+function displayedWeekKey() {
+  if (state_view.weekKey && state_view.weeks.includes(state_view.weekKey)) return state_view.weekKey;
+  const current = currentWeekKey();
+  return state_view.weeks.includes(current) ? current : state_view.weeks[0];
+}
+
+/** Recharge les cours de la semaine déjà ouverte, sans en changer. */
+function refreshDisplayedWeek() {
+  const key = displayedWeekKey();
+  state_view.weeks = buildWeekList();
+  const index = Math.max(0, state_view.weeks.indexOf(key));
+  const shown = state_view.weeks[index];
+  const target = shown === currentWeekKey()
+    ? { weekIndex: index, dayIndex: todayColumnIndex(), ongoing: true }
+    : state_view.target;
+  renderWeek(index, { animate: false, weekKey: shown, target });
+}
+
 async function loadEverything(options = {}) {
   if (loadPromise && !options.force) return loadPromise;
   loadPromise = (async () => {
     await applyRemoteConfig();
-    const cached = await loadFromCache();
-    if (cached?.weeks && Object.keys(cached.weeks).length) {
-      state.weeks = cached.weeks;
-      state.generatedAt = cached.generatedAt ?? null;
-      state_view.recurring = findRecurringCancellations(state.weeks);
-      state_view.weeks = buildWeekList();
-      renderWeek(state_view.index);
-    }
-
-    const syncAt = await fetchSyncStatus();
-
+    const before = JSON.stringify(state.weeks);
     try {
       const file = await loadDataFile();
       if (!params.get("group") && file.group) CONFIG.group = String(file.group).trim();
-      const hadData = Object.keys(state.weeks).length > 0;
-      const same = JSON.stringify(file.weeks) === JSON.stringify(state.weeks);
       state.weeks = file.weeks ?? {};
       state.generatedAt = file.generatedAt ?? null;
       state_view.recurring = findRecurringCancellations(state.weeks);
-      state_view.weeks = buildWeekList();
       saveToCache();
-      if (!hadData) {
-        const index = state_view.weeks.indexOf(currentWeekKey());
-        renderWeek(index >= 0 ? index : state_view.index);
-      } else if (!same) {
-        renderWeek(state_view.index); // met à jour la semaine affichée sans changer de page
-      }
       buildPrint();
     } catch (error) {
       console.warn("[edt] data/edt.json indisponible :", error.message);
     }
-
-    const lastKnown = Math.max(syncAt?.getTime() ?? 0, state.generatedAt ? new Date(state.generatedAt).getTime() : 0);
-    const stale = !lastKnown || Date.now() - lastKnown > CONFIG.dataMaxAgeMs;
-    if (stale) {
-      try {
-        const { changed } = await refreshFromLive(currentWeekKey());
-        state_view.recurring = findRecurringCancellations(state.weeks);
-        state_view.weeks = buildWeekList();
-        saveToCache();
-        if (changed || options.force) renderWeek(state_view.index);
-        buildPrint();
-      } catch (error) {
-        console.warn("[edt] appel direct CELCAT impossible (CORS) :", error.message);
-      }
-    }
-    return state;
+    state_view.weeks = buildWeekList();
+    return { changed: JSON.stringify(state.weeks) !== before };
   })().finally(() => { loadPromise = null; });
   return loadPromise;
 }
 
 /* ----------------------------------------------------------- démarrage */
+function todayColumnIndex() {
+  const day = (new Date().getDay() + 6) % 7;
+  return day <= 4 ? day : 0;
+}
+
 function initialize() {
   initTheme();
   initTdSelector();
+  syncResetButton();
+  const cached = readCacheSync();
+  if (cached?.weeks) {
+    state.weeks = cached.weeks;
+    state.generatedAt = cached.generatedAt ?? null;
+    state_view.recurring = findRecurringCancellations(state.weeks);
+  }
   state_view.weeks = buildWeekList();
   const requested = params.get("week");
-  const startIndex = requested && state_view.weeks.includes(mondayOf(requested)) ? state_view.weeks.indexOf(mondayOf(requested)) : Math.max(0, state_view.weeks.indexOf(currentWeekKey()));
-  const target = findTarget();
-  renderWeek(requested ? startIndex : target.weekIndex, { target });
+  const wanted = requested ? mondayOf(requested) : currentWeekKey();
+  const weekKey = state_view.weeks.includes(wanted) ? wanted : currentWeekKey();
+  const weekIndex = Math.max(0, state_view.weeks.indexOf(weekKey));
+  const todayColumn = todayColumnIndex();
+  renderWeek(weekIndex, { animate: false, weekKey, target: { weekIndex, dayIndex: todayColumn, ongoing: true } });
   buildPrint();
-  if (innerWidth <= 860) setDay(target.weekIndex === state_view.index ? target.dayIndex : 0, false);
+  if (innerWidth <= 860) setDay(todayColumn, false);
   else setDay("all", false);
-  requestAnimationFrame(() => scrollToDay(state_view.target?.dayIndex ?? 0, false));
-  loadEverything().then(() => {
-    if (!requested) {
-      const fresh = findTarget();
-      if (fresh.weekIndex !== state_view.index || fresh.dayIndex !== state_view.target?.dayIndex) renderWeek(fresh.weekIndex, { target: fresh });
-      requestAnimationFrame(() => scrollToDay(state_view.target?.dayIndex ?? 0, false));
-    }
+  requestAnimationFrame(() => scrollToDay(todayColumn, false));
+  // Un seul chargement, au démarrage. La semaine ouverte ne change plus ensuite.
+  loadEverything().then((result) => {
+    if (result?.changed) refreshDisplayedWeek();
   });
 }
 
 addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && $("#holdDialog") && !$("#holdDialog").hidden) { closeHoldDialog(); return; }
+  if ($("#holdDialog") && !$("#holdDialog").hidden) return;
+  const tag = event.target?.tagName;
+  if (tag === "SELECT" || tag === "INPUT" || tag === "TEXTAREA" || event.target?.closest?.("#tdSelectorWrap")) return;
   if (event.key === "ArrowLeft") changeWeek(-1);
   if (event.key === "ArrowRight") changeWeek(1);
 });
@@ -1170,16 +1392,95 @@ let startX = 0;
 let startY = 0;
 $("#grid").addEventListener("touchstart", (event) => { const touch = event.changedTouches[0]; startX = touch.clientX; startY = touch.clientY; }, { passive: true });
 $("#grid").addEventListener("touchend", (event) => {
+  if (suppressSwipe) { suppressSwipe = false; return; }
   const touch = event.changedTouches[0];
   const dx = touch.clientX - startX;
   const dy = touch.clientY - startY;
   if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) changeWeek(dx < 0 ? 1 : -1);
 }, { passive: true });
+$("#resetHidden")?.addEventListener("click", () => resetHidden());
+$("#holdCancel")?.addEventListener("click", () => closeHoldDialog());
+$("#holdDelete")?.addEventListener("click", () => confirmHide());
+$("#holdDialog")?.addEventListener("click", (event) => { if (event.target === $("#holdDialog")) closeHoldDialog(); });
+
+let holdTimer = 0;
+let holdCard = null;
+let holdPoint = null;
+let pendingHide = null;
+let suppressSwipe = false;
+const HOLD_MS = 560;
+
+function cancelHold() {
+  clearTimeout(holdTimer);
+  holdTimer = 0;
+  holdCard?.classList.remove("arming");
+  holdCard = null;
+  holdPoint = null;
+}
+
+function openHoldDialog(card) {
+  pendingHide = {
+    date: card.dataset.date,
+    time: card.dataset.time,
+    title: card.dataset.title,
+    cat: card.dataset.cat,
+  };
+  if (!pendingHide.date || !pendingHide.title) return;
+  suppressSwipe = true;
+  $("#holdTitle").textContent = pendingHide.title;
+  $("#holdDetail").textContent = `Masquer cette matière à partir du ${formatDate(parseISO(pendingHide.date))}, pour tous ses créneaux et toutes les semaines suivantes. Les semaines d'avant restent affichées.`;
+  $("#holdDialog").hidden = false;
+  $("#holdCancel").focus();
+  try { navigator.vibrate?.(12); } catch {}
+}
+
+function closeHoldDialog() {
+  const dialog = $("#holdDialog");
+  if (dialog) dialog.hidden = true;
+  pendingHide = null;
+}
+
+function confirmHide() {
+  if (!pendingHide) return;
+  hideSubjectFrom(pendingHide);
+  closeHoldDialog();
+  renderWeek(state_view.index);
+  buildPrint();
+}
+
+function armHold(card, x, y, pointerId) {
+  cancelHold();
+  holdCard = card;
+  holdPoint = { x, y, pointerId };
+  card.classList.add("arming");
+  holdTimer = setTimeout(() => {
+    const armed = holdCard;
+    cancelHold();
+    if (armed) openHoldDialog(armed);
+  }, HOLD_MS);
+}
+
+$("#grid").addEventListener("pointerdown", (event) => {
+  if (event.button > 0) return;
+  const card = event.target.closest?.(".card");
+  if (!card) return;
+  armHold(card, event.clientX, event.clientY, event.pointerId);
+}, { passive: true });
+$("#grid").addEventListener("pointermove", (event) => {
+  if (!holdPoint || event.pointerId !== holdPoint.pointerId) return;
+  if (Math.hypot(event.clientX - holdPoint.x, event.clientY - holdPoint.y) > 12) cancelHold();
+}, { passive: true });
+$("#grid").addEventListener("pointerup", cancelHold, { passive: true });
+$("#grid").addEventListener("pointercancel", cancelHold, { passive: true });
+$("#grid").addEventListener("contextmenu", (event) => {
+  const card = event.target.closest?.(".card");
+  if (!card) return;
+  event.preventDefault();
+  cancelHold();
+  openHoldDialog(card);
+});
 addEventListener("beforeprint", () => buildPrint());
 addEventListener("DOMContentLoaded", initialize);
-addEventListener("load", () => { if (state_view.target) scrollToDay(state_view.target.dayIndex, false); });
-setInterval(() => { if (document.visibilityState === "visible") renderWeek(state_view.index); }, 60000);
-setInterval(() => { if (document.visibilityState === "visible") loadEverything({ force: true }).then(() => renderWeek(state_view.index)).catch(() => {}); }, CONFIG.refreshMs);
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = { parseEvent, isMyCourse, tagForLiveCourse, buildWeek, weeksFromEvents, findRecurringCancellations, mondayOf, addDaysISO, slotOf, familyOf, normalizeModuleName, normalizeGroupCode, decodeEntities };

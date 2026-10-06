@@ -114,13 +114,13 @@ test("les vacances de la Toussaint restent vides (pas de faux fantômes)", (core
   assert.equal(view.days.flatMap((day) => day.courses).length, 0);
 });
 
-test("un cours disparu du planning est signalé comme à vérifier", (core, data) => {
+test("un cours absent du planning officiel n'est pas inventé", (core, data) => {
   const raw = data.weeks["2026-12-07"].events;
   const reference = core.fallbackWeeks.find((week) => week.monday === "2026-12-07");
   const view = core.buildWeek("2026-12-07", raw, reference, { live: true, recurringCancellations: core.findRecurringCancellations(data.weeks) });
-  const ghost = view.days[2].courses.find((course) => course.ghost && course.title === "Anglais UE2");
-  assert.ok(ghost, "le cours absent reste directement signalé sur sa carte");
-  assert.equal(ghost.date, "2026-12-09");
+  const courses = view.days.flatMap((day) => day.courses);
+  assert.ok(courses.every((course) => !course.ghost), "le site officiel fait foi : pas de carte « à vérifier »");
+  assert.ok(!courses.some((course) => course.title === "Anglais UE2" && course.date === "2026-12-09"), "l'anglais absent de CELCAT n'est pas réinventé");
 });
 
 test("sans données live, la semaine de secours est utilisée telle quelle", (core) => {
@@ -129,6 +129,37 @@ test("sans données live, la semaine de secours est utilisée telle quelle", (co
   assert.equal(view.live, false);
   assert.equal(view.days[0].courses.length, 2);
   assert.ok(view.days[0].courses.every((course) => course.source === "reference" && !course.ghost));
+});
+
+test("le TD 1 n'affiche pas les créneaux ni les étiquettes du TD 2", (core, data) => {
+  const previous = core.CONFIG.myTd;
+  core.CONFIG.myTd = "S3MIASHS TD 1";
+  try {
+    const raw = data.weeks["2026-09-28"].events;
+    const reference = core.fallbackWeeks.find((week) => week.monday === "2026-09-28");
+    const recurring = core.findRecurringCancellations(data.weeks);
+    const view = core.buildWeek("2026-09-28", raw, reference, { live: true, recurringCancellations: recurring });
+    const courses = view.days.flatMap((day) => day.courses);
+    const monday = view.days[0].courses;
+    const wednesday = view.days[2].courses;
+    const friday = view.days[4].courses;
+
+    assert.ok(monday.some((course) => course.time.startsWith("13:50") && course.cat === "micro"), "le micro du TD 1 (13:50) doit s'afficher");
+    assert.ok(!monday.some((course) => course.time.startsWith("15:30")), "le micro du TD 2 (15:30) ne doit pas s'afficher");
+    assert.ok(wednesday.some((course) => course.cat === "info" && course.time.startsWith("09:40")), "le TD info du mercredi appartient au TD 1");
+    assert.ok(!wednesday.some((course) => course.cat === "maths"), "le TD de maths du mercredi est celui du TD 2");
+    assert.ok(friday.some((course) => course.cat === "maths" && course.time.startsWith("09:40")), "le TD de maths du TD 1 est le vendredi");
+    assert.ok(courses.some((course) => course.title === "Sociologie : démographie"), "les cours de promo restent visibles");
+    assert.ok(!courses.some((course) => /TD 02/.test(`${course.tag ?? ""} ${course.title}`)), "aucune étiquette TD 02");
+    assert.ok(!courses.some((course) => course.ghost && /TD 02|15:30 - 17:00/.test(`${course.tag ?? ""} ${course.time}`)), "pas de fantôme issu du TD 2");
+
+    const offline = core.buildWeek("2026-09-28", [], reference, { live: false });
+    const offlineCourses = offline.days.flatMap((day) => day.courses);
+    assert.ok(!offlineCourses.some((course) => /TD 02/.test(course.tag ?? "")), "le secours hors-ligne du TD 1 n'emprunte pas le TD 2");
+    assert.ok(offlineCourses.some((course) => course.time.startsWith("13:50") && course.cat === "micro"));
+  } finally {
+    core.CONFIG.myTd = previous;
+  }
 });
 
 test("CONFIG cible bien le groupe S3MIASHS et son TD", (core) => {
