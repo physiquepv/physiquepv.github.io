@@ -194,22 +194,16 @@ function weekKeys(cfg) {
   return keys;
 }
 
-/** Champs utiles au site — on garde la description brute (HTML) pour le parsing client. */
+/** Champs lus par la page. Le reste (sites, faculté, couleurs de texte…) alourdit le dépôt sans changer l'affichage. */
 function slimEvent(event) {
   const keep = [
     "id",
     "start",
     "end",
-    "allDay",
     "description",
     "eventCategory",
     "backgroundColor",
-    "textColor",
-    "location",
-    "sites",
     "modules",
-    "department",
-    "faculty",
   ];
   const out = {};
   for (const key of keep) if (event[key] !== undefined && event[key] !== null && event[key] !== "") out[key] = event[key];

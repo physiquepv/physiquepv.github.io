@@ -107,21 +107,10 @@ check(!cards.some((card) => /13:50/.test(card.querySelector(".card-time").textCo
 check(cards.some((card) => /Votre TD 02/.test(card.textContent)), "les étiquettes « Votre TD 02 » sont conservées");
 check(!cards.some((card) => card.classList.contains("cancelled") && /Anglais/.test(card.textContent)), "le créneau d'anglais annulé en permanence est masqué");
 
-console.log("\n— semaine avec cours disparu (décembre) —");
-let steps = 0;
-for (; steps < 40 && !/14 Décembre/.test($("#weekTitle").textContent); steps++) {
-  $("#next").click();
-  await wait(20);
-}
-console.log(`      atteinte en ${steps} clic(s) : ${$("#weekTitle").textContent}`);
-if (/14 Décembre/.test($("#weekTitle").textContent)) {
-  const ghost = window.document.querySelector("#grid .card.ghost");
-  check(ghost !== null, "le cours disparu est signalé directement sur sa carte");
-  check(/Anglais UE2/.test(ghost?.textContent ?? ""), "la bonne matière manquante est identifiée");
-  check(!$("#changes"), "aucun encart global ne réapparaît pour un cours manquant");
-} else {
-  check(false, `semaine du 14 décembre attendue, obtenue : ${$("#weekTitle").textContent}`);
-}
+console.log("\n— le planning officiel n'invente pas de séance « à vérifier » —");
+check(window.document.querySelector("#grid .card.ghost") === null, "aucune carte « à vérifier » sur la semaine affichée");
+check(!/À VÉRIFIER/.test(window.document.body.textContent), "le badge « à vérifier » n'est plus affiché");
+check(!$("#changes"), "aucun encart global de cours manquant");
 
 console.log("\n— impression —");
 window.dispatchEvent(new window.Event("beforeprint"));
