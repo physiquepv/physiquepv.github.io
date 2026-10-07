@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-06T18:57:20.017Z",
+  "generatedAt": "2026-10-07T20:20:01.860Z",
   "group": "S3MIASHS",
   "label": "L2 MIASHS — Semestre 3",
   "timezone": "Europe/Paris",
@@ -32,11 +32,11 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "4dccae85-91567",
+  "contentHash": "fc42bcee-93198",
   "weeks": {
     "2026-09-28": {
       "monday": "2026-09-28",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -220,7 +220,7 @@
     },
     "2026-10-05": {
       "monday": "2026-10-05",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -415,7 +415,7 @@
     },
     "2026-10-12": {
       "monday": "2026-10-12",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -610,21 +610,21 @@
     },
     "2026-08-24": {
       "monday": "2026-08-24",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-08-31": {
       "monday": "2026-08-31",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-09-07": {
       "monday": "2026-09-07",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -654,7 +654,7 @@
     },
     "2026-09-14": {
       "monday": "2026-09-14",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -794,7 +794,7 @@
     },
     "2026-09-21": {
       "monday": "2026-09-21",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -989,7 +989,7 @@
     },
     "2026-10-19": {
       "monday": "2026-10-19",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1162,14 +1162,14 @@
     },
     "2026-10-26": {
       "monday": "2026-10-26",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-11-02": {
       "monday": "2026-11-02",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1306,12 +1306,23 @@
           ]
         },
         {
-          "id": "-1742255826:1073733534:17:5874379:12",
+          "id": "-1742255826:1073733534:17:5882732:12",
+          "start": "2026-11-04T17:10:00",
+          "end": "2026-11-04T18:40:00",
+          "description": "Option de R&#233;servation\r\n\r\n<br />\r\n\r\nAMPHI BERTIN - BUFFON (255 / 126)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Option de Réservation",
+          "backgroundColor": "#FEBCA9",
+          "modules": [
+            "LSIN311"
+          ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5779518:12",
           "start": "2026-11-05T09:40:00",
           "end": "2026-11-05T11:10:00",
-          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nAMPHI E - DESCARTES (200 / 100)<br />AMPHI J - FERMAT (176 / 92) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
-          "eventCategory": "Contrôle continu",
-          "backgroundColor": "#FF00FF",
+          "description": "CM\r\n\r\n<br />\r\n\r\nAMPHI E - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
           "modules": [
             "LSIN311"
           ]
@@ -1359,12 +1370,23 @@
           "modules": [
             "LSEC311*"
           ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5882722:12",
+          "start": "2026-11-06T17:10:00",
+          "end": "2026-11-06T18:40:00",
+          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nAMPHI BERTIN - BUFFON (255 / 126)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Contrôle continu",
+          "backgroundColor": "#FF00FF",
+          "modules": [
+            "LSIN311"
+          ]
         }
       ]
     },
     "2026-11-09": {
       "monday": "2026-11-09",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1526,7 +1548,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1721,7 +1743,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1916,7 +1938,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2067,7 +2089,7 @@
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2149,12 +2171,12 @@
           ]
         },
         {
-          "id": "-1742255826:1073733534:17:5874379:17",
-          "start": "2026-12-10T09:40:00",
-          "end": "2026-12-10T11:10:00",
-          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nAMPHI E - DESCARTES (200 / 100)<br />AMPHI J - FERMAT (176 / 92) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
-          "eventCategory": "Contrôle continu",
-          "backgroundColor": "#FF00FF",
+          "id": "-1742255826:1073733534:17:5882732:17",
+          "start": "2026-12-09T17:10:00",
+          "end": "2026-12-09T18:40:00",
+          "description": "Option de R&#233;servation\r\n\r\n<br />\r\n\r\nAMPHI BERTIN - BUFFON (255 / 126)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Option de Réservation",
+          "backgroundColor": "#FEBCA9",
           "modules": [
             "LSIN311"
           ]
@@ -2202,12 +2224,23 @@
           "modules": [
             "LSEC311*"
           ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5882722:17",
+          "start": "2026-12-11T17:10:00",
+          "end": "2026-12-11T18:40:00",
+          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nAMPHI BERTIN - BUFFON (255 / 126)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Contrôle continu",
+          "backgroundColor": "#FF00FF",
+          "modules": [
+            "LSIN311"
+          ]
         }
       ]
     },
     "2026-12-14": {
       "monday": "2026-12-14",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2347,28 +2380,28 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-10-06T18:57:20.017Z",
+      "fetchedAt": "2026-10-07T20:20:01.860Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
