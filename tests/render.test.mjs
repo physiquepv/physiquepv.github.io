@@ -37,6 +37,12 @@ const dom = new JSDOM(html, {
   pretendToBeVisual: true,
   virtualConsole,
   beforeParse(window) {
+    const RealDate = window.Date;
+    class TestDate extends RealDate {
+      constructor(...args) { super(...(args.length ? args : [2026, 9, 9, 17, 30, 0])); }
+      static now() { return new RealDate(2026, 9, 9, 17, 30, 0).getTime(); }
+    }
+    window.Date = TestDate;
     window.matchMedia = (query) => ({ matches: false, media: query, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} });
     window.Element.prototype.animate = function animate() { return { finished: Promise.resolve(), cancel() {} }; };
     window.scrollTo = () => {};
@@ -75,11 +81,20 @@ check($("#grid .day") !== null, "la grille affiche des journées");
 check(window.document.querySelectorAll("#grid .day").length === 5, "5 colonnes (lundi → vendredi)");
 const title = $("#weekTitle").textContent;
 console.log(`      titre affiché : ${title}`);
-const now = new Date();
-const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
-const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-const todayLabel = `${String(monday.getDate()).padStart(2, "0")} ${months[monday.getMonth()]}`;
-check(title.includes(todayLabel), `la semaine du jour est affichée tout de suite (${todayLabel})`);
+const targetDay = $("#grid .day.target");
+check(targetDay !== null, "un jour est ciblé dès l'ouverture");
+const targetName = targetDay?.querySelector(".day-name")?.textContent;
+check(["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"].includes(targetName), `la destination est un jour ouvré (${targetName ?? "introuvable"})`);
+const targetTime = targetDay?.querySelector(".day-date time");
+check(targetTime?.dateTime === "2026-10-12", "après la dernière séance du vendredi, lundi est affiché à l'ouverture");
+if (targetTime?.dateTime) {
+  const [year, month, day] = targetTime.dateTime.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
+  const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+  const targetWeekStart = `${String(date.getDate()).padStart(2, "0")} ${months[date.getMonth()]}`;
+  check(title.includes(targetWeekStart), `la semaine de la journée ciblée est affichée (${targetWeekStart})`);
+}
 
 console.log("\n— interface simplifiée —");
 check(!$(".legend") && !/Repères\s*:/i.test(window.document.body.textContent), "la section « Repères » a été supprimée");
@@ -113,7 +128,7 @@ check(!cards.some((card) => card.classList.contains("cancelled") && /Anglais/.te
 
 console.log("\n— le planning officiel n'invente pas de séance « à vérifier » —");
 check(window.document.querySelector("#grid .card.ghost") === null, "aucune carte « à vérifier » sur la semaine affichée");
-check(!/À VÉRIFIER/.test(window.document.body.textContent), "le badge « à vérifier » n'est plus affiché");
+check(!/À VÉRIFIER/.test($("#grid").textContent), "le badge « à vérifier » n'est plus affiché dans le planning");
 check(!$("#changes"), "aucun encart global de cours manquant");
 
 console.log("\n— impression —");

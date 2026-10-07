@@ -325,8 +325,8 @@ if("scrollRestoration" in history) history.scrollRestoration="manual";
       publie le planning brut dans data/edt.json.
    2. Cette page lit data/edt.json, filtre les cours du groupe (promo +
       TD choisi dans le sélecteur), détecte les annulations / absences de
-      prof et affiche la
-      semaine correspondant à la date du jour.
+      prof et affiche la semaine du jour à consulter (jour suivant après la
+      dernière séance, lundi après le week-end).
    3. Si le fichier est indisponible, elle tente un appel direct (puis via
       des proxys publics). En dernier recours seulement, l'emploi du temps
       de secours codé en dur est utilisé.
@@ -379,6 +379,26 @@ function mondayOf(iso) {
   return formatISO(d);
 }
 const todayISO = () => formatISO(new Date());
+
+/** Prochain jour ouvré : vendredi → lundi, samedi → lundi, dimanche → lundi. */
+function nextWeekdayISO(iso) {
+  const day = parseISO(iso).getDay();
+  return addDaysISO(iso, day === 5 ? 3 : day === 6 ? 2 : 1);
+}
+
+/**
+ * Date à mettre en avant à l'ouverture. Après la dernière fin de cours
+ * (19 h par défaut si la journée n'a aucun cours), on passe au jour ouvré suivant.
+ */
+function openingDateISO(now = new Date(), lastEndMin = TIMELINE.end) {
+  const iso = formatISO(now);
+  const weekday = now.getDay();
+  if (weekday === 0 || weekday === 6) return nextWeekdayISO(iso);
+  const cutoff = Number.isFinite(lastEndMin) ? lastEndMin : TIMELINE.end;
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  return minutes >= cutoff ? nextWeekdayISO(iso) : iso;
+}
+
 const formatDate = (d) => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 const minutesOf = (time) => { const [h, m] = time.split(":").map(Number); return h * 60 + m; };
 const startMinutes = (slot) => minutesOf(slot.split("-")[0].trim());
@@ -981,7 +1001,7 @@ function weekLabel(weekKey) {
 }
 
 function currentWeekKey() {
-  return mondayOf(todayISO());
+  return mondayOf(scheduleOpeningDateISO());
 }
 
 /** Liste des semaines affichables : semestre + données live + semaine du jour. */
@@ -1010,6 +1030,31 @@ function buildWeekView(weekKey, recurring) {
       ? buildWeek(weekKey, [], reference, { live: true, recurringCancellations: recurring })
       : buildWeek(weekKey, [], reference, { live: false });
   return withoutHidden(view);
+}
+
+/**
+ * Jour ciblé au démarrage, calculé avec les cours visibles de la journée.
+ * Le week-end est toujours ramené au lundi suivant.
+ */
+function scheduleOpeningDateISO(now = new Date()) {
+  const iso = formatISO(now);
+  const weekday = now.getDay();
+  if (weekday === 0 || weekday === 6) return openingDateISO(now);
+
+  const view = buildWeekView(mondayOf(iso), null);
+  const day = view.days[weekdayIndex(iso)];
+  const courses = (day?.courses ?? []).filter((item) => !item.isCancelled && !item.ghost);
+  const lastEnd = courses.length ? Math.max(...courses.map((item) => item.endMin)) : TIMELINE.end;
+  return openingDateISO(now, lastEnd);
+}
+
+function openingTarget(weekIndex, dateISO = scheduleOpeningDateISO()) {
+  return {
+    weekIndex,
+    dayIndex: weekdayIndex(dateISO),
+    ongoing: dateISO === todayISO(),
+    opening: true,
+  };
 }
 
 const HIDDEN_KEY = "schedule_hidden";
@@ -1133,7 +1178,8 @@ function renderWeek(index, options = {}) {
     const selected = targetWeek && target.dayIndex === dayIndex;
     const futureTarget = selected && !target.ongoing;
     const hidden = state_view.mobileFilter !== "all" && state_view.mobileFilter !== dayIndex;
-    const indicator = selected ? `<span class="target-pill">${target.ongoing ? "📍 Aujourd'hui" : "🚀 Prochain cours"}</span>` : "";
+    const indicatorLabel = target.ongoing ? "📍 Aujourd'hui" : target.opening ? "📆 Prochain jour ouvré" : "🚀 Prochain cours";
+    const indicator = selected ? `<span class="target-pill">${indicatorLabel}</span>` : "";
     let content;
     if (count) {
       content = day.courses.map((item) => cardHTML(item, day)).join("");
@@ -1320,7 +1366,7 @@ function refreshDisplayedWeek() {
   const index = Math.max(0, state_view.weeks.indexOf(key));
   const shown = state_view.weeks[index];
   const target = shown === currentWeekKey()
-    ? { weekIndex: index, dayIndex: todayColumnIndex(), ongoing: true }
+    ? openingTarget(index)
     : state_view.target;
   renderWeek(index, { animate: false, weekKey: shown, target });
 }
@@ -1348,11 +1394,6 @@ async function loadEverything(options = {}) {
 }
 
 /* ----------------------------------------------------------- démarrage */
-function todayColumnIndex() {
-  const day = (new Date().getDay() + 6) % 7;
-  return day <= 4 ? day : 0;
-}
-
 function initialize() {
   initTheme();
   initTdSelector();
@@ -1364,16 +1405,17 @@ function initialize() {
     state_view.recurring = findRecurringCancellations(state.weeks);
   }
   state_view.weeks = buildWeekList();
+  const openingDate = scheduleOpeningDateISO();
   const requested = params.get("week");
-  const wanted = requested ? mondayOf(requested) : currentWeekKey();
+  const wanted = requested ? mondayOf(requested) : mondayOf(openingDate);
   const weekKey = state_view.weeks.includes(wanted) ? wanted : currentWeekKey();
   const weekIndex = Math.max(0, state_view.weeks.indexOf(weekKey));
-  const todayColumn = todayColumnIndex();
-  renderWeek(weekIndex, { animate: false, weekKey, target: { weekIndex, dayIndex: todayColumn, ongoing: true } });
+  const target = openingTarget(weekIndex, openingDate);
+  renderWeek(weekIndex, { animate: false, weekKey, target });
   buildPrint();
-  if (innerWidth <= 860) setDay(todayColumn, false);
+  if (innerWidth <= 860) setDay(target.dayIndex, false);
   else setDay("all", false);
-  requestAnimationFrame(() => scrollToDay(todayColumn, false));
+  requestAnimationFrame(() => scrollToDay(target.dayIndex, false));
   // Un seul chargement, au démarrage. La semaine ouverte ne change plus ensuite.
   loadEverything().then((result) => {
     if (result?.changed) refreshDisplayedWeek();
