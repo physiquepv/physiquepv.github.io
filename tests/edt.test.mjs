@@ -21,7 +21,7 @@ function loadCore(source) {
   const end = source.indexOf("CORE-END");
   assert.ok(start > 0 && end > start, "marqueurs CORE-START / CORE-END introuvables");
   const code = source.slice(source.indexOf("*/", start) + 2, source.lastIndexOf("/*", source.indexOf("CORE-END")));
-  const factory = new Function(`${code}; return { parseEvent, isMyCourse, buildWeek, weeksFromEvents, findRecurringCancellations, normalizeGroupCode, decodeEntities, mondayOf, addDaysISO, slotOf, familyOf, CONFIG, fallbackWeeks };`);
+  const factory = new Function(`${code}; return { parseEvent, isMyCourse, buildWeek, weeksFromEvents, findRecurringCancellations, normalizeGroupCode, decodeEntities, mondayOf, addDaysISO, nextWeekdayISO, openingDateISO, slotOf, familyOf, CONFIG, fallbackWeeks };`);
   return factory();
 }
 
@@ -181,6 +181,21 @@ test("mondayOf / addDaysISO sont justes (bords de mois et d'année)", (core) => 
   assert.equal(core.addDaysISO("2026-12-31", 1), "2027-01-01");
   assert.equal(core.addDaysISO("2026-03-01", -1), "2026-02-28");
   assert.equal(core.slotOf(9 * 60 + 40, 11 * 60 + 10), "09:40 - 11:10");
+});
+
+test("openingDateISO avance après la dernière heure et saute le week-end", (core) => {
+  const at = (year, month, day, hour, minute) => new Date(year, month - 1, day, hour, minute);
+  const endAt17 = 17 * 60;
+  const endAt19 = 19 * 60;
+
+  assert.equal(core.openingDateISO(at(2026, 10, 7, 16, 59), endAt17), "2026-10-07");
+  assert.equal(core.openingDateISO(at(2026, 10, 7, 17, 0), endAt17), "2026-10-08");
+  assert.equal(core.openingDateISO(at(2026, 10, 9, 16, 59), endAt17), "2026-10-09");
+  assert.equal(core.openingDateISO(at(2026, 10, 9, 17, 0), endAt17), "2026-10-12", "vendredi soir, on passe directement au lundi");
+  assert.equal(core.openingDateISO(at(2026, 10, 10, 9, 0), endAt17), "2026-10-12", "samedi, le lundi est sélectionné");
+  assert.equal(core.openingDateISO(at(2026, 10, 11, 9, 0), endAt17), "2026-10-12", "dimanche, le lundi est sélectionné");
+  assert.equal(core.openingDateISO(at(2026, 10, 22, 18, 59), endAt19), "2026-10-22", "un cours tardif maintient la journée sélectionnée");
+  assert.equal(core.openingDateISO(at(2026, 10, 22, 19, 0), endAt19), "2026-10-23");
 });
 
 /* ------------------------------------------------------------------ runner */
