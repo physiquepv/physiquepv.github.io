@@ -49,6 +49,7 @@ check(dom.window.document.querySelectorAll("#grid .day").length === 5, "la grill
 check(dom.window.document.querySelectorAll("#grid .card").length > 0, "des cours de secours sont affichés");
 check(!$(".legend") && !$("#changes"), "la section Repères et l'encart global sont absents");
 check(!$("#liveBanner") && !$("#liveStatus"), "aucun statut de synchronisation n'est affiché");
+check($("#changeBanner")?.hidden !== false && $("#changesBtn")?.hidden !== false, "sans donnée de changement, le bandeau et la cloche restent masqués");
 check(!$("#refresh") && !$(".week-progress"), "le bouton manuel et la progression de semaine sont absents");
 check($("#print").innerHTML.includes("print-table"), "l'impression de secours fonctionne");
 check(!scheduledIntervals.some(({ delay }) => delay === 5 * 60 * 1000 || delay === 60 * 1000), "aucune actualisation automatique après le chargement");

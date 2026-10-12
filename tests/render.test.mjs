@@ -99,6 +99,11 @@ if (targetTime?.dateTime) {
 console.log("\n— interface simplifiée —");
 check(!$(".legend") && !/Repères\s*:/i.test(window.document.body.textContent), "la section « Repères » a été supprimée");
 check(!$("#changes") && !/1 séance annulée/i.test(window.document.body.textContent), "aucun encart global ni liste d'annulations");
+// data/edt.json ne contient pas de journal de changements : rien à signaler, donc
+// ni bandeau ni cloche (le comportement « il y a du nouveau » est couvert par
+// tests/changes.test.mjs, qui alimente la page avec un planning modifié).
+check($("#changeBanner") !== null && $("#changeBanner").hidden, "sans changement détecté, le bandeau reste masqué");
+check($("#changesBtn") !== null && $("#changesBtn").hidden, "sans changement détecté, la cloche reste masquée");
 check(!$("#liveBanner") && !$("#liveStatus") && !/synchro GitHub/i.test(window.document.body.textContent), "le statut de synchronisation n'est plus affiché");
 check(!$(".week-progress") && !$("#weekProgress"), "la barre de progression hebdomadaire a été supprimée");
 check(!$("#refresh") && !/Actualiser|refreshCurrentWeek/.test(html), "le bouton et le code de rafraîchissement manuel ont été supprimés");
