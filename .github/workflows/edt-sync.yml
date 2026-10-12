@@ -71,10 +71,27 @@ jobs:
             echo "Planning inchangé : rien à publier."
             exit 0
           fi
+          # Le message de commit annonce ce qui a bougé (annulation, nouveau cours…) :
+          # l'historique du dépôt devient la chronologie des changements.
+          subject=$(node scripts/sync-edt.mjs --summary-subject || true)
+          summary=$(node scripts/sync-edt.mjs --summary || true)
+          if [ -n "$subject" ]; then
+            message="chore(edt): planning synchronisé — $subject"
+          else
+            message="chore(edt): planning synchronisé ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+          fi
           git config user.name "edt-sync[bot]"
           git config user.email "edt-sync@users.noreply.github.com"
           git add data/edt.json
-          git commit -m "chore(edt): planning synchronisé ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+          git commit -m "$message" -m "$summary"
+          {
+            echo
+            echo "### Planning publié"
+            echo
+            echo "**$message**"
+            echo
+            echo "$summary"
+          } >> "$GITHUB_STEP_SUMMARY"
           if ! git push; then
             {
               echo "### ⚠️ Impossible d'écrire data/edt.json"

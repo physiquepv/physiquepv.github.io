@@ -41,7 +41,19 @@ function fakeEvent(start, end, extra = {}) {
   };
 }
 
-let payload = (monday) => [fakeEvent(`${monday}T09:40:00`, `${monday}T11:10:00`)];
+const baseEvent = (monday) => fakeEvent(`${monday}T09:40:00`, `${monday}T11:10:00`);
+let payload = (monday) => [baseEvent(monday)];
+
+/** Même séance, mais publiée « Annulation » (professeur absent). */
+function cancellationEvent(monday) {
+  const event = baseEvent(monday);
+  return {
+    ...event,
+    description: event.description.replace(/^CM/, "Annulation"),
+    eventCategory: "Annulation",
+    backgroundColor: "#333333",
+  };
+}
 let calls = 0;
 let online = true;
 
@@ -59,7 +71,7 @@ globalThis.fetch = async (url, init = {}) => {
   };
 };
 
-const { main } = await import(path.join(ROOT, "scripts", "sync-edt.mjs"));
+const { main, lastDetectedChanges } = await import(path.join(ROOT, "scripts", "sync-edt.mjs"));
 
 const readOut = async () => JSON.parse(await readFile(outFile, "utf8"));
 
@@ -90,6 +102,36 @@ assert.ok(third.weeks["2026-09-28"].events.length === 2, "le nouveau cours est b
 assert.equal(third.weeks["2026-09-28"].events.length, before["2026-09-28"].events.length + 1);
 console.log("  ✓ fusion : les semaines déjà connues sont conservées");
 
+// Une annulation publiée sur une seule semaine : elle doit être signalée
+const beforeCancel = await readOut();
+payload = (monday) => (monday === "2026-10-05" ? [cancellationEvent(monday)] : [baseEvent(monday)]);
+await main();
+const cancelled = await readOut();
+assert.ok(Array.isArray(cancelled.changes), "le fichier publié contient un journal de changements");
+const cancelChange = cancelled.changes.filter((change) => change.kind === "cancelled");
+assert.equal(cancelChange.length, 1, `une annulation doit être signalée (${cancelChange.length})`);
+assert.equal(cancelChange[0].date, "2026-10-05");
+assert.equal(cancelChange[0].title, "Initiation aux bases de données");
+assert.equal(cancelChange[0].type, "CM", "le type réel de la séance est conservé");
+assert.notEqual(cancelled.contentHash, beforeCancel.contentHash);
+console.log(`  ✓ annulation signalée : ${cancelChange[0].title} (${cancelChange[0].date})`);
+
+// Un nouveau cours : il est signalé lui aussi, et sans doublon au passage suivant
+const beforeAdd = (await readOut()).changes.filter((change) => change.kind === "added").length;
+payload = (monday) => [baseEvent(monday), fakeEvent(`${monday}T16:00:00`, `${monday}T17:30:00`, { room: "AMPHI G - FERMAT" })];
+await main();
+const withAdd = await readOut();
+const added = withAdd.changes.filter((change) => change.kind === "added");
+assert.ok(added.length > beforeAdd, "un nouveau cours doit apparaître dans le journal");
+const snapshotChanges = JSON.stringify(withAdd.changes);
+await main();
+assert.equal(JSON.stringify((await readOut()).changes), snapshotChanges, "un second passage n'ajoute pas de doublon");
+// Le résumé de workflow (et le message de commit) ne cite que ce dernier passage :
+const detectedThisRun = lastDetectedChanges(withAdd);
+assert.ok(detectedThisRun.some((change) => change.kind === "added" && change.time === "16:00 - 17:30"), "le résumé cite les nouveaux cours du dernier passage");
+assert.ok(!detectedThisRun.some((change) => change.detectedAt !== withAdd.generatedAt), "les changements plus anciens ne sont pas recomptés");
+console.log(`  ✓ nouveaux cours signalés (${added.length}) et journal sans doublon (${withAdd.changes.length} entrées, ${detectedThisRun.length} du dernier passage)`);
+
 // CELCAT renvoie du vide : on ne doit pas écraser les données valides
 const snapshot = await readFile(outFile, "utf8");
 payload = () => [];
@@ -104,4 +146,4 @@ await assert.rejects(main(), /aucun appel réussi/i);
 assert.equal((await stat(outFile)).mtimeMs, beforeStat.mtimeMs, "le fichier ne doit pas être touché");
 console.log("  ✓ garde-fou : une panne réseau laisse le fichier intact");
 
-console.log("\n✅ 4/4 vérifications réussies");
+console.log("\n✅ 6/6 vérifications réussies");

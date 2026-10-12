@@ -258,6 +258,94 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 .hold-delete:hover{color:#fff;border-color:#b91c1c;background:#b91c1c}
 @media screen and (max-width:860px){.td-tools{grid-area:td;display:flex;align-items:stretch;gap:8px;width:100%}.td-tools .td-selector{width:auto;flex:1 1 auto;min-width:0}.td-tools .reset-btn{width:auto;flex:0 0 auto;padding:0 10px;white-space:nowrap}}
 @media print{.hold-dialog,.reset-btn{display:none!important}}
+
+/* ---- Changements du planning : prof absent, nouveau cours, salle, horaire ---- */
+.changes{margin:0 0 18px;padding:15px 17px;border:1px solid #f5c768;border-left:6px solid #f59e0b;border-radius:var(--radius-lg);background:linear-gradient(135deg,#fffbeb,color-mix(in srgb,#fffbeb 70%,var(--surface)));box-shadow:var(--shadow-sm)}
+[data-theme="dark"] .changes{border-color:#6b4a12;border-left-color:#f59e0b;background:linear-gradient(135deg,#241a06,color-mix(in srgb,#241a06 72%,var(--surface)))}
+.changes[hidden]{display:none}
+.changes-head{display:flex;align-items:flex-start;gap:12px}
+.changes-icon{font-size:1.15rem;line-height:1.2}
+.changes-heading{min-width:0;flex:1 1 auto}
+.changes-title{font-size:1rem;font-weight:800;line-height:1.25;letter-spacing:-.02em}
+.changes-sub{margin-top:3px;color:var(--text-soft);font-size:.79rem;font-weight:600;line-height:1.4}
+.changes-actions{display:flex;flex:none;gap:7px}
+.changes-actions .btn{width:auto;min-height:34px;padding:7px 11px;font-size:.71rem}
+.changes-dismiss{color:#fff;border-color:#b45309;background:linear-gradient(135deg,#d97706,#b45309);box-shadow:0 4px 12px rgba(180,83,9,.22)}
+.changes-dismiss:hover:not(:disabled){color:#fff;border-color:#92400e;background:linear-gradient(135deg,#b45309,#92400e);box-shadow:0 7px 16px rgba(180,83,9,.28)}
+.change-list{display:flex;flex-direction:column;gap:7px;margin:13px 0 0;padding:0;list-style:none}
+.change-list[hidden]{display:none}
+.change-item{display:flex;flex-wrap:wrap;align-items:center;gap:8px;width:100%;padding:9px 11px;color:var(--text);text-align:left;cursor:pointer;border:1px solid var(--border-soft);border-left:4px solid var(--muted);border-radius:12px;background:var(--surface);box-shadow:var(--shadow-xs);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.change-item:hover{transform:translateX(2px);border-color:color-mix(in srgb,var(--primary) 30%,var(--border));box-shadow:var(--shadow-sm)}
+.change.cancelled .change-item,.change.removed .change-item{border-left-color:#dc2626}
+.change.restored .change-item{border-left-color:#059669}
+.change.added .change-item{border-left-color:#4f46e5}
+.change.moved .change-item{border-left-color:#d97706}
+.change.room .change-item{border-left-color:#7c3aed}
+.change.updated .change-item{border-left-color:#0f766e}
+.change-kind{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;font-size:.68rem;font-weight:800;line-height:1.2;white-space:nowrap;border:1px solid transparent;border-radius:999px}
+.change-kind.cancelled{color:#991b1b;background:#fee2e2;border-color:#fca5a5}
+.change-kind.removed{color:#374151;background:#e5e7eb;border-color:#cbd5e1}
+.change-kind.restored{color:#065f46;background:#d1fae5;border-color:#6ee7b7}
+.change-kind.added{color:#3730a3;background:#e0e7ff;border-color:#a5b4fc}
+.change-kind.moved{color:#92400e;background:#fef3c7;border-color:#fcd34d}
+.change-kind.room{color:#5b21b6;background:#ede9fe;border-color:#c4b5fd}
+.change-kind.updated{color:#115e59;background:#ccfbf1;border-color:#5eead4}
+[data-theme="dark"] .change-kind.cancelled{color:#fecaca;background:#3f1212;border-color:#7f1d1d}
+[data-theme="dark"] .change-kind.removed{color:#cbd5e1;background:#28303d;border-color:#3f4a5c}
+[data-theme="dark"] .change-kind.restored{color:#a7f3d0;background:#0c2f24;border-color:#115e59}
+[data-theme="dark"] .change-kind.added{color:#c7d2fe;background:#1e2347;border-color:#3730a3}
+[data-theme="dark"] .change-kind.moved{color:#fde68a;background:#3a2905;border-color:#92400e}
+[data-theme="dark"] .change-kind.room{color:#ddd6fe;background:#2a1a4a;border-color:#5b21b6}
+[data-theme="dark"] .change-kind.updated{color:#99f6e4;background:#042f2e;border-color:#115e59}
+.change-when{font-size:.74rem;font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.change-what{min-width:0;font-size:.82rem;font-weight:700;overflow-wrap:anywhere}
+.change-type{padding:1px 5px;color:var(--muted);font-size:.6rem;font-weight:800;letter-spacing:.04em;border:1px solid var(--border-soft);border-radius:4px;background:var(--surface-soft)}
+.change-room{color:var(--muted);font-size:.72rem;font-weight:600}
+.change-detail{color:var(--muted);font-size:.71rem;font-weight:600;font-style:italic}
+.change-jump{margin-left:auto;color:var(--primary);font-size:.69rem;font-weight:800;white-space:nowrap}
+.changes-foot{margin-top:11px;color:var(--muted);font-size:.67rem;font-weight:600}
+.changes-btn{position:relative;color:#92400e;border-color:#fcd34d;background:#fffbeb}
+[data-theme="dark"] .changes-btn{color:#fcd34d;border-color:#78350f;background:#2a1d06}
+.changes-btn:hover:not(:disabled){color:#fff;border-color:#b45309;background:#b45309}
+.changes-btn[hidden]{display:none}
+.changes-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;color:#fff;font-size:.65rem;font-weight:800;border-radius:999px;background:#dc2626}
+.day-tags{display:inline-flex;align-items:center;gap:6px}
+.day-alert{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;color:#92400e;font-size:.62rem;font-weight:800;border:1px solid #fcd34d;border-radius:999px;background:#fffbeb}
+[data-theme="dark"] .day-alert{color:#fcd34d;border-color:#78350f;background:#2a1d06}
+.card.changed{background-image:linear-gradient(90deg,rgba(245,158,11,.75),rgba(245,158,11,0) 70%);background-repeat:no-repeat;background-position:top left;background-size:100% 3px}
+.card-change{display:inline-flex;align-items:center;gap:3px;width:fit-content;padding:2px 6px;font-size:.56rem;font-weight:800;letter-spacing:.02em;border:1px solid transparent;border-radius:5px}
+.card-change.removed{color:#374151;background:#e5e7eb;border-color:#cbd5e1}
+.card-change.restored{color:#065f46;background:#d1fae5;border-color:#6ee7b7}
+.card-change.added{color:#3730a3;background:#e0e7ff;border-color:#a5b4fc}
+.card-change.moved{color:#92400e;background:#fef3c7;border-color:#fcd34d}
+.card-change.room{color:#5b21b6;background:#ede9fe;border-color:#c4b5fd}
+.card-change.updated{color:#115e59;background:#ccfbf1;border-color:#5eead4}
+[data-theme="dark"] .card-change.removed{color:#cbd5e1;background:#28303d;border-color:#3f4a5c}
+[data-theme="dark"] .card-change.restored{color:#a7f3d0;background:#0c2f24;border-color:#115e59}
+[data-theme="dark"] .card-change.added{color:#c7d2fe;background:#1e2347;border-color:#3730a3}
+[data-theme="dark"] .card-change.moved{color:#fde68a;background:#3a2905;border-color:#92400e}
+[data-theme="dark"] .card-change.room{color:#ddd6fe;background:#2a1a4a;border-color:#5b21b6}
+[data-theme="dark"] .card-change.updated{color:#99f6e4;background:#042f2e;border-color:#115e59}
+.change-note{color:#92400e;font-weight:700}
+[data-theme="dark"] .change-note{color:#fcd34d}
+.card.removed{border-style:dashed;border-left-style:solid;border-left-color:#64748b!important;opacity:.7;background:color-mix(in srgb,var(--subtle) 80%,transparent)!important}
+.card.removed .card-title{text-decoration:line-through;text-decoration-color:var(--muted);color:var(--muted)}
+@keyframes cardFlash{0%{box-shadow:0 0 0 0 rgba(245,158,11,.55)}70%{box-shadow:0 0 0 14px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
+.card.flash{z-index:45;border-color:#f59e0b!important;outline:3px solid rgba(245,158,11,.55);outline-offset:2px;animation:cardFlash 1.3s ease-out 2}
+.p-item.changed{border-left-color:#f59e0b}
+.p-item.removed{border-left-color:#64748b;border-left-style:dashed;opacity:.75}
+@media screen and (max-width:860px){
+  .changes{padding:13px;border-radius:17px}
+  .changes-head{flex-wrap:wrap;gap:9px}
+  .changes-heading{flex:1 1 60%}
+  .changes-actions{width:100%;margin-left:0}
+  .changes-actions .btn{flex:1;width:auto}
+  .change-item{gap:6px;padding:9px 10px}
+  .change-jump{width:100%;margin-left:0;text-align:right}
+  .changes-btn{grid-area:changes}
+  .nav{grid-template-areas:"center center" "prev next" "td td" "changes changes" "today theme" "print print"}
+}
+@media print{.changes,.changes-btn{display:none!important}}
 </style>
 </head>
 <body>
@@ -269,6 +357,7 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 <div class="nav-title" id="weekTitle"></div>
 </div>
 <div class="actions">
+<button class="btn changes-btn" id="changesBtn" type="button" aria-expanded="false" aria-controls="changeBanner" title="Changements au planning" hidden>🔔 <span class="changes-count" id="changesCount">0</span></button>
 <button class="btn" id="next" type="button" onclick="changeWeek(1)">Suivante ▶</button>
 <button class="btn today-btn" id="today" type="button" onclick="jumpToTarget(true)">🎯 Aujourd'hui</button>
 <div class="td-tools">
@@ -289,6 +378,22 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 <button class="btn print-btn" type="button" onclick="window.print()">🖨 Imprimer</button>
 </div>
 </nav>
+
+<section class="changes" id="changeBanner" role="status" aria-live="polite" hidden>
+<div class="changes-head">
+<span class="changes-icon" aria-hidden="true">🔔</span>
+<div class="changes-heading">
+<h2 class="changes-title" id="changesTitle">Changements au planning</h2>
+<p class="changes-sub" id="changesSub"></p>
+</div>
+<div class="changes-actions">
+<button class="btn changes-toggle" id="changesToggle" type="button" aria-controls="changeList" aria-expanded="true">Masquer le détail</button>
+<button class="btn changes-dismiss" id="changesDismiss" type="button" title="Marquer ces changements comme vus">✓ Vu</button>
+</div>
+</div>
+<ul class="change-list" id="changeList"></ul>
+<p class="changes-foot" id="changesFoot"></p>
+</section>
 
 <div class="mobile-tabs" id="tabs">
 <button class="tab" data-day="all" aria-pressed="false" onclick="setDay('all')">Tous</button>
@@ -812,6 +917,195 @@ function findRecurringCancellations(weeks) {
   return recurring;
 }
 
+/* ======================================================================
+   JOURNAL DES CHANGEMENTS — « prof absent », nouveau cours, salle, horaire…
+   ----------------------------------------------------------------------
+   La synchro (scripts/edt-changes.mjs) compare à chaque passage le planning
+   officiel avec la version publiée et écrit les différences dans le champ
+   `changes` de data/edt.json. Ce noyau les lit, les filtre pour le TD de
+   l'étudiant et leur donne un libellé clair ; la page les affiche en bandeau
+   et sous forme de badges sur les cartes concernées.
+   ====================================================================== */
+const CHANGE_INFO = {
+  cancelled: { icon: "🚫", short: "Annulé", label: "Cours annulé", cls: "cancelled" },
+  restored: { icon: "↩️", short: "Rétabli", label: "Séance rétablie", cls: "restored" },
+  added: { icon: "🆕", short: "Nouveau", label: "Nouveau cours", cls: "added" },
+  removed: { icon: "❌", short: "Retiré", label: "Cours retiré", cls: "removed" },
+  moved: { icon: "🕘", short: "Horaire", label: "Horaire modifié", cls: "moved" },
+  room: { icon: "🚪", short: "Salle", label: "Salle changée", cls: "room" },
+  updated: { icon: "✏️", short: "Modifié", label: "Cours modifié", cls: "updated" },
+};
+/** Ordre d'importance : sert à choisir le badge principal quand un cours cumule plusieurs changements. */
+const CHANGE_ORDER = ["cancelled", "restored", "added", "removed", "moved", "room", "updated"];
+const CHANGE_WORDS = {
+  cancelled: ["annulation", "annulations"],
+  restored: ["séance rétablie", "séances rétablies"],
+  added: ["nouveau cours", "nouveaux cours"],
+  removed: ["cours retiré", "cours retirés"],
+  moved: ["horaire modifié", "horaires modifiés"],
+  room: ["changement de salle", "changements de salle"],
+  updated: ["cours modifié", "cours modifiés"],
+};
+const changeKind = (change) => (CHANGE_INFO[change?.kind] ? change.kind : "added");
+const changeStartMin = (change) => (Number.isFinite(change?.startMin) ? change.startMin : startMinutes(change?.time || "00:00 - 00:00"));
+const changeEndMin = (change) => (Number.isFinite(change?.endMin) ? change.endMin : endMinutes(change?.time || "00:00 - 00:00"));
+const changeRank = (change) => Math.max(0, CHANGE_ORDER.indexOf(changeKind(change)));
+
+/** Clé stable d'un changement (même formule que côté synchro). */
+function changeKey(change) {
+  return `${changeKind(change)}|${change?.date ?? ""}|${changeStartMin(change)}|${stripAccents(String(change?.title ?? "")).toLowerCase()}`;
+}
+
+/** « Mardi 13 octobre » — avec « Aujourd'hui » / « Demain » quand c'est plus clair. */
+function changeDayLabel(change, today = todayISO()) {
+  if (change.date === today) return "Aujourd'hui";
+  if (change.date === addDaysISO(today, 1)) return "Demain";
+  if (change.date === addDaysISO(today, -1)) return "Hier";
+  const date = parseISO(change.date);
+  return `${DAY_NAMES[weekdayIndex(change.date)] ?? ""} ${date.getDate()} ${MONTHS_LONG[date.getMonth()].toLowerCase()}`.trim();
+}
+
+function changeWhenLabel(change, today = todayISO()) {
+  const time = change?.time ? ` · ${change.time}` : "";
+  return `${changeDayLabel(change, today)}${time}`;
+}
+
+/** Libellé court d'un changement : icône + texte + classe CSS. */
+function changeLabel(change) {
+  const kind = changeKind(change);
+  return { kind, ...CHANGE_INFO[kind] };
+}
+
+/** Ce qui a changé par rapport à avant (« avant : 13:50 – 15:20 », « salle non précisée »…). */
+function changeStatusLabel(change) {
+  const before = change?.previous;
+  if (!before) return "";
+  if (changeKind(change) === "moved") return `avant : ${before.time || "horaire inconnu"}`;
+  if (changeKind(change) === "room") return `avant : ${before.room || "salle non précisée"}`;
+  if (changeKind(change) === "updated") return `avant : ${before.type || "type inconnu"}`;
+  if (changeKind(change) === "restored") return "était annulée";
+  return "";
+}
+
+/** Phrase complète d'un changement (« Mardi 13 octobre · 09:40 – 11:10 — Macroéconomie 2 (CM) »). */
+function changeSentence(change, today = todayISO()) {
+  const room = change?.room ? ` · 📍 ${change.room}` : "";
+  return `${changeWhenLabel(change, today)} — ${change?.title ?? "Cours"} (${change?.type ?? ""})${room}`.replace(" ()", "");
+}
+
+/** Le changement concerne-t-il la promo ou le TD affiché ? */
+function changeAppliesToTd(change, config = CONFIG) {
+  const groups = (change?.groups ?? []).map((code) => normalizeGroupCode(code));
+  if (!groups.length) return true;
+  return groups.includes(normalizeGroupCode(config.myTd)) || groups.includes(normalizeGroupCode(config.group));
+}
+
+/** Fenêtre affichée dans le bandeau : la semaine qui vient, et les tous derniers jours. */
+function changeInHorizon(change, today = todayISO(), daysBack = 3, daysAhead = 21) {
+  if (!change?.date) return false;
+  return change.date >= addDaysISO(today, -daysBack) && change.date <= addDaysISO(today, daysAhead);
+}
+
+/** À venir d'abord (chronologique), puis les changements déjà passés (plus récents d'abord). */
+function sortChangesForDisplay(changes, today = todayISO()) {
+  const key = (change) => `${change.date}|${String(changeStartMin(change)).padStart(5, "0")}|${change.title}`;
+  const upcoming = changes.filter((change) => change.date >= today).sort((a, b) => key(a).localeCompare(key(b)));
+  const past = changes.filter((change) => change.date < today).sort((a, b) => key(b).localeCompare(key(a)));
+  return [...upcoming, ...past];
+}
+
+/** Changements à signaler : ceux du TD affiché, dans la fenêtre utile. */
+function relevantChanges(changes, config = CONFIG, options = {}) {
+  const today = options.today ?? todayISO();
+  const list = (changes ?? []).filter(
+    (change) => change?.date && changeAppliesToTd(change, config) && changeInHorizon(change, today, options.daysBack, options.daysAhead),
+  );
+  return sortChangesForDisplay(list, today);
+}
+
+/** « 2 annulations, 1 nouveau cours » */
+function changeSummaryLabel(changes) {
+  const counts = new Map();
+  for (const change of changes ?? []) {
+    const kind = changeKind(change);
+    counts.set(kind, (counts.get(kind) ?? 0) + 1);
+  }
+  return CHANGE_ORDER.filter((kind) => counts.has(kind))
+    .map((kind) => {
+      const count = counts.get(kind);
+      const [one, many] = CHANGE_WORDS[kind];
+      return `${count} ${count === 1 ? one : many}`;
+    })
+    .join(", ");
+}
+
+/** Un changement déjà vu ? (l'utilisateur a cliqué sur « ✓ Vu ») */
+function changeIsUnseen(change, seenAt) {
+  if (!seenAt) return true;
+  if (!change?.detectedAt) return true;
+  return change.detectedAt > seenAt;
+}
+
+/** Le changement concerne-t-il exactement cette carte ? */
+function courseMatchesChange(item, change) {
+  if (change?.eventId && item?.id === change.eventId) return true;
+  if (!item || item.date !== change?.date) return false;
+  if (item.startMin !== changeStartMin(change)) return false;
+  const title = (value) => stripAccents(String(value ?? "")).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const a = title(item.title);
+  const b = title(change.title);
+  return a === b || a.startsWith(b) || b.startsWith(a);
+}
+
+/**
+ * Accroche les changements aux cours de la semaine affichée : badges sur les
+ * cartes concernées, et carte « cours retiré » là où une séance a disparu du
+ * planning officiel (sinon l'information n'aurait nulle part où s'afficher).
+ */
+function attachChanges(view, changes, config = CONFIG, options = {}) {
+  const list = options.all ? changes ?? [] : relevantChanges(changes, config, options);
+  if (!view?.days?.length || !list.length) return view;
+  const days = view.days.map((day) => ({ ...day, courses: (day.courses ?? []).map((item) => ({ ...item })) }));
+  const indexByDate = new Map(days.map((day, index) => [formatISO(day.realDate), index]));
+
+  for (const change of list) {
+    const day = days[indexByDate.get(change.date)];
+    if (!day) continue;
+    const course = day.courses.find((item) => courseMatchesChange(item, change));
+    if (course) {
+      course.changes = [...(course.changes ?? []), change];
+      continue;
+    }
+    if (changeKind(change) !== "removed") continue;
+    day.courses.push({
+      id: `change-${change.eventId ?? changeKey(change)}`,
+      date: change.date,
+      time: change.time,
+      startMin: changeStartMin(change),
+      endMin: changeEndMin(change),
+      type: change.type || "Cours",
+      title: change.title || "Cours",
+      cat: change.cat || familyOf(change.title),
+      room: change.room || "",
+      tag: "Retiré du planning officiel",
+      tagType: "removed",
+      isCancelled: false,
+      ghost: false,
+      removed: true,
+      changes: [change],
+      source: "change",
+    });
+  }
+
+  for (const day of days) {
+    for (const course of day.courses) {
+      if (course.changes?.length) course.changes.sort((a, b) => changeRank(a) - changeRank(b));
+    }
+    day.courses.sort((a, b) => a.startMin - b.startMin);
+  }
+  return { ...view, days };
+}
+
 /* ===== CORE-END ===== */
 
 /* ======================================================================
@@ -820,6 +1114,7 @@ function findRecurringCancellations(weeks) {
 const state = {
   weeks: {},          // { 'YYYY-MM-DD': { monday, fetchedAt, events[] } }
   generatedAt: null,
+  changes: [],        // journal des changements publié par la synchro (prof absent, nouveau cours…)
 };
 
 /** Aligne la configuration de la page sur edt.config.json (si accessible). */
@@ -870,7 +1165,7 @@ async function loadFromCache() {
 
 function saveToCache() {
   try {
-    localStorage.setItem(`${CONFIG.cacheKey}_${CONFIG.group}`, JSON.stringify({ ts: Date.now(), weeks: state.weeks, generatedAt: state.generatedAt }));
+    localStorage.setItem(`${CONFIG.cacheKey}_${CONFIG.group}`, JSON.stringify({ ts: Date.now(), weeks: state.weeks, generatedAt: state.generatedAt, changes: state.changes }));
   } catch { /* quota / mode privé */ }
 }
 
@@ -957,16 +1252,57 @@ function isCourseRunning(item, day) {
   return minutes >= item.startMin && minutes < item.endMin && !item.ghost;
 }
 
+/** Badge(s) « nouveau cours », « salle changée »… affiché(s) sur la carte concernée. */
+function cardChangeHTML(item) {
+  const changes = item.changes ?? [];
+  if (!changes.length) return { badges: "", notes: "" };
+  // L'annulation a déjà son bandeau rouge (::before) et la carte « retiré » son
+  // étiquette : on n'affiche un badge que là où l'information n'est pas déjà visible.
+  const redundant = new Set(["cancelled"]);
+  if (item.removed) redundant.add("removed");
+  const badges = changes
+    .filter((change) => !redundant.has(changeKind(change)))
+    .map((change) => {
+      const { icon, short, cls } = changeLabel(change);
+      return `<span class="card-change ${cls}" title="${escapeHtml(changeLabel(change).label)}">${icon} ${escapeHtml(short)}</span>`;
+    })
+    .join("");
+  const notes = changes
+    .map((change) => [changeStatusLabel(change), change.reason ? `motif : ${change.reason}` : ""].filter(Boolean).join(" · "))
+    .filter(Boolean)
+    .map((text) => `<div class="card-note change-note">${escapeHtml(text)}</div>`)
+    .join("");
+  return { badges, notes };
+}
+
+/** Étiquette CELCAT sans information (« Annulation », « Supprimé »…) : déjà affichée ailleurs. */
+const BARE_NOTE_LABEL = /^(annul[ée]e?s?|annulation|supprim[ée]e?s?|report[ée]e?s?|absence|absent)$/i;
+
 function cardHTML(item, day) {
   const p = position(item.time);
   const classes = ["card", item.cat];
   if (item.isCancelled) classes.push("cancelled");
   if (item.ghost) classes.push("ghost");
+  if (item.removed) classes.push("removed");
+  if (item.changes?.length) classes.push("changed");
   if (isCourseRunning(item, day)) classes.push("running");
-  const details = [item.title, item.time, item.room, item.tag, item.note].filter(Boolean).join(" — ");
+  const { badges, notes } = cardChangeHTML(item);
+  // La note CELCAT répète souvent le type (« Annulation ») ou le motif déjà
+  // affiché avec le changement : on ne garde que ce qui apporte une information.
+  const type = stripAccents(item.type).toLowerCase();
+  const shownReasons = (item.changes ?? []).map((change) => change.reason).filter(Boolean);
+  const note = String(item.note ?? "")
+    .split(" · ")
+    .map((fragment) => fragment.trim())
+    .filter((fragment) => {
+      const clean = stripAccents(fragment).toLowerCase();
+      return fragment && clean !== type && !BARE_NOTE_LABEL.test(clean) && !shownReasons.includes(fragment);
+    })
+    .join(" · ");
+  const details = [item.title, item.time, item.room, item.tag, note].filter(Boolean).join(" — ");
   const room = item.room ? `<div class="card-room" title="${escapeHtml(item.room)}">📍 ${escapeHtml(item.room)}</div>` : `<div class="card-room">📍 ${item.isCancelled ? "salle non précisée" : "lieu non précisé"}</div>`;
   const tag = item.tag ? `<div class="card-tag ${escapeHtml(item.tagType || "")}">${escapeHtml(item.tag)}</div>` : "";
-  return `<article class="${classes.join(" ")}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="top:${p.top}px;height:${p.height}px" tabindex="0" title="${escapeHtml(details)} — maintenir pour masquer"><div class="card-time"><span>${escapeHtml(item.time)}</span><span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-title">${escapeHtml(item.title)}</div>${room}${tag}${item.note ? `<div class="card-note">${escapeHtml(item.note)}</div>` : ""}</article>`;
+  return `<article class="${classes.join(" ")}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="top:${p.top}px;height:${p.height}px" tabindex="0" title="${escapeHtml(details)} — maintenir pour masquer"><div class="card-time"><span>${escapeHtml(item.time)}</span><span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-title">${escapeHtml(item.title)}</div>${room}${badges}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}${notes}</article>`;
 }
 
 function emptyMessage(weekKey, dayIndex, live) {
@@ -1021,7 +1357,7 @@ function weekSource(weekKey) {
 }
 
 /** Semaine affichée : planning officiel, ou référence seulement hors-ligne. */
-function buildWeekView(weekKey, recurring) {
+function buildWeekView(weekKey, recurring, changeOptions = {}) {
   const source = weekSource(weekKey);
   const reference = REFERENCE_BY_MONDAY.get(weekKey) ?? null;
   const view = source === "live"
@@ -1029,7 +1365,7 @@ function buildWeekView(weekKey, recurring) {
     : source === "live-empty"
       ? buildWeek(weekKey, [], reference, { live: true, recurringCancellations: recurring })
       : buildWeek(weekKey, [], reference, { live: false });
-  return withoutHidden(view);
+  return attachChanges(withoutHidden(view), state.changes, CONFIG, changeOptions);
 }
 
 /**
@@ -1174,40 +1510,50 @@ function renderWeek(index, options = {}) {
   const targetWeek = target.weekIndex === index;
 
   $("#grid").innerHTML = view.days.map((day, dayIndex) => {
-    const count = day.courses.length;
+    const dayISO = formatISO(day.realDate);
+    const removedCount = day.courses.filter((item) => item.removed).length;
+    const count = day.courses.length - removedCount;
+    const changes = visibleChanges().filter((change) => change.date === dayISO);
     const selected = targetWeek && target.dayIndex === dayIndex;
     const futureTarget = selected && !target.ongoing;
     const hidden = state_view.mobileFilter !== "all" && state_view.mobileFilter !== dayIndex;
     const indicatorLabel = target.ongoing ? "📍 Aujourd'hui" : target.opening ? "📆 Prochain jour ouvré" : "🚀 Prochain cours";
     const indicator = selected ? `<span class="target-pill">${indicatorLabel}</span>` : "";
     let content;
-    if (count) {
+    if (day.courses.length) {
       content = day.courses.map((item) => cardHTML(item, day)).join("");
     } else {
       content = `<div class="empty">${escapeHtml(emptyMessage(weekKey, dayIndex, view.live))}</div>`;
     }
-    const countLabel = count ? `${count} cours` : "libre";
-    return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date"><time datetime="${formatISO(day.realDate)}">${day.date}</time></div>${indicator}</div><span class="day-count${count ? " has" : ""}">${countLabel}</span></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
+    const countLabel = count ? `${count} cours` : removedCount ? `${removedCount} retiré${removedCount > 1 ? "s" : ""}` : "libre";
+    const alert = changes.length
+      ? `<span class="day-alert" title="${escapeHtml(changeSummaryLabel(changes))}">🔔 ${changes.length}</span>`
+      : "";
+    return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date"><time datetime="${dayISO}">${day.date}</time></div>${indicator}</div><div class="day-tags">${alert}<span class="day-count${count ? " has" : ""}">${countLabel}</span></div></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
   }).join("");
 
   if (options.animate !== false && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
     $("#grid").animate([{ opacity: 0.4, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 180, easing: "ease-out" });
   }
   $$(".tab").forEach((tab) => tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex)));
+  renderChangePanel();
 }
 
 /* ------------------------------------------------------------------ print */
 function printCourse(item) {
-  const flag = item.ghost ? " • À VÉRIFIER" : item.isCancelled ? " • ANNULÉ" : "";
+  const changeFlags = (item.changes ?? []).map((change) => changeLabel(change).short.toUpperCase());
+  const flag = item.ghost ? " • À VÉRIFIER" : item.isCancelled ? " • ANNULÉ" : changeFlags.length ? ` • ${changeFlags.join(" / ")}` : "";
   const classes = ["p-item", item.cat];
   if (item.isCancelled) classes.push("cancelled");
   if (item.ghost) classes.push("ghost");
+  if (item.removed) classes.push("removed");
+  if (item.changes?.length) classes.push("changed");
   return `<div class="${classes.join(" ")}"><span class="p-time">${escapeHtml(item.time)}</span><span class="p-type"> ${escapeHtml(item.type)}${flag}</span><br><b>${escapeHtml(item.title)}</b><br><span class="p-room">${escapeHtml(item.room || "lieu non précisé")} • ${escapeHtml(item.tag || "")}</span></div>`;
 }
 
 function buildPrintPage(pageWeeks, page, total, period) {
   const rows = pageWeeks.map(({ weekKey, number }) => {
-    const view = buildWeekView(weekKey, state_view.recurring);
+    const view = buildWeekView(weekKey, state_view.recurring, { all: true });
     const cells = view.days.map((day, dayIndex) => {
       if (day.courses.length) return `<td>${day.courses.map(printCourse).join("")}</td>`;
       const message = emptyMessage(weekKey, dayIndex, view.live);
@@ -1221,7 +1567,12 @@ function buildPrintPage(pageWeeks, page, total, period) {
   }).join("");
   const tdNum = selectedTdNumber();
   const tdLabel = tdNum ? `TD ${tdNum.padStart(2, "0")}` : "";
-  return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — ${escapeHtml(period)}</h2><p>Source : edt.uvsq.fr • Groupe ${escapeHtml(CONFIG.group)}${tdLabel ? ` • ${tdLabel}` : ""} • <strong>Page ${page} / ${total}</strong> • ${new Date().toLocaleString("fr-FR")}</p></div><div class="print-badge">Planning officiel • annulations et absences signalées</div></header><table class="print-table"><thead><tr><th>Semaine</th>${DAY_NAMES.map((day) => `<th>${day}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></section>`;
+  const pageKeys = new Set(pageWeeks.map(({ weekKey }) => weekKey));
+  const pageChanges = (state.changes ?? []).filter((change) => pageKeys.has(mondayOf(change.date)) && changeAppliesToTd(change));
+  const badge = pageChanges.length
+    ? `Planning officiel • ${escapeHtml(changeSummaryLabel(pageChanges))} signalé(e)${pageChanges.length > 1 ? "s" : ""}`
+    : "Planning officiel • annulations et absences signalées";
+  return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — ${escapeHtml(period)}</h2><p>Source : edt.uvsq.fr • Groupe ${escapeHtml(CONFIG.group)}${tdLabel ? ` • ${tdLabel}` : ""} • <strong>Page ${page} / ${total}</strong> • ${new Date().toLocaleString("fr-FR")}</p></div><div class="print-badge">${badge}</div></header><table class="print-table"><thead><tr><th>Semaine</th>${DAY_NAMES.map((day) => `<th>${day}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></section>`;
 }
 
 function buildPrint() {
@@ -1231,6 +1582,113 @@ function buildPrint() {
   $("#print").innerHTML =
     buildPrintPage(numbered.slice(0, half), 1, 2, "1re partie") +
     buildPrintPage(numbered.slice(half), 2, 2, "2e partie");
+}
+
+/* ---------------------------------------------- bandeau des changements */
+/**
+ * Affiche, en clair, ce qui a bougé dans le planning officiel : cours annulé
+ * (professeur absent), nouveau cours, séance retirée, salle ou horaire modifiés.
+ * Le bandeau s'ouvre tout seul tant que l'étudiant ne l'a pas marqué comme vu ;
+ * il reste ensuite accessible par la cloche de la barre d'outils.
+ */
+const CHANGE_SEEN_KEY = "schedule_changes_seen";
+let changesPanelOpen = null;   // null = automatique : ouvert s'il reste du nouveau
+let changesListOpen = true;    // détail déplié/replié
+
+function changesSeenAt() {
+  try { return localStorage.getItem(CHANGE_SEEN_KEY) || ""; } catch { return ""; }
+}
+
+function markChangesSeen(list) {
+  const newest = (list ?? []).map((change) => change.detectedAt ?? "").sort().at(-1);
+  try { localStorage.setItem(CHANGE_SEEN_KEY, newest || new Date().toISOString()); } catch {}
+}
+
+/** Changements à signaler pour le TD affiché, matières masquées exclues. */
+function visibleChanges(today = todayISO()) {
+  return relevantChanges(state.changes, CONFIG, { today }).filter((change) => !isCourseHidden(change));
+}
+
+function changesFreshnessLabel() {
+  const at = state.generatedAt ? new Date(state.generatedAt) : null;
+  if (!at || Number.isNaN(at.getTime())) return "Source : edt.uvsq.fr";
+  return `Planning vérifié le ${at.toLocaleString("fr-FR", { day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })} · source edt.uvsq.fr`;
+}
+
+function changeItemHTML(change) {
+  const { icon, label, cls } = changeLabel(change);
+  const detail = changeStatusLabel(change);
+  const reason = change.reason ? `motif : ${change.reason}` : "";
+  const where = change.room ? `<span class="change-room">📍 ${escapeHtml(change.room)}</span>` : "";
+  return `<li class="change ${cls}"><button type="button" class="change-item" data-change="${escapeHtml(changeKey(change))}" title="Afficher cette semaine dans le planning">` +
+    `<span class="change-kind ${cls}">${icon} ${escapeHtml(label)}</span>` +
+    `<span class="change-when">${escapeHtml(changeWhenLabel(change))}</span>` +
+    `<span class="change-what">${escapeHtml(change.title)}${change.type ? ` <span class="change-type">${escapeHtml(change.type)}</span>` : ""} ${where}</span>` +
+    (detail || reason ? `<span class="change-detail">${escapeHtml([detail, reason].filter(Boolean).join(" · "))}</span>` : "") +
+    `<span class="change-jump">Voir →</span>` +
+    `</button></li>`;
+}
+
+function setChangesCollapsed() {
+  const list = $("#changeList");
+  const toggle = $("#changesToggle");
+  if (list) list.hidden = !changesListOpen;
+  if (toggle) {
+    toggle.textContent = changesListOpen ? "Masquer le détail" : "Voir le détail";
+    toggle.setAttribute("aria-expanded", String(changesListOpen));
+  }
+}
+
+function renderChangePanel() {
+  const banner = $("#changeBanner");
+  const button = $("#changesBtn");
+  const count = $("#changesCount");
+  const list = visibleChanges();
+  const unseen = list.filter((change) => changeIsUnseen(change, changesSeenAt()));
+  const open = changesPanelOpen ?? unseen.length > 0;
+  const show = list.length > 0 && open;
+
+  if (button) {
+    button.hidden = list.length === 0;
+    button.setAttribute("aria-expanded", String(show));
+    button.title = list.length ? `${list.length} changement(s) au planning — ${changeSummaryLabel(list)}` : "";
+    if (count) count.textContent = String(list.length);
+  }
+  if (!banner) return;
+  banner.hidden = !show;
+  if (!show) return;
+
+  const title = $("#changesTitle");
+  const sub = $("#changesSub");
+  const items = $("#changeList");
+  const foot = $("#changesFoot");
+  if (title) title.textContent = list.length > 1 ? `${list.length} changements au planning` : "1 changement au planning";
+  if (sub) sub.textContent = `${changeSummaryLabel(list)} — vérifie avant de te déplacer, puis clique pour retrouver le cours.`;
+  if (items) items.innerHTML = list.map(changeItemHTML).join("");
+  if (foot) foot.textContent = changesFreshnessLabel();
+  setChangesCollapsed();
+}
+
+/** Amène l'étudiant sur la semaine et la carte concernées, et les met en évidence. */
+function revealChange(key) {
+  const change = visibleChanges().find((item) => changeKey(item) === key);
+  if (!change) return;
+  const weekKey = mondayOf(change.date);
+  if (!state_view.weeks.includes(weekKey)) return;
+  const dayIndex = weekdayIndex(change.date);
+  if (innerWidth <= 860 && state_view.mobileFilter !== "all" && state_view.mobileFilter !== dayIndex) setDay(dayIndex, false);
+  renderWeek(state_view.weeks.indexOf(weekKey), { weekKey, animate: false });
+  scrollToDay(dayIndex, true);
+  flashCourse(change);
+}
+
+function flashCourse(change) {
+  const cards = [...document.querySelectorAll("#grid .card")];
+  const card = cards.find((element) => element.dataset.date === change.date && element.dataset.time === change.time)
+    ?? cards.find((element) => element.dataset.date === change.date && element.dataset.title === change.title);
+  if (!card) return;
+  card.classList.add("flash");
+  setTimeout(() => card.classList.remove("flash"), 2600);
 }
 
 /* ------------------------------------------------------------- thème/UI */
@@ -1381,7 +1839,10 @@ async function loadEverything(options = {}) {
       if (!params.get("group") && file.group) CONFIG.group = String(file.group).trim();
       state.weeks = file.weeks ?? {};
       state.generatedAt = file.generatedAt ?? null;
+      state.changes = Array.isArray(file.changes) ? file.changes : [];
       state_view.recurring = findRecurringCancellations(state.weeks);
+      // Le journal peut arriver après le premier rendu : on le signale tout de suite.
+      renderChangePanel();
       saveToCache();
       buildPrint();
     } catch (error) {
@@ -1402,6 +1863,7 @@ function initialize() {
   if (cached?.weeks) {
     state.weeks = cached.weeks;
     state.generatedAt = cached.generatedAt ?? null;
+    state.changes = Array.isArray(cached.changes) ? cached.changes : [];
     state_view.recurring = findRecurringCancellations(state.weeks);
   }
   state_view.weeks = buildWeekList();
@@ -1520,6 +1982,21 @@ $("#grid").addEventListener("contextmenu", (event) => {
   event.preventDefault();
   cancelHold();
   openHoldDialog(card);
+});
+$("#changesBtn")?.addEventListener("click", () => {
+  const banner = $("#changeBanner");
+  changesPanelOpen = banner ? banner.hidden : true;
+  renderChangePanel();
+});
+$("#changesToggle")?.addEventListener("click", () => { changesListOpen = !changesListOpen; setChangesCollapsed(); });
+$("#changesDismiss")?.addEventListener("click", () => {
+  markChangesSeen(visibleChanges());
+  changesPanelOpen = false;
+  renderChangePanel();
+});
+$("#changeList")?.addEventListener("click", (event) => {
+  const item = event.target.closest?.(".change-item");
+  if (item?.dataset.change) revealChange(item.dataset.change);
 });
 addEventListener("beforeprint", () => buildPrint());
 addEventListener("DOMContentLoaded", initialize);

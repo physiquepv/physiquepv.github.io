@@ -8,16 +8,24 @@
  * ensuite en same-origin.
  *
  * Usage :
- *   node scripts/sync-edt.mjs            # rafraîchit la fenêtre courante
- *   node scripts/sync-edt.mjs --full     # recharge tout le semestre
- *   EDT_DUMP=1 node scripts/sync-edt.mjs # affiche le JSON complet (debug)
+ *   node scripts/sync-edt.mjs              # rafraîchit la fenêtre courante
+ *   node scripts/sync-edt.mjs --full       # recharge tout le semestre
+ *   node scripts/sync-edt.mjs --summary    # résumé markdown des changements publiés
+ *   node scripts/sync-edt.mjs --summary-subject  # sujet court pour le message de commit
+ *   EDT_DUMP=1 node scripts/sync-edt.mjs   # affiche le JSON complet (debug)
  *
  * Le fichier n'est réécrit que si le contenu du planning a réellement changé :
  * cela évite de polluer l'historique Git avec un commit toutes les 10 minutes.
+ *
+ * À chaque écriture, les changements détectés (annulation / professeur absent,
+ * nouveau cours, salle ou horaire modifiés…) sont comparés à la version
+ * précédente et publiés dans le champ `changes` : la page s'en sert pour
+ * prévenir les étudiants de façon explicite.
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import path from "node:path";
+import { diffWeeks, mergeChangeLog, loadCoreFromRepo, summaryMarkdown, summarySubject, changeLine } from "./edt-changes.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const CONFIG_PATH = process.env.EDT_CONFIG ? path.resolve(process.env.EDT_CONFIG) : path.join(ROOT, "edt.config.json");
@@ -222,6 +230,15 @@ function hashEvents(weeks) {
 
 /* -------------------------------------------------------------------- main */
 
+/** Résumé markdown des changements publiés dans data/edt.json. */
+async function readPublished(root = ROOT, outPath = OUT_PATH) {
+  const [core, dataFile] = await Promise.all([
+    loadCoreFromRepo(root),
+    readFile(outPath, "utf8").then((text) => JSON.parse(text)).catch(() => null),
+  ]);
+  return { core, data: dataFile, changes: dataFile?.changes ?? [] };
+}
+
 async function main() {
   const config = JSON.parse(await readFile(CONFIG_PATH, "utf8"));
   const cfg = {
@@ -287,6 +304,30 @@ async function main() {
     );
   }
 
+  // Journal des changements : comparaison de la nouvelle version du planning
+  // avec celle déjà publiée. Seules les semaines rafraîchies peuvent avoir
+  // bougé, on ne compare donc que celles-là.
+  //
+  // Cette partie est volontairement isolée : publier le planning reste la
+  // priorité, un souci de journal ne doit pas empêcher la synchro de tourner.
+  const contentHash = hashEvents(weeks);
+  let core = null;
+  let detected = [];
+  let changes = previous?.changes ?? [];
+  try {
+    core = await loadCoreFromRepo(ROOT);
+    detected = diffWeeks(previous?.weeks ?? {}, weeks, {
+      core,
+      detectedAt: now,
+      onlyKeys: new Set(keys),
+    });
+    changes = mergeChangeLog(previous?.changes ?? [], detected);
+  } catch (error) {
+    const message = String(error?.message ?? error).replace(/\s+/g, " ").slice(0, 300);
+    console.error(`[edt] journal des changements indisponible : ${message}`);
+    console.error(`::warning title=Journal des changements indisponible::${message.replaceAll("%", "%25")}`);
+  }
+
   const output = {
     version: 1,
     generatedAt: now,
@@ -296,23 +337,40 @@ async function main() {
     semester: config.semester,
     source: `${cfg.baseUrl}/cal?vt=agendaWeek&et=group&fid0=${encodeURIComponent(config.group)}`,
     fetchedWeeks: keys,
-    contentHash: hashEvents(weeks),
+    contentHash,
+    changes,
     weeks,
   };
 
   const serialized = JSON.stringify(output, null, 2) + "\n";
-  const previousSerialized = previous ? JSON.stringify({ ...previous, generatedAt: null, fetchedWeeks: null }, null, 2) + "\n" : "";
+  const changed = !previous || previous.contentHash !== contentHash;
 
-  if (previous && previous.contentHash === output.contentHash) {
-    console.log(`[edt] aucun changement (hash ${output.contentHash}) — ${Object.keys(weeks).length} semaines connues, fichier inchangé.`);
+  if (!changed) {
+    console.log(`[edt] aucun changement (hash ${contentHash}) — ${Object.keys(weeks).length} semaines connues, fichier inchangé.`);
   } else {
     await mkdir(path.dirname(OUT_PATH), { recursive: true });
     await writeFile(OUT_PATH, serialized, "utf8");
     console.log(
       `[edt] data/edt.json écrit : ${Object.keys(weeks).length} semaines, ` +
-        `${Object.values(weeks).reduce((n, w) => n + (w.events?.length ?? 0), 0)} créneaux, hash ${output.contentHash}`,
+        `${Object.values(weeks).reduce((n, w) => n + (w.events?.length ?? 0), 0)} créneaux, hash ${contentHash}`,
     );
-    void previousSerialized;
+  }
+
+  // On informe, clairement : une ligne par changement, dans le journal du
+  // workflow, et un tableau markdown dans le résumé de l'exécution.
+  if (!process.env.EDT_QUIET) {
+    if (detected.length) {
+      console.log(`[edt] ${detected.length} changement(s) détecté(s) à signaler aux étudiants :`);
+      for (const change of detected) console.log(`[edt]   • ${changeLine(core, change)}`);
+    } else {
+      console.log("[edt] aucun changement à signaler.");
+    }
+  }
+
+  if (detected.length && process.env.GITHUB_STEP_SUMMARY) {
+    const { appendFile } = await import("node:fs/promises");
+    const markdown = summaryMarkdown(core, detected, { generatedAt: now, title: "Changements détectés dans le planning" });
+    await appendFile(process.env.GITHUB_STEP_SUMMARY, `\n${markdown}\n`, "utf8").catch(() => {});
   }
 
   if (dump) {
@@ -326,13 +384,48 @@ async function main() {
   }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main().catch((error) => {
+/* ---------------------------------------------------------- résumés (CLI) */
+
+/**
+ * Changements de la dernière synchronisation : ceux dont la première détection
+ * correspond à la version publiée (les plus anciens gardent leur date d'origine
+ * et ne sont donc pas recomptés à chaque passage).
+ */
+export function lastDetectedChanges(data) {
+  const detectedAt = data?.generatedAt ?? null;
+  return (data?.changes ?? []).filter((change) => change.detectedAt === detectedAt);
+}
+
+/** `--summary` : tableau markdown des changements de la dernière synchronisation. */
+async function printSummary() {
+  const { core, data } = await readPublished();
+  if (!data) {
+    console.log("_data/edt.json est absent : aucun changement publié._");
+    return;
+  }
+  process.stdout.write(summaryMarkdown(core, lastDetectedChanges(data), { generatedAt: data.generatedAt }));
+}
+
+/** `--summary-subject` : sujet court pour le message de commit. */
+async function printSummarySubject() {
+  const { core, data } = await readPublished();
+  const subject = summarySubject(core, lastDetectedChanges(data));
+  if (subject) console.log(subject);
+}
+
+const isCli = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isCli) {
+  const summaryMode = process.argv.includes("--summary");
+  const subjectMode = process.argv.includes("--summary-subject");
+  const task = summaryMode ? printSummary() : subjectMode ? printSummarySubject() : main();
+  task.catch((error) => {
     const message = String(error?.stack ?? error).replace(/\s+/g, " ").slice(0, 1200);
+    const title = summaryMode || subjectMode ? "Résumé du planning en échec" : "Synchro CELCAT en échec";
     console.error(`[edt] erreur fatale : ${message}`);
-    console.error(`::error title=Synchro CELCAT en échec::${message.replaceAll("%", "%25")}`);
+    console.error(`::error title=${title}::${message.replaceAll("%", "%25")}`);
     process.exit(1);
   });
 }
 
-export { main, todayParis, addDays, mondayOf, weekKeys, slimEvent, hashEvents, postForm, probeStrategy, fetchWeekEvents };
+export { main, todayParis, addDays, mondayOf, weekKeys, slimEvent, hashEvents, postForm, probeStrategy, fetchWeekEvents, printSummary, printSummarySubject };
