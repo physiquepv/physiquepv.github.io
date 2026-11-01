@@ -61,10 +61,60 @@ Tout se règle dans `edt.config.json` (la page lit ce fichier au chargement) :
 }
 ```
 
+### Pourquoi le planning ne s'arrête plus fin décembre
+
+Avant, trois endroits codaient en dur « semestre S3, du 14 septembre au
+19 décembre » : la liste des semaines, l'impression et la synchro. Résultat, la
+navigation butait sur la semaine du 19 décembre et janvier n'existait pas.
+
+Maintenant :
+
+- `edt.config.json` décrit une **liste de semestres** (`semesters`) — S3 en
+  automne, S4 à partir du 4 janvier (groupe `S4MIASHS`) — et la synchro choisit
+  toute seule le semestre correspondant à la date du jour ;
+- `data/edt.json` publie cette liste (`semesters`) et le semestre courant ;
+- la page suit `data/edt.json` : elle affiche jusqu'aux dernières semaines
+  réellement publiées par l'université, même au-delà de la date de fin, et
+  l'option de TD garde le numéro choisi en changeant de semestre
+  (`S3MIASHS TD 2` → `S4MIASHS TD 2`) ;
+- une semaine pas encore publiée est annoncée « Pas encore publié » — aucune
+  vacance n'est inventée ;
+- l'impression découpe autant de pages A4 que nécessaire (12 semaines par page).
+
 Pour changer de groupe ou de semestre : modifier ce fichier, puis lancer
 **Actions → « Sync emploi du temps UVSQ » → Run workflow** (case « recharger tout
 le semestre » cochée). Les paramètres d'URL `?group=…&td=…` permettent de tester
 sans rien modifier (`index.html?group=S3MIASHS`).
+
+## Une seule vue, sans défilement de page
+
+L'interface est verrouillée sur la hauteur de l'écran (`100dvh`) : la barre
+d'outils, les onglets et la semaine restent toujours visibles, il n'y a plus
+jamais à faire défiler la page vers le haut ou vers le bas.
+
+- **Ordinateur** : les cinq colonnes se partagent la hauteur disponible. Les
+  cours sont placés en **pourcentage** de la journée 08:00 → 19:00 (plus aucune
+  hauteur fixe en pixels) : la journée entière tient dans l'écran, que la fenêtre
+  fasse 600 px ou 1 400 px de haut. Deux cours qui se chevauchent s'affichent
+  côte à côte au lieu de se superposer.
+- **Mobile** : un seul jour à la fois, choisi par les onglets ; seule la zone du
+  jour défile, jamais la page.
+- **Repères horaires** resserrés automatiquement sur les écrans très bas, et
+  cartes qui s'allègent (titre + horaire) pour les créneaux courts.
+
+## Une interface de produit, pas de prototype
+
+Feuille de style unique (les anciens blocs empilés ont été fusionnés), icônes
+SVG inline partout (plus aucun emoji dans les boutons), typographie Inter,
+couleurs et rayons cohérents, états hover/actif/focus discrets inspirés des
+outils type Linear / Vercel :
+
+- barre d'outils : navigation segmentée `‹ Aujourd'hui ›`, cloche de
+  changements, menu `⋯` ancré sous son bouton ;
+- menu : groupe de TD, thème clair/sombre, impression, réaffichage des matières ;
+- dialogues d'import et de confirmation avec de vrais boutons (Annuler /
+  Importer / Supprimer) ;
+- le rendu papier (`@media print`) reste un tableau A4 paysage, inchangé.
 
 ## Chaque changement est signalé, clairement
 
@@ -87,9 +137,9 @@ Comment l'information arrive à l'étudiant :
    (« 1 annulation, 1 nouveau cours, 1 changement de salle… ») et de la liste
    détaillée — jour, horaire, matière, salle, et l'ancienne valeur pour les
    déplacements. Il s'ouvre tout seul tant qu'il n'a pas été marqué comme vu.
-2. **Cloche 🔔 dans la barre d'outils** : nombre de changements connus ; elle
-   rouvre le détail après un clic sur « ✓ Vu » (le bandeau ne revient que s'il y
-   a du nouveau).
+2. **Cloche dans la barre d'outils** : nombre de changements connus ; elle
+   rouvre le détail après un clic sur « Vu » (le bandeau ne revient que s'il y a
+   du nouveau).
 3. **Badges sur les cartes** du planning, **puce 🔔 par journée** concernée, et
    mention dans l'**impression** (« NOUVEAU », « SALLE »… avec compteur en tête
    de page).
@@ -114,8 +164,8 @@ Garde-fous (détaillés par `npm run test:changes`) :
   (type + date + heure + matière). Un changement revu plus tard redevient une
   information récente, mais n'est jamais listé deux fois.
 - **Matières masquées** : maintenir une carte propose de la retirer à partir de
-  cette semaine, pour tous ses créneaux et les semaines suivantes. **Reset**
-  les réaffiche. Le choix reste dans le navigateur — les changements qui la
+  cette semaine, pour tous ses créneaux et les semaines suivantes.
+  **Réafficher les matières** (menu ⋯) les remet toutes. Le choix reste dans le navigateur — les changements qui la
   concernent ne sont plus signalés non plus.
 
 ## Mise en place (une seule fois)
