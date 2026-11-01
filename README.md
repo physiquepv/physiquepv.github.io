@@ -158,6 +158,29 @@ production. `npm run test:changes` construit en plus un planning volontairement
 modifié (annulation, nouveau cours, salle, horaire, cours retiré) et vérifie que
 la page le signale — et qu'elle reste silencieuse quand rien ne bouge.
 
+## Votre agenda personnel
+
+En plus de l'emploi du temps officiel, vous pouvez importer vos propres événements
+(rendez-vous, sport, démarches…) dans l'agenda :
+
+1. Ouvrez le menu ⋮ → **Importer des événements**.
+2. Collez votre agenda au format texte, une ligne par événement :
+   ```
+   Lundi 14/09 09:00-10:30 Réunion équipe #travail
+   2026-09-15 14h00-15h30 Dentiste #santé
+   Mercredi 16/09 08:00-09:00 Foot #sport
+   Jeudi 17/09 11:00-12:00 Banque #perso
+   ```
+   Règle : **jour ou date (ISO ou JJ/MM), horaire, titre**, puis un **#tag** optionnel.
+   Vous pouvez demander à votre IA d'écrire votre semaine dans ce format, puis copier-coller
+   le résultat dans la boîte d'import.
+3. Cliquez sur **Importer** : les événements s'ajoutent à votre agenda et s'affichent sur
+   les bonnes journées. Ils sont enregistrés dans votre navigateur uniquement (localStorage),
+   rien n'est envoyé sur un serveur.
+
+Un événement personnel peut être supprimé en le maintenant du doigt (ou en le survolant sur
+ordinateur) → **Supprimer**.
+
 ## Limites connues
 
 - CELCAT ne fournit pas le **nom du professeur** dans le flux « groupe » : la page
