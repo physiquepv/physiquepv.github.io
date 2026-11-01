@@ -346,22 +346,131 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
   .nav{grid-template-areas:"center center" "prev next" "td td" "changes changes" "today theme" "print print"}
 }
 @media print{.changes,.changes-btn{display:none!important}}
+<style>
+/* ======================================================================
+   Agenda simplifié — style « Silicon Valley » : moins de boutons, moins
+   de texte, plus d’espace. Ce bloc vient après les styles existants et
+   les remplace/complète pour la barre d’outils, le menu, l’import et les
+   événements personnels.
+   ====================================================================== */
+.nav{
+  position:sticky;top:12px;z-index:60;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 14px;margin-bottom:12px;border:1px solid var(--border);
+  border-radius:var(--radius-lg);background:color-mix(in srgb,var(--surface) 88%,transparent);
+  backdrop-filter:blur(18px) saturate(1.25);-webkit-backdrop-filter:blur(18px) saturate(1.25);
+  box-shadow:var(--shadow-sm)
+}
+.bar{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 14px;margin-bottom:8px;border:1px solid var(--border);
+  border-radius:var(--radius-lg);background:color-mix(in srgb,var(--surface) 88%,transparent);
+  backdrop-filter:blur(18px) saturate(1.25);-webkit-backdrop-filter:blur(18px) saturate(1.25)
+}
+.bar .nav-title{
+  margin:0;font-size:clamp(1rem,1.7vw,1.4rem);font-weight:800;letter-spacing:-.03em;
+  overflow-wrap:break-word
+}
+.toolbar{display:flex;align-items:center;gap:6px}
+.btn.nav-btn{
+  min-height:36px;padding:6px 10px;font-size:.75rem;font-weight:750;color:var(--muted);
+  border:1px solid var(--border);border-radius:10px;background:transparent
+}
+.btn.nav-btn:hover:not(:disabled){
+  color:var(--primary);border-color:color-mix(in srgb,var(--primary) 40%,var(--border));
+  background:var(--primary-soft,#eef2ff)
+}
+.btn.nav-btn.today{
+  color:var(--primary);border-color:color-mix(in srgb,var(--primary) 22%,var(--border));
+  background:var(--primary-soft,#eef2ff)
+}
+.btn.nav-btn.more{font-size:1.3rem;line-height:1;padding:6px 8px}
+@media screen and (max-width:860px){
+  .nav{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:10px !important}
+  .bar{flex-direction:column;align-items:flex-start;gap:8px}
+  .bar .nav-title{order:1;font-size:1.1rem}
+  .toolbar{order:2;width:100%;flex-wrap:wrap;justify-content:center;gap:6px}
+  .btn.nav-btn{width:auto;justify-content:center}
+  .btn.nav-btn.today{width:auto}
+}
+/* Menu secondaire (groupe TD, thème, impression, changements, import, reset) */
+#moreMenu{
+  position:fixed;z-index:200;top:0;right:0;width:min(300px,94vw);max-height:84vh;
+  overflow-y:auto;margin:10px;padding:8px;border:1px solid var(--border);
+  border-radius:20px;background:var(--surface-strong);box-shadow:var(--shadow-lg);
+  backdrop-filter:blur(24px) saturate(1.25);-webkit-backdrop-filter:blur(24px) saturate(1.25)
+}
+#moreMenu button,#moreMenu .menu-item{
+  width:100%;text-align:left;min-height:38px;padding:9px 12px;border:1px solid transparent;
+  border-radius:12px;background:transparent;color:var(--text-soft);font-size:.82rem;
+  font-weight:750;cursor:pointer
+}
+#moreMenu button:hover,#moreMenu .menu-item:hover{
+  background:var(--primary-soft,#eef2ff);color:var(--primary);
+  border-color:color-mix(in srgb,var(--primary) 30%,var(--border))
+}
+#moreMenu button[hidden],#moreMenu .menu-item[hidden]{display:none}
+#moreMenu #tdSelectorWrap{border:none;box-shadow:none;padding:0;margin:0}
+#moreMenu .td-selector-btn{width:100%;margin:-1px}
+#moreMenu #changesBtn{width:100%;text-align:left}
+/* Boîte de dialogue d’import */
+#importDialog{
+  position:fixed;inset:0;z-index:220;display:flex;align-items:center;justify-content:center;
+  padding:16px;background:rgba(8,12,21,.35)
+}
+#importDialog[hidden]{display:none!important}
+.import-backdrop{position:absolute;inset:0}
+.import-panel{
+  position:relative;z-index:2;width:min(480px,94vw);max-height:90vh;overflow:auto;
+  display:flex;flex-direction:column;gap:10px;padding:20px 22px;border:1px solid var(--border);
+  border-radius:20px;background:var(--surface-strong);box-shadow:var(--shadow-lg)
+}
+.import-panel h3{margin:0 0 6px;font-size:1.1rem;font-weight:800;letter-spacing:-.02em}
+.import-hint{
+  margin:0 0 6px;color:var(--muted);font-size:.78rem;font-weight:600;line-height:1.5
+}
+.import-example{
+  margin:0;color:var(--muted);font-size:.72rem;font-weight:500
+}
+#importText{
+  flex:1;min-height:150px;padding:12px 14px;border:1px solid var(--border);
+  border-radius:12px;background:var(--surface);font:inherit;font-size:.86rem;
+  line-height:1.55;color:var(--text)
+}
+.import-actions{display:flex;gap:8px;margin-top:6px}
+.import-actions .btn{flex:1}
+.import-result{margin:0;font-size:.78rem;font-weight:700}
+/* Événements personnels importés */
+.card.personal{border-left-color:var(--personal)!important;background:var(--personal-bg)}
+.card.personal .card-tag{background:var(--personal);color:#fff;border-color:transparent}
+.card-delete{
+  position:absolute;top:8px;right:8px;z-index:4;display:grid;place-items:center;
+  width:22px;height:22px;border:0;border-radius:50%;
+  background:color-mix(in srgb,var(--border) 60%,transparent);color:var(--muted);
+  font-size:15px;line-height:1;cursor:pointer;opacity:0;transition:opacity .2s ease
+}
+.card:hover .card-delete,.card-delete:focus-visible{opacity:1}
+.card-delete:hover{
+  background:color-mix(in srgb,var(--text) 15%,transparent);color:var(--text)
+}
+@media screen and (max-width:860px){.card-delete{opacity:1}}
 </style>
 </head>
 <body>
 <div class="ambient-bg" aria-hidden="true"><span class="ambient-orb ambient-orb-1"></span><span class="ambient-orb ambient-orb-2"></span><span class="ambient-orb ambient-orb-3"></span></div>
 <main class="app">
-<nav class="nav">
-<button class="btn" id="prev" type="button" onclick="changeWeek(-1)">◀ Précédente</button>
-<div class="nav-center" aria-live="polite" aria-atomic="true">
-<div class="nav-title" id="weekTitle"></div>
+<header class="bar">
+<h1 id="weekTitle" class="nav-title"></h1>
+<div class="toolbar">
+<button class="btn nav-btn" id="prev" type="button" onclick="changeWeek(-1)">◀</button>
+<button class="btn nav-btn" id="next" type="button" onclick="changeWeek(1)">▶</button>
+<button class="btn nav-btn today" id="today" type="button" onclick="jumpToTarget(true)">Aujourd’hui</button>
+<button class="btn nav-btn more" id="moreBtn" type="button" aria-haspopup="true" aria-controls="moreMenu" aria-expanded="false">⋮</button>
 </div>
-<div class="actions">
-<button class="btn changes-btn" id="changesBtn" type="button" aria-expanded="false" aria-controls="changeBanner" title="Changements au planning" hidden>🔔 <span class="changes-count" id="changesCount">0</span></button>
-<button class="btn" id="next" type="button" onclick="changeWeek(1)">Suivante ▶</button>
-<button class="btn today-btn" id="today" type="button" onclick="jumpToTarget(true)">🎯 Aujourd'hui</button>
-<div class="td-tools">
-<div class="td-selector" id="tdSelectorWrap">
+</header>
+<div id="moreMenu" class="menu" hidden>
+<button class="menu-item" id="importAction" type="button">📥 Importer des événements</button>
+<div id="tdSelectorWrap">
 <button type="button" class="td-selector-btn" id="tdSelectorBtn" aria-haspopup="listbox" aria-controls="tdSelect" aria-label="Choisir son groupe de TD">
 <span class="td-selector-icon" aria-hidden="true">👥</span>
 <span class="td-selector-value" id="tdSelectLabel">TD 2</span>
@@ -372,12 +481,11 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 <option value="S3MIASHS TD 2" selected>TD 2</option>
 </select>
 </div>
-<button class="btn reset-btn" id="resetHidden" type="button" title="Réafficher les matières masquées. Maintiens une carte pour en masquer une." disabled>↺ Reset</button>
+<button class="menu-item" id="theme" type="button" onclick="toggleTheme()">🌙 Sombre</button>
+<button class="menu-item" type="button" onclick="window.print()">🖨 Imprimer</button>
+<button class="btn changes-btn" id="changesBtn" type="button" aria-expanded="false" aria-controls="changeBanner" title="Changements au planning" hidden>🔔 <span class="changes-count" id="changesCount">0</span></button>
+<button class="btn reset-btn" id="resetHidden" type="button" title="Réafficher les matières masquées. Maintiens une carte pour en masquer une." disabled>↺ Réafficher</button>
 </div>
-<button class="btn" id="theme" type="button" onclick="toggleTheme()">🌙 Sombre</button>
-<button class="btn print-btn" type="button" onclick="window.print()">🖨 Imprimer</button>
-</div>
-</nav>
 
 <section class="changes" id="changeBanner" role="status" aria-live="polite" hidden>
 <div class="changes-head">
@@ -405,6 +513,22 @@ body{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
 </div>
 
 <section class="grid" id="grid" aria-label="Emploi du temps de la semaine"></section>
+<div id="importDialog" class="import-dialog" hidden>
+<div class="import-backdrop"></div>
+<div class="import-panel">
+<h3>Importer votre agenda</h3>
+<p class="import-hint">Une ligne par événement — demandez à votre IA d’écrire votre agenda dans ce format&#160;:</p>
+<div class="import-example">Lundi 14/09 09:00-10:30 Réunion équipe #travail</div>
+<div class="import-example">2026-09-15 14h00-15h30 Dentiste #santé</div>
+<div class="import-example">Mercredi 16/09 08:00-09:00 Foot #sport · Jeudi 17/09 11:00-12:00 Banque #perso</div>
+<textarea id="importText" placeholder="Lundi 14/09 09:00-10:30 Réunion équipe #travail …"></textarea>
+<div class="import-actions">
+<button type="button" id="importClose">Annuler</button>
+<button type="button" id="importRun">Importer</button>
+</div>
+<p id="importResult" class="import-result" hidden></p>
+</div>
+</div>
 <div id="holdDialog" class="hold-dialog" hidden>
 <div class="hold-panel" role="dialog" aria-modal="true" aria-labelledby="holdTitle">
 <p class="hold-kicker">Masquer une matière</p>
@@ -1109,6 +1233,179 @@ function attachChanges(view, changes, config = CONFIG, options = {}) {
 /* ===== CORE-END ===== */
 
 /* ======================================================================
+   AGENDA PERSONNEL — import d’un agenda au format texte (IA-friendly)
+   ----------------------------------------------------------------------
+   Format accepté, une ligne par événement :
+     Lundi 14/09 09:00-10:30 Réunion équipe #travail
+     2026-09-15 14h00-15h30 Dentiste #santé
+     Mercredi 16/09 08:00-09:00 Foot #sport
+   Jour ou date (ISO ou JJ/MM), horaire, titre, puis #tag optionnel.
+   Les événements sont stockés dans le navigateur (localStorage) et
+   s’affichent sur le planning comme n’importe quel autre cours.
+   ====================================================================== */
+const PERSONAL_KEY = "schedule_personal";
+const uid = () => globalThis.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const WD = { lundi: 1, mardi: 2, mercredi: 3, jeudi: 4, vendredi: 5, samedi: 6, dimanche: 0, lun: 1, mar: 2, mer: 3, jeu: 4, ven: 5, sam: 6, dim: 0 };
+
+function loadPersonal() {
+  try { const r = JSON.parse(localStorage.getItem(PERSONAL_KEY) || "[]"); return Array.isArray(r) ? r : []; } catch { return []; }
+}
+function savePersonal(list) { try { localStorage.setItem(PERSONAL_KEY, JSON.stringify(list)); } catch {} }
+function removePersonal(id) { savePersonal(loadPersonal().filter((e) => e.id !== id)); }
+function normTitle(t) { return String(t ?? "").toLowerCase().replace(/\s+/g, " ").trim(); }
+function personalKey(e) { return `${e.date}|${e.startMin}|${normTitle(e.title)}`; }
+function addPersonal(e, list = loadPersonal()) {
+  if (list.some((x) => personalKey(x) === personalKey(e))) return false;
+  list.push(e); savePersonal(list); return true;
+}
+
+/* Prochain jour nommé à partir d’aujourd’hui (ex. « Lundi » → ce lundi ou le prochain). */
+function nextWeekdayFromToday(weekday) {
+  const d = new Date();
+  return addDaysISO(formatISO(d), (WD[weekday] - d.getDay() + 7) % 7);
+}
+function parseDateToken(token, today) {
+  const m = token.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) {
+    const [, y, mo, dd] = m.map(Number);
+    const d = new Date(y, mo - 1, dd);
+    if (d.getFullYear() === y && d.getMonth() + 1 === mo && d.getDate() === dd) return formatISO(d);
+    return today;
+  }
+  const m2 = token.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?$/);
+  if (m2) {
+    const [, d, mth, y] = m2.map(Number);
+    const dd = new Date(y ? y : new Date().getFullYear(), mth - 1, d);
+    if (dd.getFullYear() === (y || new Date().getFullYear()) && dd.getMonth() + 1 === mth && dd.getDate() === d) return formatISO(dd);
+    return today;
+  }
+  return today;
+}
+function parseTimeMatch(m) {
+  const [, sh, sm, eh, em] = m.map(Number);
+  if (sh > 23 || sm > 59 || eh > 23 || em > 59) return null;
+  const s = sh * 60 + sm, e = eh * 60 + em;
+  return e > s ? { startMin: s, endMin: e, time: slotOf(s, e) } : null;
+}
+function parseImportLine(line, today) {
+  let rest = line.trim();
+  let weekday = null;
+  const mW = rest.match(/^(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche|lun|mar|mer|jeu|ven|sam|dim)\b/i);
+  if (mW) { weekday = mW[1].toLowerCase(); rest = rest.slice(mW[0].length).trim(); }
+  let date = null;
+  const mD = rest.match(/^(\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/);
+  if (mD) { date = mD[1]; rest = rest.slice(mD[0].length).trim(); }
+  let time = null;
+  let hasTimeToken = false;
+  let hasWeekday = !!weekday;
+  let hasDate = !!date;
+  const mT = rest.match(/^(\d{1,2}):(\d{2})\s*[-–—]\s*(\d{1,2}):(\d{2})/) || rest.match(/^(\d{1,2})h(\d{2})\s*[-–—]\s*(\d{1,2})h(\d{2})/);
+  if (mT) {
+    hasTimeToken = true;
+    time = parseTimeMatch(mT);
+    rest = rest.slice(mT[0].length).trim();
+  }
+  if (!time) {
+    if (hasTimeToken) return null; // horaire présent mais invalide
+    time = { startMin: 9 * 60, endMin: 10 * 60, time: "09:00 - 10:00" };
+  }
+  let tag = "";
+  const mTag = rest.match(/\s(#\S+)\s*$/);
+  if (mTag) { tag = mTag[1].slice(1); rest = rest.slice(0, mTag.index).trim(); }
+  const title = rest;
+  if (!title || (!hasWeekday && !hasDate && !hasTimeToken)) return null;
+  return {
+    id: uid(), date: date ? parseDateToken(date, today) : (weekday ? nextWeekdayFromToday(weekday) : today),
+    startMin: time.startMin, endMin: time.endMin, time: time.time, type: "RDV", title, cat: "personal",
+    room: "", tag: tag || "Personnel", tagType: "personal", isCancelled: false, ghost: false, removed: false,
+    note: "", source: "personal",
+  };
+}
+function parseImport(text) {
+  const today = todayISO();
+  const list = loadPersonal();
+  const existing = new Set(list.map(personalKey));
+  const added = [];
+  let skipped = 0;
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#") || line.startsWith("//")) { skipped++; continue; }
+    const parsed = parseImportLine(line, today);
+    if (!parsed) { skipped++; continue; }
+    const key = personalKey(parsed);
+    if (existing.has(key) || added.some((p) => personalKey(p) === key)) { skipped++; continue; }
+    existing.add(key); added.push(parsed);
+  }
+  return { added, skipped };
+}
+function doImport(text) {
+  const { added, skipped } = parseImport(text);
+  savePersonal([...loadPersonal(), ...added]);
+  return { added: added.length, skipped };
+}
+
+/* Ajoute les événements personnels aux jours de la semaine rendue. */
+function mergePersonalEvents(view) {
+  const personal = loadPersonal();
+  if (!view?.days?.length || !personal.length) return view;
+  const byDate = new Map();
+  for (const e of personal) {
+    const bucket = byDate.get(e.date);
+    if (bucket) bucket.push(e); else byDate.set(e.date, [e]);
+  }
+  const days = view.days.map((day) => {
+    const extra = byDate.get(formatISO(day.realDate));
+    if (!extra) return day;
+    const courses = [...day.courses];
+    for (const e of extra) {
+      courses.push({
+        id: e.id, date: e.date, time: e.time, startMin: e.startMin, endMin: e.endMin,
+        type: e.type || "RDV", title: e.title, cat: "personal", room: e.room || "",
+        tag: e.tag || "Personnel", tagType: "personal", isCancelled: false, ghost: false, removed: false,
+        note: "", changes: [], source: "personal",
+      });
+    }
+    courses.sort((a, b) => a.startMin - b.startMin);
+    return { ...day, courses };
+  });
+  return { ...view, days };
+}
+
+/* Dialogue d’import et menu secondaire. */
+function initImportDialog() {
+  const dialog = $("#importDialog");
+  const text = $("#importText");
+  const result = $("#importResult");
+  const close = () => { dialog.hidden = true; result.hidden = true; text.value = ""; };
+  $("#importAction")?.addEventListener("click", (event) => { event.stopPropagation(); dialog.hidden = false; text.focus(); });
+  $("#importClose")?.addEventListener("click", close);
+  $(".import-backdrop")?.addEventListener("click", close);
+  $("#importRun")?.addEventListener("click", () => {
+    const { added, skipped } = doImport(text.value);
+    renderWeek(state_view.index);
+    buildPrint();
+    result.hidden = false;
+    result.textContent = added
+      ? `✓ ${added} événement${added > 1 ? "s" : ""} importé${added > 1 ? "s" : ""}${skipped ? ` · ${skipped} ignoré${skipped > 1 ? "s" : ""}` : ""}`
+      : "Aucun événement valable dans le texte.";
+  });
+  addEventListener("keydown", (event) => { if (event.key === "Escape" && dialog && !dialog.hidden) close(); });
+}
+function initMoreMenu() {
+  const btn = $("#moreBtn");
+  const menu = $("#moreMenu");
+  let open = false;
+  function setOpen(value) {
+    open = value;
+    btn.setAttribute("aria-expanded", String(value));
+    menu.hidden = !value;
+  }
+  btn.addEventListener("click", (event) => { event.stopPropagation(); setOpen(!open); });
+  addEventListener("click", (event) => { if (open && !menu.contains(event.target) && event.target !== btn) setOpen(false); });
+  addEventListener("keydown", (event) => { if (event.key === "Escape" && open) setOpen(false); });
+}
+
+/* ======================================================================
    SOURCES DE DONNÉES
    ====================================================================== */
 const state = {
@@ -1300,9 +1597,10 @@ function cardHTML(item, day) {
     })
     .join(" · ");
   const details = [item.title, item.time, item.room, item.tag, note].filter(Boolean).join(" — ");
-  const room = item.room ? `<div class="card-room" title="${escapeHtml(item.room)}">📍 ${escapeHtml(item.room)}</div>` : `<div class="card-room">📍 ${item.isCancelled ? "salle non précisée" : "lieu non précisé"}</div>`;
+  const room = item.room ? `<div class="card-room" title="${escapeHtml(item.room)}">📍 ${escapeHtml(item.room)}</div>` : "";
   const tag = item.tag ? `<div class="card-tag ${escapeHtml(item.tagType || "")}">${escapeHtml(item.tag)}</div>` : "";
-  return `<article class="${classes.join(" ")}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="top:${p.top}px;height:${p.height}px" tabindex="0" title="${escapeHtml(details)} — maintenir pour masquer"><div class="card-time"><span>${escapeHtml(item.time)}</span><span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-title">${escapeHtml(item.title)}</div>${room}${badges}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}${notes}</article>`;
+  const del = item.source === "personal" ? `<button class="card-delete" data-id="${escapeHtml(item.id)}" aria-label="Supprimer cet événement">×</button>` : "";
+  return `<article class="${classes.join(" ")}" data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="top:${p.top}px;height:${p.height}px" tabindex="0" title="${escapeHtml(details)} — ${item.source === "personal" ? "maintenir pour supprimer" : "maintenir pour masquer"}"><div class="card-time"><span>${escapeHtml(item.time)}</span><span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-title">${escapeHtml(item.title)}</div>${room}${badges}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}${notes}${del}</article>`;
 }
 
 function emptyMessage(weekKey, dayIndex, live) {
@@ -1498,7 +1796,7 @@ function renderWeek(index, options = {}) {
   state_view.weekKey = weekKey;
   const recurring = options.recurring ?? state_view.recurring;
   state_view.recurring = recurring;
-  const view = buildWeekView(weekKey, recurring);
+  const view = mergePersonalEvents(buildWeekView(weekKey, recurring));
   const label = weekLabel(weekKey);
 
   $("#weekTitle").textContent = label.title;
@@ -1553,7 +1851,7 @@ function printCourse(item) {
 
 function buildPrintPage(pageWeeks, page, total, period) {
   const rows = pageWeeks.map(({ weekKey, number }) => {
-    const view = buildWeekView(weekKey, state_view.recurring, { all: true });
+    const view = mergePersonalEvents(buildWeekView(weekKey, state_view.recurring, { all: true }));
     const cells = view.days.map((day, dayIndex) => {
       if (day.courses.length) return `<td>${day.courses.map(printCourse).join("")}</td>`;
       const message = emptyMessage(weekKey, dayIndex, view.live);
@@ -1859,6 +2157,8 @@ function initialize() {
   initTheme();
   initTdSelector();
   syncResetButton();
+  initMoreMenu();
+  initImportDialog();
   const cached = readCacheSync();
   if (cached?.weeks) {
     state.weeks = cached.weeks;
@@ -1928,11 +2228,17 @@ function openHoldDialog(card) {
     time: card.dataset.time,
     title: card.dataset.title,
     cat: card.dataset.cat,
+    source: card.dataset.source,
+    id: card.dataset.id,
   };
   if (!pendingHide.date || !pendingHide.title) return;
   suppressSwipe = true;
-  $("#holdTitle").textContent = pendingHide.title;
-  $("#holdDetail").textContent = `Masquer cette matière à partir du ${formatDate(parseISO(pendingHide.date))}, pour tous ses créneaux et toutes les semaines suivantes. Les semaines d'avant restent affichées.`;
+  const personal = pendingHide.source === "personal";
+  $("#holdTitle").textContent = personal ? "Supprimer cet événement" : pendingHide.title;
+  $("#holdDetail").textContent = personal
+    ? "Cet événement personnel sera retiré de votre agenda."
+    : `Masquer cette matière à partir du ${formatDate(parseISO(pendingHide.date))}, pour tous ses créneaux et toutes les semaines suivantes. Les semaines d'avant restent affichées.`;
+  $("#holdDelete").textContent = personal ? "Supprimer" : "Supprimer";
   $("#holdDialog").hidden = false;
   $("#holdCancel").focus();
   try { navigator.vibrate?.(12); } catch {}
@@ -1946,7 +2252,8 @@ function closeHoldDialog() {
 
 function confirmHide() {
   if (!pendingHide) return;
-  hideSubjectFrom(pendingHide);
+  if (pendingHide.source === "personal") removePersonal(pendingHide.id);
+  else hideSubjectFrom(pendingHide);
   closeHoldDialog();
   renderWeek(state_view.index);
   buildPrint();
