@@ -208,6 +208,12 @@ function semesterAt(semesters, date = todayParis()) {
  * une fenêtre glissante autour d'aujourd'hui. La fenêtre n'est plus écrêtée à
  * la fin du semestre : elle continue d'avancer en janvier et au-delà, pour ne
  * jamais s'arrêter à une date arbitraire.
+ *
+ * En mode glissant, les dernières semaines de la fenêtre du semestre
+ * (`weeksTail`, 4 par défaut) sont aussi rafraîchies à chaque passage : c'est
+ * là que l'université publie les rattrapages et les premiers cours de janvier,
+ * bien avant la fin décembre — sinon le site s'arrêterait à décembre alors
+ * que le planning officiel les montre déjà.
  */
 function weekKeys(cfg, semester = cfg.semester) {
   const today = todayParis();
@@ -231,6 +237,13 @@ function weekKeys(cfg, semester = cfg.semester) {
 
   const keys = [];
   for (let cursor = from; parseDay(cursor) <= parseDay(to); cursor = addDays(cursor, 7)) keys.push(cursor);
+  if (!full) {
+    const tail = Math.max(0, Number(cfg.weeksTail ?? 4));
+    const window = [];
+    for (let cursor = first; parseDay(cursor) <= parseDay(last); cursor = addDays(cursor, 7)) window.push(cursor);
+    for (const monday of window.slice(-tail)) if (!keys.includes(monday)) keys.push(monday);
+    keys.sort();
+  }
   return keys;
 }
 

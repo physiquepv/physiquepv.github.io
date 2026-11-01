@@ -139,10 +139,57 @@ button{font:inherit;color:inherit}
 svg{display:block}
 [hidden]{display:none!important}
 :focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+/* Mobile : un double-tap sur un contrôle ne doit pas zoomer la page.
+   iOS Safari ignore user-scalable=no dans la balise viewport ;
+   touch-action:manipulation conserve le défilement et le pinch,
+   mais supprime le zoom au double-tap (flèches ‹ ›, onglets, cartes…). */
+button,a,select,[role="button"],.card{touch-action:manipulation}
 .ambient-bg{display:none}
+
+/* ------------------------------------- ciel étoilé discret (mode sombre) */
+[data-theme="dark"] body{
+  background:
+    radial-gradient(1100px 480px at 12% -10%,rgba(99,102,241,.16),transparent 70%),
+    radial-gradient(900px 440px at 100% -5%,rgba(56,189,248,.10),transparent 70%),
+    radial-gradient(760px 480px at 50% 112%,rgba(168,85,247,.09),transparent 70%),
+    var(--body);
+}
+[data-theme="dark"] body::before,
+[data-theme="dark"] body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background-repeat:repeat;
+}
+[data-theme="dark"] body::before{
+  background-image:
+    radial-gradient(circle at 22px 34px,rgba(255,255,255,.9) 0,rgba(255,255,255,.9) 1px,transparent 1.6px),
+    radial-gradient(circle at 130px 92px,rgba(255,255,255,.6) 0,rgba(255,255,255,.6) 1px,transparent 1.5px),
+    radial-gradient(circle at 208px 156px,#fff 0,#fff 1.4px,transparent 2px),
+    radial-gradient(circle at 74px 190px,rgba(214,224,255,.8) 0,rgba(214,224,255,.8) 1px,transparent 1.5px),
+    radial-gradient(circle at 168px 44px,rgba(255,255,255,.75) 0,rgba(255,255,255,.75) 1.2px,transparent 1.8px),
+    radial-gradient(circle at 246px 226px,rgba(255,255,255,.5) 0,rgba(255,255,255,.5) .9px,transparent 1.4px);
+  background-size:280px 280px;
+  opacity:.55;
+}
+[data-theme="dark"] body::after{
+  background-image:
+    radial-gradient(circle at 48px 66px,rgba(255,255,255,.8) 0,rgba(255,255,255,.8) 1px,transparent 1.5px),
+    radial-gradient(circle at 190px 128px,#fff 0,#fff 1.6px,transparent 2.2px),
+    radial-gradient(circle at 96px 214px,rgba(190,205,255,.7) 0,rgba(190,205,255,.7) 1px,transparent 1.5px),
+    radial-gradient(circle at 244px 36px,rgba(255,255,255,.85) 0,rgba(255,255,255,.85) 1.3px,transparent 1.9px),
+    radial-gradient(circle at 150px 260px,rgba(255,255,255,.5) 0,rgba(255,255,255,.5) .9px,transparent 1.4px);
+  background-size:340px 340px;
+  animation:star-twinkle 8s ease-in-out infinite alternate;
+}
+@keyframes star-twinkle{from{opacity:.12}to{opacity:.38}}
 
 /* ---------------------------------------------------------------- shell */
 .app{
+  position:relative;
+  z-index:1; /* au-dessus du fond étoilé (body::before/::after en z-index:0) */
   display:flex;
   flex-direction:column;
   gap:10px;
@@ -975,7 +1022,7 @@ svg{display:block}
 
 /* --------------------------------------------------------------- impression */
 #print{display:none}
-@media print{html,body{height:auto!important;min-height:0!important;overflow:visible!important;background:#fff!important}@page{size:A4 landscape;margin:4mm 5mm}*{box-sizing:border-box!important}html,body{width:100%!important;margin:0!important;padding:0!important;color:#000!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.app{display:none!important}#print{display:block!important}.print-page{display:flex!important;flex-direction:column;width:100%;height:196mm;overflow:hidden;page-break-inside:avoid;break-inside:avoid}.print-page:first-child{page-break-after:always;break-after:page}.print-head{display:flex;flex-shrink:0;align-items:flex-end;justify-content:space-between;height:11mm;margin-bottom:2mm;padding-bottom:2px;border-bottom:2px solid #0f172a}.print-head h2{color:#0f172a!important;font-size:10pt;font-weight:800;text-transform:uppercase}.print-head p{margin-top:1px;color:#334155!important;font-size:7.5pt;font-weight:600}.print-badge{padding:2px 6px;color:#0f172a!important;white-space:nowrap;font-size:6.8pt;font-weight:700;border:1px solid #64748b;border-radius:4px;background:#f1f5f9!important}.print-table{width:100%;height:181mm;table-layout:fixed;border-collapse:collapse}.print-table th{height:6mm;padding:2px;color:#fff!important;font-size:7.5pt;font-weight:800;text-transform:uppercase;border:1px solid #0f172a;background:#0f172a!important}.print-table th:first-child{width:9%}.print-table td{padding:1.5px 2px;color:#000!important;vertical-align:middle;border:1px solid #94a3b8;background:#fff!important}.print-week{text-align:center;background:#f8fafc!important}.print-week b{display:block;color:#0f172a!important;font-size:7.2pt}.print-week span{display:block;margin-top:2px;color:#334155!important;font-size:6.3pt;font-weight:700}.p-item{display:block;margin-bottom:1.5px;padding:1.5px 2px;color:#0f172a!important;font-size:6.2pt;line-height:1.12;border-left:3px solid #94a3b8;border-radius:2px}.p-item:last-child{margin-bottom:0}.p-item.maths{border-left-color:#1d4ed8;background:#eff6ff!important}.p-item.info{border-left-color:#0284c7;background:#f0f9ff!important}.p-item.micro{border-left-color:#059669;background:#ecfdf5!important}.p-item.macro{border-left-color:#0f766e;background:#f0fdfa!important}.p-item.socio{border-left-color:#7c3aed;background:#f5f3ff!important}.p-item.anglais{border-left-color:#b45309;background:#fffbeb!important}.p-time{font-weight:800}.p-type{font-weight:800;text-transform:uppercase}.p-room{color:#334155!important;font-size:5.7pt;font-weight:600}.p-empty{color:#64748b!important;text-align:center;font-size:6.2pt;font-style:italic}.p-item.cancelled{border-left-color:#dc2626;background:#fef2f2!important}.p-item.ghost{border-left-color:#94a3b8;border-left-style:dashed;opacity:.85}.p-alert{padding:4px 2px;color:#991b1b!important;text-align:center;font-size:6.4pt;font-weight:800;border:1px solid #f87171;border-radius:3px;background:#fef2f2!important}}
+@media print{body::before,body::after{display:none!important}html,body{height:auto!important;min-height:0!important;overflow:visible!important;background:#fff!important}@page{size:A4 landscape;margin:4mm 5mm}*{box-sizing:border-box!important}html,body{width:100%!important;margin:0!important;padding:0!important;color:#000!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.app{display:none!important}#print{display:block!important}.print-page{display:flex!important;flex-direction:column;width:100%;height:196mm;overflow:hidden;page-break-inside:avoid;break-inside:avoid}.print-page:first-child{page-break-after:always;break-after:page}.print-head{display:flex;flex-shrink:0;align-items:flex-end;justify-content:space-between;height:11mm;margin-bottom:2mm;padding-bottom:2px;border-bottom:2px solid #0f172a}.print-head h2{color:#0f172a!important;font-size:10pt;font-weight:800;text-transform:uppercase}.print-head p{margin-top:1px;color:#334155!important;font-size:7.5pt;font-weight:600}.print-badge{padding:2px 6px;color:#0f172a!important;white-space:nowrap;font-size:6.8pt;font-weight:700;border:1px solid #64748b;border-radius:4px;background:#f1f5f9!important}.print-table{width:100%;height:181mm;table-layout:fixed;border-collapse:collapse}.print-table th{height:6mm;padding:2px;color:#fff!important;font-size:7.5pt;font-weight:800;text-transform:uppercase;border:1px solid #0f172a;background:#0f172a!important}.print-table th:first-child{width:9%}.print-table td{padding:1.5px 2px;color:#000!important;vertical-align:middle;border:1px solid #94a3b8;background:#fff!important}.print-week{text-align:center;background:#f8fafc!important}.print-week b{display:block;color:#0f172a!important;font-size:7.2pt}.print-week span{display:block;margin-top:2px;color:#334155!important;font-size:6.3pt;font-weight:700}.p-item{display:block;margin-bottom:1.5px;padding:1.5px 2px;color:#0f172a!important;font-size:6.2pt;line-height:1.12;border-left:3px solid #94a3b8;border-radius:2px}.p-item:last-child{margin-bottom:0}.p-item.maths{border-left-color:#1d4ed8;background:#eff6ff!important}.p-item.info{border-left-color:#0284c7;background:#f0f9ff!important}.p-item.micro{border-left-color:#059669;background:#ecfdf5!important}.p-item.macro{border-left-color:#0f766e;background:#f0fdfa!important}.p-item.socio{border-left-color:#7c3aed;background:#f5f3ff!important}.p-item.anglais{border-left-color:#b45309;background:#fffbeb!important}.p-time{font-weight:800}.p-type{font-weight:800;text-transform:uppercase}.p-room{color:#334155!important;font-size:5.7pt;font-weight:600}.p-empty{color:#64748b!important;text-align:center;font-size:6.2pt;font-style:italic}.p-item.cancelled{border-left-color:#dc2626;background:#fef2f2!important}.p-item.ghost{border-left-color:#94a3b8;border-left-style:dashed;opacity:.85}.p-alert{padding:4px 2px;color:#991b1b!important;text-align:center;font-size:6.4pt;font-weight:800;border:1px solid #f87171;border-radius:3px;background:#fef2f2!important}}
 
 </style>
 </head>
@@ -2325,13 +2372,15 @@ function buildWeekList() {
   const keys = new Set(fallbackWeeks.map((week) => week.monday));
   // Toutes les semaines du semestre, même sans données, pour pouvoir naviguer.
   for (let cursor = mondayOf(CONFIG.semester.start); cursor <= CONFIG.semester.end; cursor = addDaysISO(cursor, 7)) keys.add(cursor);
-  // Toute semaine publiée par la synchro, y compris après la fin du semestre.
-  for (const [monday, week] of Object.entries(state.weeks)) {
-    if (week.events?.length) keys.add(monday);
-  }
+  // Toutes les semaines publiées par la synchro, même vides : elles bornent la
+  // fenêtre réellement interrogée chez CELCAT, donc la navigation va jusqu'à
+  // la dernière semaine connue — janvier compris — au lieu de s'arrêter à la
+  // dernière semaine contenant des cours (fin décembre). Une semaine publiée
+  // mais vide affiche « Aucun cours au planning officiel ».
+  for (const monday of Object.keys(state.weeks)) keys.add(monday);
   keys.add(currentWeekKey());
-  // Les semaines hors semestre et sans données ne sont pas listées (sauf celle
-  // du jour), pour ne pas afficher des mois de « rien ».
+  // Seules les semaines trop éloignées du semestre sont écartées, pour ne pas
+  // afficher des mois de « rien » hors de la fenêtre réellement publiée.
   return [...keys]
     .filter((monday) => monday >= addDaysISO(mondayOf(CONFIG.semester.start), -28) && monday <= addDaysISO(mondayOf(CONFIG.semester.end), 7 * 8))
     .sort();
