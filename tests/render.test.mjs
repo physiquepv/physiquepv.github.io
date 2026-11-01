@@ -136,6 +136,12 @@ check(window.document.querySelector("#grid .card.ghost") === null, "aucune carte
 check(!/À VÉRIFIER/.test($("#grid").textContent), "le badge « à vérifier » n'est plus affiché dans le planning");
 check(!$("#changes"), "aucun encart global de cours manquant");
 
+console.log("\n— mobile : le double-tap ne zoome plus, mode sombre étoilé —");
+check(/button,a,select,\[role="button"\],\.card\{touch-action:manipulation\}/.test(html), "touch-action:manipulation sur les contrôles (double-tap sans zoom, flèches ‹ › comprises)");
+check(/\[data-theme="dark"\] body::before/.test(html) && /@keyframes star-twinkle/.test(html), "mode sombre : fond étoilé discret (body::before/::after + scintillement)");
+check(/\.app\{[^}]*z-index:1/.test(html), "le contenu de l'app passe au-dessus du fond étoilé");
+check(/@media print\{body::before,body::after\{display:none!important\}/.test(html), "le fond étoilé n'est pas imprimé");
+
 console.log("\n— mise en page sans défilement de page —");
 // Aucun contrôle ne doit déplacer la page : la barre d'outils et les onglets
 // restent visibles, seul le conteneur #grid peut défiler (mobile).
@@ -170,6 +176,11 @@ const emojiInButtons = [...window.document.querySelectorAll("button")].filter((b
 check(emojiInButtons.length === 0, `aucun emoji dans les boutons (${emojiInButtons.map((b) => b.textContent.trim()).join(" | ")})`);
 
 console.log("\n— le calendrier ne s'arrête pas fin décembre —");
+// 0. les semaines publiées par la synchro restent navigables même vides :
+// data/edt.json contient déjà les semaines de janvier (pas encore de cours)
+const publishedWeeks = window.eval("buildWeekList()");
+check(publishedWeeks.includes("2027-01-11"), `une semaine de janvier publiée mais vide est proposée (${publishedWeeks[0]} → ${publishedWeeks.at(-1)})`);
+check(publishedWeeks.at(-1) >= "2027-01-04", "la navigation atteint janvier avec les données publiées seules");
 // 1. la liste des semaines va chercher les données publiées au-delà du semestre
 // une semaine de janvier publiée par la synchro, après la fin du semestre S3
 const weeks = window.eval(`(() => {

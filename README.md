@@ -73,10 +73,17 @@ Maintenant :
   automne, S4 à partir du 4 janvier (groupe `S4MIASHS`) — et la synchro choisit
   toute seule le semestre correspondant à la date du jour ;
 - `data/edt.json` publie cette liste (`semesters`) et le semestre courant ;
-- la page suit `data/edt.json` : elle affiche jusqu'aux dernières semaines
-  réellement publiées par l'université, même au-delà de la date de fin, et
-  l'option de TD garde le numéro choisi en changeant de semestre
-  (`S3MIASHS TD 2` → `S4MIASHS TD 2`) ;
+- la page suit `data/edt.json` : **toutes les semaines publiées sont
+  navigables, même vides** — la navigation va donc jusqu'à la dernière semaine
+  connue de la fenêtre CELCAT (janvier compris), au lieu de s'arrêter à la
+  dernière semaine contenant des cours ; une semaine publiée mais vide affiche
+  « Aucun cours au planning officiel », et l'option de TD garde le numéro
+  choisi en changeant de semestre (`S3MIASHS TD 2` → `S4MIASHS TD 2`) ;
+- la synchro glissante (toutes les 10 min) rafraîchit la fenêtre autour du jour
+  **plus les dernières semaines de la fenêtre du semestre** (`weeksTail`, 4 par
+  défaut) : les rattrapages et cours de janvier publiés par l'université
+  apparaissent donc sur le site dans les 10 minutes, sans attendre le
+  rechargement complet du lendemain ;
 - une semaine pas encore publiée est annoncée « Pas encore publié » — aucune
   vacance n'est inventée ;
 - l'impression découpe autant de pages A4 que nécessaire (12 semaines par page).
@@ -114,6 +121,11 @@ outils type Linear / Vercel :
 - menu : groupe de TD, thème clair/sombre, impression, réaffichage des matières ;
 - dialogues d'import et de confirmation avec de vrais boutons (Annuler /
   Importer / Supprimer) ;
+- sur mobile, un **double-tap sur un contrôle ne zoome plus** la page
+  (`touch-action:manipulation` sur les boutons — iOS ignore `user-scalable=no`) ;
+- le **mode sombre** reçoit un fond **étoilé discret** : deux couches d'étoiles
+  en `body::before`/`body::after` (scintillement lent, coupé par
+  `prefers-reduced-motion`, jamais imprimé) ;
 - le rendu papier (`@media print`) reste un tableau A4 paysage, inchangé.
 
 ## Chaque changement est signalé, clairement
