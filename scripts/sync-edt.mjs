@@ -182,9 +182,36 @@ async function fetchWeekEvents(monday, cfg) {
 
 /* ----------------------------------------------------------------- lecture */
 
-function weekKeys(cfg) {
+/** Tous les semestres déclarés (`semesters`) ou l'ancien champ unique `semester`. */
+function semestersOf(config) {
+  const list = Array.isArray(config?.semesters) && config.semesters.length ? config.semesters : [config?.semester ?? {}];
+  return list
+    .filter((semester) => semester?.start && semester?.end)
+    .map((semester) => ({
+      id: semester.id ?? semester.label ?? semester.group ?? "semestre",
+      label: semester.label ?? config.label,
+      group: semester.group ?? config.group,
+      tdGroup: semester.tdGroup ?? config.tdGroup,
+      start: semester.start,
+      end: semester.end,
+    }));
+}
+
+/** Semestre applicable à une date (le dernier dont le début est passé). */
+function semesterAt(semesters, date = todayParis()) {
+  const started = semesters.filter((semester) => semester.start <= date);
+  return started.length ? started[started.length - 1] : semesters[0];
+}
+
+/**
+ * Semaines à interroger pour un semestre : tout le semestre (`--full`), sinon
+ * une fenêtre glissante autour d'aujourd'hui. La fenêtre n'est plus écrêtée à
+ * la fin du semestre : elle continue d'avancer en janvier et au-delà, pour ne
+ * jamais s'arrêter à une date arbitraire.
+ */
+function weekKeys(cfg, semester = cfg.semester) {
   const today = todayParis();
-  const { start, end } = cfg.semester;
+  const { start, end } = semester;
   const first = mondayOf(addDays(start, -cfg.marginDaysBefore));
   const last = mondayOf(addDays(end, cfg.marginDaysAfter));
 
@@ -193,8 +220,13 @@ function weekKeys(cfg) {
   if (!full) {
     from = mondayOf(addDays(today, -7 * (cfg.weeksBackIncremental - 1)));
     to = mondayOf(addDays(today, 7 * cfg.weeksAheadIncremental));
+    // On ne sort pas de la fenêtre du semestre à gauche, mais on accepte
+    // d'aller voir un peu après sa fin (rattrapages, semestre suivant).
     if (parseDay(from) < parseDay(first)) from = first;
-    if (parseDay(to) > parseDay(last)) to = last;
+    if (parseDay(to) > parseDay(last)) {
+      const beyond = mondayOf(addDays(end, 7 * 6));
+      to = parseDay(to) > parseDay(beyond) ? beyond : to;
+    }
   }
 
   const keys = [];
@@ -241,17 +273,24 @@ async function readPublished(root = ROOT, outPath = OUT_PATH) {
 
 async function main() {
   const config = JSON.parse(await readFile(CONFIG_PATH, "utf8"));
+  // Le semestre courant dépend de la date : S3 jusqu'en décembre, S4 à partir
+  // de janvier. Plus de calendrier qui s'arrête à une date codée en dur.
+  const semesters = semestersOf(config);
+  const semester = semesterAt(semesters);
   const cfg = {
     ...config.fetch,
-    group: config.group,
-    semester: config.semester,
+    group: semester.group,
+    tdGroup: semester.tdGroup,
+    semester: { start: semester.start, end: semester.end },
+    semesters,
     retries: Number(process.env.EDT_RETRIES ?? config.fetch.retries ?? 3),
     timeoutMs: Number(process.env.EDT_TIMEOUT_MS ?? config.fetch.timeoutMs ?? 25000),
   };
-  const keys = weekKeys(cfg);
+  const keys = weekKeys(cfg, cfg.semester);
 
-  console.log(`[edt] node ${process.version} — groupe ${cfg.group} — ${full ? "semestre complet" : "fenêtre glissante"} — ${keys.length} semaines`);
+  console.log(`[edt] node ${process.version} — groupe ${cfg.group} (${semester.label ?? semester.id}) — ${full ? "semestre complet" : "fenêtre glissante"} — ${keys.length} semaines`);
   console.log(`[edt] fenêtre : ${keys[0]} → ${keys.at(-1)} (aujourd'hui : ${todayParis()})`);
+  console.log(`[edt] semestres suivis : ${semesters.map((item) => `${item.group} ${item.start}→${item.end}`).join(" | ")}`);
   console.log(`[edt] cible : ${cfg.baseUrl}${cfg.endpoints[0]}`);
 
   // Repart du fichier existant : les semaines non rafraîchies sont conservées.
@@ -299,7 +338,7 @@ async function main() {
       );
     }
     throw new Error(
-      `aucun créneau récupéré : vérifie le code du groupe dans edt.config.json (actuellement « ${config.group} ») ` +
+      `aucun créneau récupéré : vérifie le code du groupe dans edt.config.json (actuellement « ${cfg.group} ») ` +
         "et la fenêtre demandée.",
     );
   }
@@ -331,11 +370,13 @@ async function main() {
   const output = {
     version: 1,
     generatedAt: now,
-    group: config.group,
-    label: config.label,
+    group: cfg.group,
+    tdGroup: cfg.tdGroup,
+    label: semester.label ?? config.label,
     timezone: TZ,
-    semester: config.semester,
-    source: `${cfg.baseUrl}/cal?vt=agendaWeek&et=group&fid0=${encodeURIComponent(config.group)}`,
+    semester: { start: semester.start, end: semester.end },
+    semesters: semesters.map((item) => ({ ...item })),
+    source: `${cfg.baseUrl}/cal?vt=agendaWeek&et=group&fid0=${encodeURIComponent(cfg.group)}`,
     fetchedWeeks: keys,
     contentHash,
     changes,
@@ -428,4 +469,4 @@ if (isCli) {
   });
 }
 
-export { main, todayParis, addDays, mondayOf, weekKeys, slimEvent, hashEvents, postForm, probeStrategy, fetchWeekEvents, printSummary, printSummarySubject };
+export { main, todayParis, addDays, mondayOf, weekKeys, semestersOf, semesterAt, slimEvent, hashEvents, postForm, probeStrategy, fetchWeekEvents, printSummary, printSummarySubject };

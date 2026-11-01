@@ -136,11 +136,63 @@ check(window.document.querySelector("#grid .card.ghost") === null, "aucune carte
 check(!/À VÉRIFIER/.test($("#grid").textContent), "le badge « à vérifier » n'est plus affiché dans le planning");
 check(!$("#changes"), "aucun encart global de cours manquant");
 
+console.log("\n— mise en page sans défilement de page —");
+// Aucun contrôle ne doit déplacer la page : la barre d'outils et les onglets
+// restent visibles, seul le conteneur #grid peut défiler (mobile).
+let pageScrolls = 0;
+window.scrollTo = () => { pageScrolls++; };
+$("#today").click();
+$("#next").click();
+$("#prev").click();
+check(pageScrolls === 0, `changer de jour ou de semaine ne fait pas défiler la page (${pageScrolls} appel(s))`);
+check(!/window\.scrollTo|\bscrollY\b|documentElement\.scrollTop/.test(html), "le code n'appelle plus window.scrollTo pour caler le planning");
+check(/100dvh/.test(html) && /overflow:hidden/.test(html), "l'application est verrouillée sur la hauteur de l'écran");
+
+const body = $("#grid .day .day-body");
+check(body !== null, "les colonnes ont une piste horaire");
+const firstCard = $("#grid .card");
+const cardStyle = firstCard?.getAttribute("style") ?? "";
+check(/--top:[\d.]+/.test(cardStyle) && /--h:[\d.]+/.test(cardStyle), `la carte est placée en pourcentage (${cardStyle})`);
+const cardTop = Number((cardStyle.match(/--top:([\d.]+)/) ?? [])[1]);
+const cardHeight = Number((cardStyle.match(/--h:([\d.]+)/) ?? [])[1]);
+check(cardTop >= 0 && cardTop < 100 && cardHeight > 0 && cardTop + cardHeight <= 100.001, "la carte tient entièrement dans la journée affichée");
+const hours = [...window.document.querySelectorAll("#grid .hour-scale span")];
+check(hours.length >= 8 && hours.every((span) => /%$/.test(span.getAttribute("style").split(":").slice(1).join(":").trim())), `${hours.length} repères horaires positionnés en pourcentage`);
+
+console.log("\n— boutons : icônes nettes, plus d'emoji —");
+check($("#prev svg") !== null && $("#next svg") !== null, "les flèches utilisent des icônes SVG");
+check($("#moreBtn svg") !== null && $("#moreBtn").textContent.trim() === "", "le bouton d'options est une icône seule");
+check($("#moreMenu #theme svg") !== null && $("#themeLabel") !== null, "le basculement de thème a une icône et un libellé");
+check($("#importClose").classList.contains("btn") && $("#importRun").classList.contains("btn"), "les boutons de la boîte d'import sont stylés");
+check($("#importRun svg") !== null && $("#importClose svg") === null, "le bouton Importer porte une icône");
+check($("#holdDelete").classList.contains("danger") && $("#holdCancel").classList.contains("btn"), "les boutons de confirmation sont stylés");
+const emojiInButtons = [...window.document.querySelectorAll("button")].filter((button) => /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(button.textContent));
+check(emojiInButtons.length === 0, `aucun emoji dans les boutons (${emojiInButtons.map((b) => b.textContent.trim()).join(" | ")})`);
+
+console.log("\n— le calendrier ne s'arrête pas fin décembre —");
+// 1. la liste des semaines va chercher les données publiées au-delà du semestre
+// une semaine de janvier publiée par la synchro, après la fin du semestre S3
+const weeks = window.eval(`(() => {
+  state.weeks["2027-01-04"] = { monday: "2027-01-04", events: [{ id: "x", start: "2027-01-04T09:00:00", end: "2027-01-04T10:00:00" }] };
+  return buildWeekList();
+})()`);
+check(weeks.includes("2027-01-04"), `les semaines de janvier sont proposées (${weeks[0]} → ${weeks.at(-1)})`);
+check(weeks.at(-1) >= "2026-12-14", "la navigation va au-delà du 19 décembre");
+const sem = window.eval("currentSemester([{id:'S3',group:'S3MIASHS',tdGroup:'S3MIASHS TD 2',start:'2026-09-14',end:'2026-12-19'},{id:'S4',group:'S4MIASHS',tdGroup:'S4MIASHS TD 2',start:'2027-01-04',end:'2027-05-08'}], '2027-02-10')");
+check(sem?.id === "S4", `en février, le semestre courant est le S4 (${sem?.id})`);
+check(window.eval("tdChoiceFor('S4MIASHS', 'S3MIASHS TD 2')") === "S4MIASHS TD 2", "le numéro de TD choisi suit le changement de semestre");
+const feb = window.eval("emptyMessage('2027-02-02', 1, false, 'none')");
+check(/Pas encore publié/.test(feb), `une semaine future non publiée est annoncée comme telle (« ${feb} »)`);
+const spring = window.eval("emptyMessage('2027-04-06', 1, false, 'reference')");
+check(!/vacances|libre/i.test(spring) || /hors période/i.test(spring), "aucune vacance n'est inventée hors semestre");
+
 console.log("\n— impression —");
 window.dispatchEvent(new window.Event("beforeprint"));
 const printHtml = $("#print").innerHTML;
 check(printHtml.includes('class="print-table"'), "la page d'impression utilise le tableau attendu");
 check(printHtml.includes("Semaine 1") && printHtml.includes("Semaine 13"), "les 13 semaines du semestre sont imprimées");
+check(!/Page 1 \/ 2/.test(printHtml) || window.document.querySelectorAll("#print .print-page").length >= 1, "l'impression n'est pas figée à deux pages");
+check(window.document.querySelectorAll("#print .print-page").length >= 2, "l'impression découpe autant de pages que nécessaire");
 
 console.log("\n— erreurs JavaScript —");
 check(errors.length === 0, `aucune erreur console (${errors.length})`);

@@ -2,6 +2,24 @@
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
+  "semesters": [
+    {
+      "id": "S3",
+      "label": "L2 MIASHS — Semestre 3",
+      "group": "S3MIASHS",
+      "tdGroup": "S3MIASHS TD 2",
+      "start": "2026-09-14",
+      "end": "2026-12-19"
+    },
+    {
+      "id": "S4",
+      "label": "L2 MIASHS — Semestre 4",
+      "group": "S4MIASHS",
+      "tdGroup": "S4MIASHS TD 2",
+      "start": "2027-01-04",
+      "end": "2027-05-08"
+    }
+  ],
   "semester": {
     "start": "2026-09-14",
     "end": "2026-12-19"
