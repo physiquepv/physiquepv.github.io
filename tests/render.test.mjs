@@ -91,9 +91,9 @@ if (targetTime?.dateTime) {
   const [year, month, day] = targetTime.dateTime.split("-").map(Number);
   const date = new Date(year, month - 1, day);
   date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
-  const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-  const targetWeekStart = `${String(date.getDate()).padStart(2, "0")} ${months[date.getMonth()]}`;
-  check(title.includes(targetWeekStart), `la semaine de la journée ciblée est affichée (${targetWeekStart})`);
+  const months = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+  const targetWeekStart = `${date.getDate()}–`;
+  check(title.includes(targetWeekStart) && title.includes(months[date.getMonth()]), `la semaine de la journée ciblée est affichée (${targetWeekStart}… ${months[date.getMonth()]})`);
 }
 
 console.log("\n— interface simplifiée —");
@@ -111,7 +111,7 @@ check(!scheduledIntervals.some(({ delay }) => delay === 5 * 60 * 1000 || delay =
 
 console.log("\n— annulation détectée (CM de BDD du 1er octobre) —");
 let back = 0;
-for (; back < 8 && !/28 Septembre/.test($("#weekTitle").textContent); back++) $("#prev").click();
+for (; back < 8 && !/28 sept\./.test($("#weekTitle").textContent); back++) $("#prev").click();
 const cancelled = window.document.querySelectorAll("#grid .card.cancelled");
 check(cancelled.length === 1, `1 carte annulée affichée (${cancelled.length})`);
 if (cancelled.length) {
@@ -140,7 +140,7 @@ console.log("\n— mobile : le double-tap ne zoome plus, mode sombre étoilé �
 check(/button,a,select,\[role="button"\],\.card\{touch-action:manipulation\}/.test(html), "touch-action:manipulation sur les contrôles (double-tap sans zoom, flèches ‹ › comprises)");
 check(/\[data-theme="dark"\] body::before/.test(html) && /@keyframes star-twinkle/.test(html), "mode sombre : fond étoilé discret (body::before/::after + scintillement)");
 check(/\.app\{[^}]*z-index:1/.test(html), "le contenu de l'app passe au-dessus du fond étoilé");
-check(/@media print\{body::before,body::after\{display:none!important\}/.test(html), "le fond étoilé n'est pas imprimé");
+check(/@media print\{body::before,body::after,\.sky\{display:none!important\}/.test(html), "le fond étoilé et le ciel animé ne sont pas imprimés");
 
 console.log("\n— mise en page sans défilement de page —");
 // Aucun contrôle ne doit déplacer la page : la barre d'outils et les onglets

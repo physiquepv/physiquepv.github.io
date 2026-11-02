@@ -37,7 +37,7 @@ try{
 
   --text:#0c0f14;
   --text-soft:#454b55;
-  --muted:#767d88;
+  --muted:#687080;
 
   --border:#e4e6ea;
   --border-strong:#d3d7de;
@@ -146,6 +146,79 @@ svg{display:block}
 button,a,select,[role="button"],.card{touch-action:manipulation}
 .ambient-bg{display:none}
 
+/* ------------------------------------------------------- ciel de nuit */
+.sky{position:fixed;inset:0;z-index:0;display:none;overflow:hidden;pointer-events:none}
+[data-theme="dark"] .sky{display:block}
+.sky-glow{position:absolute;border-radius:50%;filter:blur(60px)}
+.sky-glow-a{top:-180px;right:-120px;width:520px;height:520px;background:radial-gradient(circle,rgba(99,102,241,.26),transparent 70%)}
+.sky-glow-b{left:-160px;bottom:-200px;width:560px;height:560px;background:radial-gradient(circle,rgba(56,189,248,.16),transparent 70%)}
+.sky-moon{
+  position:absolute;
+  top:clamp(56px,10vh,138px);
+  right:clamp(24px,7vw,120px);
+  width:52px;height:52px;
+  border-radius:50%;
+  background:transparent;
+  box-shadow:inset -9px -6px 0 0 rgba(240,245,255,.95),0 0 0 1px rgba(205,220,255,.08);
+  opacity:.5;
+  filter:drop-shadow(0 0 18px rgba(186,205,255,.5));
+  animation:moon-glow 13s ease-in-out infinite alternate;
+}
+@keyframes moon-glow{from{opacity:.3;filter:drop-shadow(0 0 12px rgba(186,205,255,.3))}to{opacity:.5;filter:drop-shadow(0 0 22px rgba(186,205,255,.55))}}
+.sky-glow-a{animation:glow-drift-a 28s ease-in-out infinite alternate}
+.sky-glow-b{animation:glow-drift-b 34s ease-in-out infinite alternate}
+@keyframes glow-drift-a{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-34px,26px,0) scale(1.08)}}
+@keyframes glow-drift-b{from{transform:translate3d(0,0,0) scale(1.04)}to{transform:translate3d(30px,-22px,0) scale(1)}}
+.sky-constellation{
+  position:absolute;
+  left:3%;
+  bottom:4%;
+  width:clamp(180px,24vw,300px);
+  height:auto;
+  color:rgba(198,214,255,.9);
+  opacity:.22;
+  filter:drop-shadow(0 0 7px rgba(150,180,255,.45));
+  animation:constellation-pulse 16s ease-in-out infinite alternate;
+}
+@keyframes constellation-pulse{from{opacity:.13;transform:translateY(2px)}to{opacity:.3;transform:translateY(-3px)}}
+.sky-meteors{position:absolute;inset:0}
+.meteor{
+  position:absolute;
+  width:var(--len,150px);
+  height:2px;
+  border-radius:999px;
+  opacity:0;
+  transform-origin:100% 50%;
+  background:linear-gradient(90deg,rgba(255,255,255,0) 0,rgba(176,198,255,.24) 38%,rgba(227,236,255,.86) 82%,#fff 100%);
+  filter:drop-shadow(0 0 6px rgba(198,216,255,.9));
+  will-change:transform,opacity;
+  animation:meteor-fly var(--dur,1.6s) cubic-bezier(.3,.42,.6,1) forwards;
+}
+.meteor::after{
+  content:"";
+  position:absolute;
+  top:50%;right:-1px;
+  width:3px;height:3px;
+  border-radius:50%;
+  background:#fff;
+  transform:translateY(-50%);
+  box-shadow:0 0 10px 2px rgba(255,255,255,.9);
+}
+.meteor.comet{height:2.5px;filter:drop-shadow(0 0 10px rgba(214,228,255,1)) drop-shadow(0 0 22px rgba(140,170,255,.55))}
+@keyframes meteor-fly{
+  0%{opacity:0;transform:rotate(var(--angle,24deg)) translate3d(0,0,0) scaleX(.35)}
+  9%{opacity:1}
+  68%{opacity:1}
+  100%{opacity:0;transform:rotate(var(--angle,24deg)) translate3d(var(--travel,60vw),0,0) scaleX(1)}
+}
+@media (max-width:860px){
+  .sky-constellation{width:min(56vw,230px);opacity:.16;bottom:2%}
+  .sky-moon{width:42px;height:42px;opacity:.32}
+}
+@media (prefers-reduced-motion:reduce){
+  .meteor,.sky-moon,.sky-glow,.sky-constellation{animation:none!important}
+}
+
 /* ------------------------------------- ciel étoilé discret (mode sombre) */
 [data-theme="dark"] body{
   background:
@@ -217,7 +290,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   backdrop-filter:blur(16px) saturate(1.4);
   -webkit-backdrop-filter:blur(16px) saturate(1.4);
 }
-.bar-left{display:flex;align-items:center;gap:9px;min-width:0}
+.bar-left{display:flex;flex:1 1 auto;align-items:center;gap:9px;min-width:0}
 .bar-mark{
   display:grid;
   place-items:center;
@@ -230,16 +303,41 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 }
 [data-theme="dark"] .bar-mark{color:var(--text);background:var(--surface-strong);box-shadow:inset 0 0 0 1px var(--border)}
 .nav-title{
+  display:flex;
+  flex:1 1 auto;
   min-width:0;
-  overflow:hidden;
+  margin:0;
   color:var(--text);
   font-size:14px;
   font-weight:650;
   letter-spacing:-.015em;
   line-height:1.3;
-  white-space:nowrap;
-  text-overflow:ellipsis;
 }
+.nav-title-btn{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+  max-width:100%;
+  margin:0;
+  padding:3px 6px;
+  color:inherit;
+  font:inherit;
+  letter-spacing:inherit;
+  text-align:left;
+  cursor:pointer;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  transition:background-color .14s ease;
+}
+.nav-title-btn:hover{background:color-mix(in srgb,var(--text) 7%,transparent)}
+.nav-title-btn:active{background:color-mix(in srgb,var(--text) 11%,transparent)}
+.nav-title-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-title-chev{flex:none;width:13px;height:13px;color:var(--muted);stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:transform .16s ease,color .16s ease}
+.nav-title-btn:hover .nav-title-chev{color:var(--text)}
+.nav-title-btn[aria-expanded="true"] .nav-title-chev{transform:rotate(180deg)}
+.nav-title .title-short{display:none}
 .toolbar{display:flex;flex:none;align-items:center;gap:6px}
 
 /* --------------------------------------------------------------- boutons */
@@ -448,7 +546,6 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 [data-theme="dark"] .changes{background:color-mix(in srgb,var(--anglais-bg) 55%,var(--surface))}
 .changes-head{display:flex;align-items:flex-start;gap:10px}
 .changes-icon{display:grid;place-items:center;flex:none;width:24px;height:24px;color:var(--anglais);border-radius:7px;background:color-mix(in srgb,var(--anglais) 12%,transparent)}
-.changes-icon svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .changes-heading{min-width:0;flex:1 1 auto}
 .changes-title{font-size:13px;font-weight:650;letter-spacing:-.01em}
 .changes-sub{margin-top:2px;color:var(--text-soft);font-size:11.5px;font-weight:450;line-height:1.45}
@@ -471,6 +568,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 }
 .change-item:hover{border-color:var(--border-strong);background:var(--subtle)}
 .change-kind{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;font-size:10.5px;font-weight:700;line-height:1.5;white-space:nowrap;border-radius:999px;border:1px solid transparent}
+.change-kind svg{width:11px;height:11px;flex:none;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .change-kind.cancelled{color:#991b1b;background:#fee2e2;border-color:#fecaca}
 .change-kind.removed{color:#3f4652;background:#eef0f3;border-color:#dfe3e8}
 .change-kind.restored{color:#065f46;background:#d1fae5;border-color:#a7f3d0}
@@ -488,7 +586,8 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 .change-when{font-size:11.5px;font-weight:650;white-space:nowrap}
 .change-what{min-width:0;font-size:12px;font-weight:550;overflow-wrap:anywhere}
 .change-type{padding:0 5px;color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.04em;border:1px solid var(--border);border-radius:4px}
-.change-room{color:var(--muted);font-size:11px}
+.change-room{display:inline-flex;align-items:center;gap:3px;color:var(--muted);font-size:11px}
+.change-room svg{width:10px;height:10px;flex:none;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .change-detail{color:var(--muted);font-size:11px;font-style:italic}
 .change-jump{display:inline-flex;align-items:center;gap:2px;margin-left:auto;color:var(--primary);font-size:11px;font-weight:650;white-space:nowrap}
 .changes-foot{margin-top:8px;color:var(--muted);font-size:10.5px}
@@ -537,6 +636,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 .day.target .day-head{background:linear-gradient(180deg,color-mix(in srgb,var(--today-bg) 70%,var(--surface)),var(--surface))}
 .day-head-main{min-width:0}
 .day-name{overflow:hidden;color:var(--text);font-size:12.5px;font-weight:650;letter-spacing:-.01em;text-overflow:ellipsis;white-space:nowrap}
+.today-dot{display:inline-block;width:5px;height:5px;margin-left:5px;vertical-align:1px;border-radius:50%;background:var(--today);box-shadow:0 0 0 3px color-mix(in srgb,var(--today) 16%,transparent)}
 .day-date{margin-top:1px;color:var(--muted);font-size:10.5px;font-weight:500}
 .day-tags{display:inline-flex;flex:none;align-items:center;gap:4px}
 .day-count{
@@ -569,6 +669,17 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   border-radius:999px;
   background:var(--anglais-bg);
 }
+.target-pill svg,.day-alert svg,.change-jump svg,.changes-icon svg{
+  flex:none;
+  width:10px;
+  height:10px;
+  stroke:currentColor;
+  stroke-width:1.9;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.changes-icon svg{width:14px;height:14px}
 .target-pill{
   display:inline-flex;
   align-items:center;
@@ -679,6 +790,10 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 }
 .card:focus-visible{outline:2px solid var(--primary);outline-offset:1px;z-index:30}
 .card-time{display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:0;color:var(--text);font-size:10.5px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.ct-range{display:inline-flex;align-items:baseline;white-space:nowrap}
+.card-main{display:flex;flex-direction:column;gap:1px;min-width:0}
+.card-kind{display:none}
+.card-flag{display:none}
 .course-type{
   flex:none;
   padding:0 4px;
@@ -748,6 +863,38 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 .card.anglais{border-left-color:var(--anglais);background:color-mix(in srgb,var(--anglais-bg) 88%,var(--surface))}
 .card.personal{border-left-color:var(--personal);background:color-mix(in srgb,var(--personal-bg) 92%,var(--surface))}
 .card.personal .card-tag{color:#fff;background:var(--personal)}
+
+/* --------------------------------------- mode sombre : verre dépoli */
+/* Tout l'habillage (barre, onglets, colonnes) laisse passer un peu du ciel
+   étoilé ; les cartes de matière restent lisibles mais laissent voir les
+   étoiles — très légèrement. Aucun flou sur les cartes : le scintillement
+   doit rester visible et le rendu fluide sur téléphone. */
+[data-theme="dark"] .bar{background:color-mix(in srgb,var(--surface) 62%,transparent)}
+[data-theme="dark"] .mobile-tabs{background:color-mix(in srgb,var(--surface) 60%,transparent)}
+[data-theme="dark"] .segmented{background:color-mix(in srgb,var(--subtle) 62%,transparent)}
+[data-theme="dark"] .changes{background:color-mix(in srgb,var(--surface) 64%,transparent)}
+[data-theme="dark"] .menu{
+  /* panneau flottant : opaque, sinon le planning transparaît sous les libellés */
+  background:var(--surface-strong);
+  box-shadow:0 18px 44px -18px rgba(0,0,0,.85),inset 0 1px 0 color-mix(in srgb,var(--text) 6%,transparent);
+}
+[data-theme="dark"] .day{background:color-mix(in srgb,var(--surface) 46%,transparent)}
+[data-theme="dark"] .day-head{background:color-mix(in srgb,var(--surface-strong) 70%,transparent)}
+[data-theme="dark"] .day-body{background-color:transparent}
+[data-theme="dark"] .card{background:color-mix(in srgb,var(--surface) 76%,transparent);border-color:color-mix(in srgb,var(--border) 76%,transparent)}
+[data-theme="dark"] .card.maths{background:color-mix(in srgb,var(--maths-bg) 74%,transparent)}
+[data-theme="dark"] .card.info{background:color-mix(in srgb,var(--info-bg) 74%,transparent)}
+[data-theme="dark"] .card.micro{background:color-mix(in srgb,var(--micro-bg) 74%,transparent)}
+[data-theme="dark"] .card.macro{background:color-mix(in srgb,var(--macro-bg) 74%,transparent)}
+[data-theme="dark"] .card.socio{background:color-mix(in srgb,var(--socio-bg) 74%,transparent)}
+[data-theme="dark"] .card.anglais{background:color-mix(in srgb,var(--anglais-bg) 74%,transparent)}
+[data-theme="dark"] .card.personal{background:color-mix(in srgb,var(--personal-bg) 74%,transparent)}
+[data-theme="dark"] .card.personal .card-tag{color:#2b1220;background:var(--personal)}
+[data-theme="dark"] .card.cancelled{background:color-mix(in srgb,#3f1212 68%,transparent)}
+[data-theme="dark"] .card.ghost,[data-theme="dark"] .card.removed{background:color-mix(in srgb,var(--subtle) 60%,transparent)}
+[data-theme="dark"] .empty{background:repeating-linear-gradient(-45deg,transparent 0 7px,color-mix(in srgb,var(--subtle) 45%,transparent) 7px 14px)}
+[data-theme="dark"] .card-tag{background:color-mix(in srgb,var(--surface) 45%,transparent)}
+[data-theme="dark"] .course-type{background:color-mix(in srgb,var(--surface) 45%,transparent)}
 
 /* étiquettes (perso, réunion, cm…) */
 .card-tag.perso{color:#1d4ed8;background:#e8efff}
@@ -821,6 +968,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 [data-theme="dark"] .card-change.updated{color:#99f6e4;background:#042f2e}
 .card.arming{box-shadow:0 0 0 2px var(--primary-ring),0 8px 18px -8px rgba(79,70,229,.4)}
 
+.day-foot{display:none}
 .empty{
   position:absolute;
   top:0;bottom:0;
@@ -920,6 +1068,154 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 .import-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:2px}
 .import-result{margin:0;font-size:11.5px;font-weight:600;color:var(--text-soft)}
 
+
+/* ------------------------------------------------------------- calendrier */
+.cal-dialog{
+  position:fixed;
+  inset:0;
+  z-index:240;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  background:color-mix(in srgb,#070910 55%,transparent);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  animation:fadeIn .14s ease-out;
+}
+.cal-backdrop{position:absolute;inset:0}
+.cal-panel{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+  width:min(520px,100%);
+  max-height:min(92vh,700px);
+  padding:18px;
+  overflow:auto;
+  overscroll-behavior:contain;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:color-mix(in srgb,var(--surface) 94%,transparent);
+  box-shadow:var(--shadow-lg);
+  animation:panelIn .18s cubic-bezier(.2,.8,.2,1);
+}
+[data-theme="dark"] .cal-panel{
+  border-color:color-mix(in srgb,var(--border) 80%,transparent);
+  background:color-mix(in srgb,var(--surface-strong) 80%,transparent);
+  backdrop-filter:blur(26px) saturate(1.25);
+  -webkit-backdrop-filter:blur(26px) saturate(1.25);
+}
+.cal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.cal-heading{min-width:0}
+.cal-kicker{color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.cal-title{margin-top:2px;color:var(--text);font-size:19px;font-weight:700;letter-spacing:-.025em;line-height:1.15}
+.cal-nav{display:flex;flex:none;align-items:center;gap:3px}
+.cal-nav .btn{height:29px;min-height:29px;padding:0 7px}
+.cal-nav .btn.icon{width:29px;padding:0}
+.cal-nav .btn svg{width:13px;height:13px}
+.cal-close{margin-left:2px}
+.cal-months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+.cal-month{
+  height:27px;
+  padding:0 2px;
+  overflow:hidden;
+  color:var(--muted);
+  font-size:10.5px;
+  font-weight:650;
+  letter-spacing:-.02em;
+  white-space:nowrap;
+  cursor:pointer;
+  border:1px solid transparent;
+  border-radius:7px;
+  background:transparent;
+  transition:background-color .12s ease,color .12s ease,border-color .12s ease;
+}
+.cal-month.available{color:var(--text-soft)}
+.cal-month.available:hover{background:var(--subtle);color:var(--text)}
+.cal-month.active{color:var(--on-primary);background:var(--text);border-color:var(--text)}
+.cal-month.active.available{color:var(--on-primary)}
+.cal-month:disabled{opacity:.3;cursor:not-allowed}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-bottom:-4px;color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-align:center;text-transform:uppercase}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.cal-day{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  height:clamp(36px,7.4vw,46px);
+  padding:0;
+  color:var(--text-soft);
+  font-size:12px;
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+  cursor:pointer;
+  border:1px solid transparent;
+  border-radius:10px;
+  background:transparent;
+  transition:background-color .12s ease,color .12s ease,border-color .12s ease,transform .12s ease;
+}
+.cal-day:hover:not(:disabled){background:var(--subtle);color:var(--text)}
+.cal-day:active:not(:disabled){transform:scale(.96)}
+.cal-day.outside{opacity:.42;pointer-events:none}
+.cal-day.weekend{color:var(--muted);opacity:.55}
+.cal-day.week-selected{background:var(--primary-soft);color:var(--text)}
+.cal-day.selected{color:var(--text);font-weight:750;box-shadow:inset 0 0 0 2px var(--primary)}
+.cal-day.today{border-color:color-mix(in srgb,var(--today) 60%,transparent);color:var(--today-text);background:color-mix(in srgb,var(--today-bg) 80%,transparent)}
+.cal-day.today.week-selected{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--today) 30%,transparent)}
+.cal-day.unavailable{color:var(--muted);opacity:.32;cursor:not-allowed}
+.cal-day.unavailable.weekend{opacity:.28}
+.cal-num{line-height:1}
+.cal-dot{width:4px;height:4px;border-radius:50%;background:transparent}
+.cal-dot.has{background:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 16%,transparent)}
+.cal-day.today .cal-dot.has{background:var(--today)}
+.cal-day.week-selected .cal-dot.has{background:var(--text)}
+.cal-day.today .cal-dot.has{background:var(--today-text)}
+.cal-summary{margin:-3px 0 0;color:var(--muted);font-size:10.5px;font-weight:550;text-align:center}
+.cal-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px solid var(--border)}
+.cal-hint{margin:0;color:var(--muted);font-size:10.5px;line-height:1.45;text-align:left}
+.cal-foot .btn{flex:none}
+@media screen and (max-width:520px){
+  .cal-dialog{align-items:flex-end;padding:0}
+  .cal-panel{
+    width:100%;
+    max-height:90vh;
+    gap:10px;
+    padding:15px 14px max(14px,env(safe-area-inset-bottom));
+    border-radius:22px 22px 0 0;
+    border-bottom:0;
+    animation:sheetIn .22s cubic-bezier(.2,.9,.25,1);
+  }
+  .cal-title{font-size:17px}
+  .cal-nav .btn{height:32px;min-height:32px}
+  .cal-nav .btn.icon{width:32px}
+  .cal-months{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+  .cal-month{height:32px;font-size:11px}
+  .cal-weekdays,.cal-grid{gap:4px}
+  .cal-day{height:42px;border-radius:9px}
+  .cal-foot{align-items:flex-end}
+  .cal-hint{max-width:64%}
+}
+@media screen and (max-width:380px){
+  .cal-head{flex-wrap:wrap;row-gap:8px}
+  .cal-heading{flex:1 1 100%}
+  .cal-kicker{font-size:9px;letter-spacing:.1em}
+  .cal-title{font-size:21px}
+  .cal-nav{margin-left:auto}
+  .cal-month{font-size:10.5px}
+  .cal-weekdays,.cal-grid{gap:3px}
+  .cal-day{height:40px}
+  .cal-num{font-size:12px}
+  .cal-foot{flex-wrap:wrap;row-gap:6px}
+  #calToday{margin-left:auto}
+  #calSummary{font-size:10.5px}
+  .cal-hint{font-size:10px}
+}
+@keyframes sheetIn{from{opacity:.5;transform:translateY(26px)}to{opacity:1;transform:none}}
+
 /* -------------------------------------------------------------- mobile */
 @media screen and (max-width:860px){
   body{overflow:hidden}
@@ -928,16 +1224,27 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   .bar-mark{display:none}
   .nav-title{font-size:12.5px}
   .toolbar{gap:4px}
-  .segmented{padding:2px;border-radius:9px}
-  .segmented .btn{height:26px;min-height:26px;padding:0 7px;font-size:11.5px}
-  .segmented .btn.icon{width:24px}
-  .btn{height:30px;min-height:30px;padding:0 9px;font-size:11.5px}
-  .btn.icon{width:30px}
+  .segmented{padding:2px;border-radius:10px}
+  .segmented .btn{height:30px;min-height:30px;padding:0 9px;font-size:11.5px}
+  .segmented .btn.icon{width:30px}
+  .btn{height:34px;min-height:34px;padding:0 11px;font-size:11.5px}
+  .btn.icon{width:34px}
+  .menu-item{height:38px}
   .menu{right:-2px;width:min(280px,calc(100vw - 20px))}
-  .changes{max-height:32vh;padding:9px 10px}
-  .changes-actions{gap:4px}
-  .changes-title{font-size:12px}
-  .changes-sub{font-size:10.5px}
+  .changes{max-height:46vh;padding:10px}
+  .changes-head{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"icon heading" "actions actions";gap:5px 9px}
+  .changes-icon{grid-area:icon;width:22px;height:22px}
+  .changes-heading{grid-area:heading}
+  .changes-actions{grid-area:actions;justify-content:flex-end;gap:5px;margin-top:2px}
+  .changes-title{font-size:12.5px}
+  .changes-sub{font-size:10.5px;line-height:1.4}
+  .change-item{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:start;padding:8px 9px}
+  .change-kind{grid-column:1 / -1;justify-self:start}
+  .change-when{grid-column:1;grid-row:2;font-size:11px}
+  .change-jump{grid-column:2;grid-row:2;justify-self:end;margin-left:0}
+  .change-what{grid-column:1 / -1;grid-row:3;font-size:12px}
+  .change-detail{grid-column:1 / -1;grid-row:4;font-size:10.5px}
+  .changes-foot{font-size:10px}
 
   .mobile-tabs{
     display:flex;
@@ -954,7 +1261,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   .tab{
     flex:1 1 0;
     min-width:0;
-    height:30px;
+    height:36px;
     padding:0 2px;
     color:var(--muted);
     font-size:11px;
@@ -966,17 +1273,73 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
     background:transparent;
     transition:background-color .12s ease,color .12s ease;
   }
+  .tab{position:relative}
   .tab:hover{color:var(--text)}
-  .tab.active{color:var(--text);background:var(--surface);box-shadow:var(--shadow-xs)}
-  .tab.current:not(.active){color:var(--primary);background:var(--primary-soft)}
+  .tab.active{
+    color:var(--text);
+    background:color-mix(in srgb,var(--primary) 14%,var(--surface));
+    box-shadow:var(--shadow-xs),inset 0 0 0 1px color-mix(in srgb,var(--primary) 34%,transparent);
+  }
+  [data-theme="dark"] .tab.active{
+    background:color-mix(in srgb,var(--primary) 34%,var(--surface-strong));
+    box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--primary) 48%,transparent);
+  }
+  .tab.current:not(.active){color:var(--primary);background:transparent;font-weight:700}
+  .tab.current:not(.active)::after{content:"";position:absolute;bottom:4px;left:50%;width:3px;height:3px;border-radius:50%;background:var(--primary);transform:translateX(-50%)}
   .tab[data-day="all"]{flex:1.2 1 0}
 
-  .grid{grid-template-columns:1fr;gap:0;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
-  .day{height:auto;border-radius:var(--radius-lg)}
-  .day-head{padding:9px 11px}
+  /* ---------- agenda mobile : une colonne, en-têtes collants, lignes compactes ---------- */
+  .nav-title{font-size:12.5px}
+  .nav-title-btn{margin:-4px -6px;padding:4px 6px;gap:4px}
+  .nav-title .title-long{display:none}
+  .nav-title .title-short{display:inline}
+
+  .grid{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:1px 1px 14px;
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .day{
+    height:auto;
+    overflow:visible;
+    border-radius:14px;
+    background:var(--surface);
+    box-shadow:var(--shadow-xs);
+  }
+  /* l'en-tête du jour reste accroché en haut pendant le défilement : on sait
+     toujours quel jour on lit, et un appui dessus isole ce jour. */
+  .day-head{
+    position:sticky;
+    top:0;
+    z-index:7;
+    gap:8px;
+    padding:9px 11px;
+    border-radius:13px 13px 0 0;
+    background:color-mix(in srgb,var(--surface) 93%,transparent);
+    backdrop-filter:blur(16px) saturate(1.25);
+    -webkit-backdrop-filter:blur(16px) saturate(1.25);
+  }
+  [data-theme="dark"] .day-head{background:color-mix(in srgb,var(--surface-strong) 80%,transparent)}
+  body[data-view="all"] .day-head{cursor:pointer}
+  body[data-view="all"] .day-head:active{background:color-mix(in srgb,var(--text) 7%,transparent)}
+  body[data-view="day"] .day:not(.hidden){flex:1 1 auto}
   .day-name{font-size:13px}
   .day-date{font-size:10.5px}
-  .day-body{display:flex;flex-direction:column;gap:6px;min-height:0;padding:8px;background-image:none;background-color:var(--surface)}
+  .day-body{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-height:0;
+    padding:8px;
+    overflow:visible;
+    background-image:none;
+    background-color:transparent;
+  }
   .hour-scale,.current-time-line{display:none}
   .card{
     position:relative;
@@ -985,25 +1348,79 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
     width:auto!important;
     height:auto!important;
     min-height:0;
-    padding:8px 10px;
-    gap:2px;
+    flex-direction:row;
+    align-items:stretch;
+    gap:9px;
+    padding:8px 9px;
     border-left-width:4px;
-    border-radius:var(--radius-md);
+    border-radius:11px;
+    box-shadow:var(--shadow-xs);
   }
+  .card-time{
+    flex:none;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+    gap:3px;
+    width:60px;
+    padding-right:8px;
+    font-size:11px;
+    border-right:1px solid color-mix(in srgb,var(--border) 55%,transparent);
+  }
+  .ct-range{display:flex;flex-direction:column;align-items:flex-start;line-height:1.28}
+  .ct-sep{display:none}
+  .ct-end{color:var(--text-soft);font-weight:600}
+  .card-time .course-type{display:none}
+  .card-kind{
+    display:inline-flex;
+    align-self:flex-start;
+    margin-bottom:1px;
+    padding:0 5px;
+    color:var(--text-soft);
+    font-size:8.5px;
+    font-weight:700;
+    line-height:1.5;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    border-radius:4px;
+    background:color-mix(in srgb,var(--surface) 58%,var(--subtle));
+  }
+  .card-main{flex:1 1 auto;min-width:0;gap:2px}
   .card.compact .card-room,.card.compact .card-tag{display:block}
-  .card-title{font-size:12.5px;-webkit-line-clamp:3}
-  .card-time{font-size:11px}
+  .card-title{font-size:12.5px;line-height:1.35;-webkit-line-clamp:3}
   .card-room{font-size:11px;white-space:normal;overflow:visible;text-overflow:clip}
   .card-tag{font-size:9.5px;white-space:normal}
-  .card.cancelled::before{position:static;align-self:flex-start;margin-bottom:2px;border-radius:4px}
-  .card.tiny .course-type{display:inline}
+  .card-note{font-size:10px}
+  .card.cancelled::before{display:none}
+  .card-flag{display:inline-flex;align-self:flex-start;margin-top:1px;padding:0 5px;color:#fff;font-size:8.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;background:#dc2626}
+  .card.tiny .course-type{display:none}
   .card.tiny .card-title{-webkit-line-clamp:3;font-size:12.5px}
   .card.running::after{top:8px;right:8px}
-  .empty{position:static;min-height:120px}
+  .day-foot{display:flex;align-items:center;gap:7px;margin-top:auto;padding:11px 4px 2px;color:var(--muted);font-size:10.5px;font-weight:600;letter-spacing:.01em}
+  .day-foot::before{content:"";flex:none;width:15px;height:1px;background:color-mix(in srgb,var(--muted) 50%,transparent)}
+  .empty{position:static;min-height:0;padding:16px 12px}
   .hold-dialog{align-items:flex-end;padding:10px}
   .hold-panel{border-radius:16px}
-  .import-panel{padding:16px;gap:8px}
+  .import-dialog{align-items:flex-end;padding:0}
+  .import-panel{
+    width:100%;
+    max-height:88vh;
+    padding:16px 14px max(14px,env(safe-area-inset-bottom));
+    gap:8px;
+    border-radius:22px 22px 0 0;
+    border-bottom:0;
+  }
+  #importText{min-height:112px;font-size:12px}
 }
+/* Tablette : la vue « Tous » passe les cartes sur deux colonnes, la vue
+   « jour » garde des lignes pleine largeur. */
+@media screen and (min-width:620px) and (max-width:860px){
+  body[data-view="all"] .day-body{display:grid;grid-template-columns:1fr 1fr;gap:7px;align-items:start}
+  body[data-view="all"] .day-body .day-foot,
+  body[data-view="all"] .day-body .empty{grid-column:1 / -1}
+  body[data-view="all"] .day-body .day-foot{margin-top:0}
+}
+
 @media screen and (max-width:400px){
   .segmented .btn.today{display:none}
   .nav-title{font-size:11.5px}
@@ -1022,17 +1439,25 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 
 /* --------------------------------------------------------------- impression */
 #print{display:none}
-@media print{body::before,body::after{display:none!important}html,body{height:auto!important;min-height:0!important;overflow:visible!important;background:#fff!important}@page{size:A4 landscape;margin:4mm 5mm}*{box-sizing:border-box!important}html,body{width:100%!important;margin:0!important;padding:0!important;color:#000!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.app{display:none!important}#print{display:block!important}.print-page{display:flex!important;flex-direction:column;width:100%;height:196mm;overflow:hidden;page-break-inside:avoid;break-inside:avoid}.print-page:first-child{page-break-after:always;break-after:page}.print-head{display:flex;flex-shrink:0;align-items:flex-end;justify-content:space-between;height:11mm;margin-bottom:2mm;padding-bottom:2px;border-bottom:2px solid #0f172a}.print-head h2{color:#0f172a!important;font-size:10pt;font-weight:800;text-transform:uppercase}.print-head p{margin-top:1px;color:#334155!important;font-size:7.5pt;font-weight:600}.print-badge{padding:2px 6px;color:#0f172a!important;white-space:nowrap;font-size:6.8pt;font-weight:700;border:1px solid #64748b;border-radius:4px;background:#f1f5f9!important}.print-table{width:100%;height:181mm;table-layout:fixed;border-collapse:collapse}.print-table th{height:6mm;padding:2px;color:#fff!important;font-size:7.5pt;font-weight:800;text-transform:uppercase;border:1px solid #0f172a;background:#0f172a!important}.print-table th:first-child{width:9%}.print-table td{padding:1.5px 2px;color:#000!important;vertical-align:middle;border:1px solid #94a3b8;background:#fff!important}.print-week{text-align:center;background:#f8fafc!important}.print-week b{display:block;color:#0f172a!important;font-size:7.2pt}.print-week span{display:block;margin-top:2px;color:#334155!important;font-size:6.3pt;font-weight:700}.p-item{display:block;margin-bottom:1.5px;padding:1.5px 2px;color:#0f172a!important;font-size:6.2pt;line-height:1.12;border-left:3px solid #94a3b8;border-radius:2px}.p-item:last-child{margin-bottom:0}.p-item.maths{border-left-color:#1d4ed8;background:#eff6ff!important}.p-item.info{border-left-color:#0284c7;background:#f0f9ff!important}.p-item.micro{border-left-color:#059669;background:#ecfdf5!important}.p-item.macro{border-left-color:#0f766e;background:#f0fdfa!important}.p-item.socio{border-left-color:#7c3aed;background:#f5f3ff!important}.p-item.anglais{border-left-color:#b45309;background:#fffbeb!important}.p-time{font-weight:800}.p-type{font-weight:800;text-transform:uppercase}.p-room{color:#334155!important;font-size:5.7pt;font-weight:600}.p-empty{color:#64748b!important;text-align:center;font-size:6.2pt;font-style:italic}.p-item.cancelled{border-left-color:#dc2626;background:#fef2f2!important}.p-item.ghost{border-left-color:#94a3b8;border-left-style:dashed;opacity:.85}.p-alert{padding:4px 2px;color:#991b1b!important;text-align:center;font-size:6.4pt;font-weight:800;border:1px solid #f87171;border-radius:3px;background:#fef2f2!important}}
+@media print{body::before,body::after,.sky{display:none!important}html,body{height:auto!important;min-height:0!important;overflow:visible!important;background:#fff!important}@page{size:A4 landscape;margin:4mm 5mm}*{box-sizing:border-box!important}html,body{width:100%!important;margin:0!important;padding:0!important;color:#000!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.app{display:none!important}#print{display:block!important}.print-page{display:flex!important;flex-direction:column;width:100%;height:196mm;overflow:hidden;page-break-inside:avoid;break-inside:avoid}.print-page:first-child{page-break-after:always;break-after:page}.print-head{display:flex;flex-shrink:0;align-items:flex-end;justify-content:space-between;height:11mm;margin-bottom:2mm;padding-bottom:2px;border-bottom:2px solid #0f172a}.print-head h2{color:#0f172a!important;font-size:10pt;font-weight:800;text-transform:uppercase}.print-head p{margin-top:1px;color:#334155!important;font-size:7.5pt;font-weight:600}.print-badge{padding:2px 6px;color:#0f172a!important;white-space:nowrap;font-size:6.8pt;font-weight:700;border:1px solid #64748b;border-radius:4px;background:#f1f5f9!important}.print-table{width:100%;height:181mm;table-layout:fixed;border-collapse:collapse}.print-table th{height:6mm;padding:2px;color:#fff!important;font-size:7.5pt;font-weight:800;text-transform:uppercase;border:1px solid #0f172a;background:#0f172a!important}.print-table th:first-child{width:9%}.print-table td{padding:1.5px 2px;color:#000!important;vertical-align:middle;border:1px solid #94a3b8;background:#fff!important}.print-week{text-align:center;background:#f8fafc!important}.print-week b{display:block;color:#0f172a!important;font-size:7.2pt}.print-week span{display:block;margin-top:2px;color:#334155!important;font-size:6.3pt;font-weight:700}.p-item{display:block;margin-bottom:1.5px;padding:1.5px 2px;color:#0f172a!important;font-size:6.2pt;line-height:1.12;border-left:3px solid #94a3b8;border-radius:2px}.p-item:last-child{margin-bottom:0}.p-item.maths{border-left-color:#1d4ed8;background:#eff6ff!important}.p-item.info{border-left-color:#0284c7;background:#f0f9ff!important}.p-item.micro{border-left-color:#059669;background:#ecfdf5!important}.p-item.macro{border-left-color:#0f766e;background:#f0fdfa!important}.p-item.socio{border-left-color:#7c3aed;background:#f5f3ff!important}.p-item.anglais{border-left-color:#b45309;background:#fffbeb!important}.p-time{font-weight:800}.p-type{font-weight:800;text-transform:uppercase}.p-room{color:#334155!important;font-size:5.7pt;font-weight:600}.p-empty{color:#64748b!important;text-align:center;font-size:6.2pt;font-style:italic}.p-item.cancelled{border-left-color:#dc2626;background:#fef2f2!important}.p-item.ghost{border-left-color:#94a3b8;border-left-style:dashed;opacity:.85}.p-alert{padding:4px 2px;color:#991b1b!important;text-align:center;font-size:6.4pt;font-weight:800;border:1px solid #f87171;border-radius:3px;background:#fef2f2!important}}
 
 </style>
 </head>
 <body>
 <div class="ambient-bg" aria-hidden="true"><span class="ambient-orb ambient-orb-1"></span><span class="ambient-orb ambient-orb-2"></span><span class="ambient-orb ambient-orb-3"></span></div>
+<div class="sky" id="sky" aria-hidden="true">
+<span class="sky-glow sky-glow-a"></span><span class="sky-glow sky-glow-b"></span><span class="sky-moon"></span>
+<svg class="sky-constellation" viewBox="0 0 220 140" aria-hidden="true" focusable="false">
+<g fill="none" stroke="currentColor" stroke-width=".7"><path d="M18 96 62 64 108 78 150 40 196 56"/><path d="M62 64 78 22M108 78 118 118"/></g>
+<g fill="currentColor"><circle cx="18" cy="96" r="1.6"/><circle cx="62" cy="64" r="2.2"/><circle cx="108" cy="78" r="1.4"/><circle cx="150" cy="40" r="2"/><circle cx="196" cy="56" r="1.3"/><circle cx="78" cy="22" r="1.1"/><circle cx="118" cy="118" r="1.2"/></g>
+</svg>
+<div class="sky-meteors" id="skyMeteors"></div>
+</div>
 <main class="app">
 <header class="bar">
 <div class="bar-left">
 <span class="bar-mark" aria-hidden="true">L2</span>
-<h1 id="weekTitle" class="nav-title"></h1>
+<h1 id="weekTitle" class="nav-title"><button class="nav-title-btn" id="weekTitleBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="calendarDialog" title="Ouvrir le calendrier du semestre — choisir un mois, puis un jour"><span class="nav-title-text" id="weekTitleText"></span><svg class="nav-title-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.4 6.4 8 10l3.6-3.6"/></svg></button></h1>
 </div>
 <div class="toolbar">
 <div class="segmented" role="group" aria-label="Navigation dans les semaines">
@@ -1045,6 +1470,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 </div>
 <div id="moreMenu" class="menu" role="menu" hidden>
 <button class="menu-item" id="importAction" type="button" role="menuitem"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.6v7.2M5 7l3 3 3-3"/><path d="M3 12.4h10"/></svg>Importer des événements</button>
+<button class="menu-item" id="calendarAction" type="button" role="menuitem"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.4" y="3.4" width="11.2" height="10.2" rx="1.6"/><path d="M2.4 6.4h11.2M5.4 2.2v2.4M10.6 2.2v2.4"/></svg>Calendrier du semestre</button>
 <div id="tdSelectorWrap">
 <button type="button" class="td-selector-btn" id="tdSelectorBtn" aria-haspopup="listbox" aria-controls="tdSelect" aria-label="Choisir son groupe de TD">
 <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><path d="M2.2 12.6c0-2 1.7-3.2 3.8-3.2s3.8 1.2 3.8 3.2"/><path d="M10.6 4.3a2 2 0 0 1 0 3.6M11.6 9.7c1.4.4 2.2 1.4 2.2 2.9"/></svg>
@@ -1105,6 +1531,32 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 <p id="importResult" class="import-result" hidden></p>
 </div>
 </div>
+<div id="calendarDialog" class="cal-dialog" hidden>
+<div class="cal-backdrop" data-cal-close></div>
+<section class="cal-panel" role="dialog" aria-modal="true" aria-labelledby="calTitle" aria-describedby="calHint">
+<header class="cal-head">
+<div class="cal-heading">
+<p class="cal-kicker">Choisir une semaine</p>
+<h2 class="cal-title" id="calTitle" aria-live="polite"></h2>
+</div>
+<div class="cal-nav">
+<button class="btn icon" id="calPrevYear" type="button" aria-label="Année précédente" title="Année précédente"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M7.4 3.6 3 8l4.4 4.4"/><path d="M12.6 3.6 8.2 8l4.4 4.4"/></svg></button>
+<button class="btn icon" id="calPrevMonth" type="button" aria-label="Mois précédent" title="Mois précédent"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.8 3.6 5.4 8l4.4 4.4"/></svg></button>
+<button class="btn icon" id="calNextMonth" type="button" aria-label="Mois suivant" title="Mois suivant"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 3.6 10.6 8l-4.4 4.4"/></svg></button>
+<button class="btn icon" id="calNextYear" type="button" aria-label="Année suivante" title="Année suivante"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.4 3.6 7.8 8l-4.4 4.4"/><path d="M8.6 3.6 13 8l-4.4 4.4"/></svg></button>
+<button class="btn icon ghost cal-close" id="calClose" type="button" aria-label="Fermer le calendrier" title="Fermer (Échap)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6"/></svg></button>
+</div>
+</header>
+<div class="cal-months" id="calMonths" role="group" aria-label="Choisir un mois"></div>
+<div class="cal-weekdays" aria-hidden="true"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+<div class="cal-grid" id="calGrid" role="group" aria-label="Jours du mois"></div>
+<p class="cal-summary" id="calSummary"></p>
+<footer class="cal-foot">
+<p class="cal-hint" id="calHint">Un point signale une journée avec cours. Choisissez un jour pour ouvrir sa semaine.</p>
+<button class="btn sm" id="calToday" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.6"/><path d="M8 1.8v1.5M8 12.7v1.5M1.8 8h1.5M12.7 8h1.5"/></svg>Aujourd'hui</button>
+</footer>
+</section>
+</div>
 <div id="holdDialog" class="hold-dialog" hidden>
 <div class="hold-panel" role="dialog" aria-modal="true" aria-labelledby="holdTitle">
 <p class="hold-kicker">Masquer une matière</p>
@@ -1160,6 +1612,12 @@ function icon(name, size = 14) {
     close: '<path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6"/>',
     trash: '<path d="M3.4 4.8h9.2M6.4 4.8V3.2h3.2v1.6M4.6 4.8l.6 8.2h5.6l.6-8.2"/>',
     chevronDown: '<path d="M4.4 6.4 8 10l3.6-3.6"/>',
+    ban: '<circle cx="8" cy="8" r="5.4"/><path d="M4.4 11.6 11.6 4.4"/>',
+    undo: '<path d="M3.4 7.2h5.2a3.4 3.4 0 1 1 0 6.8H5.8"/><path d="M6 4.2 3.2 7.2l2.8 3"/>',
+    plus: '<path d="M8 3.2v9.6M3.2 8h9.6"/>',
+    clock: '<circle cx="8" cy="8" r="5.4"/><path d="M8 4.8V8l2.3 1.5"/>',
+    door: '<path d="M3.6 13.4V3.2h6.4v10.2"/><path d="M2.2 13.4h11.6"/><circle cx="8.4" cy="8" r=".8" fill="currentColor" stroke="none"/>',
+    pen: '<path d="M3.2 12.8l.5-2.6 6.2-6.2 2.1 2.1-6.2 6.2-2.6.5Z"/><path d="M9.1 5.4 10.6 3.9"/>',
   };
   return `<svg viewBox="0 0 16 16" width="${size}" height="${size}" aria-hidden="true" focusable="false">${paths[name] ?? ""}</svg>`;
 }
@@ -1189,6 +1647,7 @@ const CONFIG = {
 const DAY_NAMES = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
 const MONTHS_LONG = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 const MONTHS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+const MONTHS_CHIP = ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 8);
 const TIMELINE = { start: 8 * 60, end: 19 * 60, top: 14, pixelsPerMinute: 1.3 };
 
@@ -1231,6 +1690,14 @@ function openingDateISO(now = new Date(), lastEndMin = TIMELINE.end) {
 }
 
 const formatDate = (d) => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+/** Durée lisible : 270 → « 4 h 30 », 45 → « 45 min ». */
+function formatDuration(minutes) {
+  const total = Math.max(0, Math.round(minutes));
+  const hours = Math.floor(total / 60);
+  const rest = total % 60;
+  if (!hours) return `${rest} min`;
+  return rest ? `${hours} h ${pad2(rest)}` : `${hours} h`;
+}
 const minutesOf = (time) => { const [h, m] = time.split(":").map(Number); return h * 60 + m; };
 const startMinutes = (slot) => minutesOf(slot.split("-")[0].trim());
 const endMinutes = (slot) => minutesOf(slot.split("-")[1].trim());
@@ -1653,13 +2120,13 @@ function findRecurringCancellations(weeks) {
    et sous forme de badges sur les cartes concernées.
    ====================================================================== */
 const CHANGE_INFO = {
-  cancelled: { icon: "🚫", short: "Annulé", label: "Cours annulé", cls: "cancelled" },
-  restored: { icon: "↩️", short: "Rétabli", label: "Séance rétablie", cls: "restored" },
-  added: { icon: "🆕", short: "Nouveau", label: "Nouveau cours", cls: "added" },
-  removed: { icon: "❌", short: "Retiré", label: "Cours retiré", cls: "removed" },
-  moved: { icon: "🕘", short: "Horaire", label: "Horaire modifié", cls: "moved" },
-  room: { icon: "🚪", short: "Salle", label: "Salle changée", cls: "room" },
-  updated: { icon: "✏️", short: "Modifié", label: "Cours modifié", cls: "updated" },
+  cancelled: { icon: "🚫", glyph: "ban", short: "Annulé", label: "Cours annulé", cls: "cancelled" },
+  restored: { icon: "↩️", glyph: "undo", short: "Rétabli", label: "Séance rétablie", cls: "restored" },
+  added: { icon: "🆕", glyph: "plus", short: "Nouveau", label: "Nouveau cours", cls: "added" },
+  removed: { icon: "❌", glyph: "close", short: "Retiré", label: "Cours retiré", cls: "removed" },
+  moved: { icon: "🕘", glyph: "clock", short: "Horaire", label: "Horaire modifié", cls: "moved" },
+  room: { icon: "🚪", glyph: "door", short: "Salle", label: "Salle changée", cls: "room" },
+  updated: { icon: "✏️", glyph: "pen", short: "Modifié", label: "Cours modifié", cls: "updated" },
 };
 /** Ordre d'importance : sert à choisir le badge principal quand un cours cumule plusieurs changements. */
 const CHANGE_ORDER = ["cancelled", "restored", "added", "removed", "moved", "room", "updated"];
@@ -1715,7 +2182,7 @@ function changeStatusLabel(change) {
 
 /** Phrase complète d'un changement (« Mardi 13 octobre · 09:40 – 11:10 — Macroéconomie 2 (CM) »). */
 function changeSentence(change, today = todayISO()) {
-  const room = change?.room ? ` · 📍 ${change.room}` : "";
+  const room = change?.room ? ` · ${change.room}` : "";
   return `${changeWhenLabel(change, today)} — ${change?.title ?? "Cours"} (${change?.type ?? ""})${room}`.replace(" ()", "");
 }
 
@@ -2314,7 +2781,12 @@ function cardHTML(item, day, lane = { lane: 0, lanes: 1 }) {
   const room = item.room ? `<div class="card-room" title="${escapeHtml(item.room)}">${PIN_ICON}${escapeHtml(item.room)}</div>` : "";
   const tag = item.tag ? `<div class="card-tag ${escapeHtml(item.tagType || "")}">${escapeHtml(item.tag)}</div>` : "";
   const del = item.source === "personal" ? `<button class="card-delete" data-id="${escapeHtml(item.id)}" aria-label="Supprimer cet événement">×</button>` : "";
-  return `<article class="${classes.join(" ")}" data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="--top:${p.top}%;--h:${p.height}%;--lane:${lane.lane};--lanes:${lane.lanes}" tabindex="0" title="${escapeHtml(details)} — ${item.source === "personal" ? "maintenir pour supprimer" : "maintenir pour masquer"}"><div class="card-time"><span>${escapeHtml(item.time)}</span><span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-title">${escapeHtml(item.title)}</div>${room}${badges}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}${notes}${del}</article>`;
+  // L'heure est découpée en deux lignes sur téléphone (début / fin) : elle tient
+  // dans une colonne étroite et la carte devient une ligne d'agenda compacte.
+  const [timeStart, timeEnd] = String(item.time).split("-").map((part) => part.trim());
+  const timeRange = `<span class="ct-range"><span class="ct-start">${escapeHtml(timeStart)}</span><span class="ct-sep"> - </span><span class="ct-end">${escapeHtml(timeEnd || timeStart)}</span></span>`;
+  const flag = item.isCancelled ? `<span class="card-flag">Annulé</span>` : "";
+  return `<article class="${classes.join(" ")}" data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="--top:${p.top}%;--h:${p.height}%;--lane:${lane.lane};--lanes:${lane.lanes}" tabindex="0" title="${escapeHtml(details)} — ${item.source === "personal" ? "maintenir pour supprimer" : "maintenir pour masquer"}"><div class="card-time">${timeRange}<span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-main"><span class="card-kind">${escapeHtml(item.type)}</span><div class="card-title">${escapeHtml(item.title)}</div>${room}${badges}${flag}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}${notes}</div>${del}</article>`;
 }
 
 /**
@@ -2327,11 +2799,11 @@ function cardHTML(item, day, lane = { lane: 0, lanes: 1 }) {
  */
 function emptyMessage(weekKey, dayIndex, live, source = "reference") {
   const date = addDaysISO(weekKey, dayIndex);
-  if (date === "2026-10-22") return "🚫 Trophée SQY Campus — journée sans cours";
-  if (date === "2026-11-11") return "🚫 Mercredi 11 novembre — université fermée";
+  if (date === "2026-10-22") return "Trophée SQY Campus — journée sans cours";
+  if (date === "2026-11-11") return "Mercredi 11 novembre — université fermée";
   if (source === "none") return "Pas encore publié — le planning de cette semaine n'est pas encore disponible";
-  if (source === "live-empty" || live) return "✅ Aucun cours au planning officiel pour cette journée";
-  return "🌴 Journée libre — hors période de cours";
+  if (source === "live-empty" || live) return "Aucun cours au planning officiel pour cette journée";
+  return "Journée libre — hors période de cours";
 }
 
 /** Numéro de la semaine dans le semestre (1 = semaine du début du semestre). */
@@ -2350,9 +2822,22 @@ function weekLabel(weekKey) {
   const start = parseISO(weekKey);
   const end = parseISO(addDaysISO(weekKey, 4));
   const number = weekNumber(weekKey);
-  const dates = `${pad2(start.getDate())} ${MONTHS_LONG[start.getMonth()]} – ${pad2(end.getDate())} ${MONTHS_LONG[end.getMonth()]} ${end.getFullYear()}`;
+  const year = end.getFullYear();
+  const sameMonth = start.getMonth() === end.getMonth();
+  // Mois abrégés partout : le titre tient sur une ligne, même sur un téléphone.
+  // La version « compacte » va encore plus loin (S6 · 19–23 oct.).
+  const prefix = number ? `Semaine ${number} : ` : "Semaine du ";
+  const reading = sameMonth
+    ? `${start.getDate()}–${end.getDate()} ${MONTHS[end.getMonth()]} ${year}`
+    : `${start.getDate()} ${MONTHS[start.getMonth()]} – ${end.getDate()} ${MONTHS[end.getMonth()]} ${year}`;
+  const shortDates = sameMonth
+    ? `${start.getDate()}–${end.getDate()} ${MONTHS[end.getMonth()]}`
+    : `${start.getDate()} ${MONTHS[start.getMonth()]}–${end.getDate()} ${MONTHS[end.getMonth()]}`;
+  const yearSuffix = year === new Date().getFullYear() ? "" : ` ${String(year).slice(2)}`;
   return {
-    title: number ? `Semaine ${number} : ${dates}` : `Semaine du ${dates}`,
+    title: `${prefix}${reading}`,
+    titleFull: `${prefix}${pad2(start.getDate())} ${MONTHS_LONG[start.getMonth()]} – ${pad2(end.getDate())} ${MONTHS_LONG[end.getMonth()]} ${year}`,
+    compact: `${number ? `S${number} · ` : ""}${shortDates}${yearSuffix}`,
     index: fallbackWeeks.findIndex((week) => week.monday === weekKey),
   };
 }
@@ -2540,7 +3025,13 @@ function renderWeek(index, options = {}) {
   const view = mergePersonalEvents(buildWeekView(weekKey, recurring));
   const label = weekLabel(weekKey);
 
-  $("#weekTitle").textContent = label.title;
+  const titleBox = $("#weekTitleText");
+  if (titleBox) {
+    titleBox.innerHTML = `<span class="title-long">${escapeHtml(label.title)}</span><span class="title-short">${escapeHtml(label.compact)}</span>`;
+  } else {
+    $("#weekTitle").textContent = label.title;
+  }
+  $("#weekTitleBtn")?.setAttribute("aria-label", `${label.titleFull} — ouvrir le calendrier`);
   $("#prev").disabled = index === 0;
   $("#next").disabled = index >= keys.length - 1;
 
@@ -2560,6 +3051,7 @@ function renderWeek(index, options = {}) {
       ? `${icon("spark", 10)}Aujourd'hui`
       : target.opening ? `${icon("calendar", 10)}Prochain jour ouvré` : `${icon("arrowRight", 10)}Prochain cours`;
     const indicator = selected ? `<span class="target-pill">${indicatorLabel}</span>` : "";
+    const isToday = sameDay(day.realDate, new Date());
     let content;
     if (day.courses.length) {
       const lanes = assignLanes(day.courses);
@@ -2571,7 +3063,15 @@ function renderWeek(index, options = {}) {
     const alert = changes.length
       ? `<span class="day-alert" title="${escapeHtml(changeSummaryLabel(changes))}">${icon("bell", 10)}${changes.length}</span>`
       : "";
-    return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}" data-day="${dayIndex}"><header class="day-head"><div><div class="day-name">${day.name}</div><div class="day-date"><time datetime="${dayISO}">${day.date}</time></div>${indicator}</div><div class="day-tags">${alert}<span class="day-count${count ? " has" : ""}">${countLabel}</span></div></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
+    const compactHead = typeof innerWidth !== "undefined" && innerWidth <= 860;
+    const activeCourses = day.courses.filter((item) => !item.removed && !item.isCancelled);
+    const totalMinutes = activeCourses.reduce((sum, item) => sum + Math.max(0, item.endMin - item.startMin), 0);
+    const lastEnd = activeCourses.length ? Math.max(...activeCourses.map((item) => item.endMin)) : 0;
+    const foot = activeCourses.length
+      ? `<div class="day-foot">${formatDuration(totalMinutes)} de cours · fin à ${pad2(Math.floor(lastEnd / 60))}:${pad2(lastEnd % 60)}</div>`
+      : "";
+    const headLabel = compactHead ? ` data-day-head="${dayIndex}" role="button" tabindex="0" aria-label="Afficher seulement ${day.name.toLowerCase()} ${day.date}" title="Afficher seulement ${day.name.toLowerCase()}"` : "";
+    return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}${isToday ? " is-today" : ""}" data-day="${dayIndex}"><header class="day-head"${headLabel}><div class="day-head-main"><div class="day-name">${day.name}${isToday ? '<span class="today-dot" aria-hidden="true"></span>' : ''}</div><div class="day-date"><time datetime="${dayISO}">${day.date}</time></div>${indicator}</div><div class="day-tags">${alert}<span class="day-count${count ? " has" : ""}">${countLabel}</span></div></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}${foot}</div></section>`;
   }).join("");
 
   if (options.animate !== false && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
@@ -2661,13 +3161,13 @@ function changesFreshnessLabel() {
 }
 
 function changeItemHTML(change) {
-  const { icon: kindIcon, label, cls } = changeLabel(change);
+  const { glyph, label, cls } = changeLabel(change);
   const detail = changeStatusLabel(change);
   const reason = change.reason ? `motif : ${change.reason}` : "";
   const where = change.room ? `<span class="change-room">${icon("pin", 10)} ${escapeHtml(change.room)}</span>` : "";
 
   return `<li class="change ${cls}"><button type="button" class="change-item" data-change="${escapeHtml(changeKey(change))}" title="Afficher cette semaine dans le planning">` +
-    `<span class="change-kind ${cls}">${escapeHtml(kindIcon)} ${escapeHtml(label)}</span>` +
+    `<span class="change-kind ${cls}">${icon(glyph, 11)} ${escapeHtml(label)}</span>` +
     `<span class="change-when">${escapeHtml(changeWhenLabel(change))}</span>` +
     `<span class="change-what">${escapeHtml(change.title)}${change.type ? ` <span class="change-type">${escapeHtml(change.type)}</span>` : ""} ${where}</span>` +
     (detail || reason ? `<span class="change-detail">${escapeHtml([detail, reason].filter(Boolean).join(" · "))}</span>` : "") +
@@ -2739,6 +3239,262 @@ function flashCourse(change) {
   setTimeout(() => card.classList.remove("flash"), 2600);
 }
 
+/* ======================================================================
+   CALENDRIER — choisir un mois précis, puis le jour à ouvrir
+   ====================================================================== */
+const CAL = { year: 0, month: 0 };
+/** Index absolu d'un mois (année × 12 + mois) : facilite les bornes. */
+const monthIndex = (year, month) => year * 12 + month;
+
+function calendarAvailableMonths() {
+  const weeks = state_view.weeks;
+  if (!weeks.length) return null;
+  const first = parseISO(mondayOf(weeks[0]));
+  const last = parseISO(mondayOf(weeks[weeks.length - 1]));
+  return { min: monthIndex(first.getFullYear(), first.getMonth()), max: monthIndex(last.getFullYear(), last.getMonth()) };
+}
+
+function monthHasWeeks(year, month) {
+  const prefix = `${year}-${pad2(month + 1)}`;
+  return state_view.weeks.some((monday) => monday.startsWith(prefix));
+}
+
+/** Nombre de séances par jour du mois (planning + événements personnels). */
+function calendarCourseCounts(year, month) {
+  const counts = new Map();
+  const mondays = new Set();
+  const total = new Date(year, month + 1, 0).getDate();
+  for (let day = 1; day <= total; day++) mondays.add(mondayOf(formatISO(new Date(year, month, day))));
+  for (const monday of mondays) {
+    if (!state_view.weeks.includes(monday)) continue;
+    const view = mergePersonalEvents(buildWeekView(monday, state_view.recurring));
+    for (const dayView of view.days) {
+      const count = dayView.courses.filter((item) => !item.removed && !item.isCancelled && !item.ghost).length;
+      if (count) counts.set(formatISO(dayView.realDate), count);
+    }
+  }
+  return counts;
+}
+
+function renderCalendar() {
+  const dialog = $("#calendarDialog");
+  if (!dialog || dialog.hidden) return;
+  const { year, month } = CAL;
+  const range = calendarAvailableMonths();
+  const current = monthIndex(year, month);
+  const title = $("#calTitle");
+  if (title) title.textContent = `${MONTHS_LONG[month]} ${year}`;
+
+  if (range) {
+    const atMin = current <= range.min;
+    const atMax = current >= range.max;
+    for (const selector of ["#calPrevMonth", "#calPrevYear"]) { const button = $(selector); if (button) button.disabled = atMin; }
+    for (const selector of ["#calNextMonth", "#calNextYear"]) { const button = $(selector); if (button) button.disabled = atMax; }
+  }
+
+  const monthsBox = $("#calMonths");
+  if (monthsBox) {
+    monthsBox.innerHTML = MONTHS_CHIP.map((name, index) => {
+      const available = monthHasWeeks(year, index);
+      const active = index === month;
+      return `<button class="cal-month${active ? " active" : ""}${available ? " available" : ""}" type="button" data-month="${index}" aria-pressed="${active}" ${available ? "" : "disabled"} title="${MONTHS_LONG[index]} ${year}${available ? "" : " — hors semestre"}">${name}</button>`;
+    }).join("");
+  }
+
+  const counts = calendarCourseCounts(year, month);
+  const first = new Date(year, month, 1);
+  const offset = (first.getDay() + 6) % 7;
+  const today = todayISO();
+  const selectedMonday = state_view.weekKey;
+  const target = state_view.target;
+  const focusDay = target && target.weekIndex === state_view.index && state_view.weekKey
+    ? addDaysISO(state_view.weekKey, target.dayIndex)
+    : today;
+  const weekdayNames = [...DAY_NAMES, "Samedi", "Dimanche"];
+  const cells = [];
+  for (let i = 0; i < 42; i++) {
+    const date = new Date(year, month, 1 - offset + i);
+    const iso = formatISO(date);
+    const weekday = (date.getDay() + 6) % 7;
+    const outside = date.getMonth() !== month;
+    const monday = mondayOf(iso);
+    const available = !outside && weekday <= 4 && state_view.weeks.includes(monday);
+    const count = counts.get(iso) ?? 0;
+    const classes = ["cal-day"];
+    if (outside) classes.push("outside");
+    if (weekday > 4) classes.push("weekend");
+    if (iso === today) classes.push("today");
+    if (!outside && monday === selectedMonday) classes.push("week-selected");
+    if (iso === focusDay) classes.push("selected");
+    if (!available) classes.push("unavailable");
+    const label = `${weekdayNames[weekday]} ${date.getDate()} ${MONTHS_LONG[date.getMonth()]} ${date.getFullYear()}${count ? `, ${count} cours` : ""}`;
+    cells.push(`<button class="${classes.join(" ")}" type="button" data-date="${iso}" ${available ? "" : "disabled"} aria-label="${escapeHtml(label)}"${iso === today ? ' aria-current="date"' : ""}><span class="cal-num">${date.getDate()}</span><span class="cal-dot${count ? " has" : ""}" aria-hidden="true"></span></button>`);
+  }
+  const grid = $("#calGrid");
+  if (grid) grid.innerHTML = cells.join("");
+
+  const summary = $("#calSummary");
+  if (summary) {
+    const totalCourses = [...counts.values()].reduce((sum, value) => sum + value, 0);
+    summary.textContent = totalCourses
+      ? `${totalCourses} séance${totalCourses > 1 ? "s" : ""} sur ${counts.size} jour${counts.size > 1 ? "s" : ""} ce mois-ci`
+      : "Aucun cours publié ce mois-ci";
+  }
+}
+
+function stepCalendar(months) {
+  const range = calendarAvailableMonths();
+  let target = monthIndex(CAL.year, CAL.month) + months;
+  if (range) target = Math.max(range.min, Math.min(range.max, target));
+  CAL.year = Math.floor(target / 12);
+  CAL.month = ((target % 12) + 12) % 12;
+  renderCalendar();
+}
+
+function openCalendar() {
+  const dialog = $("#calendarDialog");
+  if (!dialog) return;
+  const anchor = state_view.weekKey ? parseISO(state_view.weekKey) : new Date();
+  CAL.year = anchor.getFullYear();
+  CAL.month = anchor.getMonth();
+  dialog.hidden = false;
+  $("#weekTitleBtn")?.setAttribute("aria-expanded", "true");
+  renderCalendar();
+  const preferred = $("#calGrid .cal-day.week-selected:not(:disabled)")
+    ?? $("#calGrid .cal-day.today:not(:disabled)")
+    ?? $("#calGrid .cal-day:not(:disabled)");
+  preferred?.focus({ preventScroll: true });
+  try { navigator.vibrate?.(6); } catch {}
+}
+
+function closeCalendar(restoreFocus = true) {
+  const dialog = $("#calendarDialog");
+  if (!dialog || dialog.hidden) return;
+  dialog.hidden = true;
+  $("#weekTitleBtn")?.setAttribute("aria-expanded", "false");
+  if (restoreFocus) $("#weekTitleBtn")?.focus({ preventScroll: true });
+}
+
+/** Ouvre la semaine du jour choisi (et isole ce jour sur téléphone). */
+function goToCalendarDate(iso) {
+  const monday = mondayOf(iso);
+  const index = state_view.weeks.indexOf(monday);
+  if (index < 0) return;
+  const dayIndex = weekdayIndex(iso);
+  renderWeek(index, { weekKey: monday });
+  const focus = dayIndex >= 0 && dayIndex <= 4 ? dayIndex : "all";
+  if (innerWidth <= 860) setDay(focus, false);
+  else setDay("all", false);
+  closeCalendar();
+  requestAnimationFrame(() => scrollToDay(focus, false));
+}
+
+function initCalendar() {
+  const dialog = $("#calendarDialog");
+  if (!dialog) return;
+  $("#weekTitleBtn")?.addEventListener("click", openCalendar);
+  $("#calendarAction")?.addEventListener("click", () => {
+    const menu = $("#moreMenu");
+    if (menu) menu.hidden = true;
+    $("#moreBtn")?.setAttribute("aria-expanded", "false");
+    openCalendar();
+  });
+  $("#calClose")?.addEventListener("click", () => closeCalendar());
+  dialog.querySelector("[data-cal-close]")?.addEventListener("click", () => closeCalendar());
+  $("#calPrevMonth")?.addEventListener("click", () => stepCalendar(-1));
+  $("#calNextMonth")?.addEventListener("click", () => stepCalendar(1));
+  $("#calPrevYear")?.addEventListener("click", () => stepCalendar(-12));
+  $("#calNextYear")?.addEventListener("click", () => stepCalendar(12));
+  $("#calToday")?.addEventListener("click", () => goToCalendarDate(todayISO()));
+  $("#calMonths")?.addEventListener("click", (event) => {
+    const button = event.target.closest?.(".cal-month");
+    if (!button || button.disabled) return;
+    CAL.month = Number(button.dataset.month);
+    renderCalendar();
+  });
+  $("#calGrid")?.addEventListener("click", (event) => {
+    const button = event.target.closest?.(".cal-day");
+    if (!button || button.disabled) return;
+    goToCalendarDate(button.dataset.date);
+  });
+  // Le panneau est modal : la tabulation reste à l'intérieur.
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key !== "Tab") return;
+    const focusables = [...dialog.querySelectorAll("button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex='-1'])")]
+      .filter((element) => element.getClientRects().length > 0);
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    } else if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    }
+  });
+  // Flèches : on se déplace dans la grille comme dans un vrai calendrier.
+  $("#calGrid")?.addEventListener("keydown", (event) => {
+    const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[event.key];
+    if (!step) return;
+    const cells = [...dialog.querySelectorAll(".cal-day")];
+    const index = cells.indexOf(document.activeElement);
+    if (index < 0) return;
+    const next = cells[index + step];
+    if (next) {
+      event.preventDefault();
+      next.focus();
+    }
+  });
+}
+
+/* ======================================================================
+   CIEL DE NUIT — étoiles filantes et comètes (mode sombre)
+   ====================================================================== */
+const SKY = { timer: 0, running: false };
+
+function skyAllowed() {
+  if (document.documentElement.dataset.theme !== "dark") return false;
+  return !(typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion:reduce)").matches);
+}
+
+function stopSky() {
+  SKY.running = false;
+  clearTimeout(SKY.timer);
+  SKY.timer = 0;
+  $("#skyMeteors")?.replaceChildren();
+}
+
+function startSky() {
+  if (!skyAllowed() || SKY.running) return;
+  SKY.running = true;
+  const loop = () => {
+    if (!SKY.running) return;
+    if (!document.hidden) spawnMeteor(Math.random() < 0.22 ? "comet" : "star");
+    SKY.timer = setTimeout(loop, 4200 + Math.random() * 9500);
+  };
+  SKY.timer = setTimeout(loop, 1600 + Math.random() * 3200);
+}
+
+/** Une étoile filante : position, inclinaison et durée varient à chaque passage. */
+function spawnMeteor(kind = "star") {
+  const layer = $("#skyMeteors");
+  if (!layer || !SKY.running || layer.childElementCount > 2) return;
+  const comet = kind === "comet";
+  const meteor = document.createElement("span");
+  meteor.className = `meteor${comet ? " comet" : ""}`;
+  meteor.style.top = `${2 + Math.random() * 44}%`;
+  meteor.style.left = `${2 + Math.random() * 56}%`;
+  meteor.style.setProperty("--angle", `${14 + Math.random() * 22}deg`);
+  meteor.style.setProperty("--travel", `${(comet ? 74 : 44) + Math.random() * 20}vw`);
+  meteor.style.setProperty("--dur", `${(comet ? 2.4 : 1.1) + Math.random() * 0.9}s`);
+  meteor.style.setProperty("--len", `${(comet ? 210 : 105) + Math.random() * 80}px`);
+  layer.appendChild(meteor);
+  meteor.addEventListener("animationend", () => meteor.remove(), { once: true });
+  // Parfois une deuxième traînée juste derrière : le ciel paraît vivant.
+  if (Math.random() < 0.3) setTimeout(() => spawnMeteor(), 360 + Math.random() * 700);
+}
+
 /* ------------------------------------------------------------- thème/UI */
 function initTheme() {
   const stored = localStorage.getItem("schedule_theme");
@@ -2747,6 +3503,10 @@ function initTheme() {
 }
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
+  // Le ciel animé n'existe qu'en mode sombre : on l'arrête franchement en
+  // thème clair pour ne pas laisser tourner des animations invisibles.
+  if (theme === "dark") startSky();
+  else stopSky();
   const button = $("#theme");
   if (!button) return;
   const dark = theme === "dark";
@@ -2840,13 +3600,16 @@ function changeWeek(delta) {
 }
 function setDay(day, scroll = true) {
   state_view.mobileFilter = day === "all" ? "all" : Number(day);
+  // La feuille de style a besoin de savoir si l'on regarde toute la semaine
+  // (en-têtes collants, jour isolé) sans dépendre d'une classe par colonne.
+  if (typeof document !== "undefined") document.body.dataset.view = state_view.mobileFilter === "all" ? "all" : "day";
   $$(".tab").forEach((tab) => {
     const active = tab.dataset.day === String(day);
     tab.classList.toggle("active", active);
     tab.setAttribute("aria-pressed", String(active));
   });
   $$(".day").forEach((column) => column.classList.toggle("hidden", state_view.mobileFilter !== "all" && Number(column.dataset.day) !== state_view.mobileFilter));
-  if (scroll && state_view.mobileFilter !== "all") scrollToDay(state_view.mobileFilter, false);
+  if (scroll && innerWidth <= 860) scrollToDay(state_view.mobileFilter, false);
 }
 /**
  * Amène le jour demandé dans la vue SANS déplacer la page : la barre d'outils
@@ -2955,6 +3718,8 @@ function initialize() {
   syncResetButton();
   initMoreMenu();
   initImportDialog();
+  initCalendar();
+  startSky();
   const cached = readCacheSync();
   if (cached?.weeks) {
     state.weeks = cached.weeks;
@@ -2987,12 +3752,31 @@ function initialize() {
 }
 
 addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && $("#calendarDialog") && !$("#calendarDialog").hidden) { closeCalendar(); return; }
   if (event.key === "Escape" && $("#holdDialog") && !$("#holdDialog").hidden) { closeHoldDialog(); return; }
   if ($("#holdDialog") && !$("#holdDialog").hidden) return;
   const tag = event.target?.tagName;
   if (tag === "SELECT" || tag === "INPUT" || tag === "TEXTAREA" || event.target?.closest?.("#tdSelectorWrap")) return;
   if (event.key === "ArrowLeft") changeWeek(-1);
   if (event.key === "ArrowRight") changeWeek(1);
+  if (event.key === "c" || event.key === "C") {
+    event.preventDefault();
+    openCalendar();
+  }
+});
+/* Sur téléphone, en vue « Tous », un appui sur l'en-tête d'un jour isole ce jour. */
+function focusDayFromHeader(head) {
+  if (innerWidth > 860 || state_view.mobileFilter !== "all" || !head) return;
+  const day = Number(head.dataset.dayHead);
+  if (Number.isFinite(day)) setDay(day);
+}
+$("#grid").addEventListener("click", (event) => focusDayFromHeader(event.target.closest?.("[data-day-head]")));
+$("#grid").addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const head = event.target.closest?.("[data-day-head]");
+  if (!head) return;
+  event.preventDefault();
+  focusDayFromHeader(head);
 });
 let startX = 0;
 let startY = 0;
@@ -3107,8 +3891,17 @@ $("#changeList")?.addEventListener("click", (event) => {
   const item = event.target.closest?.(".change-item");
   if (item?.dataset.change) revealChange(item.dataset.change);
 });
-addEventListener("resize", () => { zoomTimelineIfNeeded(); if (innerWidth <= 860) setDay(state_view.mobileFilter, false); });
+addEventListener("resize", () => {
+  zoomTimelineIfNeeded();
+  if (innerWidth <= 860) setDay(state_view.mobileFilter, false);
+  else if (state_view.mobileFilter !== "all") setDay("all", false);
+});
 addEventListener("beforeprint", () => buildPrint());
+// Onglet en arrière-plan : on coupe les étoiles filantes (batterie, CPU).
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) stopSky();
+  else startSky();
+});
 addEventListener("DOMContentLoaded", initialize);
 
 if (typeof module !== "undefined" && module.exports) {
