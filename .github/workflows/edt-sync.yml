@@ -70,9 +70,9 @@ jobs:
               echo
               echo "_Ces secrets restent chiffrés côté GitHub Actions et ne sont jamais exposés dans le site ni dans \`data/edt.json\`._"
             } >> "$GITHUB_STEP_SUMMARY"
-            if [ "${GITHUB_EVENT_NAME:-}" = "schedule" ]; then
-              # En mode planifié, ne pas échouer en boucle tant que les secrets ne sont pas créés
-              # (évite les e-mails d'échec répétés et la désactivation du cron par GitHub).
+            if [ "${GITHUB_EVENT_NAME:-}" != "workflow_dispatch" ]; then
+              # En mode automatique (schedule / push), ne pas casser le statut du dépôt
+              # ni envoyer d'e-mails d'échec tant que les secrets ne sont pas créés.
               exit 0
             fi
             exit 2
