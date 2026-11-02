@@ -863,13 +863,13 @@ function decodeMiniEntities(value) {
 }
 
 const STAFF_LINE_RE =
-  /^[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ][A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ'’ -]{1,45},\s*[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ][A-Za-zÀ-ÖØ-öø-ÿ'’ .-]{0,45}(?:\s*\[[^\]]+\])?$/;
+  /^[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’ -]{0,45},\s*[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’ .-]{0,45}(?:\s*\[[^\]]+\])?$/;
 const NON_STAFF_WORD_RE =
   /\b(?:annul\w*|absen\w*|cours|salle|amphi\w*|examen\w*|contr[oô]le|report\w*|gr[eè]ve|distanciel|visio|moodle|fermat|descartes|buffon|joliot|curie|semestre|miashs|licence|master|groupe|option|banalis\w*)\b/i;
 
 function isStaffFragment(fragment) {
   const clean = decodeMiniEntities(fragment).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-  return Boolean(clean) && STAFF_LINE_RE.test(clean) && !NON_STAFF_WORD_RE.test(clean);
+  return Boolean(clean) && !/\d/.test(clean) && STAFF_LINE_RE.test(clean) && !NON_STAFF_WORD_RE.test(clean);
 }
 
 /**
