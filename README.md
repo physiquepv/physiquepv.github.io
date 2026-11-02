@@ -8,29 +8,35 @@ donc toujours à la bonne date, avec les **annulations et absences de professeur
 
 ```
 edt.uvsq.fr (CELCAT)
-        │  POST /Home/GetCalendarData   ← impossible depuis le navigateur (CORS)
+        │  /LdapLogin + POST /Home/GetCalendarData   ← CORS + session LDAP UVSQ
         ▼
-.github/workflows/edt-sync.yml          toutes les 10 min + 1×/jour
+.github/workflows/edt-sync.yml          toutes les 15 min (lun–sam) + dim + 1×/jour
         │  scripts/sync-edt.mjs ──▶ scripts/edt-changes.mjs
-        │                           (comparaison avec la version publiée)
+        │  (session LDAP chiffrée via secrets GitHub, nettoyage RGPD, diff)
         ▼
-data/edt.json                           planning brut + journal des `changes`
-        │  fetch same-origin
+data/edt.json                           planning du groupe + journal des `changes`
+        │  fetch same-origin (au chargement + au retour sur l'onglet)
         ▼
 index.html                              filtrage du TD, bandeau « ce qui a changé »,
                                         badges sur les cours, impression
 ```
 
-1. **GitHub Actions** interroge CELCAT côté serveur (pas de CORS) et écrit le
-   planning brut de tout le semestre dans `data/edt.json`. Au passage, chaque
-   séance est comparée à la version déjà publiée : annulation (« prof absent »),
-   nouveau cours, cours retiré, salle ou horaire modifiés sont consignés dans
-   `changes`, et le commit de synchro les annonce en clair.
-2. La page lit ce fichier, garde les cours de la promo et du **TD choisi**
-   (TD 1 ou TD 2, mémorisé dans le navigateur ; `tdGroup` est seulement le
-   défaut), **signale en clair ce qui a changé** (bandeau en haut de page,
-   cloche avec le nombre de changements, badges sur les cartes concernées),
-   affiche tout de suite la semaine du jour, et n'en change plus ensuite.
+1. **GitHub Actions** ouvre une session sur `edt.uvsq.fr/LdapLogin` à l'aide des
+   secrets chiffrés `CELCAT_USERNAME` et `CELCAT_PASSWORD` (depuis octobre 2026,
+   l'UVSQ bloque l'accès anonyme à CELCAT), interroge le groupe `S3MIASHS` (ainsi
+   que `S4MIASHS` sur les semaines de charnière de janvier), retire toute mention
+   nominative d'enseignant (dépôt public / RGPD) et écrit le planning dans
+   `data/edt.json`. Au passage, chaque séance est comparée à la version déjà
+   publiée : annulation (« prof absent »), nouveau cours, cours retiré, salle ou
+   horaire modifiés sont consignés dans `changes`, et le commit de synchro les
+   annonce en clair.
+2. La page lit ce fichier sans demander aucune connexion aux étudiants, garde les
+   cours de la promo et du **TD choisi** (TD 1 ou TD 2, mémorisé dans le
+   navigateur ; `tdGroup` est seulement le défaut), **signale en clair ce qui a
+   changé** (bandeau en haut de page, cloche avec le nombre de changements,
+   badges sur les cartes concernées), affiche tout de suite la semaine du jour, et
+   se resynchronise discrètement quand on revient sur un onglet laissé ouvert ou
+   qu'on retrouve du réseau.
 3. Si le fichier est indisponible, la page tente un appel direct (puis via des
    proxys publics) ; en dernier recours seulement, elle affiche l'emploi du temps
    de secours codé en dur, sans statut global à l'écran.
@@ -243,14 +249,20 @@ Garde-fous (détaillés par `npm run test:changes`) :
 
 ## Mise en place (une seule fois)
 
-1. **Settings → Actions → General → Workflow permissions** :
+1. **Secrets UVSQ pour CELCAT** (**Settings → Secrets and variables → Actions → New repository secret**) :
+   depuis le 12 octobre 2026, `edt.uvsq.fr` redirige vers `/LdapLogin` et renvoie
+   une réponse vide aux requêtes anonymes. Ajoutez deux secrets sur le dépôt :
+   - **`CELCAT_USERNAME`** : votre identifiant ENT UVSQ (numéro étudiant, ex. `22501234`, **sans** `@etu.uvsq.fr`) ;
+   - **`CELCAT_PASSWORD`** : votre mot de passe ENT UVSQ.
+   *(Ces secrets restent chiffrés dans GitHub Actions : ils ne sont jamais exposés dans le site ni dans `data/edt.json`, et une protection anti-blocage coupe automatiquement les tentatives répétées pendant 6 h si le mot de passe expire.)*
+2. **Settings → Actions → General → Workflow permissions** :
    sélectionner **Read and write permissions** (le workflow doit pouvoir
-   committer `data/edt.json`). Sans ce réglage, la synchro s'exécute mais ne
-   peut pas publier : elle l'indique dans le résumé du workflow et le site
-   continue d'afficher la dernière version publiée.
-2. Pages : *Deploy from a branch* → `main` / `/ (root)` (déjà en place).
-3. Lancer une première fois le workflow « Sync emploi du temps UVSQ » pour
-   remplir `data/edt.json`.
+   committer `data/edt.json`).
+3. Pages : *Deploy from a branch* → `main` / `/ (root)` (déjà en place).
+4. Lancer **Actions → « Sync emploi du temps UVSQ » → Run workflow** pour mettre
+   immédiatement à jour `data/edt.json` (ensuite, la tâche tourne toute seule
+   toutes les 15 minutes du lundi au samedi, chaque heure le dimanche et en
+   rechargement complet chaque matin).
 
 ## Tests
 
@@ -269,7 +281,7 @@ npm run test:all      # tout
 
 | Symptôme | Cause probable | Solution |
 | --- | --- | --- |
-| Le planning ne change pas | Workflow en échec ou permissions de lecture seule | Onglet **Actions** → regarder le résumé du run (l'erreur exacte y est écrite) |
+| Le planning ne change pas | Secrets `CELCAT_USERNAME` / `CELCAT_PASSWORD` manquants ou expirés, ou permissions de lecture seule | Vérifier **Settings → Secrets and variables → Actions** (`CELCAT_USERNAME` = n° étudiant sans `@etu.uvsq.fr`), puis lancer **Actions → Sync emploi du temps UVSQ → Run workflow** |
 | Le planning de secours s'affiche | `data/edt.json` inaccessible et CELCAT indisponible | Vérifier que le fichier est bien publié sur `main` et consulter le dernier run Actions |
 | Un cours manque / en trop | Mauvais TD sélectionné, ou groupe mal configuré | Choisir TD 1 ou TD 2 dans le sélecteur de la page (le choix est mémorisé). Le défaut se règle avec `tdGroup` dans `edt.config.json` |
 | Le bandeau de changements n'apparaît pas | Aucun changement dans la fenêtre affichée (3 jours en arrière → 3 semaines en avant), changement déjà marqué « ✓ Vu », ou champ `changes` encore absent de `data/edt.json` | La cloche 🔔 indique toujours combien de changements sont connus. Le champ `changes` est écrit dès la première synchro qui détecte un changement (**Actions → « Sync emploi du temps UVSQ » → Run workflow**) |

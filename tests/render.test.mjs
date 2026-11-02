@@ -31,6 +31,7 @@ virtualConsole.on("jsdomError", (error) => errors.push(`jsdomError: ${error.mess
 virtualConsole.on("error", (...args) => errors.push(`console.error: ${args.join(" ")}`));
 virtualConsole.on("warn", () => {});
 
+let currentServedData = data;
 const dom = new JSDOM(html, {
   url: "https://physiquepv.github.io/",
   runScripts: "dangerously",
@@ -54,7 +55,7 @@ const dom = new JSDOM(html, {
     window.fetch = async (url) => {
       const target = String(url);
       if (target.includes("data/edt.json")) {
-        return { ok: true, status: 200, json: async () => data };
+        return { ok: true, status: 200, json: async () => currentServedData };
       }
       if (target.includes("api.github.com")) {
         return { ok: true, status: 200, json: async () => ({ workflow_runs: [{ updated_at: new Date().toISOString() }] }) };
@@ -204,6 +205,32 @@ check(printHtml.includes('class="print-table"'), "la page d'impression utilise l
 check(printHtml.includes("Semaine 1") && printHtml.includes("Semaine 13"), "les 13 semaines du semestre sont imprimées");
 check(!/Page 1 \/ 2/.test(printHtml) || window.document.querySelectorAll("#print .print-page").length >= 1, "l'impression n'est pas figée à deux pages");
 check(window.document.querySelectorAll("#print .print-page").length >= 2, "l'impression découpe autant de pages que nécessaire");
+
+console.log("\n— resynchronisation au retour sur l'onglet (sans polling) —");
+const updatedData = JSON.parse(JSON.stringify(data));
+updatedData.generatedAt = "2026-10-09T18:00:00.000Z";
+updatedData.changes = [
+  {
+    kind: "cancelled",
+    date: "2026-10-13",
+    startMin: 580,
+    endMin: 670,
+    time: "09:40 - 11:10",
+    title: "Macroéconomie 2",
+    type: "CM",
+    room: "2205 - FERMAT",
+    cat: "macro",
+    groups: ["S3MIASHS"],
+    eventId: "live-cancel-resume",
+    reason: "Enseignant absent",
+    detectedAt: "2026-10-09T18:00:00.000Z",
+  },
+];
+currentServedData = updatedData;
+window.dispatchEvent(new window.Event("online"));
+await wait(120);
+check($("#changeBanner") !== null && !$("#changeBanner").hidden, "le retour en ligne / sur l'onglet récupère automatiquement les nouveaux changements");
+check(/Macroéconomie 2/.test($("#changeBanner")?.textContent ?? ""), "le cours fraîchement annulé s'affiche sans recharger la page");
 
 console.log("\n— erreurs JavaScript —");
 check(errors.length === 0, `aucune erreur console (${errors.length})`);

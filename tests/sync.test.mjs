@@ -71,7 +71,13 @@ globalThis.fetch = async (url, init = {}) => {
   };
 };
 
-const { main, lastDetectedChanges } = await import(path.join(ROOT, "scripts", "sync-edt.mjs"));
+const {
+  main,
+  lastDetectedChanges,
+  CelcatAuthError,
+  stripStaffLines,
+  extractVerificationToken,
+} = await import(path.join(ROOT, "scripts", "sync-edt.mjs"));
 
 const readOut = async () => JSON.parse(await readFile(outFile, "utf8"));
 
@@ -146,4 +152,230 @@ await assert.rejects(main(), /aucun appel réussi/i);
 assert.equal((await stat(outFile)).mtimeMs, beforeStat.mtimeMs, "le fichier ne doit pas être touché");
 console.log("  ✓ garde-fou : une panne réseau laisse le fichier intact");
 
-console.log("\n✅ 6/6 vérifications réussies");
+/* ------------------------------------------- authentification LDAP UVSQ */
+console.log("\n— authentification LDAP CELCAT (/LdapLogin) —");
+
+// 1. Cas réel d'octobre 2026 : sans secret, GetCalendarData renvoie un corps vide
+//    et /cal redirige vers /LdapLogin → diagnostic immédiat (exitCode = 2).
+calls = 0;
+globalThis.fetch = async (url) => {
+  calls++;
+  const u = String(url);
+  if (u.includes("/cal?")) {
+    return {
+      ok: false,
+      status: 302,
+      statusText: "Found",
+      headers: { get: (k) => (k.toLowerCase() === "location" ? "/LdapLogin" : null) },
+      text: async () => "",
+    };
+  }
+  return { ok: true, status: 200, statusText: "OK", headers: { get: () => null }, text: async () => "" };
+};
+await assert.rejects(
+  main(),
+  (err) => err instanceof CelcatAuthError && err.kind === "auth_required" && err.exitCode === 2 && /CELCAT_USERNAME/.test(err.message),
+  "la fermeture de l'accès anonyme doit être détectée explicitement",
+);
+assert.ok(calls <= 3, `détection immédiate sans marteler CELCAT (${calls} appels)`);
+assert.equal(await readFile(outFile, "utf8"), snapshot, "data/edt.json reste intact");
+console.log(`  ✓ accès anonyme fermé (/LdapLogin) détecté immédiatement (${calls} appels, code 2)`);
+
+// 2. Session LDAP complète : anti-forgery + cookies par saut + nettoyage RGPD
+//    des noms d'enseignants + fusion S3MIASHS / S4MIASHS en janvier + reconnexion
+//    automatique si la session expire en cours de route.
+assert.equal(
+  extractVerificationToken('<input type="hidden" value="tok-value-first" name="__RequestVerificationToken" />'),
+  "tok-value-first",
+  "jeton extrait même si value précède name",
+);
+const descWithStaff =
+  "CM\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de données [LSIN311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nDUPONT, Jean<br />SAINT-GERMAIN, Marie<br />FERM&#201;, Marc [MFERME]\r\n\r\n<br />\r\n\r\nCours annulé, enseignant absent\r\n";
+const cleanedDesc = stripStaffLines(descWithStaff);
+assert.ok(!/DUPONT|SAINT-GERMAIN|MFERME|FERM&#201;|FERMÉ/.test(cleanedDesc), "les noms d'enseignants ne sont jamais écrits dans le dépôt public");
+assert.ok(/Cours annulé, enseignant absent/.test(cleanedDesc), "les remarques avec virgule sont intégralement conservées");
+
+let loginPosts = 0;
+let expireOnce = true;
+process.env.CELCAT_USERNAME = "  22501234  ";
+process.env.CELCAT_PASSWORD = "secret-uvsq-pass\r\n";
+
+function makeHeaders(map = {}, setCookies = []) {
+  const lower = Object.fromEntries(Object.entries(map).map(([k, v]) => [k.toLowerCase(), v]));
+  return {
+    get: (name) => lower[String(name).toLowerCase()] ?? null,
+    getSetCookie: () => setCookies,
+  };
+}
+
+globalThis.fetch = async (url, init = {}) => {
+  const u = String(url);
+  const cookie = init?.headers?.Cookie ?? "";
+
+  if (u.endsWith("/LdapLogin")) {
+    return {
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: makeHeaders({}, [".AspNetCore.Antiforgery.abc=anti-123; path=/; samesite=strict; httponly"]),
+      text: async () =>
+        '<html><form action="/LdapLogin/Logon" method="post"><input type="hidden" value="csrf-tok-99" name="__RequestVerificationToken" /><input name="Password" type="password" /></form></html>',
+    };
+  }
+
+  if (u.endsWith("/LdapLogin/Logon") && init.method === "POST") {
+    loginPosts++;
+    const params = new URLSearchParams(init.body);
+    assert.ok(cookie.includes(".AspNetCore.Antiforgery.abc=anti-123"), "le cookie anti-forgery accompagne le POST");
+    assert.equal(params.get("__RequestVerificationToken"), "csrf-tok-99");
+    if (params.get("Name") === "22501234" && params.get("Password") === "secret-uvsq-pass") {
+      return {
+        ok: false,
+        status: 302,
+        statusText: "Found",
+        headers: makeHeaders({ location: "/Home/Index" }, [`.AspNetCore.Cookies=sess-${loginPosts}; path=/; httponly`]),
+        text: async () => "",
+      };
+    }
+    return {
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: makeHeaders(),
+      text: async () =>
+        '<div class="validation-summary-errors"><ul><li>Identifiant ou mot de passe incorrect</li></ul></div><form action="/LdapLogin/Logon"><input name="Password" /><input name="__RequestVerificationToken" value="tok2" /></form>',
+    };
+  }
+
+  if (u.endsWith("/Home/Index")) {
+    return {
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: makeHeaders({ location: "/cal?vt=month" }),
+      text: async () => "<html><body>Calendrier CELCAT</body></html>",
+    };
+  }
+
+  if (u.includes("/cal?")) {
+    if (!cookie.includes(".AspNetCore.Cookies=sess-")) {
+      return { ok: false, status: 302, statusText: "Found", headers: makeHeaders({ location: "/LdapLogin" }), text: async () => "" };
+    }
+    return { ok: true, status: 200, statusText: "OK", headers: makeHeaders(), text: async () => "<html><body>OK</body></html>" };
+  }
+
+  if (u.endsWith("/Home/GetCalendarData")) {
+    if (!cookie.includes(".AspNetCore.Cookies=sess-")) {
+      return { ok: true, status: 200, statusText: "OK", headers: makeHeaders(), text: async () => "" };
+    }
+    // Simule une expiration de session en plein milieu du run : doit se reconnecter 1 fois
+    const form = new URLSearchParams(init.body);
+    const monday = form.get("start");
+    const group = form.get("federationIds[]");
+    if (monday === "2026-11-02" && expireOnce) {
+      expireOnce = false;
+      return { ok: false, status: 302, statusText: "Found", headers: makeHeaders({ location: "/LdapLogin" }), text: async () => "" };
+    }
+    if (group === "S4MIASHS") {
+      if (monday === "2027-01-04") {
+        return {
+          ok: true,
+          status: 200,
+          statusText: "OK",
+          headers: makeHeaders(),
+          text: async () =>
+            JSON.stringify([
+              {
+                id: "s4-2027-01-04",
+                start: "2027-01-04T09:40:00",
+                end: "2027-01-04T11:10:00",
+                description: "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT\r\n\r\n<br />\r\n\r\nLSIN400-Bases de données S4 [LSIN400]\r\n\r\n<br />\r\n\r\nL2 MIASHS S4 [S4MIASHS]\r\n\r\n<br />\r\n\r\nDUPONT, Jean\r\n\r\n<br />\r\n\r\n\r\n",
+                eventCategory: "CM",
+                backgroundColor: "#00FFFF",
+                modules: ["LSIN400"],
+              },
+            ]),
+        };
+      }
+      // S4 pas encore publié sur 2027-01-11 : corps vide toléré pour le groupe optionnel
+      return { ok: true, status: 200, statusText: "OK", headers: makeHeaders(), text: async () => "" };
+    }
+    return {
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: makeHeaders(),
+      text: async () =>
+        JSON.stringify([
+          fakeEvent(`${monday}T09:40:00`, `${monday}T11:10:00`, { description: descWithStaff }),
+        ]),
+    };
+  }
+
+  throw new Error(`URL inattendue dans le test : ${u}`);
+};
+
+await main();
+const authedOut = await readOut();
+assert.equal(loginPosts, 2, "1 connexion initiale + 1 reconnexion sur expiration de session");
+assert.ok(
+  authedOut.weeks["2027-01-04"].events.some((e) => e.id === "s4-2027-01-04"),
+  "les premiers cours de S4MIASHS de janvier sont fusionnés dès qu'ils existent",
+);
+assert.ok(
+  !JSON.stringify(authedOut).includes("DUPONT"),
+  "aucun nom d'enseignant n'est présent dans data/edt.json",
+);
+console.log("  ✓ connexion LDAP, reprise sur session expirée, nettoyage RGPD et fusion S3+S4 réussis");
+
+// 3. Mauvais mot de passe : 1 seule tentative (jamais de retry qui bloquerait le compte ENT)
+loginPosts = 0;
+process.env.CELCAT_USERNAME = "prenom.nom@etu.uvsq.fr";
+process.env.CELCAT_PASSWORD = "mauvais-mot-de-passe";
+await assert.rejects(
+  main(),
+  (err) =>
+    err instanceof CelcatAuthError &&
+    err.kind === "bad_credentials" &&
+    err.exitCode === 3 &&
+    /@etu\.uvsq\.fr/.test(err.message),
+  "les identifiants refusés lèvent bad_credentials avec conseil sur le format du login",
+);
+assert.equal(loginPosts, 1, "un mot de passe refusé n'est jamais renvoyé une seconde fois");
+console.log("  ✓ mauvais mot de passe : 1 seul essai envoyé (anti-verrouillage ENT)");
+
+// 4. Pause de sécurité de 6 h en exécution planifiée (schedule) après un refus LDAP
+let celcatTouched = false;
+process.env.GITHUB_EVENT_NAME = "schedule";
+process.env.GITHUB_REPOSITORY = "physiquepv/physiquepv.github.io";
+process.env.GITHUB_TOKEN = "ghs_fake_token";
+globalThis.fetch = async (url) => {
+  const u = String(url);
+  if (u.includes("api.github.com") && u.includes("/runs?")) {
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({
+        workflow_runs: [{ id: 999, conclusion: "failure", updated_at: new Date(Date.now() - 15 * 60 * 1000).toISOString() }],
+      }),
+    };
+  }
+  if (u.includes("api.github.com") && u.includes("/jobs")) {
+    return { ok: true, status: 200, json: async () => ({ jobs: [{ id: 777 }] }) };
+  }
+  if (u.includes("api.github.com") && u.includes("/annotations")) {
+    return { ok: true, status: 200, json: async () => [{ title: "Authentification UVSQ refusée", message: "..." }] };
+  }
+  celcatTouched = true;
+  throw new Error("CELCAT ne devait pas être appelé pendant la pause de sécurité");
+};
+await main();
+assert.equal(celcatTouched, false, "aucun appel LDAP envoyé pendant le cooldown planifié");
+delete process.env.GITHUB_EVENT_NAME;
+delete process.env.GITHUB_REPOSITORY;
+delete process.env.GITHUB_TOKEN;
+delete process.env.CELCAT_USERNAME;
+delete process.env.CELCAT_PASSWORD;
+console.log("  ✓ pause anti-blocage de 6 h en mode schedule vérifiée (0 appel CELCAT)");
+
+console.log("\n✅ 10/10 vérifications réussies");
