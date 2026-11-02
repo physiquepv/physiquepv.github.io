@@ -100,11 +100,10 @@ if (targetTime?.dateTime) {
 console.log("\n— interface simplifiée —");
 check(!$(".legend") && !/Repères\s*:/i.test(window.document.body.textContent), "la section « Repères » a été supprimée");
 check(!$("#changes") && !/1 séance annulée/i.test(window.document.body.textContent), "aucun encart global ni liste d'annulations");
-// data/edt.json ne contient pas de journal de changements : rien à signaler, donc
-// ni bandeau ni cloche (le comportement « il y a du nouveau » est couvert par
-// tests/changes.test.mjs, qui alimente la page avec un planning modifié).
-check($("#changeBanner") !== null && $("#changeBanner").hidden, "sans changement détecté, le bandeau reste masqué");
-check($("#changesBtn") !== null && $("#changesBtn").hidden, "sans changement détecté, la cloche reste masquée");
+// Aucun bandeau jaune de changements ni cloche : les matières sont affichées
+// directement dans l'emploi du temps, sans doublon.
+check($("#changeBanner") === null && !$(".changes"), "aucun bandeau jaune de changements au-dessus de l'emploi du temps");
+check($("#changesBtn") === null, "la cloche de changements a été supprimée");
 check(!$("#liveBanner") && !$("#liveStatus") && !/synchro GitHub/i.test(window.document.body.textContent), "le statut de synchronisation n'est plus affiché");
 check(!$(".week-progress") && !$("#weekProgress"), "la barre de progression hebdomadaire a été supprimée");
 check(!$("#refresh") && !/Actualiser|refreshCurrentWeek/.test(html), "le bouton et le code de rafraîchissement manuel ont été supprimés");
@@ -209,28 +208,21 @@ check(window.document.querySelectorAll("#print .print-page").length >= 2, "l'imp
 console.log("\n— resynchronisation au retour sur l'onglet (sans polling) —");
 const updatedData = JSON.parse(JSON.stringify(data));
 updatedData.generatedAt = "2026-10-09T18:00:00.000Z";
-updatedData.changes = [
-  {
-    kind: "cancelled",
-    date: "2026-10-13",
-    startMin: 580,
-    endMin: 670,
-    time: "09:40 - 11:10",
-    title: "Macroéconomie 2",
-    type: "CM",
-    room: "2205 - FERMAT",
-    cat: "macro",
-    groups: ["S3MIASHS"],
-    eventId: "live-cancel-resume",
-    reason: "Enseignant absent",
-    detectedAt: "2026-10-09T18:00:00.000Z",
-  },
-];
+const shownMonday = window.eval("displayedWeekKey()");
+updatedData.weeks[shownMonday].events.push({
+  id: "live-new-course-resume",
+  start: `${shownMonday}T16:15:00`,
+  end: `${shownMonday}T17:45:00`,
+  description: "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI B - DESCARTES\r\n\r\n<br />\r\n\r\nLSSO310N-Conférence spéciale démographie [LSSO310N]\r\n",
+  eventCategory: "CM",
+  backgroundColor: "#00FFFF",
+  modules: ["LSSO310N"],
+});
 currentServedData = updatedData;
 window.dispatchEvent(new window.Event("online"));
 await wait(120);
-check($("#changeBanner") !== null && !$("#changeBanner").hidden, "le retour en ligne / sur l'onglet récupère automatiquement les nouveaux changements");
-check(/Macroéconomie 2/.test($("#changeBanner")?.textContent ?? ""), "le cours fraîchement annulé s'affiche sans recharger la page");
+check(/Conférence spéciale démographie/.test($("#grid")?.textContent ?? ""), "le retour en ligne / sur l'onglet met à jour les matières directement dans l'emploi du temps");
+check($("#changeBanner") === null && !window.document.querySelector("#grid .card.removed"), "aucun bandeau ni cours en double après resynchronisation");
 
 console.log("\n— erreurs JavaScript —");
 check(errors.length === 0, `aucune erreur console (${errors.length})`);

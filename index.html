@@ -531,69 +531,6 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 }
 .td-select option{color:var(--text);background:var(--surface)}
 
-/* ----------------------------------------------------------- changements */
-.changes{
-  flex:none;
-  max-height:36vh;
-  overflow:auto;
-  margin:0;
-  padding:11px 13px;
-  border:1px solid color-mix(in srgb,var(--anglais) 26%,var(--border));
-  border-radius:var(--radius-lg);
-  background:color-mix(in srgb,var(--anglais-bg) 70%,var(--surface));
-  box-shadow:var(--shadow-xs);
-}
-[data-theme="dark"] .changes{background:color-mix(in srgb,var(--anglais-bg) 55%,var(--surface))}
-.changes-head{display:flex;align-items:flex-start;gap:10px}
-.changes-icon{display:grid;place-items:center;flex:none;width:24px;height:24px;color:var(--anglais);border-radius:7px;background:color-mix(in srgb,var(--anglais) 12%,transparent)}
-.changes-heading{min-width:0;flex:1 1 auto}
-.changes-title{font-size:13px;font-weight:650;letter-spacing:-.01em}
-.changes-sub{margin-top:2px;color:var(--text-soft);font-size:11.5px;font-weight:450;line-height:1.45}
-.changes-actions{display:flex;flex:none;align-items:center;gap:6px}
-.change-list{display:flex;flex-direction:column;gap:4px;margin:10px 0 0;padding:0;list-style:none}
-.change-item{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:7px;
-  width:100%;
-  padding:6px 8px;
-  color:var(--text);
-  text-align:left;
-  cursor:pointer;
-  border:1px solid color-mix(in srgb,var(--border) 70%,transparent);
-  border-radius:var(--radius-sm);
-  background:var(--surface);
-  transition:border-color .12s ease,background-color .12s ease;
-}
-.change-item:hover{border-color:var(--border-strong);background:var(--subtle)}
-.change-kind{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;font-size:10.5px;font-weight:700;line-height:1.5;white-space:nowrap;border-radius:999px;border:1px solid transparent}
-.change-kind svg{width:11px;height:11px;flex:none;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.change-kind.cancelled{color:#991b1b;background:#fee2e2;border-color:#fecaca}
-.change-kind.removed{color:#3f4652;background:#eef0f3;border-color:#dfe3e8}
-.change-kind.restored{color:#065f46;background:#d1fae5;border-color:#a7f3d0}
-.change-kind.added{color:#3730a3;background:#e0e7ff;border-color:#c7d2fe}
-.change-kind.moved{color:#92400e;background:#fef3c7;border-color:#fde68a}
-.change-kind.room{color:#5b21b6;background:#ede9fe;border-color:#ddd6fe}
-.change-kind.updated{color:#115e59;background:#ccfbf1;border-color:#99f6e4}
-[data-theme="dark"] .change-kind.cancelled{color:#fecaca;background:#3f1212;border-color:#7f1d1d}
-[data-theme="dark"] .change-kind.removed{color:#cbd5e1;background:#28303d;border-color:#3f4a5c}
-[data-theme="dark"] .change-kind.restored{color:#a7f3d0;background:#0c2f24;border-color:#115e59}
-[data-theme="dark"] .change-kind.added{color:#c7d2fe;background:#1e2347;border-color:#3730a3}
-[data-theme="dark"] .change-kind.moved{color:#fde68a;background:#3a2905;border-color:#92400e}
-[data-theme="dark"] .change-kind.room{color:#ddd6fe;background:#2a1a4a;border-color:#5b21b6}
-[data-theme="dark"] .change-kind.updated{color:#99f6e4;background:#042f2e;border-color:#115e59}
-.change-when{font-size:11.5px;font-weight:650;white-space:nowrap}
-.change-what{min-width:0;font-size:12px;font-weight:550;overflow-wrap:anywhere}
-.change-type{padding:0 5px;color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.04em;border:1px solid var(--border);border-radius:4px}
-.change-room{display:inline-flex;align-items:center;gap:3px;color:var(--muted);font-size:11px}
-.change-room svg{width:10px;height:10px;flex:none;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.change-detail{color:var(--muted);font-size:11px;font-style:italic}
-.change-jump{display:inline-flex;align-items:center;gap:2px;margin-left:auto;color:var(--primary);font-size:11px;font-weight:650;white-space:nowrap}
-.changes-foot{margin-top:8px;color:var(--muted);font-size:10.5px}
-.change-note{color:var(--anglais);font-weight:600}
-[data-theme="dark"] .change-note{color:#fbbf24}
-
 /* -------------------------------------------------------- onglets mobile */
 .mobile-tabs{display:none}
 
@@ -1545,7 +1482,6 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 <button class="btn today" id="today" type="button" onclick="jumpToTarget(true)" title="Revenir à aujourd'hui">Aujourd'hui</button>
 <button class="btn icon" id="next" type="button" onclick="changeWeek(1)" aria-label="Semaine suivante" title="Semaine suivante (→)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 3.6 10.6 8l-4.4 4.4"/></svg></button>
 </div>
-<button class="btn icon bell" id="changesBtn" type="button" aria-expanded="false" aria-controls="changeBanner" aria-label="Changements au planning" title="Changements au planning" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.3 10.6V7.4a4.3 4.3 0 1 0-8.6 0v3.2L2.6 12.3h10.8l-1.1-1.7Z"/><path d="M6.4 12.3a1.7 1.7 0 0 0 3.2 0"/></svg><span class="changes-count" id="changesCount">0</span></button>
 <button class="btn icon" id="moreBtn" type="button" aria-haspopup="true" aria-controls="moreMenu" aria-expanded="false" aria-label="Plus d'options" title="Plus d'options"><svg viewBox="0 0 16 16" aria-hidden="true"><circle class="dot" cx="3.3" cy="8" r="1.15"/><circle class="dot" cx="8" cy="8" r="1.15"/><circle class="dot" cx="12.7" cy="8" r="1.15"/></svg></button>
 </div>
 <div id="moreMenu" class="menu" role="menu" hidden>
@@ -1566,22 +1502,6 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 <button class="menu-item" type="button" role="menuitem" onclick="window.print()"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.6 6V2.8h6.8V6"/><rect x="2.4" y="6" width="11.2" height="5.2" rx="1.4"/><path d="M4.6 9.4h6.8v3.8H4.6z"/></svg>Imprimer le semestre</button>
 </div>
 </header>
-
-<section class="changes" id="changeBanner" role="status" aria-live="polite" hidden>
-<div class="changes-head">
-<span class="changes-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M12.3 10.6V7.4a4.3 4.3 0 1 0-8.6 0v3.2L2.6 12.3h10.8l-1.1-1.7Z"/><path d="M6.4 12.3a1.7 1.7 0 0 0 3.2 0"/></svg></span>
-<div class="changes-heading">
-<h2 class="changes-title" id="changesTitle">Changements au planning</h2>
-<p class="changes-sub" id="changesSub"></p>
-</div>
-<div class="changes-actions">
-<button class="btn sm ghost" id="changesToggle" type="button" aria-controls="changeList" aria-expanded="true">Masquer le détail</button>
-<button class="btn sm" id="changesDismiss" type="button" title="Marquer ces changements comme vus"><svg viewBox="0 0 16 16" aria-hidden="true" style="width:13px;height:13px"><path d="M3.2 8.4l3 3 6.6-6.8"/></svg>Vu</button>
-</div>
-</div>
-<ul class="change-list" id="changeList"></ul>
-<p class="changes-foot" id="changesFoot"></p>
-</section>
 
 <div class="mobile-tabs" id="tabs">
 <button class="tab" data-day="all" aria-pressed="false" onclick="setDay('all')">Tous</button>
@@ -1955,11 +1875,11 @@ function splitSections(description) {
     .map((fragment) => cleanFragment(fragment));
 }
 
-const STAFF_LINE_RE = /^[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ][A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ'’ -]{1,45},\s*[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ][A-Za-zÀ-ÖØ-öø-ÿ'’ .-]{0,45}(?:\s*\[[^\]]+\])?$/;
+const STAFF_LINE_RE = /^[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’ -]{0,45},\s*[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’ .-]{0,45}(?:\s*\[[^\]]+\])?$/;
 const NON_STAFF_WORD_RE = /\b(?:annul\w*|absen\w*|cours|salle|amphi\w*|examen\w*|contr[oô]le|report\w*|gr[eè]ve|distanciel|visio|moodle|fermat|descartes|buffon|joliot|curie|semestre|miashs|licence|master|groupe|option|banalis\w*)\b/i;
 function isStaffLine(line) {
   const clean = String(line ?? "").trim();
-  return Boolean(clean) && STAFF_LINE_RE.test(clean) && !NON_STAFF_WORD_RE.test(clean);
+  return Boolean(clean) && !/\d/.test(clean) && STAFF_LINE_RE.test(clean) && !NON_STAFF_WORD_RE.test(clean);
 }
 
 /**
@@ -2898,29 +2818,6 @@ function isCourseRunning(item, day) {
   return minutes >= item.startMin && minutes < item.endMin && !item.ghost;
 }
 
-/** Badge(s) « nouveau cours », « salle changée »… affiché(s) sur la carte concernée. */
-function cardChangeHTML(item) {
-  const changes = item.changes ?? [];
-  if (!changes.length) return { badges: "", notes: "" };
-  // L'annulation a déjà son bandeau rouge (::before) et la carte « retiré » son
-  // étiquette : on n'affiche un badge que là où l'information n'est pas déjà visible.
-  const redundant = new Set(["cancelled"]);
-  if (item.removed) redundant.add("removed");
-  const badges = changes
-    .filter((change) => !redundant.has(changeKind(change)))
-    .map((change) => {
-      const { icon, short, cls } = changeLabel(change);
-      return `<span class="card-change ${cls}" title="${escapeHtml(changeLabel(change).label)}">${icon} ${escapeHtml(short)}</span>`;
-    })
-    .join("");
-  const notes = changes
-    .map((change) => [changeStatusLabel(change), change.reason ? `motif : ${change.reason}` : ""].filter(Boolean).join(" · "))
-    .filter(Boolean)
-    .map((text) => `<div class="card-note change-note">${escapeHtml(text)}</div>`)
-    .join("");
-  return { badges, notes };
-}
-
 /** Étiquette CELCAT sans information (« Annulation », « Supprimé »…) : déjà affichée ailleurs. */
 const BARE_NOTE_LABEL = /^(annul[ée]e?s?|annulation|supprim[ée]e?s?|report[ée]e?s?|absence|absent)$/i;
 
@@ -2935,20 +2832,14 @@ function cardHTML(item, day, lane = { lane: 0, lanes: 1 }) {
   if (lane.lanes > 1) classes.push("overlap");
   if (item.isCancelled) classes.push("cancelled");
   if (item.ghost) classes.push("ghost");
-  if (item.removed) classes.push("removed");
-  if (item.changes?.length) classes.push("changed");
   if (isCourseRunning(item, day)) classes.push("running");
-  const { badges, notes } = cardChangeHTML(item);
-  // La note CELCAT répète souvent le type (« Annulation ») ou le motif déjà
-  // affiché avec le changement : on ne garde que ce qui apporte une information.
   const type = stripAccents(item.type).toLowerCase();
-  const shownReasons = (item.changes ?? []).map((change) => change.reason).filter(Boolean);
   const note = String(item.note ?? "")
     .split(" · ")
     .map((fragment) => fragment.trim())
     .filter((fragment) => {
       const clean = stripAccents(fragment).toLowerCase();
-      return fragment && clean !== type && !BARE_NOTE_LABEL.test(clean) && !shownReasons.includes(fragment);
+      return fragment && clean !== type && !BARE_NOTE_LABEL.test(clean);
     })
     .join(" · ");
   const details = [item.title, item.time, item.room, item.tag, note].filter(Boolean).join(" — ");
@@ -2972,7 +2863,7 @@ function cardHTML(item, day, lane = { lane: 0, lanes: 1 }) {
     : "";
   const hint = item.source === "personal" ? "maintenir ou cliquer sur × pour supprimer" : link ? "cliquer pour ouvrir la page eCampus" : "";
   const tooltip = hint ? `${details} — ${hint}` : details;
-  return `<${tagName} class="${classes.join(" ")}${link ? " is-link" : ""}"${linkAttrs} data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="--top:${p.top}%;--h:${p.height}%;--lane:${lane.lane};--lanes:${lane.lanes}" ${link ? "" : 'tabindex="0" '}title="${escapeHtml(tooltip)}"><div class="card-time">${timeRange}<span class="card-meta"><span class="course-type">${escapeHtml(item.type)}</span>${extIcon}</span></div><div class="card-main"><span class="card-kind">${escapeHtml(item.type)}</span><div class="card-title">${escapeHtml(item.title)}</div>${room}${badges}${flag}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}${notes}</div>${del}</${tagName}>`;
+  return `<${tagName} class="${classes.join(" ")}${link ? " is-link" : ""}"${linkAttrs} data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="--top:${p.top}%;--h:${p.height}%;--lane:${lane.lane};--lanes:${lane.lanes}" ${link ? "" : 'tabindex="0" '}title="${escapeHtml(tooltip)}"><div class="card-time">${timeRange}<span class="card-meta"><span class="course-type">${escapeHtml(item.type)}</span>${extIcon}</span></div><div class="card-main"><span class="card-kind">${escapeHtml(item.type)}</span><div class="card-title">${escapeHtml(item.title)}</div>${room}${flag}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}</div>${del}</${tagName}>`;
 }
 
 /**
@@ -3065,15 +2956,14 @@ function weekSource(weekKey) {
 }
 
 /** Semaine affichée : planning officiel, ou référence seulement hors-ligne. */
-function buildWeekView(weekKey, recurring, changeOptions = {}) {
+function buildWeekView(weekKey, recurring) {
   const source = weekSource(weekKey);
   const reference = REFERENCE_BY_MONDAY.get(weekKey) ?? null;
-  const view = source === "live"
+  return source === "live"
     ? buildWeek(weekKey, state.weeks[weekKey].events, reference, { live: true, recurringCancellations: recurring })
     : source === "live-empty"
       ? buildWeek(weekKey, [], reference, { live: true, recurringCancellations: recurring })
       : buildWeek(weekKey, [], reference, { live: false });
-  return attachChanges(view, state.changes, CONFIG, changeOptions);
 }
 
 /**
@@ -3167,9 +3057,7 @@ function renderWeek(index, options = {}) {
 
   $("#grid").innerHTML = view.days.map((day, dayIndex) => {
     const dayISO = formatISO(day.realDate);
-    const removedCount = day.courses.filter((item) => item.removed).length;
-    const count = day.courses.length - removedCount;
-    const changes = visibleChanges().filter((change) => change.date === dayISO);
+    const count = day.courses.length;
     const selected = targetWeek && target.dayIndex === dayIndex;
     const futureTarget = selected && !target.ongoing;
     const hidden = state_view.mobileFilter !== "all" && state_view.mobileFilter !== dayIndex;
@@ -3185,38 +3073,31 @@ function renderWeek(index, options = {}) {
     } else {
       content = `<div class="empty">${escapeHtml(emptyMessage(weekKey, dayIndex, view.live, weekSource(weekKey)))}</div>`;
     }
-    const countLabel = count ? `${count} cours` : removedCount ? `${removedCount} retiré${removedCount > 1 ? "s" : ""}` : "libre";
-    const alert = changes.length
-      ? `<span class="day-alert" title="${escapeHtml(changeSummaryLabel(changes))}">${icon("bell", 10)}${changes.length}</span>`
-      : "";
+    const countLabel = count ? `${count} cours` : "libre";
     const compactHead = typeof innerWidth !== "undefined" && innerWidth <= 860;
-    const activeCourses = day.courses.filter((item) => !item.removed && !item.isCancelled);
+    const activeCourses = day.courses.filter((item) => !item.isCancelled);
     const totalMinutes = activeCourses.reduce((sum, item) => sum + Math.max(0, item.endMin - item.startMin), 0);
     const lastEnd = activeCourses.length ? Math.max(...activeCourses.map((item) => item.endMin)) : 0;
     const foot = activeCourses.length
       ? `<div class="day-foot">${formatDuration(totalMinutes)} de cours · fin à ${pad2(Math.floor(lastEnd / 60))}:${pad2(lastEnd % 60)}</div>`
       : "";
     const headLabel = compactHead ? ` data-day-head="${dayIndex}" role="button" tabindex="0" aria-label="Afficher seulement ${day.name.toLowerCase()} ${day.date}" title="Afficher seulement ${day.name.toLowerCase()}"` : "";
-    return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}${isToday ? " is-today" : ""}" data-day="${dayIndex}"><header class="day-head"${headLabel}><div class="day-head-main"><div class="day-name">${day.name}${isToday ? '<span class="today-dot" aria-hidden="true"></span>' : ''}</div><div class="day-date"><time datetime="${dayISO}">${day.date}</time></div>${indicator}</div><div class="day-tags">${alert}<span class="day-count${count ? " has" : ""}">${countLabel}</span></div></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}${foot}</div></section>`;
+    return `<section class="day${selected ? " target" : ""}${futureTarget ? " future-target" : ""}${hidden ? " hidden" : ""}${isToday ? " is-today" : ""}" data-day="${dayIndex}"><header class="day-head"${headLabel}><div class="day-head-main"><div class="day-name">${day.name}${isToday ? '<span class="today-dot" aria-hidden="true"></span>' : ''}</div><div class="day-date"><time datetime="${dayISO}">${day.date}</time></div>${indicator}</div><div class="day-tags"><span class="day-count${count ? " has" : ""}">${countLabel}</span></div></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}${foot}</div></section>`;
   }).join("");
 
   if (options.animate !== false && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
     $("#grid").animate([{ opacity: 0.4, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 180, easing: "ease-out" });
   }
   $$(".tab").forEach((tab) => tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex)));
-  renderChangePanel();
   updateDayNav();
 }
 
 /* ------------------------------------------------------------------ print */
 function printCourse(item) {
-  const changeFlags = (item.changes ?? []).map((change) => changeLabel(change).short.toUpperCase());
-  const flag = item.ghost ? " • À VÉRIFIER" : item.isCancelled ? " • ANNULÉ" : changeFlags.length ? ` • ${changeFlags.join(" / ")}` : "";
+  const flag = item.ghost ? " • À VÉRIFIER" : item.isCancelled ? " • ANNULÉ" : "";
   const classes = ["p-item", item.cat];
   if (item.isCancelled) classes.push("cancelled");
   if (item.ghost) classes.push("ghost");
-  if (item.removed) classes.push("removed");
-  if (item.changes?.length) classes.push("changed");
   const link = courseLinkFor(item);
   const title = link
     ? `<a class="p-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>`
@@ -3226,7 +3107,7 @@ function printCourse(item) {
 
 function buildPrintPage(pageWeeks, page, total, period) {
   const rows = pageWeeks.map(({ weekKey, number }) => {
-    const view = mergePersonalEvents(buildWeekView(weekKey, state_view.recurring, { all: true }));
+    const view = mergePersonalEvents(buildWeekView(weekKey, state_view.recurring));
     const cells = view.days.map((day, dayIndex) => {
       if (day.courses.length) return `<td>${day.courses.map(printCourse).join("")}</td>`;
       const message = emptyMessage(weekKey, dayIndex, view.live, weekSource(weekKey));
@@ -3240,11 +3121,7 @@ function buildPrintPage(pageWeeks, page, total, period) {
   }).join("");
   const tdNum = selectedTdNumber();
   const tdLabel = tdNum ? `TD ${tdNum.padStart(2, "0")}` : "";
-  const pageKeys = new Set(pageWeeks.map(({ weekKey }) => weekKey));
-  const pageChanges = (state.changes ?? []).filter((change) => pageKeys.has(mondayOf(change.date)) && changeAppliesToTd(change));
-  const badge = pageChanges.length
-    ? `Planning officiel • ${escapeHtml(changeSummaryLabel(pageChanges))} signalé(e)${pageChanges.length > 1 ? "s" : ""}`
-    : "Planning officiel • annulations et absences signalées";
+  const badge = "Planning officiel • annulations et absences signalées";
   return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — ${escapeHtml(period)}</h2><p>Source : edt.uvsq.fr • Groupe ${escapeHtml(CONFIG.group)}${tdLabel ? ` • ${tdLabel}` : ""} • <strong>Page ${page} / ${total}</strong> • ${new Date().toLocaleString("fr-FR")}</p></div><div class="print-badge">${badge}</div></header><table class="print-table"><thead><tr><th>Semaine</th>${DAY_NAMES.map((day) => `<th>${day}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></section>`;
 }
 
@@ -3258,116 +3135,6 @@ function buildPrint() {
   $("#print").innerHTML = Array.from({ length: pages }, (_, index) =>
     buildPrintPage(numbered.slice(index * perPage, (index + 1) * perPage), index + 1, pages, period(index + 1)),
   ).join("");
-}
-
-/* ---------------------------------------------- bandeau des changements */
-/**
- * Affiche, en clair, ce qui a bougé dans le planning officiel : cours annulé
- * (professeur absent), nouveau cours, séance retirée, salle ou horaire modifiés.
- * Le bandeau s'ouvre tout seul tant que l'étudiant ne l'a pas marqué comme vu ;
- * il reste ensuite accessible par la cloche de la barre d'outils.
- */
-const CHANGE_SEEN_KEY = "schedule_changes_seen";
-let changesPanelOpen = null;   // null = automatique : ouvert s'il reste du nouveau
-let changesListOpen = true;    // détail déplié/replié
-
-function changesSeenAt() {
-  try { return localStorage.getItem(CHANGE_SEEN_KEY) || ""; } catch { return ""; }
-}
-
-function markChangesSeen(list) {
-  const newest = (list ?? []).map((change) => change.detectedAt ?? "").sort().at(-1);
-  try { localStorage.setItem(CHANGE_SEEN_KEY, newest || new Date().toISOString()); } catch {}
-}
-
-/** Changements à signaler pour le TD affiché. */
-function visibleChanges(today = todayISO()) {
-  return relevantChanges(state.changes, CONFIG, { today });
-}
-
-function changesFreshnessLabel() {
-  const at = state.generatedAt ? new Date(state.generatedAt) : null;
-  if (!at || Number.isNaN(at.getTime())) return "Source : edt.uvsq.fr";
-  return `Planning vérifié le ${at.toLocaleString("fr-FR", { day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })} · source edt.uvsq.fr`;
-}
-
-function changeItemHTML(change) {
-  const { glyph, label, cls } = changeLabel(change);
-  const detail = changeStatusLabel(change);
-  const reason = change.reason ? `motif : ${change.reason}` : "";
-  const where = change.room ? `<span class="change-room">${icon("pin", 10)} ${escapeHtml(change.room)}</span>` : "";
-
-  return `<li class="change ${cls}"><button type="button" class="change-item" data-change="${escapeHtml(changeKey(change))}" title="Afficher cette semaine dans le planning">` +
-    `<span class="change-kind ${cls}">${icon(glyph, 11)} ${escapeHtml(label)}</span>` +
-    `<span class="change-when">${escapeHtml(changeWhenLabel(change))}</span>` +
-    `<span class="change-what">${escapeHtml(change.title)}${change.type ? ` <span class="change-type">${escapeHtml(change.type)}</span>` : ""} ${where}</span>` +
-    (detail || reason ? `<span class="change-detail">${escapeHtml([detail, reason].filter(Boolean).join(" · "))}</span>` : "") +
-    `<span class="change-jump">Voir ${icon("arrowRight", 10)}</span>` +
-    `</button></li>`;
-}
-
-function setChangesCollapsed() {
-  const list = $("#changeList");
-  const toggle = $("#changesToggle");
-  if (list) list.hidden = !changesListOpen;
-  if (toggle) {
-    toggle.textContent = changesListOpen ? "Masquer le détail" : "Voir le détail";
-    toggle.setAttribute("aria-expanded", String(changesListOpen));
-  }
-}
-
-function renderChangePanel() {
-  const banner = $("#changeBanner");
-  const button = $("#changesBtn");
-  const count = $("#changesCount");
-  const list = visibleChanges();
-  const unseen = list.filter((change) => changeIsUnseen(change, changesSeenAt()));
-  const open = changesPanelOpen ?? unseen.length > 0;
-  const show = list.length > 0 && open;
-
-  if (button) {
-    button.hidden = list.length === 0;
-    button.setAttribute("aria-expanded", String(show));
-    button.title = list.length ? `${list.length} changement(s) au planning — ${changeSummaryLabel(list)}` : "";
-    button.setAttribute("aria-label", list.length ? `${list.length} changement(s) au planning` : "Changements au planning");
-    button.classList.toggle("has-changes", unseen.length > 0);
-    if (count) count.textContent = String(list.length);
-  }
-  if (!banner) return;
-  banner.hidden = !show;
-  if (!show) return;
-
-  const title = $("#changesTitle");
-  const sub = $("#changesSub");
-  const items = $("#changeList");
-  const foot = $("#changesFoot");
-  if (title) title.textContent = list.length > 1 ? `${list.length} changements au planning` : "1 changement au planning";
-  if (sub) sub.textContent = `${changeSummaryLabel(list)} — vérifie avant de te déplacer, puis clique pour retrouver le cours.`;
-  if (items) items.innerHTML = list.map(changeItemHTML).join("");
-  if (foot) foot.textContent = changesFreshnessLabel();
-  setChangesCollapsed();
-}
-
-/** Amène l'étudiant sur la semaine et la carte concernées, et les met en évidence. */
-function revealChange(key) {
-  const change = visibleChanges().find((item) => changeKey(item) === key);
-  if (!change) return;
-  const weekKey = mondayOf(change.date);
-  if (!state_view.weeks.includes(weekKey)) return;
-  const dayIndex = weekdayIndex(change.date);
-  if (innerWidth <= 860 && state_view.mobileFilter !== "all" && state_view.mobileFilter !== dayIndex) setDay(dayIndex, false);
-  renderWeek(state_view.weeks.indexOf(weekKey), { weekKey, animate: false });
-  scrollToDay(dayIndex, true);
-  flashCourse(change);
-}
-
-function flashCourse(change) {
-  const cards = [...document.querySelectorAll("#grid .card")];
-  const card = cards.find((element) => element.dataset.date === change.date && element.dataset.time === change.time)
-    ?? cards.find((element) => element.dataset.date === change.date && element.dataset.title === change.title);
-  if (!card) return;
-  card.classList.add("flash");
-  setTimeout(() => card.classList.remove("flash"), 2600);
 }
 
 /* ======================================================================
@@ -3876,7 +3643,6 @@ function renderWeekend(iso) {
   });
   $("#prev").disabled = !dayIsNavigable(addDaysISO(iso, -7));
   $("#next").disabled = !dayIsNavigable(addDaysISO(iso, 7));
-  renderChangePanel();
   updateDayNav();
 }
 
@@ -3958,8 +3724,6 @@ async function loadEverything(options = {}) {
       state.changes = Array.isArray(file.changes) ? file.changes : [];
       state_view.recurring = findRecurringCancellations(state.weeks);
       lastLoadedAt = Date.now();
-      // Le journal peut arriver après le premier rendu : on le signale tout de suite.
-      renderChangePanel();
       saveToCache();
       buildPrint();
     } catch (error) {
@@ -4195,21 +3959,6 @@ $("#grid").addEventListener("contextmenu", (event) => {
   event.preventDefault();
   cancelHold();
   openDeleteDialog(card);
-});
-$("#changesBtn")?.addEventListener("click", () => {
-  const banner = $("#changeBanner");
-  changesPanelOpen = banner ? banner.hidden : true;
-  renderChangePanel();
-});
-$("#changesToggle")?.addEventListener("click", () => { changesListOpen = !changesListOpen; setChangesCollapsed(); });
-$("#changesDismiss")?.addEventListener("click", () => {
-  markChangesSeen(visibleChanges());
-  changesPanelOpen = false;
-  renderChangePanel();
-});
-$("#changeList")?.addEventListener("click", (event) => {
-  const item = event.target.closest?.(".change-item");
-  if (item?.dataset.change) revealChange(item.dataset.change);
 });
 addEventListener("resize", () => {
   zoomTimelineIfNeeded();
