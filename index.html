@@ -1955,12 +1955,23 @@ function splitSections(description) {
     .map((fragment) => cleanFragment(fragment));
 }
 
+const STAFF_LINE_RE = /^[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ][A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ'’ -]{1,45},\s*[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ][A-Za-zÀ-ÖØ-öø-ÿ'’ .-]{0,45}(?:\s*\[[^\]]+\])?$/;
+const NON_STAFF_WORD_RE = /\b(?:annul\w*|absen\w*|cours|salle|amphi\w*|examen\w*|contr[oô]le|report\w*|gr[eè]ve|distanciel|visio|moodle|fermat|descartes|buffon|joliot|curie|semestre|miashs|licence|master|groupe|option|banalis\w*)\b/i;
+function isStaffLine(line) {
+  const clean = String(line ?? "").trim();
+  return Boolean(clean) && STAFF_LINE_RE.test(clean) && !NON_STAFF_WORD_RE.test(clean);
+}
+
 /**
  * Classe une ligne de description : « module » (matière), « group » (groupe
- * d'étudiants), « room » (salle) ou « note ». Les codes de matière fournis par
- * l'API (raw.modules, ex. LSIN311) sont le signal le plus fiable.
+ * d'étudiants), « room » (salle), « staff » (enseignant) ou « note ». Les codes
+ * de matière fournis par l'API (raw.modules, ex. LSIN311) sont le signal le plus fiable.
  */
 function classifyLine(line, moduleCodes) {
+  // En mode authentifié, CELCAT peut joindre « NOM, Prénom » : on l'isole avant
+  // tout pour qu'un patronyme (ex. GERMAIN, LASALLE, FERMÉ) ne devienne ni une
+  // salle, ni un groupe, ni un faux signal d'annulation.
+  if (isStaffLine(line)) return "staff";
   // Une salle peut se terminer par un suffixe entre crochets
   // (« 2203 - FERMAT [Salle de TD] ») : on la reconnaît avant tout.
   if (ROOM_RE.test(line)) return "room";
@@ -1980,12 +1991,14 @@ function parseEventUncached(raw) {
   if (!start || !end || start.length < 16 || end.length < 16) return null;
   const moduleCodes = Array.isArray(raw.modules) ? raw.modules.map((code) => String(code)) : [];
   const sections = splitSections(raw.description);
-  const buckets = { module: [], group: [], room: [], note: [] };
+  const buckets = { module: [], group: [], room: [], staff: [], note: [] };
   for (const section of sections) {
     const lines = section.filter(Boolean);
     if (!lines.length) continue;
-    const kind = classifyLine(lines[0], moduleCodes);
-    for (const line of lines) buckets[kind].push(line);
+    for (const line of lines) {
+      const kind = classifyLine(line, moduleCodes);
+      buckets[kind].push(line);
+    }
   }
   const type = (sections[0]?.filter(Boolean)[0] || "").trim() || stripResourceSuffix(String(raw.eventCategory ?? "")).trim();
   const modules = buckets.module.map((line) => stripCapacity(normalizeModuleName(line))).filter(Boolean);
@@ -2029,11 +2042,40 @@ function normalizeGroupCode(code) {
     .trim();
 }
 
+/**
+ * Le groupe de TD dépend du semestre : « S3MIASHS TD 2 » devient
+ * « S4MIASHS TD 2 » en janvier. On ne garde donc que le numéro choisi.
+ */
+function tdChoiceFor(group, value, fallback = 2) {
+  const number = String(value ?? "").match(/TD\s*0?(\d+)$/i)?.[1] ?? String(fallback);
+  const prefix = String(group ?? "").replace(/\s*TD\s*0?\d+$/i, "").trim() || "S3MIASHS";
+  return `${prefix} TD ${number}`;
+}
+
+/** Codes de promo et de TD suivis sur l'ensemble des semestres déclarés (S3 + S4). */
+function wantedGroupSets(config = CONFIG) {
+  const promoSet = new Set([normalizeGroupCode(config.group)]);
+  const tdSet = new Set([normalizeGroupCode(config.myTd)]);
+  const semesters = Array.isArray(config?.semesters) ? config.semesters : [];
+  const followsSemesters = semesters.some((sem) => normalizeGroupCode(sem?.group) === normalizeGroupCode(config.group));
+  if (followsSemesters) {
+    for (const sem of semesters) {
+      if (!sem?.group) continue;
+      promoSet.add(normalizeGroupCode(sem.group));
+      tdSet.add(normalizeGroupCode(tdChoiceFor(sem.group, config.myTd)));
+    }
+  }
+  return { promoSet, tdSet };
+}
+
 /** Ne garde que les cours de la promo (CM / TD réunies) et du TD de l'étudiant. */
 function isMyCourse(parsed, config = CONFIG) {
   if (!parsed.groups.length) return true;
-  const wanted = new Set([normalizeGroupCode(config.group), normalizeGroupCode(config.myTd)]);
-  return parsed.groups.some((group) => wanted.has(normalizeGroupCode(resourceCode(group))));
+  const { promoSet, tdSet } = wantedGroupSets(config);
+  return parsed.groups.some((group) => {
+    const code = normalizeGroupCode(resourceCode(group));
+    return promoSet.has(code) || tdSet.has(code);
+  });
 }
 
 /** Numéro du TD sélectionné (« S3MIASHS TD 2 » → « 2 »). */
@@ -2056,12 +2098,14 @@ function referenceMatchesTd(ref, config = CONFIG) {
 function tagForLiveCourse(item) {
   if (item.cancelled) return { tag: "Annulé — prof absent / séance supprimée", tagType: "cancelled" };
   const codes = item.groups.map((group) => normalizeGroupCode(resourceCode(group)));
-  const promo = codes.includes(normalizeGroupCode(CONFIG.group));
-  const mine = codes.includes(normalizeGroupCode(CONFIG.myTd));
+  const { promoSet, tdSet } = wantedGroupSets(CONFIG);
+  const promo = codes.some((code) => promoSet.has(code));
+  const mine = codes.some((code) => tdSet.has(code));
   if (/^CM/i.test(item.type)) return { tag: "CM Promo", tagType: "cm" };
   if (mine && promo) return { tag: "TD Promo réunie (TD 1 & 2)", tagType: "reuni" };
   if (mine) return { tag: `Votre ${item.type}`.trim(), tagType: "perso" };
-  return { tag: `${CONFIG.group} • promo`, tagType: "reuni" };
+  const matchedPromo = codes.find((code) => promoSet.has(code)) || CONFIG.group;
+  return { tag: `${matchedPromo} • promo`, tagType: "reuni" };
 }
 
 /** Regroupe des événements bruts par semaine (clé = lundi ISO). */
@@ -2304,7 +2348,8 @@ function changeSentence(change, today = todayISO()) {
 function changeAppliesToTd(change, config = CONFIG) {
   const groups = (change?.groups ?? []).map((code) => normalizeGroupCode(code));
   if (!groups.length) return true;
-  return groups.includes(normalizeGroupCode(config.myTd)) || groups.includes(normalizeGroupCode(config.group));
+  const { promoSet, tdSet } = wantedGroupSets(config);
+  return groups.some((code) => tdSet.has(code) || promoSet.has(code));
 }
 
 /** Fenêtre affichée dans le bandeau : la semaine qui vient, et les tous derniers jours. */
@@ -2656,16 +2701,6 @@ function currentSemester(semesters = CONFIG.semesters, date = todayISO()) {
   return started.length ? started[started.length - 1] : sorted[0];
 }
 
-/**
- * Le groupe de TD dépend du semestre : « S3MIASHS TD 2 » devient
- * « S4MIASHS TD 2 » en janvier. On ne garde donc que le numéro choisi.
- */
-function tdChoiceFor(group, value, fallback = 2) {
-  const number = String(value ?? "").match(/TD\s*(\d+)$/i)?.[1] ?? String(fallback);
-  const prefix = String(group ?? "").replace(/\s*TD\s*\d+$/i, "").trim() || "S3MIASHS";
-  return `${prefix} TD ${number}`;
-}
-
 /** Aligne le sélecteur de TD sur le semestre affiché (S3 TD 1/2 → S4 TD 1/2). */
 function syncSemesterOptions() {
   const select = $("#tdSelect");
@@ -2715,7 +2750,13 @@ async function loadFromCache() {
 
 function saveToCache() {
   try {
-    localStorage.setItem(`${CONFIG.cacheKey}_${CONFIG.group}`, JSON.stringify({ ts: Date.now(), weeks: state.weeks, generatedAt: state.generatedAt, changes: state.changes }));
+    localStorage.setItem(`${CONFIG.cacheKey}_${CONFIG.group}`, JSON.stringify({
+      ts: Date.now(),
+      weeks: state.weeks,
+      generatedAt: state.generatedAt,
+      changes: state.changes,
+      semesters: CONFIG.semesters,
+    }));
   } catch { /* quota / mode privé */ }
 }
 
@@ -3887,11 +3928,15 @@ function refreshDisplayedWeek() {
   renderWeek(index, { animate: false, weekKey: shown, target });
 }
 
+let lastLoadedAt = 0;
+let activeCalendarDay = todayISO();
+const RESUME_MIN_MS = 2 * 60 * 1000;
+
 async function loadEverything(options = {}) {
   if (loadPromise && !options.force) return loadPromise;
   loadPromise = (async () => {
     await applyRemoteConfig();
-    const before = JSON.stringify(state.weeks);
+    const before = `${JSON.stringify(state.weeks)}|${JSON.stringify(state.changes)}`;
     try {
       const file = await loadDataFile();
       // Le fichier publié peut décrire plusieurs semestres : on suit celui qui
@@ -3912,6 +3957,7 @@ async function loadEverything(options = {}) {
       state.generatedAt = file.generatedAt ?? null;
       state.changes = Array.isArray(file.changes) ? file.changes : [];
       state_view.recurring = findRecurringCancellations(state.weeks);
+      lastLoadedAt = Date.now();
       // Le journal peut arriver après le premier rendu : on le signale tout de suite.
       renderChangePanel();
       saveToCache();
@@ -3920,9 +3966,27 @@ async function loadEverything(options = {}) {
       console.warn("[edt] data/edt.json indisponible :", error.message);
     }
     state_view.weeks = buildWeekList();
-    return { changed: JSON.stringify(state.weeks) !== before };
+    return { changed: `${JSON.stringify(state.weeks)}|${JSON.stringify(state.changes)}` !== before };
   })().finally(() => { loadPromise = null; });
   return loadPromise;
+}
+
+/**
+ * Quand l'étudiant revient sur un onglet laissé ouvert (ou retrouve du réseau),
+ * on vérifie discrètement si `data/edt.json` a évolué, sans aucun minuteur en
+ * arrière-plan. Si la date du jour a basculé pendant la nuit, on recale aussi
+ * la vue sur le nouveau jour.
+ */
+function refreshOnResume(force = false) {
+  if (!force && Date.now() - lastLoadedAt < RESUME_MIN_MS) return Promise.resolve(null);
+  const nowDay = todayISO();
+  const dayRolledOver = nowDay !== activeCalendarDay;
+  if (dayRolledOver) activeCalendarDay = nowDay;
+  return loadEverything({ force: true }).then((result) => {
+    if (dayRolledOver) jumpToTarget(false);
+    else if (result?.changed) refreshDisplayedWeek();
+    return result;
+  });
 }
 
 /**
@@ -3949,6 +4013,9 @@ function initialize() {
   startSky();
   const cached = readCacheSync();
   if (cached?.weeks) {
+    if (Array.isArray(cached.semesters) && cached.semesters.length && !CONFIG.semesters.length) {
+      CONFIG.semesters = cached.semesters;
+    }
     state.weeks = cached.weeks;
     state.generatedAt = cached.generatedAt ?? null;
     state.changes = Array.isArray(cached.changes) ? cached.changes : [];
@@ -3978,9 +4045,19 @@ function initialize() {
       && mondayOf(remembered) === mondayOf(todayISO()) && dayIsNavigable(remembered)) {
     showDay(remembered, { animate: false });
   }
-  // Un seul chargement, au démarrage. La semaine ouverte ne change plus ensuite.
+  // Chargement initial, puis resynchronisation passive uniquement quand on
+  // rouvre l'onglet ou retrouve la connexion (aucun polling en arrière-plan).
   loadEverything().then((result) => {
     if (result?.changed) refreshDisplayedWeek();
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") refreshOnResume(false);
+  });
+  addEventListener("pageshow", (event) => {
+    if (event.persisted) refreshOnResume(true);
+  });
+  addEventListener("online", () => {
+    refreshOnResume(true);
   });
 }
 

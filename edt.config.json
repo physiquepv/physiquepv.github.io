@@ -47,7 +47,7 @@
     ],
     "colourScheme": "3",
     "weeksBackIncremental": 1,
-    "weeksAheadIncremental": 2,
+    "weeksAheadIncremental": 4,
     "weeksTail": 4,
     "marginDaysBefore": 21,
     "marginDaysAfter": 28,

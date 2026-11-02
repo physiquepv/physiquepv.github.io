@@ -10,6 +10,7 @@ on:
       - "data/**"
       - "package.json"
       - ".github/workflows/edt-tests.yml"
+      - ".github/workflows/edt-sync.yml"
   pull_request:
   workflow_dispatch:
 
@@ -29,6 +30,8 @@ jobs:
         run: npm install --no-audit --no-fund --no-package-lock
       - name: Noyau (parsing CELCAT, filtrage du TD, annulations)
         run: npm test
+      - name: Synchronisation CELCAT (session LDAP, fusion, garde-fous)
+        run: npm run test:sync
       - name: Changements de planning (prof absent, nouveau cours…)
         run: npm run test:changes
       - name: Rendu de la page

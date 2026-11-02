@@ -1,16 +1,19 @@
 name: Sync emploi du temps UVSQ
 
 # Récupère le planning officiel CELCAT (edt.uvsq.fr) et l'écrit dans data/edt.json.
-# Le site (GitHub Pages, statique) ne peut pas appeler CELCAT directement : son
-# API n'autorise pas les requêtes cross-origin (CORS). Cette tâche le fait donc
-# côté serveur, et la page lit ensuite un simple fichier JSON en same-origin.
+# Depuis octobre 2026, edt.uvsq.fr exige une session LDAP UVSQ (/LdapLogin) :
+# le script ouvre cette session à partir des secrets GitHub Actions
+# CELCAT_USERNAME et CELCAT_PASSWORD, récupère les créneaux du groupe (aucune
+# donnée nominative n'est écrite dans le dépôt) et publie data/edt.json.
 
 on:
   schedule:
-    # Rafraîchissement glissant (semaine en cours + 2 à venir) toutes les 10 min.
-    - cron: "*/10 * * * *"
-    # Rechargement complet du semestre, une fois par jour (~05:17 heure de Paris).
-    - cron: "17 3 * * *"
+    # Rafraîchissement glissant toutes les 15 min du lundi au samedi (~06h–23h Paris).
+    - cron: "*/15 4-21 * * 1-6"
+    # Veille du dimanche (~08h–22h Paris, 1×/heure) pour capter les annonces du lundi matin.
+    - cron: "12 6-20 * * 0"
+    # Rechargement complet du semestre (et aperçu du suivant), chaque matin (~05:17 / 06:17 Paris).
+    - cron: "17 4 * * *"
   workflow_dispatch:
     inputs:
       full:
@@ -24,6 +27,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: edt-sync
@@ -44,11 +48,35 @@ jobs:
 
       - name: Récupérer le planning CELCAT
         env:
-          EDT_FULL: ${{ (github.event.schedule == '17 3 * * *' || github.event_name == 'push' || inputs.full) && '1' || '0' }}
+          EDT_FULL: ${{ (github.event.schedule == '17 4 * * *' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full != false)) && '1' || '0' }}
+          CELCAT_USERNAME: ${{ secrets.CELCAT_USERNAME }}
+          CELCAT_PASSWORD: ${{ secrets.CELCAT_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
           node scripts/sync-edt.mjs 2>&1 | tee /tmp/sync.log
           code=${PIPESTATUS[0]}
+          if [ "$code" -eq 2 ]; then
+            {
+              echo "### 🔑 Configuration requise (une seule fois) : secrets UVSQ"
+              echo
+              echo "Depuis octobre 2026, \`edt.uvsq.fr\` redirige vers \`/LdapLogin\` et bloque l'accès anonyme."
+              echo "Pour activer la synchronisation automatique :"
+              echo
+              echo "1. Ouvrez **Settings → Secrets and variables → Actions → New repository secret**."
+              echo "2. Ajoutez **\`CELCAT_USERNAME\`** : votre identifiant ENT UVSQ (numéro étudiant, **sans** \`@etu.uvsq.fr\`)."
+              echo "3. Ajoutez **\`CELCAT_PASSWORD\`** : votre mot de passe ENT UVSQ."
+              echo "4. Revenez dans **Actions → Sync emploi du temps UVSQ → Run workflow**."
+              echo
+              echo "_Ces secrets restent chiffrés côté GitHub Actions et ne sont jamais exposés dans le site ni dans \`data/edt.json\`._"
+            } >> "$GITHUB_STEP_SUMMARY"
+            if [ "${GITHUB_EVENT_NAME:-}" = "schedule" ]; then
+              # En mode planifié, ne pas échouer en boucle tant que les secrets ne sont pas créés
+              # (évite les e-mails d'échec répétés et la désactivation du cron par GitHub).
+              exit 0
+            fi
+            exit 2
+          fi
           if [ "$code" -ne 0 ]; then
             if ! grep -q '::error' /tmp/sync.log; then
               msg=$(tail -c 1200 /tmp/sync.log | tr '\n' ' ' | sed 's/%/%25/g')
@@ -71,6 +99,7 @@ jobs:
             echo "Planning inchangé : rien à publier."
             exit 0
           fi
+          cp data/edt.json /tmp/edt.json.published
           # Le message de commit annonce ce qui a bougé (annulation, nouveau cours…) :
           # l'historique du dépôt devient la chronologie des changements.
           subject=$(node scripts/sync-edt.mjs --summary-subject || true)
@@ -84,15 +113,36 @@ jobs:
           git config user.email "edt-sync@users.noreply.github.com"
           git add data/edt.json
           git commit -m "$message" -m "$summary"
-          {
-            echo
-            echo "### Planning publié"
-            echo
-            echo "**$message**"
-            echo
-            echo "$summary"
-          } >> "$GITHUB_STEP_SUMMARY"
-          if ! git push; then
+
+          pushed=0
+          if git push origin HEAD:main; then
+            pushed=1
+          else
+            # Si un commit est arrivé sur main pendant la synchro, on rejoue proprement dessus.
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/edt.json.published data/edt.json
+            if [ -z "$(git status --porcelain -- data/edt.json)" ]; then
+              echo "Planning déjà aligné sur main."
+              exit 0
+            fi
+            git add data/edt.json
+            git commit -m "$message" -m "$summary"
+            if git push origin HEAD:main; then
+              pushed=1
+            fi
+          fi
+
+          if [ "$pushed" -eq 1 ]; then
+            {
+              echo
+              echo "### Planning publié"
+              echo
+              echo "**$message**"
+              echo
+              echo "$summary"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
             {
               echo "### ⚠️ Impossible d'écrire data/edt.json"
               echo

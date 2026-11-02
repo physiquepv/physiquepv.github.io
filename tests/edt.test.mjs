@@ -21,7 +21,7 @@ function loadCore(source) {
   const end = source.indexOf("CORE-END");
   assert.ok(start > 0 && end > start, "marqueurs CORE-START / CORE-END introuvables");
   const code = source.slice(source.indexOf("*/", start) + 2, source.lastIndexOf("/*", source.indexOf("CORE-END")));
-  const factory = new Function(`${code}; return { parseEvent, isMyCourse, buildWeek, weeksFromEvents, findRecurringCancellations, normalizeGroupCode, decodeEntities, mondayOf, addDaysISO, nextWeekdayISO, openingDateISO, slotOf, familyOf, CONFIG, fallbackWeeks };`);
+  const factory = new Function(`${code}; return { parseEvent, isMyCourse, changeAppliesToTd, buildWeek, weeksFromEvents, findRecurringCancellations, normalizeGroupCode, decodeEntities, mondayOf, addDaysISO, nextWeekdayISO, openingDateISO, slotOf, familyOf, CONFIG, fallbackWeeks };`);
   return factory();
 }
 
@@ -196,6 +196,72 @@ test("openingDateISO avance après la dernière heure et saute le week-end", (co
   assert.equal(core.openingDateISO(at(2026, 10, 11, 9, 0), endAt17), "2026-10-12", "dimanche, le lundi est sélectionné");
   assert.equal(core.openingDateISO(at(2026, 10, 22, 18, 59), endAt19), "2026-10-22", "un cours tardif maintient la journée sélectionnée");
   assert.equal(core.openingDateISO(at(2026, 10, 22, 19, 0), endAt19), "2026-10-23");
+});
+
+test("parseEvent isole les noms d'enseignants CELCAT (mode LDAP) sans fausser salle, groupe ni annulation", (core) => {
+  const authedRaw = {
+    id: "authed-1",
+    start: "2026-11-02T09:40:00",
+    end: "2026-11-02T11:10:00",
+    description:
+      "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC311*-Microéconomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2 [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nGERMAIN, Paul<br />LASALLE, Claire<br />FERM&#201;, Marc [MFERME]\r\n\r\n<br />\r\n\r\n\r\n",
+    eventCategory: "TD",
+    backgroundColor: "#FFFF00",
+    modules: ["LSEC311*"],
+  };
+  const parsed = core.parseEvent(authedRaw);
+  assert.equal(parsed.room, "2206 - FERMAT", "GERMAIN / LASALLE ne deviennent pas des salles");
+  assert.equal(parsed.cancelled, false, "FERMÉ ne déclenche pas une fausse annulation");
+  assert.deepEqual(parsed.groups, ["L2 MIASHS S3 TD 2 [S3MIASHS TD 2]"], "[MFERME] ne pollue pas les groupes étudiants");
+
+  const cancelledWithNote = {
+    ...authedRaw,
+    description: authedRaw.description.replace(/\r\n$/, "Cours annulé, enseignant absent\r\n"),
+  };
+  assert.equal(core.parseEvent(cancelledWithNote).cancelled, true, "une note d'absence avec virgule reste détectée");
+});
+
+test("isMyCourse et changeAppliesToTd couvrent S3 + S4 avec le numéro de TD choisi", (core) => {
+  const cfg = {
+    group: "S3MIASHS",
+    myTd: "S3MIASHS TD 2",
+    semesters: [
+      { id: "S3", group: "S3MIASHS", tdGroup: "S3MIASHS TD 2", start: "2026-09-14", end: "2026-12-19" },
+      { id: "S4", group: "S4MIASHS", tdGroup: "S4MIASHS TD 2", start: "2027-01-04", end: "2027-05-08" },
+    ],
+  };
+  const s4Promo = core.parseEvent({
+    id: "s4-cm",
+    start: "2027-01-05T09:40:00",
+    end: "2027-01-05T11:10:00",
+    description: "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT\r\n\r\n<br />\r\n\r\nLSIN400-Algo S4 [LSIN400]\r\n\r\n<br />\r\n\r\nL2 MIASHS S4 [S4MIASHS]",
+    eventCategory: "CM",
+    backgroundColor: "#00FFFF",
+    modules: ["LSIN400"],
+  });
+  const s4Td2 = core.parseEvent({
+    id: "s4-td2",
+    start: "2027-01-05T13:50:00",
+    end: "2027-01-05T15:20:00",
+    description: "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSIN400-Algo S4 [LSIN400]\r\n\r\n<br />\r\n\r\nL2 MIASHS S4 TD 2 [S4MIASHS TD 2]",
+    eventCategory: "TD",
+    backgroundColor: "#FFFF00",
+    modules: ["LSIN400"],
+  });
+  const s4Td1 = core.parseEvent({
+    id: "s4-td1",
+    start: "2027-01-05T13:50:00",
+    end: "2027-01-05T15:20:00",
+    description: "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSIN400-Algo S4 [LSIN400]\r\n\r\n<br />\r\n\r\nL2 MIASHS S4 TD 1 [S4MIASHS TD 1]",
+    eventCategory: "TD",
+    backgroundColor: "#FFFF00",
+    modules: ["LSIN400"],
+  });
+  assert.equal(core.isMyCourse(s4Promo, cfg), true, "les CM S4 sont visibles dès leur publication");
+  assert.equal(core.isMyCourse(s4Td2, cfg), true, "le TD 2 du S4 suit le choix TD 2");
+  assert.equal(core.isMyCourse(s4Td1, cfg), false, "le TD 1 du S4 reste filtré");
+  assert.equal(core.changeAppliesToTd({ groups: ["S4MIASHS TD 2"] }, cfg), true);
+  assert.equal(core.changeAppliesToTd({ groups: ["S4MIASHS TD 1"] }, cfg), false);
 });
 
 /* ------------------------------------------------------------------ runner */
