@@ -10,11 +10,12 @@
     "test:offline": "node tests/render-offline.test.mjs",
     "test:changes": "node tests/changes.test.mjs",
     "test:sync": "node tests/sync.test.mjs",
-    "test:all": "node tests/edt.test.mjs && node tests/sync.test.mjs && node tests/changes.test.mjs && node tests/render.test.mjs && node tests/render-offline.test.mjs && node tests/ui.test.mjs",
+    "test:all": "node tests/edt.test.mjs && node tests/sync.test.mjs && node tests/changes.test.mjs && node tests/render.test.mjs && node tests/render-offline.test.mjs && node tests/ui.test.mjs && node tests/links-nav.test.mjs",
     "sync": "node scripts/sync-edt.mjs",
     "sync:full": "node scripts/sync-edt.mjs --full",
     "changes": "node scripts/sync-edt.mjs --summary",
-    "test:ui": "node tests/ui.test.mjs"
+    "test:ui": "node tests/ui.test.mjs",
+    "test:links": "node tests/links-nav.test.mjs"
   },
   "devDependencies": {
     "jsdom": "^30.1.1"
