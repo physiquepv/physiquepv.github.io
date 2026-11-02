@@ -166,6 +166,15 @@ globalThis.fetch = async (url) => {
       ok: false,
       status: 302,
       statusText: "Found",
+      headers: { get: (k) => (k.toLowerCase() === "location" ? "/Login" : null) },
+      text: async () => "",
+    };
+  }
+  if (u.includes("/Login")) {
+    return {
+      ok: false,
+      status: 302,
+      statusText: "Found",
       headers: { get: (k) => (k.toLowerCase() === "location" ? "/LdapLogin" : null) },
       text: async () => "",
     };
@@ -177,9 +186,9 @@ await assert.rejects(
   (err) => err instanceof CelcatAuthError && err.kind === "auth_required" && err.exitCode === 2 && /CELCAT_USERNAME/.test(err.message),
   "la fermeture de l'accès anonyme doit être détectée explicitement",
 );
-assert.ok(calls <= 3, `détection immédiate sans marteler CELCAT (${calls} appels)`);
+assert.ok(calls <= 5, `détection immédiate sans marteler CELCAT (${calls} appels)`);
 assert.equal(await readFile(outFile, "utf8"), snapshot, "data/edt.json reste intact");
-console.log(`  ✓ accès anonyme fermé (/LdapLogin) détecté immédiatement (${calls} appels, code 2)`);
+console.log(`  ✓ accès anonyme fermé (/LdapLogin multi-redirections) détecté immédiatement (${calls} appels, code 2)`);
 
 // 2. Session LDAP complète : anti-forgery + cookies par saut + nettoyage RGPD
 //    des noms d'enseignants + fusion S3MIASHS / S4MIASHS en janvier + reconnexion

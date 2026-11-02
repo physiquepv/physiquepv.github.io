@@ -480,8 +480,8 @@ async function probeAnonymousLoginRedirect(cfg, group) {
   try {
     const root = String(cfg.baseUrl).replace(/\/+$/, "");
     const check = await requestWithJar(
-      `${root}/cal?vt=agendaDay&et=group&fid0=${encodeURIComponent(group)}`,
-      { headers: HTML_HEADERS, timeoutMs: Math.min(cfg.timeoutMs, 8000), maxRedirects: 0 },
+      `${root}/cal?vt=agendaDay&dt=${todayParis()}&et=group&fid0=${encodeURIComponent(group)}`,
+      { jar: createCookieJar(), headers: HTML_HEADERS, timeoutMs: Math.min(cfg.timeoutMs, 8000), maxRedirects: 5 },
     );
     if ([301, 302, 303, 307, 308].includes(check.status) && isLoginUrl(check.location)) {
       return true;
@@ -1197,7 +1197,7 @@ if (isCli) {
     console.error(`[edt] erreur fatale : ${message}`);
     // En exécution planifiée sans secrets configurés, le workflow transforme le
     // code 2 en simple avertissement pour ne pas désactiver le cron GitHub.
-    const level = isAuth && error.kind === "auth_required" && process.env.GITHUB_EVENT_NAME === "schedule"
+    const level = isAuth && error.kind === "auth_required" && process.env.GITHUB_EVENT_NAME !== "workflow_dispatch"
       ? "warning"
       : "error";
     console.error(`::${level} title=${title}::${message.replaceAll("%", "%25")}`);
