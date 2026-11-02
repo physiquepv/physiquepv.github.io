@@ -607,6 +607,66 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   overflow:hidden;
   touch-action:pan-y;
 }
+/* Le week-end est affiché seul, en pleine largeur, quand on y arrive avec les
+   boutons ‹ › du bas. Les 5 colonnes de la semaine restent inchangées sinon. */
+.grid.single{grid-template-columns:minmax(0,1fr)}
+.day.weekend-day .day-head{background:linear-gradient(180deg,color-mix(in srgb,var(--today-bg) 70%,var(--surface)),var(--surface))}
+
+/* --------------------------------------------- navigation jour par jour */
+.day-nav{
+  display:flex;
+  flex:none;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:5px 7px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:color-mix(in srgb,var(--surface) 84%,transparent);
+  box-shadow:var(--shadow-sm);
+  backdrop-filter:blur(16px) saturate(1.4);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);
+}
+.day-nav-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:32px;
+  padding:0 10px;
+  color:var(--text-soft);
+  font:inherit;
+  font-size:11.5px;
+  font-weight:600;
+  cursor:pointer;
+  border:1px solid transparent;
+  border-radius:var(--radius-sm);
+  background:var(--subtle);
+  transition:background-color .12s ease,color .12s ease,border-color .12s ease;
+}
+.day-nav-btn:hover:not(:disabled){color:var(--text);border-color:var(--border-strong);background:var(--surface)}
+.day-nav-btn:disabled{opacity:.38;cursor:not-allowed}
+.day-nav-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.day-nav-current{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  min-height:32px;
+  padding:2px 8px;
+  color:var(--text);
+  font:inherit;
+  cursor:pointer;
+  border:0;
+  border-radius:var(--radius-sm);
+  background:transparent;
+}
+.day-nav-current:hover{background:var(--subtle)}
+.day-nav-current .day-nav-long{max-width:100%;overflow:hidden;font-size:12px;font-weight:650;white-space:nowrap;text-overflow:ellipsis}
+.day-nav-current .day-nav-short{display:none;font-size:11.5px;font-weight:650;white-space:nowrap}
+.day-nav-hint{color:var(--primary);font-size:9.5px;font-weight:600}
+.day-nav-hint[hidden]{display:none}
 .day{
   position:relative;
   display:flex;
@@ -845,6 +905,15 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 }
 .card:hover .card-delete,.card:focus-within .card-delete,.card-delete:focus-visible{opacity:1}
 .card-delete:hover{color:var(--text);background:color-mix(in srgb,var(--text) 16%,transparent)}
+
+/* Un cours officiel est un lien vers sa page eCampus : toute la carte est
+   cliquable, l'icône en haut à droite signale l'ouverture dans un nouvel onglet. */
+.card.is-link{cursor:pointer;text-decoration:none;color:inherit}
+.card-meta{display:inline-flex;flex:none;align-items:center;gap:4px}
+.card-ext{width:10px;height:10px;flex:none;opacity:.5;color:var(--text-soft);stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:opacity .12s ease}
+.card.is-link:hover .card-ext,.card.is-link:focus-visible .card-ext{opacity:1}
+.card.is-link:active{filter:brightness(.98)}
+.p-link{color:inherit;text-decoration:none}
 
 /* densité : les créneaux courts n'affichent que l'essentiel */
 .card.compact{padding:4px 6px;gap:0}
@@ -1426,6 +1495,17 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   .nav-title{font-size:11.5px}
 }
 
+/* --------------------------------------- navigation par jour sur téléphone */
+@media screen and (max-width:520px){
+  .day-nav{gap:5px;padding:4px;border-radius:13px}
+  .day-nav-btn{min-width:40px;min-height:36px;justify-content:center;padding:0 8px}
+  .day-nav-btn .day-nav-text{display:none}
+  .day-nav-current .day-nav-long{display:none}
+  .day-nav-current .day-nav-short{display:inline}
+  .day-nav-hint{font-size:9px}
+}
+@media print{.day-nav{display:none!important}}
+
 /* ------------------------------------------------------------ accessibilité */
 .tiny-hours .hour-scale span:nth-child(even){display:none}
 @media (prefers-reduced-motion:reduce){
@@ -1484,8 +1564,6 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 </div>
 <button class="menu-item" id="theme" type="button" role="menuitem" onclick="toggleTheme()"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.8 9.6A5 5 0 0 1 6.4 3.2a5.2 5.2 0 1 0 6.4 6.4Z"/></svg><span id="themeLabel">Thème sombre</span></button>
 <button class="menu-item" type="button" role="menuitem" onclick="window.print()"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.6 6V2.8h6.8V6"/><rect x="2.4" y="6" width="11.2" height="5.2" rx="1.4"/><path d="M4.6 9.4h6.8v3.8H4.6z"/></svg>Imprimer le semestre</button>
-<div class="menu-sep" role="separator"></div>
-<button class="menu-item" id="resetHidden" type="button" role="menuitem" title="Réafficher les matières masquées. Maintiens une carte pour en masquer une." disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.5-3.6"/><path d="M13 2.6v3.2H9.8"/></svg><span id="resetLabel">Réafficher les matières</span></button>
 </div>
 </header>
 
@@ -1515,6 +1593,11 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 </div>
 
 <section class="grid" id="grid" aria-label="Emploi du temps de la semaine"></section>
+<nav class="day-nav" id="dayNav" aria-label="Navigation jour par jour">
+<button class="day-nav-btn" id="prevDay" type="button" aria-label="Jour précédent" title="Jour précédent"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.8 3.6 5.4 8l4.4 4.4"/></svg><span class="day-nav-text">Jour précédent</span></button>
+<button class="day-nav-current" id="dayNavToday" type="button" title="Revenir à aujourd'hui" aria-label="Revenir à aujourd'hui"><span id="dayNavLabel"></span><span class="day-nav-hint" id="dayNavHint" hidden>Aujourd'hui</span></button>
+<button class="day-nav-btn" id="nextDay" type="button" aria-label="Jour suivant" title="Jour suivant"><span class="day-nav-text">Jour suivant</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 3.6 10.6 8l-4.4 4.4"/></svg></button>
+</nav>
 <div id="importDialog" class="import-dialog" hidden>
 <div class="import-backdrop"></div>
 <div class="import-panel">
@@ -1559,7 +1642,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 </div>
 <div id="holdDialog" class="hold-dialog" hidden>
 <div class="hold-panel" role="dialog" aria-modal="true" aria-labelledby="holdTitle">
-<p class="hold-kicker">Masquer une matière</p>
+<p class="hold-kicker">Événement personnel</p>
 <h3 id="holdTitle"></h3>
 <p id="holdDetail"></p>
 <div class="hold-actions">
@@ -1644,7 +1727,38 @@ const CONFIG = {
   ],
 };
 
+/* Pages eCampus des matières du semestre. La clé est la « famille » CELCAT
+   (même classement que FAMILIES) : un cours de démographie, d'algèbre,
+   d'anglais, de SQL/BDD, de macro ou de micro ouvre sa page de cours.
+   `edt.config.json` peut corriger ces URL sans toucher au code de la page. */
+const DEFAULT_COURSE_LINKS = {
+  socio:   "https://ecampus.paris-saclay.fr/course/view.php?id=229297", // Sociologie : démographie
+  maths:   "https://ecampus.paris-saclay.fr/course/view.php?id=230833", // Analyse 2 & Algèbre linéaire 2
+  anglais: "https://ecampus.paris-saclay.fr/course/view.php?id=230269", // Anglais UE2
+  info:    "https://ecampus.paris-saclay.fr/course/view.php?id=231179", // Initiation aux bases de données / SQL
+  macro:   "https://ecampus.paris-saclay.fr/course/view.php?id=230499", // Macroéconomie 2
+  micro:   "https://ecampus.paris-saclay.fr/course/view.php?id=229574", // Microéconomie 2
+};
+const COURSE_LABELS = {
+  socio: "Démographie", maths: "Algèbre linéaire", anglais: "Anglais",
+  info: "Bases de données / SQL", macro: "Macroéconomie", micro: "Microéconomie",
+};
+const COURSE_LINKS = { ...DEFAULT_COURSE_LINKS };
+const ECAMPUS_RE = /^https:\/\/ecampus\.paris-saclay\.fr\/course\/view\.php\?id=\d+$/;
+/** URL eCampus d'un cours officiel (jamais pour un événement personnel). */
+function courseLinkFor(item) {
+  if (!item || item.source === "personal") return "";
+  const family = item.cat || familyOf(item.title);
+  const url = COURSE_LINKS[family];
+  return url && ECAMPUS_RE.test(url) ? url : "";
+}
+function courseLinkLabel(item) {
+  return COURSE_LABELS[item?.cat || familyOf(item?.title)] || item?.title || "eCampus";
+}
+
 const DAY_NAMES = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+const WEEK_DAY_NAMES = [...DAY_NAMES, "Samedi", "Dimanche"];
+const WEEK_DAY_SHORT = ["Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam.", "Dim."];
 const MONTHS_LONG = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 const MONTHS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
 const MONTHS_CHIP = ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
@@ -2451,7 +2565,7 @@ function initImportDialog() {
   $(".import-backdrop")?.addEventListener("click", close);
   $("#importRun")?.addEventListener("click", () => {
     const { added, skipped } = doImport(text.value);
-    renderWeek(state_view.index);
+    refreshCurrentView();
     buildPrint();
     result.hidden = false;
     result.textContent = added
@@ -2493,6 +2607,15 @@ const state = {
 async function applyRemoteConfig() {
   try {
     const remote = await fetchJson(`edt.config.json?v=${Math.floor(Date.now() / 600000)}`, {}, 5000);
+    // Les pages eCampus sont configurables : seules les familles connues et les
+    // URL du domaine officiel sont acceptées (pas d'injection de lien).
+    if (remote?.courseLinks && typeof remote.courseLinks === "object") {
+      for (const [family, url] of Object.entries(remote.courseLinks)) {
+        if (DEFAULT_COURSE_LINKS[family] && typeof url === "string" && ECAMPUS_RE.test(url.trim())) {
+          COURSE_LINKS[family] = url.trim();
+        }
+      }
+    }
     const list = Array.isArray(remote?.semesters) && remote.semesters.length ? remote.semesters : null;
     if (list) {
       CONFIG.semesters = list
@@ -2646,7 +2769,17 @@ async function fetchSyncStatus() {
    ====================================================================== */
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
-let state_view = { weeks: [], index: 0, weekKey: null, mobileFilter: "all", target: null };
+let state_view = { weeks: [], index: 0, weekKey: null, mobileFilter: "all", target: null, weekendDate: null };
+const LAST_DAY_KEY = "schedule_last_day";
+function readLastDay() {
+  try {
+    const iso = localStorage.getItem(LAST_DAY_KEY) || "";
+    return /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso : null;
+  } catch { return null; }
+}
+function rememberDay(iso) {
+  try { if (iso) localStorage.setItem(LAST_DAY_KEY, iso); } catch {}
+}
 
 /**
  * Position d'un créneau exprimée en pourcentage de la hauteur visible de la
@@ -2786,7 +2919,19 @@ function cardHTML(item, day, lane = { lane: 0, lanes: 1 }) {
   const [timeStart, timeEnd] = String(item.time).split("-").map((part) => part.trim());
   const timeRange = `<span class="ct-range"><span class="ct-start">${escapeHtml(timeStart)}</span><span class="ct-sep"> - </span><span class="ct-end">${escapeHtml(timeEnd || timeStart)}</span></span>`;
   const flag = item.isCancelled ? `<span class="card-flag">Annulé</span>` : "";
-  return `<article class="${classes.join(" ")}" data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="--top:${p.top}%;--h:${p.height}%;--lane:${lane.lane};--lanes:${lane.lanes}" tabindex="0" title="${escapeHtml(details)} — ${item.source === "personal" ? "maintenir pour supprimer" : "maintenir pour masquer"}"><div class="card-time">${timeRange}<span class="course-type">${escapeHtml(item.type)}</span></div><div class="card-main"><span class="card-kind">${escapeHtml(item.type)}</span><div class="card-title">${escapeHtml(item.title)}</div>${room}${badges}${flag}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}${notes}</div>${del}</article>`;
+  // Un cours officiel ouvre sa page eCampus au clic (nouvel onglet, pour garder
+  // l'emploi du temps ouvert et la session eCampus active dans l'autre onglet).
+  const link = courseLinkFor(item);
+  const tagName = link ? "a" : "article";
+  const linkAttrs = link
+    ? ` href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(item.title)} — ouvrir ${escapeHtml(courseLinkLabel(item))} sur eCampus (nouvel onglet)"`
+    : "";
+  const extIcon = link
+    ? `<svg class="card-ext" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.4 3.4h3.2v3.2"/><path d="M12.6 3.4 8 8"/><path d="M11.8 9.6v2.6a.6.6 0 0 1-.6.6H4.2a.6.6 0 0 1-.6-.6V5.2a.6.6 0 0 1 .6-.6H7"/></svg>`
+    : "";
+  const hint = item.source === "personal" ? "maintenir ou cliquer sur × pour supprimer" : link ? "cliquer pour ouvrir la page eCampus" : "";
+  const tooltip = hint ? `${details} — ${hint}` : details;
+  return `<${tagName} class="${classes.join(" ")}${link ? " is-link" : ""}"${linkAttrs} data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="--top:${p.top}%;--h:${p.height}%;--lane:${lane.lane};--lanes:${lane.lanes}" ${link ? "" : 'tabindex="0" '}title="${escapeHtml(tooltip)}"><div class="card-time">${timeRange}<span class="card-meta"><span class="course-type">${escapeHtml(item.type)}</span>${extIcon}</span></div><div class="card-main"><span class="card-kind">${escapeHtml(item.type)}</span><div class="card-title">${escapeHtml(item.title)}</div>${room}${badges}${flag}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}${notes}</div>${del}</${tagName}>`;
 }
 
 /**
@@ -2887,7 +3032,7 @@ function buildWeekView(weekKey, recurring, changeOptions = {}) {
     : source === "live-empty"
       ? buildWeek(weekKey, [], reference, { live: true, recurringCancellations: recurring })
       : buildWeek(weekKey, [], reference, { live: false });
-  return attachChanges(withoutHidden(view), state.changes, CONFIG, changeOptions);
+  return attachChanges(view, state.changes, CONFIG, changeOptions);
 }
 
 /**
@@ -2915,74 +3060,11 @@ function openingTarget(weekIndex, dateISO = scheduleOpeningDateISO()) {
   };
 }
 
-const HIDDEN_KEY = "schedule_hidden";
-
-/** Identité stable d'une matière (CM et TD, titres légèrement différents). */
-function subjectKey(item) {
-  const title = stripAccents(item?.title || "").toLowerCase().replace(/&/g, " et ");
-  const stem = title.replace(/\b(aux|de|des|du|et|ue2|le|la|les)\b/g, " ").replace(/\d+/g, " ").replace(/[^a-z]+/g, " ").replace(/\s+/g, " ").trim();
-  return `${item?.cat || familyOf(item?.title)}|${stem}`;
-}
-
-function loadHidden() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(HIDDEN_KEY) || "[]");
-    return Array.isArray(raw) ? raw.filter((rule) => rule && rule.key && rule.from) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveHidden(list) {
-  try { localStorage.setItem(HIDDEN_KEY, JSON.stringify(list)); } catch {}
-  syncResetButton();
-}
-
-function isCourseHidden(item, hidden = loadHidden()) {
-  if (!item?.date || !hidden.length) return false;
-  const key = subjectKey(item);
-  return hidden.some((rule) => rule.key === key && item.date >= rule.from);
-}
-
-function withoutHidden(view) {
-  const hidden = loadHidden();
-  if (!hidden.length || !view?.days) return view;
-  return {
-    ...view,
-    days: view.days.map((day) => ({
-      ...day,
-      courses: day.courses.filter((item) => !isCourseHidden(item, hidden)),
-    })),
-  };
-}
-
-function hideSubjectFrom(item) {
-  const key = subjectKey(item);
-  const hidden = loadHidden();
-  const previous = hidden.find((rule) => rule.key === key);
-  const from = previous && previous.from < item.date ? previous.from : item.date;
-  saveHidden([...hidden.filter((rule) => rule.key !== key), { key, from, title: item.title }]);
-}
-
-function resetHidden() {
-  if (!loadHidden().length) return;
-  if (!confirm("Réafficher toutes les matières masquées ?")) return;
-  saveHidden([]);
-  renderWeek(state_view.index);
-  buildPrint();
-}
-
-function syncResetButton() {
-  const button = $("#resetHidden");
-  if (!button) return;
-  const hidden = loadHidden();
-  button.disabled = hidden.length === 0;
-  const label = button.querySelector("#resetLabel");
-  if (label) label.textContent = "Réafficher les matières";
-  else button.textContent = "Réafficher les matières";
-  button.title = hidden.length
-    ? `Réafficher ${hidden.map((rule) => rule.title).filter(Boolean).join(", ")}`
-    : "Maintiens une matière pour la masquer. Reset réaffiche tout.";
+/* Les matières ne sont plus masquables : un appui long ne supprime plus un
+   cours (voir openDeleteDialog, réservé aux événements personnels). Les
+   anciennes règles encore stockées sont effacées au démarrage. */
+function clearLegacyHiddenRules() {
+  try { localStorage.removeItem("schedule_hidden"); } catch {}
 }
 
 function findTarget() {
@@ -3014,6 +3096,9 @@ function findTarget() {
 }
 
 function renderWeek(index, options = {}) {
+  // Rendre une semaine quitte l'éventuel affichage isolé du week-end.
+  state_view.weekendDate = null;
+  $("#grid")?.classList.remove("single");
   const keys = state_view.weeks;
   if (options.weekKey && keys.includes(options.weekKey)) index = keys.indexOf(options.weekKey);
   index = Math.max(0, Math.min(index, keys.length - 1));
@@ -3050,7 +3135,7 @@ function renderWeek(index, options = {}) {
     const indicatorLabel = target.ongoing
       ? `${icon("spark", 10)}Aujourd'hui`
       : target.opening ? `${icon("calendar", 10)}Prochain jour ouvré` : `${icon("arrowRight", 10)}Prochain cours`;
-    const indicator = selected ? `<span class="target-pill">${indicatorLabel}</span>` : "";
+    const indicator = selected && !target.dayNav ? `<span class="target-pill">${indicatorLabel}</span>` : "";
     const isToday = sameDay(day.realDate, new Date());
     let content;
     if (day.courses.length) {
@@ -3079,6 +3164,7 @@ function renderWeek(index, options = {}) {
   }
   $$(".tab").forEach((tab) => tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex)));
   renderChangePanel();
+  updateDayNav();
 }
 
 /* ------------------------------------------------------------------ print */
@@ -3090,7 +3176,11 @@ function printCourse(item) {
   if (item.ghost) classes.push("ghost");
   if (item.removed) classes.push("removed");
   if (item.changes?.length) classes.push("changed");
-  return `<div class="${classes.join(" ")}"><span class="p-time">${escapeHtml(item.time)}</span><span class="p-type"> ${escapeHtml(item.type)}${flag}</span><br><b>${escapeHtml(item.title)}</b><br><span class="p-room">${escapeHtml(item.room || "lieu non précisé")} • ${escapeHtml(item.tag || "")}</span></div>`;
+  const link = courseLinkFor(item);
+  const title = link
+    ? `<a class="p-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>`
+    : escapeHtml(item.title);
+  return `<div class="${classes.join(" ")}"><span class="p-time">${escapeHtml(item.time)}</span><span class="p-type"> ${escapeHtml(item.type)}${flag}</span><br><b>${title}</b><br><span class="p-room">${escapeHtml(item.room || "lieu non précisé")} • ${escapeHtml(item.tag || "")}</span></div>`;
 }
 
 function buildPrintPage(pageWeeks, page, total, period) {
@@ -3149,9 +3239,9 @@ function markChangesSeen(list) {
   try { localStorage.setItem(CHANGE_SEEN_KEY, newest || new Date().toISOString()); } catch {}
 }
 
-/** Changements à signaler pour le TD affiché, matières masquées exclues. */
+/** Changements à signaler pour le TD affiché. */
 function visibleChanges(today = todayISO()) {
-  return relevantChanges(state.changes, CONFIG, { today }).filter((change) => !isCourseHidden(change));
+  return relevantChanges(state.changes, CONFIG, { today });
 }
 
 function changesFreshnessLabel() {
@@ -3377,6 +3467,7 @@ function closeCalendar(restoreFocus = true) {
 
 /** Ouvre la semaine du jour choisi (et isole ce jour sur téléphone). */
 function goToCalendarDate(iso) {
+  if (weekdayIndex(iso) >= 5) { showDay(iso); closeCalendar(); return; }
   const monday = mondayOf(iso);
   const index = state_view.weeks.indexOf(monday);
   if (index < 0) return;
@@ -3593,12 +3684,26 @@ function initTdSelector() {
 }
 
 function changeWeek(delta) {
+  // Depuis un week-end, ‹ › reculent/avancent d'une semaine entière (7 jours).
+  if (state_view.weekendDate) { stepDay(delta * 7); return; }
   const next = state_view.index + delta;
   if (next < 0 || next >= state_view.weeks.length) return;
-  renderWeek(next);
+  const dayIndex = Math.min(4, weekdayIndex(focusedDayISO()));
+  renderWeek(next, { target: { weekIndex: next, dayIndex, ongoing: false, dayNav: true } });
   if (innerWidth <= 860 && state_view.mobileFilter !== "all") scrollToDay(state_view.mobileFilter, false);
 }
 function setDay(day, scroll = true) {
+  // Depuis l'affichage isolé du week-end, un onglet ramène à la semaine.
+  if (state_view.weekendDate && day !== state_view.mobileFilter) {
+    if (day === "all") { renderWeek(state_view.index, { animate: false }); return; }
+    const wanted = Number(day);
+    if (Number.isInteger(wanted) && wanted >= 0 && wanted <= 4) {
+      const wantedDate = addDaysISO(mondayOf(state_view.weekendDate), wanted);
+      if (dayIsNavigable(wantedDate)) showDay(wantedDate, { animate: false });
+      else renderWeek(state_view.index, { animate: false }); // semaine non publiée
+      return;
+    }
+  }
   state_view.mobileFilter = day === "all" ? "all" : Number(day);
   // La feuille de style a besoin de savoir si l'on regarde toute la semaine
   // (en-têtes collants, jour isolé) sans dépendre d'une classe par colonne.
@@ -3609,6 +3714,7 @@ function setDay(day, scroll = true) {
     tab.setAttribute("aria-pressed", String(active));
   });
   $$(".day").forEach((column) => column.classList.toggle("hidden", state_view.mobileFilter !== "all" && Number(column.dataset.day) !== state_view.mobileFilter));
+  updateDayNav();
   if (scroll && innerWidth <= 860) scrollToDay(state_view.mobileFilter, false);
 }
 /**
@@ -3639,6 +3745,126 @@ function jumpToTarget(smooth = true) {
   renderWeek(target.weekIndex, { target });
   if (innerWidth <= 860 && state_view.mobileFilter !== "all") setDay(target.dayIndex, false);
   scrollToDay(target.dayIndex, smooth);
+}
+
+/* ======================================================================
+   NAVIGATION JOUR PAR JOUR — les boutons ‹ › en bas de page
+   On avance d'un vrai jour de calendrier : lundi → mardi, mais aussi
+   lundi → dimanche (le week-end de la semaine d'avant), dimanche → lundi,
+   vendredi → samedi… en changeant de semaine publiée quand il le faut.
+   Le week-end n'a pas de colonne dans les 5 jours ouvrés : il s'affiche
+   seul, en pleine largeur, avec les éventuels événements personnels du jour.
+   ====================================================================== */
+function dayIsNavigable(iso) {
+  const weeks = state_view.weeks;
+  if (!weeks.length || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return false;
+  // Dimanche qui précède la 1re semaine → dimanche de la dernière semaine.
+  if (iso < addDaysISO(weeks[0], -1) || iso > addDaysISO(weeks[weeks.length - 1], 6)) return false;
+  return weekdayIndex(iso) >= 5 || weeks.includes(mondayOf(iso));
+}
+
+/** Jour effectivement regardé : onglet mobile, sinon jour mis en avant. */
+function focusedDayISO() {
+  if (state_view.weekendDate) return state_view.weekendDate;
+  const monday = state_view.weekKey || state_view.weeks[0] || mondayOf(todayISO());
+  const filter = state_view.mobileFilter;
+  let dayIndex = Number.isInteger(filter) && filter >= 0 && filter <= 4 ? filter : -1;
+  if (dayIndex < 0) {
+    const t = state_view.target;
+    dayIndex = t && t.weekIndex === state_view.index && t.dayIndex >= 0 && t.dayIndex <= 4 ? t.dayIndex : 0;
+  }
+  return addDaysISO(monday, dayIndex);
+}
+
+/** Libellé et état des boutons du bas, + mémorisation du jour consulté. */
+function updateDayNav() {
+  const iso = focusedDayISO();
+  const date = parseISO(iso);
+  const index = weekdayIndex(iso);
+  const box = $("#dayNavLabel");
+  if (box) {
+    box.innerHTML = `<span class="day-nav-long">${escapeHtml(WEEK_DAY_NAMES[index])} ${date.getDate()} ${escapeHtml(MONTHS[date.getMonth()])} ${date.getFullYear()}</span>`
+      + `<span class="day-nav-short">${escapeHtml(WEEK_DAY_SHORT[index])} ${date.getDate()} ${escapeHtml(MONTHS[date.getMonth()])}</span>`;
+  }
+  const hint = $("#dayNavHint");
+  if (hint) hint.hidden = iso === todayISO();
+  const todayButton = $("#dayNavToday");
+  if (todayButton) todayButton.setAttribute("aria-label", `${WEEK_DAY_NAMES[index]} ${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()} — revenir à aujourd'hui`);
+  const prev = $("#prevDay");
+  const next = $("#nextDay");
+  if (prev) prev.disabled = !dayIsNavigable(addDaysISO(iso, -1));
+  if (next) next.disabled = !dayIsNavigable(addDaysISO(iso, 1));
+  rememberDay(iso);
+}
+
+/** Week-end isolé : une seule colonne, sans cours officiel. */
+function renderWeekend(iso) {
+  const dayIndex = weekdayIndex(iso);
+  if (dayIndex < 5 || !state_view.weeks.length) return;
+  const monday = mondayOf(iso);
+  const realDate = parseISO(iso);
+  const day = { name: WEEK_DAY_NAMES[dayIndex], date: formatDate(realDate), realDate, courses: [] };
+  const courses = mergePersonalEvents({ days: [day], live: false }).days[0].courses;
+  const label = weekLabel(monday);
+  const titleBox = $("#weekTitleText");
+  if (titleBox) titleBox.innerHTML = `<span class="title-long">${escapeHtml(label.title)}</span><span class="title-short">${escapeHtml(label.compact)}</span>`;
+  $("#weekTitleBtn")?.setAttribute("aria-label", `${label.titleFull} — ouvrir le calendrier`);
+  const published = state_view.weeks.includes(monday);
+  const official = emptyMessage(monday, dayIndex, true, weekSource(monday));
+  const message = !published
+    ? "Week-end — planning pas encore publié"
+    : /Trophée|fermée/.test(official) ? official : "Week-end — aucun cours au planning officiel";
+  const lanes = courses.length ? assignLanes(courses) : new Map();
+  const content = courses.length
+    ? courses.map((item) => cardHTML(item, day, lanes.get(item))).join("")
+    : `<div class="empty">${escapeHtml(message)}</div>`;
+  const grid = $("#grid");
+  if (!grid) return;
+  grid.classList.add("single");
+  grid.innerHTML = `<section class="day weekend-day target" data-day="${dayIndex}"><header class="day-head"><div class="day-head-main"><div class="day-name">${escapeHtml(day.name)}</div><div class="day-date"><time datetime="${escapeHtml(iso)}">${escapeHtml(day.date)}</time></div></div><div class="day-tags"><span class="day-count${courses.length ? " has" : ""}">${courses.length ? `${courses.length} événement${courses.length > 1 ? "s" : ""}` : "libre"}</span></div></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
+  state_view.weekendDate = iso;
+  state_view.weekKey = monday;
+  state_view.index = Math.max(0, state_view.weeks.indexOf(monday));
+  state_view.mobileFilter = dayIndex;
+  state_view.target = { weekIndex: state_view.index, dayIndex, ongoing: iso === todayISO(), dayNav: true };
+  if (typeof document !== "undefined") document.body.dataset.view = "day";
+  $$(".tab").forEach((tab) => {
+    const active = tab.dataset.day === String(dayIndex);
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-pressed", String(active));
+  });
+  $("#prev").disabled = !dayIsNavigable(addDaysISO(iso, -7));
+  $("#next").disabled = !dayIsNavigable(addDaysISO(iso, 7));
+  renderChangePanel();
+  updateDayNav();
+}
+
+/** Affiche un jour précis (semaine + jour, ou week-end isolé). */
+function showDay(iso, options = {}) {
+  if (!dayIsNavigable(iso)) return;
+  const dayIndex = weekdayIndex(iso);
+  if (dayIndex >= 5) { renderWeekend(iso); return; }
+  const monday = mondayOf(iso);
+  const index = state_view.weeks.indexOf(monday);
+  if (index < 0) return;
+  const target = { weekIndex: index, dayIndex, ongoing: iso === todayISO(), dayNav: true };
+  renderWeek(index, { target, animate: options.animate !== false });
+  if (innerWidth <= 860) setDay(dayIndex, false);
+  else setDay("all", false);
+  requestAnimationFrame(() => scrollToDay(dayIndex, false));
+}
+
+/** Boutons ‹ › : un jour à la fois, week-end et changement de semaine compris. */
+function stepDay(delta) {
+  const next = addDaysISO(focusedDayISO(), delta);
+  if (!dayIsNavigable(next)) return;
+  showDay(next);
+}
+
+/** Re-rend la vue courante (import/suppression d'un événement personnel). */
+function refreshCurrentView(options = {}) {
+  if (state_view.weekendDate) renderWeekend(state_view.weekendDate);
+  else renderWeek(state_view.index, options);
 }
 /* -------------------------------------------------------------- données */
 let loadPromise = null;
@@ -3713,9 +3939,10 @@ function zoomTimelineIfNeeded() {
 
 /* ----------------------------------------------------------- démarrage */
 function initialize() {
+  clearLegacyHiddenRules();
+  const remembered = readLastDay();
   initTheme();
   initTdSelector();
-  syncResetButton();
   initMoreMenu();
   initImportDialog();
   initCalendar();
@@ -3745,6 +3972,12 @@ function initialize() {
     // La position du jour visé est mémorisée pour les rendus suivants.
     zoomTimelineIfNeeded();
   });
+  // Le navigateur se souvient du dernier jour consulté : on le rouvre s'il
+  // appartient à la semaine en cours (le site reste centré sur « aujourd'hui »).
+  if (remembered && remembered !== focusedDayISO()
+      && mondayOf(remembered) === mondayOf(todayISO()) && dayIsNavigable(remembered)) {
+    showDay(remembered, { animate: false });
+  }
   // Un seul chargement, au démarrage. La semaine ouverte ne change plus ensuite.
   loadEverything().then((result) => {
     if (result?.changed) refreshDisplayedWeek();
@@ -3757,6 +3990,8 @@ addEventListener("keydown", (event) => {
   if ($("#holdDialog") && !$("#holdDialog").hidden) return;
   const tag = event.target?.tagName;
   if (tag === "SELECT" || tag === "INPUT" || tag === "TEXTAREA" || event.target?.closest?.("#tdSelectorWrap")) return;
+  if (event.shiftKey && event.key === "ArrowLeft") { stepDay(-1); return; }
+  if (event.shiftKey && event.key === "ArrowRight") { stepDay(1); return; }
   if (event.key === "ArrowLeft") changeWeek(-1);
   if (event.key === "ArrowRight") changeWeek(1);
   if (event.key === "c" || event.key === "C") {
@@ -3770,7 +4005,20 @@ function focusDayFromHeader(head) {
   const day = Number(head.dataset.dayHead);
   if (Number.isFinite(day)) setDay(day);
 }
-$("#grid").addEventListener("click", (event) => focusDayFromHeader(event.target.closest?.("[data-day-head]")));
+$("#grid").addEventListener("click", (event) => {
+  const del = event.target.closest?.(".card-delete");
+  if (del) {
+    event.preventDefault();
+    event.stopPropagation();
+    const card = del.closest?.(".card");
+    if (card?.dataset.source === "personal") openDeleteDialog(card);
+    return;
+  }
+  focusDayFromHeader(event.target.closest?.("[data-day-head]"));
+});
+$("#prevDay")?.addEventListener("click", () => stepDay(-1));
+$("#nextDay")?.addEventListener("click", () => stepDay(1));
+$("#dayNavToday")?.addEventListener("click", () => jumpToTarget(true));
 $("#grid").addEventListener("keydown", (event) => {
   if (event.key !== "Enter" && event.key !== " ") return;
   const head = event.target.closest?.("[data-day-head]");
@@ -3788,15 +4036,14 @@ $("#grid").addEventListener("touchend", (event) => {
   const dy = touch.clientY - startY;
   if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) changeWeek(dx < 0 ? 1 : -1);
 }, { passive: true });
-$("#resetHidden")?.addEventListener("click", () => resetHidden());
 $("#holdCancel")?.addEventListener("click", () => closeHoldDialog());
-$("#holdDelete")?.addEventListener("click", () => confirmHide());
+$("#holdDelete")?.addEventListener("click", () => confirmDelete());
 $("#holdDialog")?.addEventListener("click", (event) => { if (event.target === $("#holdDialog")) closeHoldDialog(); });
 
 let holdTimer = 0;
 let holdCard = null;
 let holdPoint = null;
-let pendingHide = null;
+let pendingDelete = null;
 let suppressSwipe = false;
 const HOLD_MS = 560;
 
@@ -3808,23 +4055,19 @@ function cancelHold() {
   holdPoint = null;
 }
 
-function openHoldDialog(card) {
-  pendingHide = {
-    date: card.dataset.date,
-    time: card.dataset.time,
-    title: card.dataset.title,
-    cat: card.dataset.cat,
-    source: card.dataset.source,
+/** Seuls les événements personnels se suppriment : une matière ne se retire
+    plus (un clic sur un cours ouvre désormais sa page eCampus). */
+function openDeleteDialog(card) {
+  if (!card || card.dataset.source !== "personal" || !card.dataset.id) return;
+  pendingDelete = {
     id: card.dataset.id,
+    title: card.dataset.title,
+    date: card.dataset.date,
   };
-  if (!pendingHide.date || !pendingHide.title) return;
   suppressSwipe = true;
-  const personal = pendingHide.source === "personal";
-  $("#holdTitle").textContent = personal ? "Supprimer cet événement" : pendingHide.title;
-  $("#holdDetail").textContent = personal
-    ? "Cet événement personnel sera retiré de votre agenda."
-    : `Masquer cette matière à partir du ${formatDate(parseISO(pendingHide.date))}, pour tous ses créneaux et toutes les semaines suivantes. Les semaines d'avant restent affichées.`;
-  $("#holdDelete").textContent = personal ? "Supprimer" : "Supprimer";
+  $("#holdTitle").textContent = pendingDelete.title || "Supprimer cet événement";
+  $("#holdDetail").textContent = "Cet événement personnel sera retiré de votre agenda. Les cours officiels ne sont pas modifiables.";
+  $("#holdDelete").textContent = "Supprimer";
   $("#holdDialog").hidden = false;
   $("#holdCancel").focus();
   try { navigator.vibrate?.(12); } catch {}
@@ -3833,15 +4076,14 @@ function openHoldDialog(card) {
 function closeHoldDialog() {
   const dialog = $("#holdDialog");
   if (dialog) dialog.hidden = true;
-  pendingHide = null;
+  pendingDelete = null;
 }
 
-function confirmHide() {
-  if (!pendingHide) return;
-  if (pendingHide.source === "personal") removePersonal(pendingHide.id);
-  else hideSubjectFrom(pendingHide);
+function confirmDelete() {
+  if (!pendingDelete) return;
+  removePersonal(pendingDelete.id);
   closeHoldDialog();
-  renderWeek(state_view.index);
+  refreshCurrentView();
   buildPrint();
 }
 
@@ -3853,14 +4095,15 @@ function armHold(card, x, y, pointerId) {
   holdTimer = setTimeout(() => {
     const armed = holdCard;
     cancelHold();
-    if (armed) openHoldDialog(armed);
+    if (armed) openDeleteDialog(armed);
   }, HOLD_MS);
 }
 
 $("#grid").addEventListener("pointerdown", (event) => {
   if (event.button > 0) return;
   const card = event.target.closest?.(".card");
-  if (!card) return;
+  // Un cours officiel est un lien : aucun appui long ne peut le supprimer.
+  if (!card || card.dataset.source !== "personal") return;
   armHold(card, event.clientX, event.clientY, event.pointerId);
 }, { passive: true });
 $("#grid").addEventListener("pointermove", (event) => {
@@ -3871,10 +4114,10 @@ $("#grid").addEventListener("pointerup", cancelHold, { passive: true });
 $("#grid").addEventListener("pointercancel", cancelHold, { passive: true });
 $("#grid").addEventListener("contextmenu", (event) => {
   const card = event.target.closest?.(".card");
-  if (!card) return;
+  if (!card || card.dataset.source !== "personal") return;
   event.preventDefault();
   cancelHold();
-  openHoldDialog(card);
+  openDeleteDialog(card);
 });
 $("#changesBtn")?.addEventListener("click", () => {
   const banner = $("#changeBanner");
@@ -3893,6 +4136,7 @@ $("#changeList")?.addEventListener("click", (event) => {
 });
 addEventListener("resize", () => {
   zoomTimelineIfNeeded();
+  if (state_view.weekendDate) { updateDayNav(); return; }
   if (innerWidth <= 860) setDay(state_view.mobileFilter, false);
   else if (state_view.mobileFilter !== "all") setDay("all", false);
 });
@@ -3905,7 +4149,7 @@ document.addEventListener("visibilitychange", () => {
 addEventListener("DOMContentLoaded", initialize);
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { parseEvent, isMyCourse, tagForLiveCourse, buildWeek, weeksFromEvents, findRecurringCancellations, mondayOf, addDaysISO, slotOf, familyOf, normalizeModuleName, normalizeGroupCode, decodeEntities };
+  module.exports = { parseEvent, isMyCourse, tagForLiveCourse, buildWeek, weeksFromEvents, findRecurringCancellations, mondayOf, addDaysISO, slotOf, familyOf, normalizeModuleName, normalizeGroupCode, decodeEntities, courseLinkFor, COURSE_LINKS, courseLinkLabel, dayIsNavigable, focusedDayISO, showDay, stepDay };
 }
 
 </script>

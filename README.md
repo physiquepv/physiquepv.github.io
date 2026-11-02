@@ -40,7 +40,7 @@ index.html                              filtrage du TD, bandeau « ce qui a chan
 | Fichier | Rôle |
 | --- | --- |
 | `index.html` | Tout le site : styles, données de secours et logique. La section `CORE-START … CORE-END` contient le noyau testable (parsing CELCAT, filtrage du TD choisi, fusion). |
-| `edt.config.json` | **Configuration** : groupe CELCAT, TD de l'étudiant, semestre, paramètres d'appel. |
+| `edt.config.json` | **Configuration** : groupe CELCAT, TD de l'étudiant, semestre, paramètres d'appel et `courseLinks` (pages eCampus des matières). |
 | `scripts/sync-edt.mjs` | Récupère CELCAT et écrit `data/edt.json` (uniquement si le planning a changé). `--summary` / `--summary-subject` produisent le résumé lisible des changements. |
 | `scripts/edt-changes.mjs` | Compare deux versions du planning et décrit chaque changement (il réutilise le noyau de `index.html`, donc un cours est décrit exactement comme la page l'affiche). |
 | `.github/workflows/edt-sync.yml` | Synchro automatique (10 min + 1×/jour) et manuelle. |
@@ -118,7 +118,7 @@ outils type Linear / Vercel :
 
 - barre d'outils : navigation segmentée `‹ Aujourd'hui ›`, cloche de
   changements, menu `⋯` ancré sous son bouton ;
-- menu : groupe de TD, thème clair/sombre, impression, réaffichage des matières ;
+- menu : groupe de TD, thème clair/sombre, impression ;
 - dialogues d'import et de confirmation avec de vrais boutons (Annuler /
   Importer / Supprimer) ;
 - sur mobile, un **double-tap sur un contrôle ne zoome plus** la page
@@ -126,7 +126,72 @@ outils type Linear / Vercel :
 - le **mode sombre** reçoit un fond **étoilé discret** : deux couches d'étoiles
   en `body::before`/`body::after` (scintillement lent, coupé par
   `prefers-reduced-motion`, jamais imprimé) ;
-- le rendu papier (`@media print`) reste un tableau A4 paysage, inchangé.
+- le rendu papier (`@media print`) reste un tableau A4 paysage, inchangé ;
+- une **barre en bas de page** `‹ jour ›` avance ou recule d'un jour à la fois.
+
+## Un clic sur une matière ouvre son cours eCampus
+
+Toute la carte d'un cours officiel est un lien : un clic (ou `Entrée` au clavier)
+ouvre la page du cours sur **eCampus** dans un **nouvel onglet**, ce qui garde
+l'emploi du temps ouvert. Les titres restent cliquables dans le PDF d'impression.
+
+| Matière | Famille | Page eCampus |
+| --- | --- | --- |
+| Sociologie : démographie | `socio` | `https://ecampus.paris-saclay.fr/course/view.php?id=229297` |
+| Analyse 2 & Algèbre linéaire 2 | `maths` | `https://ecampus.paris-saclay.fr/course/view.php?id=230833` |
+| Anglais UE2 | `anglais` | `https://ecampus.paris-saclay.fr/course/view.php?id=230269` |
+| Initiation aux bases de données / SQL | `info` | `https://ecampus.paris-saclay.fr/course/view.php?id=231179` |
+| Macroéconomie 2 | `macro` | `https://ecampus.paris-saclay.fr/course/view.php?id=230499` |
+| Microéconomie 2 | `micro` | `https://ecampus.paris-saclay.fr/course/view.php?id=229574` |
+
+Le rapprochement se fait sur la **famille** déjà utilisée pour les couleurs du
+planning : un cours dont le titre change (« Initiation aux bases de données » →
+« Initiation bases de données ») garde donc son lien. Les URL se corrigent dans
+`edt.config.json` (`courseLinks`) sans toucher à `index.html` ; seules les URL du
+domaine officiel sont acceptées. Un événement personnel n'est jamais un lien.
+
+**L'appui long ne supprime plus une matière** : c'était le seul moyen de retirer
+un cours et il entrait en conflit avec le clic. Les cours officiels ne sont plus
+modifiables ; seuls les événements personnels se suppriment encore (croix `×` sur
+la carte, ou appui long sur mobile). Les éventuelles règles de matières masquées
+mémorisées par une ancienne version sont effacées au chargement.
+
+## Navigation jour par jour
+
+Les boutons `‹` / `›` en bas de page avancent d'un **vrai jour de calendrier** :
+de lundi on va à mardi avec `›`, et à **dimanche** avec `‹` (le week-end de la
+semaine précédente) ; de vendredi on passe à samedi, de dimanche à lundi, en
+changeant automatiquement de semaine publiée. Le libellé central rappelle la date
+et ramène à aujourd'hui d'un clic.
+
+- Sur téléphone, un seul jour est affiché : les boutons font défiler les jours.
+- Sur ordinateur, les cinq colonnes restent visibles et le jour concerné est mis
+  en évidence ; les flèches `‹ ›` du haut et les balayages continuent de changer
+  de **semaine**.
+- Le **week-end** n'a pas de colonne dans les 5 jours ouvrés : il s'affiche seul,
+  en pleine largeur, avec les éventuels événements personnels de la journée.
+- Les boutons se désactivent aux bornes des semaines publiées (dimanche qui
+  précède la première → dimanche de la dernière).
+- Au clavier : `←` / `→` changent de semaine, `Maj + ←` / `Maj + →` changent de
+  jour.
+
+## Ce que le navigateur retient
+
+Tout est stocké uniquement dans le navigateur (`localStorage`), aucun serveur ne
+connaît vos choix : thème clair/sombre, groupe de TD, événements personnels,
+changements déjà marqués « Vu », cache du planning et **dernier jour consulté**
+(rouvert s'il appartient à la semaine en cours). Pas de compte, donc rien à
+saisir à chaque visite sur ce site.
+
+En revanche, **l'authentification eCampus ne peut pas être retenue par cette
+page** : `ecampus.paris-saclay.fr` est un Moodle protégé par le SSO de
+l'université, et une page statique GitHub Pages ne peut ni se connecter à votre
+place, ni stocker un mot de passe (ce serait d'ailleurs dangereux). C'est le
+cookie de session du navigateur qui décide : cochez « **Se souvenir de moi** /
+rester connecté » sur la page de connexion de l'université, n'utilisez pas la
+navigation privée et autorisez les cookies pour `ecampus.paris-saclay.fr`.
+Une fois la session ouverte, tous les liens du planning s'ouvrent directement sur
+le cours, dans un nouvel onglet, sans nouvelle saisie.
 
 ## Chaque changement est signalé, clairement
 
@@ -175,10 +240,6 @@ Garde-fous (détaillés par `npm run test:changes`) :
 - **Un seul message par changement** : le journal est dédoublonné par clé
   (type + date + heure + matière). Un changement revu plus tard redevient une
   information récente, mais n'est jamais listé deux fois.
-- **Matières masquées** : maintenir une carte propose de la retirer à partir de
-  cette semaine, pour tous ses créneaux et les semaines suivantes.
-  **Réafficher les matières** (menu ⋯) les remet toutes. Le choix reste dans le navigateur — les changements qui la
-  concernent ne sont plus signalés non plus.
 
 ## Mise en place (une seule fois)
 
@@ -200,6 +261,7 @@ npm run test:sync     # synchro (faux CELCAT) : fusion, garde-fous, journal des 
 npm run test:changes  # changements : détection, silence quand rien ne bouge, bandeau + badges (jsdom)
 npm run test:render   # rendu réel de la page sur les données de data/edt.json
 npm run test:offline  # mode sans réseau (repli sur l'emploi du temps de secours)
+npm run test:links    # liens eCampus, fin de la suppression des matières, boutons ‹ › (jsdom)
 npm run test:all      # tout
 ```
 
@@ -214,7 +276,7 @@ npm run test:all      # tout
 | Un changement est signalé à tort | Créneau suspendu non repéré comme récurrent, ou groupe inattendu | Regarder l'entrée correspondante dans `changes` (`data/edt.json`) ; la comparaison se règle dans `diffWeeks` (`scripts/edt-changes.mjs`) |
 | L'UVSQ change d'API | L'URL ou le format CELCAT a évolué | Adapter `scripts/sync-edt.mjs` (endpoints listés dans `edt.config.json`) |
 
-Les tests `npm test`, `npm run test:changes` et `npm run test:render` s'appuient
+Les tests `npm test`, `npm run test:changes`, `npm run test:render` et `npm run test:links` s'appuient
 sur `data/edt.json` : si le format CELCAT évolue, ils échouent avant la mise en
 production. `npm run test:changes` construit en plus un planning volontairement
 modifié (annulation, nouveau cours, salle, horaire, cours retiré) et vérifie que
@@ -240,8 +302,9 @@ En plus de l'emploi du temps officiel, vous pouvez importer vos propres événem
    les bonnes journées. Ils sont enregistrés dans votre navigateur uniquement (localStorage),
    rien n'est envoyé sur un serveur.
 
-Un événement personnel peut être supprimé en le maintenant du doigt (ou en le survolant sur
-ordinateur) → **Supprimer**.
+Un événement personnel peut être supprimé avec la croix **×** de sa carte (ou en
+le maintenant du doigt sur téléphone) → confirmer **Supprimer**. Les matières
+officielles ne se suppriment plus : un clic ouvre leur page eCampus.
 
 ## Limites connues
 
@@ -253,3 +316,5 @@ ordinateur) → **Supprimer**.
   bandeau n'est pas une notification poussée (pas de mail ni de push).
 - La fraîcheur dépend de GitHub Actions (délai de quelques minutes) et du cache
   CDN de GitHub Pages.
+- La **connexion à eCampus** est gérée par le SSO de l'université : la page ne
+  peut pas la mémoriser (voir « Ce que le navigateur retient »).

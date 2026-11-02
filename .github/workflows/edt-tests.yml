@@ -37,3 +37,5 @@ jobs:
         run: npm run test:offline
       - name: Interface mobile (agenda « Tous », calendrier, ciel)
         run: npm run test:ui
+      - name: Liens eCampus, suppression des matières et navigation ‹ ›
+        run: npm run test:links
