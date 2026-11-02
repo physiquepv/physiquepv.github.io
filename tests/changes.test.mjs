@@ -248,6 +248,10 @@ check(labels.some((label) => /Nouveau cours/.test(label)), "une ligne dit claire
 check(labels.some((label) => /Cours retiré/.test(label)), "une ligne dit clairement « Cours retiré »");
 check(labels.some((label) => /Salle changée/.test(label)), "une ligne dit clairement « Salle changée »");
 check(labels.some((label) => /Horaire modifié/.test(label)), "une ligne dit clairement « Horaire modifié »");
+check($$("#changeList .change-kind svg").length === 6, "chaque étiquette de changement a une icône SVG (pas d'emoji)");
+const emojiInChanges = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/u.test($("#changeBanner").textContent);
+check(!emojiInChanges, "le bandeau des changements n'utilise plus d'emoji");
+check($$("#changeList .change-room svg").length >= 1, "la salle est précédée d'une icône vectorielle");
 check(/plus tard|avant|semaine/i.test($("#changesFoot")?.textContent ?? "") || /vérifié/.test($("#changesFoot")?.textContent ?? ""), "la fraîcheur de l'information est affichée");
 check($("#changesBtn") !== null && !$("#changesBtn").hidden && $("#changesCount").textContent === "6", "la cloche indique le nombre de changements (6)");
 
@@ -271,7 +275,7 @@ const jump = $$("#changeList .change-item").find((item) => /Conférence sociolog
 check(jump !== undefined, "un changement hors semaine affichée est cliquable");
 jump?.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
 await wait(80);
-check(/19 Octobre/.test($("#weekTitle")?.textContent ?? ""), `le clic amène à la semaine concernée (« ${$("#weekTitle")?.textContent} »)`);
+check(/Semaine 6/.test($("#weekTitle")?.textContent ?? "") && /19–23 oct\./.test($("#weekTitle")?.textContent ?? ""), `le clic amène à la semaine concernée (« ${$("#weekTitle")?.textContent} »)`);
 check($$("#grid .card.flash").length >= 1, "la carte concernée est mise en évidence");
 check($("#grid .card.removed") === null, "les cartes « retiré » ne bavent pas sur les autres semaines");
 
