@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-02T17:26:22.815Z",
+  "generatedAt": "2026-11-04T11:40:37.607Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -29,29 +29,17 @@
   ],
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
-    "2026-08-24",
-    "2026-08-31",
-    "2026-09-07",
-    "2026-09-14",
-    "2026-09-21",
-    "2026-09-28",
-    "2026-10-05",
-    "2026-10-12",
-    "2026-10-19",
-    "2026-10-26",
     "2026-11-02",
     "2026-11-09",
     "2026-11-16",
     "2026-11-23",
     "2026-11-30",
-    "2026-12-07",
-    "2026-12-14",
     "2026-12-21",
     "2026-12-28",
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "712fd2d7-89523",
+  "contentHash": "ae5eea12-90860",
   "changes": [
     {
       "kind": "removed",
@@ -836,6 +824,68 @@
       "previous": null
     },
     {
+      "kind": "moved",
+      "date": "2027-01-07",
+      "startMin": 570,
+      "endMin": 730,
+      "time": "09:30 - 12:10",
+      "title": "EXAMEN L2 SESSION 1",
+      "type": "Examen Session 1",
+      "room": "AMPHI BERTIN - BUFFON",
+      "cat": "info",
+      "groups": [
+        "S3LDDMP",
+        "S3MATHS",
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5898012:21",
+      "reason": "",
+      "detectedAt": "2026-11-04T11:40:37.607Z",
+      "previous": {
+        "time": "09:00 - 11:40",
+        "room": "AMPHI BERTIN - BUFFON",
+        "type": "Examen Session 1",
+        "cancelled": false
+      }
+    },
+    {
+      "kind": "added",
+      "date": "2027-01-07",
+      "startMin": 810,
+      "endMin": 900,
+      "time": "13:30 - 15:00",
+      "title": "Macroéconomie 2",
+      "type": "Examen Session 1",
+      "room": "AMPHI F - FERMAT",
+      "cat": "macro",
+      "groups": [
+        "S3MIASHS TD 1",
+        "S3MIASHS TD 2"
+      ],
+      "eventId": "-1742255826:1073733534:17:5907390:21",
+      "reason": "",
+      "detectedAt": "2026-11-04T11:40:37.607Z",
+      "previous": null
+    },
+    {
+      "kind": "added",
+      "date": "2027-01-07",
+      "startMin": 930,
+      "endMin": 1050,
+      "time": "15:30 - 17:30",
+      "title": "Microéconomie 2",
+      "type": "Examen Session 1",
+      "room": "AMPHI G - FERMAT",
+      "cat": "micro",
+      "groups": [
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5907398:21",
+      "reason": "",
+      "detectedAt": "2026-11-04T11:40:37.607Z",
+      "previous": null
+    },
+    {
       "kind": "added",
       "date": "2027-01-08",
       "startMin": 570,
@@ -852,6 +902,24 @@
       "eventId": "-1742255826:1073733534:17:5898042:21",
       "reason": "",
       "detectedAt": "2026-11-02T17:26:22.815Z",
+      "previous": null
+    },
+    {
+      "kind": "added",
+      "date": "2027-01-08",
+      "startMin": 840,
+      "endMin": 960,
+      "time": "14:00 - 16:00",
+      "title": "Sociologie : démographie",
+      "type": "Examen Session 1",
+      "room": "AMPHI F - FERMAT",
+      "cat": "socio",
+      "groups": [
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5907403:21",
+      "reason": "",
+      "detectedAt": "2026-11-04T11:40:37.607Z",
       "previous": null
     }
   ],
@@ -1991,7 +2059,7 @@
     },
     "2026-11-02": {
       "monday": "2026-11-02",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2208,7 +2276,7 @@
     },
     "2026-11-09": {
       "monday": "2026-11-09",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2381,7 +2449,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2576,7 +2644,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2760,7 +2828,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3213,34 +3281,56 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
         {
           "id": "-1742255826:1073733534:17:5898012:21",
-          "start": "2027-01-07T09:00:00",
-          "end": "2027-01-07T11:40:00",
+          "start": "2027-01-07T09:30:00",
+          "end": "2027-01-07T12:10:00",
           "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI BERTIN - BUFFON (255 / 126)\r\n\r\n<br />\r\n\r\nEXAMEN L2 SESSION 1 [EXAMEN L2 SESSION 1]<br />LSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "Examen Session 1",
           "backgroundColor": "#FF00FF",
           "modules": [
             "LSIN311",
             "EXAMEN L2 SESSION 1"
+          ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5907390:21",
+          "start": "2027-01-07T13:30:00",
+          "end": "2027-01-07T15:00:00",
+          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI F - FERMAT (120 / 65)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Examen Session 1",
+          "backgroundColor": "#FF00FF",
+          "modules": [
+            "LSEC312*"
+          ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5907398:21",
+          "start": "2027-01-07T15:30:00",
+          "end": "2027-01-07T17:30:00",
+          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Examen Session 1",
+          "backgroundColor": "#FF00FF",
+          "modules": [
+            "LSEC311*"
           ]
         },
         {
@@ -3254,12 +3344,23 @@
             "LSMA302",
             "EXAMEN L2 SESSION 1"
           ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5907403:21",
+          "start": "2027-01-08T14:00:00",
+          "end": "2027-01-08T16:00:00",
+          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI F - FERMAT (120 / 65)\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Examen Session 1",
+          "backgroundColor": "#FF00FF",
+          "modules": [
+            "LSSO310N"
+          ]
         }
       ]
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-02T17:26:22.815Z",
+      "fetchedAt": "2026-11-04T11:40:37.607Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
