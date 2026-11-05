@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-04T18:52:49.375Z",
+  "generatedAt": "2026-11-05T11:41:24.040Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -39,7 +39,7 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "95272eb9-90921",
+  "contentHash": "b759a1f1-91049",
   "changes": [
     {
       "kind": "removed",
@@ -488,6 +488,44 @@
       }
     },
     {
+      "kind": "added",
+      "date": "2026-11-09",
+      "startMin": 930,
+      "endMin": 1020,
+      "time": "15:30 - 17:00",
+      "title": "Initiation aux bases de données",
+      "type": "TD Cartable Numérique",
+      "room": "2202 - FERMAT",
+      "cat": "info",
+      "groups": [
+        "S3MIASHS TD 1",
+        "S3MATHS TD 2A OPTION IN311"
+      ],
+      "eventId": "-1742255826:1073733534:17:5908640:13",
+      "reason": "",
+      "detectedAt": "2026-11-05T11:41:24.040Z",
+      "previous": null
+    },
+    {
+      "kind": "added",
+      "date": "2026-11-09",
+      "startMin": 1030,
+      "endMin": 1120,
+      "time": "17:10 - 18:40",
+      "title": "Initiation aux bases de données",
+      "type": "TD Cartable Numérique",
+      "room": "2202 - FERMAT",
+      "cat": "info",
+      "groups": [
+        "S3MIASHS TD 1",
+        "S3MATHS TD 2A OPTION IN311"
+      ],
+      "eventId": "-1742255826:1073733534:17:5908646:13",
+      "reason": "",
+      "detectedAt": "2026-11-05T11:41:24.040Z",
+      "previous": null
+    },
+    {
       "kind": "removed",
       "date": "2026-11-10",
       "startMin": 830,
@@ -528,6 +566,30 @@
       "reason": "",
       "detectedAt": "2026-11-02T17:26:22.815Z",
       "previous": null
+    },
+    {
+      "kind": "removed",
+      "date": "2026-11-11",
+      "startMin": 930,
+      "endMin": 1020,
+      "time": "15:30 - 17:00",
+      "title": "Macroéconomie 2",
+      "type": "TD",
+      "room": "AMPHI G - FERMAT",
+      "cat": "macro",
+      "groups": [
+        "S3MIASHS TD 1",
+        "S3MIASHS TD 2"
+      ],
+      "eventId": "-1742255826:1073733534:17:5780729:13",
+      "reason": "",
+      "detectedAt": "2026-11-05T11:41:24.040Z",
+      "previous": {
+        "time": "15:30 - 17:00",
+        "room": "AMPHI G - FERMAT",
+        "type": "TD",
+        "cancelled": false
+      }
     },
     {
       "kind": "room",
@@ -595,6 +657,30 @@
         "room": "",
         "type": "Annulation",
         "cancelled": true
+      }
+    },
+    {
+      "kind": "removed",
+      "date": "2026-11-18",
+      "startMin": 930,
+      "endMin": 1020,
+      "time": "15:30 - 17:00",
+      "title": "Macroéconomie 2",
+      "type": "TD",
+      "room": "AMPHI G - FERMAT",
+      "cat": "macro",
+      "groups": [
+        "S3MIASHS TD 1",
+        "S3MIASHS TD 2"
+      ],
+      "eventId": "-1742255826:1073733534:17:5780729:14",
+      "reason": "",
+      "detectedAt": "2026-11-05T11:41:24.040Z",
+      "previous": {
+        "time": "15:30 - 17:00",
+        "room": "AMPHI G - FERMAT",
+        "type": "TD",
+        "cancelled": false
       }
     },
     {
@@ -2084,7 +2170,7 @@
     },
     "2026-11-02": {
       "monday": "2026-11-02",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2301,7 +2387,7 @@
     },
     "2026-11-09": {
       "monday": "2026-11-09",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2350,6 +2436,28 @@
           ]
         },
         {
+          "id": "-1742255826:1073733534:17:5908640:13",
+          "start": "2026-11-09T15:30:00",
+          "end": "2026-11-09T17:00:00",
+          "description": "TD Cartable Num&#233;rique\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />S3 Maths TD 2A OPTION IN311 [S3Maths TD 2A OPTION IN311]\r\n\r\n<br />\r\n\r\n2202 - FERMAT\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD Cartable Numérique",
+          "backgroundColor": "#FFEBBA",
+          "modules": [
+            "LSIN311"
+          ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5908646:13",
+          "start": "2026-11-09T17:10:00",
+          "end": "2026-11-09T18:40:00",
+          "description": "TD Cartable Num&#233;rique\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />S3 Maths TD 2A OPTION IN311 [S3Maths TD 2A OPTION IN311]\r\n\r\n<br />\r\n\r\n2202 - FERMAT\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD Cartable Numérique",
+          "backgroundColor": "#FFEBBA",
+          "modules": [
+            "LSIN311"
+          ]
+        },
+        {
           "id": "-1742255826:1073733534:17:5793464:13",
           "start": "2026-11-10T08:00:00",
           "end": "2026-11-10T09:30:00",
@@ -2391,17 +2499,6 @@
           "backgroundColor": "#FFEBBA",
           "modules": [
             "LSIN311"
-          ]
-        },
-        {
-          "id": "-1742255826:1073733534:17:5780729:13",
-          "start": "2026-11-11T15:30:00",
-          "end": "2026-11-11T17:00:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\n\r\n",
-          "eventCategory": "TD",
-          "backgroundColor": "#FFFF00",
-          "modules": [
-            "LSEC312*"
           ]
         },
         {
@@ -2474,7 +2571,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2589,17 +2686,6 @@
           ]
         },
         {
-          "id": "-1742255826:1073733534:17:5780729:14",
-          "start": "2026-11-18T15:30:00",
-          "end": "2026-11-18T17:00:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\n\r\n",
-          "eventCategory": "TD",
-          "backgroundColor": "#FFFF00",
-          "modules": [
-            "LSEC312*"
-          ]
-        },
-        {
           "id": "-1742255826:1073733534:17:5779518:14",
           "start": "2026-11-19T09:40:00",
           "end": "2026-11-19T11:10:00",
@@ -2669,7 +2755,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2853,7 +2939,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3306,21 +3392,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3385,7 +3471,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-04T18:52:49.375Z",
+      "fetchedAt": "2026-11-05T11:41:24.040Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
