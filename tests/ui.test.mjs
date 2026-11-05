@@ -202,6 +202,29 @@ check(/\.day-head\{\s*\n\s*position:sticky/.test(html), "les en-têtes de jour r
 check(/\.ct-sep\{display:none\}/.test(html), "sur téléphone, l'heure s'affiche sur deux lignes");
 check(/\.grid\{[\s\S]{0,200}display:flex;[\s\S]{0,80}flex-direction:column;/.test(html), "la grille mobile empile les jours en colonne");
 
+console.log("\n— pauses de l’agenda mobile —");
+function breaksFor(times) {
+  // Isoler le calcul des pauses du contenu des cartes.
+  return window.eval(`(() => {
+    const original = cardHTML;
+    try {
+      cardHTML = () => '<article class="card"></article>';
+      const courses = ${JSON.stringify(times)}.map(([startMin, endMin]) => ({ startMin, endMin }));
+      const box = document.createElement('div');
+      box.innerHTML = agendaCardsHTML({ courses }, new Map());
+      return [...box.querySelectorAll('.agenda-break')].map(el => ({ text: el.textContent, height: el.style.getPropertyValue('--break-height') }));
+    } finally { cardHTML = original; }
+  })()`);
+}
+check(breaksFor([[480, 540], [1020, 1080]])[0]?.text === "Pause · 8 h", "un cours à 8h puis à 17h laisse une pause explicite de 8h");
+check(breaksFor([[840, 960]])[0]?.text === "Début des cours à 14:00", "un premier cours l’après-midi est précédé d’un espace explicite");
+check(breaksFor([[480, 540], [540, 600]]).length === 0, "aucune fausse pause entre deux cours consécutifs");
+check(breaksFor([[480, 720], [540, 600], [660, 780]]).length === 0, "les chevauchements ne créent pas de fausse pause");
+check(breaksFor([[480, 540], [555, 600]])[0]?.text === "Pause · 15 min", "les petites pauses sont également visibles");
+check(breaksFor([[480, 540], [1020, 1080]])[0]?.height === "56px", "les longues pauses gardent un espacement compact");
+check(breaksFor([]).length === 0, "un jour vide ne reçoit pas de séparateur");
+check(/\.agenda-break\{display:none\}/.test(html), "les séparateurs sont masqués par défaut sur ordinateur");
+
 console.log("\n— erreurs JavaScript —");
 check(errors.length === 0, `aucune erreur console (${errors.length})`);
 if (errors.length) errors.forEach((error) => console.log(`      ${error}`));

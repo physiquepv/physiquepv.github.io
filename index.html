@@ -533,6 +533,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 
 /* -------------------------------------------------------- onglets mobile */
 .mobile-tabs{display:none}
+.agenda-break{display:none}
 
 /* ---------------------------------------------------------------- grille */
 .grid{
@@ -1345,6 +1346,21 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
     overflow:visible;
     background-image:none;
     background-color:transparent;
+  }
+  .agenda-break{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-height:var(--break-height,28px);
+    flex-shrink:0;
+    color:var(--text-soft);
+    font-size:10px;
+    text-align:center;
+  }
+  .agenda-break::before,.agenda-break::after{
+    content:"";
+    flex:1;
+    border-top:1px dashed var(--border);
   }
   .hour-scale,.current-time-line{display:none}
   .card{
@@ -3026,6 +3042,26 @@ function findTarget() {
   return { weekIndex: last, dayIndex: 0, ongoing: false, future: true };
 }
 
+/** Les pauses restent compactes sur mobile ; la grille PC ne change pas. */
+function agendaCardsHTML(day, lanes) {
+  let occupiedUntil = null;
+  return [...day.courses].sort((a, b) => a.startMin - b.startMin).map((item) => {
+    let separator = "";
+    const gap = occupiedUntil === null ? 0 : item.startMin - occupiedUntil;
+    if (occupiedUntil === null && item.startMin >= 12 * 60) {
+      const time = `${pad2(Math.floor(item.startMin / 60))}:${pad2(item.startMin % 60)}`;
+      separator = `<div class="agenda-break" style="--break-height:36px">Début des cours à ${time}</div>`;
+    } else if (gap > 0) {
+      // Échelle plafonnée : neuf heures de pause ne créent pas un écran vide.
+      const height = Math.min(56, 20 + Math.round(gap / 6));
+      separator = `<div class="agenda-break" style="--break-height:${height}px">Pause · ${formatDuration(gap)}</div>`;
+    }
+    // Un cours superposé ne doit pas créer de fausse pause après lui.
+    occupiedUntil = Math.max(occupiedUntil ?? item.endMin, item.endMin);
+    return separator + cardHTML(item, day, lanes.get(item));
+  }).join("");
+}
+
 function renderWeek(index, options = {}) {
   // Rendre une semaine quitte l'éventuel affichage isolé du week-end.
   state_view.weekendDate = null;
@@ -3069,7 +3105,7 @@ function renderWeek(index, options = {}) {
     let content;
     if (day.courses.length) {
       const lanes = assignLanes(day.courses);
-      content = day.courses.map((item) => cardHTML(item, day, lanes.get(item))).join("");
+      content = agendaCardsHTML(day, lanes);
     } else {
       content = `<div class="empty">${escapeHtml(emptyMessage(weekKey, dayIndex, view.live, weekSource(weekKey)))}</div>`;
     }
