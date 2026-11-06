@@ -602,6 +602,8 @@ async function postForm(url, fields, cfg, options = {}) {
 function formFields(monday, calView, cfg, group = cfg.group) {
   return [
     ["start", monday],
+    // Semaine complète lundi → dimanche : ne jamais écrêter le samedi, où
+    // l'université peut publier des cours / rattrapages.
     ["end", addDays(monday, 6)],
     ["resType", cfg.resourceType],
     ["calView", calView],

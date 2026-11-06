@@ -49,7 +49,7 @@ index.html                              filtrage du TD, bandeau « ce qui a chan
 | `edt.config.json` | **Configuration** : groupe CELCAT, TD de l'étudiant, semestre, paramètres d'appel et `courseLinks` (pages eCampus des matières). |
 | `scripts/sync-edt.mjs` | Récupère CELCAT et écrit `data/edt.json` (uniquement si le planning a changé). `--summary` / `--summary-subject` produisent le résumé lisible des changements. |
 | `scripts/edt-changes.mjs` | Compare deux versions du planning et décrit chaque changement (il réutilise le noyau de `index.html`, donc un cours est décrit exactement comme la page l'affiche). |
-| `.github/workflows/edt-sync.yml` | Synchro automatique (10 min + 1×/jour) et manuelle. |
+| `.github/workflows/edt-sync.yml` | Synchro automatique (15 min lun–sam, horaire le dimanche + 1×/jour) et manuelle. |
 | `.github/workflows/edt-tests.yml` | Lance les tests à chaque modification. |
 | `data/edt.json` | Planning brut publié (mis à jour par le workflow). |
 | `tests/` | Tests du noyau, des changements (détection + affichage), de la synchro, du rendu complet (jsdom) et du mode hors-ligne. |
@@ -85,11 +85,12 @@ Maintenant :
   dernière semaine contenant des cours ; une semaine publiée mais vide affiche
   « Aucun cours au planning officiel », et l'option de TD garde le numéro
   choisi en changeant de semestre (`S3MIASHS TD 2` → `S4MIASHS TD 2`) ;
-- la synchro glissante (toutes les 10 min) rafraîchit la fenêtre autour du jour
-  **plus les dernières semaines de la fenêtre du semestre** (`weeksTail`, 4 par
-  défaut) : les rattrapages et cours de janvier publiés par l'université
-  apparaissent donc sur le site dans les 10 minutes, sans attendre le
-  rechargement complet du lendemain ;
+- la synchro glissante (toutes les 15 min du lundi au samedi, chaque heure le
+  dimanche) rafraîchit la fenêtre autour du jour **plus les dernières semaines
+  de la fenêtre du semestre** (`weeksTail`, 4 par défaut) : les rattrapages,
+  cours du samedi et cours de janvier publiés par l'université apparaissent donc
+  sur le site automatiquement, sans attendre le rechargement complet du
+  lendemain ;
 - une semaine pas encore publiée est annoncée « Pas encore publié » — aucune
   vacance n'est inventée ;
 - l'impression découpe autant de pages A4 que nécessaire (12 semaines par page).
@@ -109,9 +110,12 @@ jamais à faire défiler la page vers le haut ou vers le bas.
   cours sont placés en **pourcentage** de la journée 08:00 → 19:00 (plus aucune
   hauteur fixe en pixels) : la journée entière tient dans l'écran, que la fenêtre
   fasse 600 px ou 1 400 px de haut. Deux cours qui se chevauchent s'affichent
-  côte à côte au lieu de se superposer.
+  côte à côte au lieu de se superposer. **Si CELCAT publie un cours le samedi**,
+  une sixième colonne « Samedi » apparaît automatiquement pour cette semaine ;
+  elle disparaît si le créneau est retiré. Aucun samedi vide n'est inventé.
 - **Mobile** : un seul jour à la fois, choisi par les onglets ; seule la zone du
-  jour défile, jamais la page.
+  jour défile, jamais la page. L'onglet **Sam** n'apparaît que lorsque le samedi
+  contient un cours officiel (y compris une annulation ponctuelle).
 - **Repères horaires** resserrés automatiquement sur les écrans très bas, et
   cartes qui s'allègent (titre + horaire) pour les créneaux courts.
 
@@ -173,9 +177,12 @@ et ramène à aujourd'hui d'un clic.
 - Sur téléphone, un seul jour est affiché : les boutons font défiler les jours.
 - Sur ordinateur, les cinq colonnes restent visibles et le jour concerné est mis
   en évidence ; les flèches `‹ ›` du haut et les balayages continuent de changer
-  de **semaine**.
-- Le **week-end** n'a pas de colonne dans les 5 jours ouvrés : il s'affiche seul,
-  en pleine largeur, avec les éventuels événements personnels de la journée.
+  de **semaine**. Un samedi de cours rejoint la grille comme sixième colonne.
+- Le **week-end sans cours officiel** n'a pas de colonne dans la semaine : il
+  s'affiche seul, en pleine largeur, avec les éventuels événements personnels de
+  la journée. Le calendrier, l'impression et le jour ouvert au démarrage suivent
+  la même règle : un samedi publié est sélectionnable et visible comme un jour
+  de cours à part entière.
 - Les boutons se désactivent aux bornes des semaines publiées (dimanche qui
   précède la première → dimanche de la dernière).
 - Au clavier : `←` / `→` changent de semaine, `Maj + ←` / `Maj + →` changent de

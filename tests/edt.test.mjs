@@ -263,6 +263,69 @@ test("isMyCourse et changeAppliesToTd couvrent S3 + S4 avec le numéro de TD cho
   assert.equal(core.changeAppliesToTd({ groups: ["S4MIASHS TD 1"] }, cfg), false);
 });
 
+test("buildWeek ajoute le samedi seulement quand un cours officiel le concerne", (core) => {
+  const saturday = {
+    id: "cm-samedi",
+    start: "2026-11-14T09:40:00",
+    end: "2026-11-14T11:10:00",
+    description: "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Algèbre linéaire 2 [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 [S3MIASHS]",
+    eventCategory: "CM",
+    backgroundColor: "#00FFFF",
+    modules: ["LSMA302"],
+  };
+  const view = core.buildWeek("2026-11-09", [saturday], null, { live: true });
+  assert.equal(view.days.length, 6, "la semaine publiée du samedi a six journées");
+  assert.equal(view.days[5].name, "Samedi");
+  assert.equal(view.days[5].courses.length, 1);
+  assert.equal(view.days[5].courses[0].date, "2026-11-14");
+  assert.equal(view.days[5].courses[0].title, "Analyse et Algèbre linéaire 2");
+
+  const empty = core.buildWeek("2026-11-09", [], null, { live: true });
+  assert.equal(empty.days.length, 5, "pas de colonne samedi vide inventée");
+  const offline = core.buildWeek("2026-11-09", [saturday], core.fallbackWeeks[0], { live: false });
+  assert.equal(offline.days.length, 5, "le secours hors-ligne ne réinvente pas le samedi");
+});
+
+test("buildWeek filtre le samedi par TD et signale une annulation ponctuelle", (core) => {
+  const td1 = {
+    id: "td1-samedi",
+    start: "2026-11-14T13:50:00",
+    end: "2026-11-14T15:20:00",
+    description: "TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nLSEC311-Microéconomie 2 [LSEC311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1 [S3MIASHS TD 1]",
+    eventCategory: "TD",
+    backgroundColor: "#FFFF00",
+    modules: ["LSEC311"],
+  };
+  assert.equal(core.buildWeek("2026-11-09", [td1], null, { live: true }).days.length, 5, "le TD 2 ne voit pas le samedi du TD 1");
+  const previous = core.CONFIG.myTd;
+  core.CONFIG.myTd = "S3MIASHS TD 1";
+  try {
+    assert.equal(core.buildWeek("2026-11-09", [td1], null, { live: true }).days.length, 6, "le TD 1 voit son samedi");
+  } finally {
+    core.CONFIG.myTd = previous;
+  }
+
+  const cancelled = { ...td1, id: "annulation-samedi", eventCategory: "Annulation", backgroundColor: "#333333", description: td1.description.replace(/^TD/, "Annulation").replace(/TD 1/g, "TD 2") };
+  const oneOff = core.buildWeek("2026-11-09", [cancelled], null, { live: true });
+  assert.equal(oneOff.days.length, 6, "une annulation ponctuelle du samedi reste visible");
+  assert.equal(oneOff.days[5].courses[0].isCancelled, true);
+
+  const weeks = {};
+  for (const monday of ["2026-11-09", "2026-11-16", "2026-11-23"]) {
+    const saturday = core.addDaysISO(monday, 5);
+    weeks[monday] = { monday, events: [{ ...cancelled, id: `rec-${monday}`, start: `${saturday}T13:50:00`, end: `${saturday}T15:20:00` }] };
+  }
+  const recurring = core.findRecurringCancellations(weeks);
+  const suspended = core.buildWeek("2026-11-09", weeks["2026-11-09"].events, null, { live: true, recurringCancellations: recurring });
+  assert.equal(suspended.days.length, 5, "un créneau du samedi suspendu en permanence n'ouvre pas de colonne vide");
+});
+
+test("weeksFromEvents rattache un cours du samedi au lundi de sa semaine", (core) => {
+  const weeks = core.weeksFromEvents([{ id: "sam", start: "2026-11-14T09:40:00", end: "2026-11-14T11:10:00", description: "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 [S3MIASHS]" }]);
+  assert.deepEqual(Object.keys(weeks), ["2026-11-09"]);
+  assert.equal(weeks["2026-11-09"].events.length, 1);
+});
+
 /* ------------------------------------------------------------------ runner */
 const html = await readFile(path.join(ROOT, "index.html"), "utf8");
 const data = JSON.parse(await readFile(path.join(ROOT, "data", "edt.json"), "utf8"));

@@ -56,12 +56,14 @@ function cancellationEvent(monday) {
 }
 let calls = 0;
 let online = true;
+const requestedRanges = new Map();
 
 globalThis.fetch = async (url, init = {}) => {
   calls++;
   if (!online) throw new Error("réseau indisponible");
   const body = init.body ? new URLSearchParams(init.body) : new URLSearchParams(String(url).split("?")[1] ?? "");
   const monday = body.get("start");
+  requestedRanges.set(monday, body.get("end"));
   const events = payload(monday) ?? [];
   return {
     ok: true,
@@ -77,6 +79,8 @@ const {
   CelcatAuthError,
   stripStaffLines,
   extractVerificationToken,
+  todayParis,
+  addDays,
 } = await import(path.join(ROOT, "scripts", "sync-edt.mjs"));
 
 const readOut = async () => JSON.parse(await readFile(outFile, "utf8"));
@@ -108,15 +112,21 @@ assert.ok(third.weeks["2026-09-28"].events.length === 2, "le nouveau cours est b
 assert.equal(third.weeks["2026-09-28"].events.length, before["2026-09-28"].events.length + 1);
 console.log("  ✓ fusion : les semaines déjà connues sont conservées");
 
-// Une annulation publiée sur une seule semaine : elle doit être signalée
+// Une annulation publiée sur une seule semaine : elle doit être signalée.
+// On choisit une semaine à venir (ou la plus proche) pour rester dans la fenêtre
+// de 30 jours du journal, quelle que soit la date d'exécution du test.
 const beforeCancel = await readOut();
-payload = (monday) => (monday === "2026-10-05" ? [cancellationEvent(monday)] : [baseEvent(monday)]);
+const knownMondays = Object.keys(beforeCancel.weeks).sort();
+const today = todayParis();
+const cancellationMonday = knownMondays.find((monday) => monday >= today)
+  ?? knownMondays.reduce((best, monday) => Math.abs(Date.parse(monday) - Date.parse(today)) < Math.abs(Date.parse(best) - Date.parse(today)) ? monday : best, knownMondays[0]);
+payload = (monday) => (monday === cancellationMonday ? [cancellationEvent(monday)] : [baseEvent(monday)]);
 await main();
 const cancelled = await readOut();
 assert.ok(Array.isArray(cancelled.changes), "le fichier publié contient un journal de changements");
 const cancelChange = cancelled.changes.filter((change) => change.kind === "cancelled");
 assert.equal(cancelChange.length, 1, `une annulation doit être signalée (${cancelChange.length})`);
-assert.equal(cancelChange[0].date, "2026-10-05");
+assert.equal(cancelChange[0].date, cancellationMonday);
 assert.equal(cancelChange[0].title, "Initiation aux bases de données");
 assert.equal(cancelChange[0].type, "CM", "le type réel de la séance est conservé");
 assert.notEqual(cancelled.contentHash, beforeCancel.contentHash);
@@ -137,6 +147,20 @@ const detectedThisRun = lastDetectedChanges(withAdd);
 assert.ok(detectedThisRun.some((change) => change.kind === "added" && change.time === "16:00 - 17:30"), "le résumé cite les nouveaux cours du dernier passage");
 assert.ok(!detectedThisRun.some((change) => change.detectedAt !== withAdd.generatedAt), "les changements plus anciens ne sont pas recomptés");
 console.log(`  ✓ nouveaux cours signalés (${added.length}) et journal sans doublon (${withAdd.changes.length} entrées, ${detectedThisRun.length} du dernier passage)`);
+
+// Le samedi fait partie de la fenêtre CELCAT : un cours publié le samedi est
+// récupéré, journalisé et conservé comme les autres jours, sans configuration.
+const beforeSaturday = await readOut();
+payload = (monday) => [baseEvent(monday), fakeEvent(`${addDays(monday, 5)}T09:40:00`, `${addDays(monday, 5)}T11:10:00`, { room: "AMPHI G - FERMAT" })];
+await main();
+const withSaturday = await readOut();
+assert.equal(requestedRanges.get("2026-11-09"), "2026-11-15", "la requête CELCAT couvre lundi → dimanche, samedi compris");
+assert.ok(withSaturday.weeks["2026-11-09"].events.some((event) => event.start === "2026-11-14T09:40:00"), "le cours du samedi est publié dans data/edt.json");
+assert.ok(withSaturday.changes.some((change) => change.kind === "added" && change.date === "2026-11-14"), "le nouveau cours du samedi est journalisé");
+assert.notEqual(withSaturday.contentHash, beforeSaturday.contentHash);
+const workflow = await readFile(path.join(ROOT, ".github", "workflows", "edt-sync.yml"), "utf8");
+assert.ok(workflow.includes("1-6"), "la synchronisation planifiée tourne aussi le samedi");
+console.log("  ✓ cours du samedi : fenêtre lundi → dimanche, publication et journal automatique");
 
 // CELCAT renvoie du vide : on ne doit pas écraser les données valides
 const snapshot = await readFile(outFile, "utf8");
@@ -387,4 +411,4 @@ delete process.env.CELCAT_USERNAME;
 delete process.env.CELCAT_PASSWORD;
 console.log("  ✓ pause anti-blocage de 6 h en mode schedule vérifiée (0 appel CELCAT)");
 
-console.log("\n✅ 10/10 vérifications réussies");
+console.log("\n✅ 11/11 vérifications réussies");

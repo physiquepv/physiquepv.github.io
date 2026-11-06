@@ -158,7 +158,7 @@ check(/Samedi 10 oct\. 2026/.test(label()) && weekendPanel()?.dataset.day === "5
 dispatch($("#prevDay"), "click");
 await wait(20);
 check(/Vendredi 9 oct\. 2026/.test(label()), "samedi → vendredi (semaine précédente)");
-check(weekendPanel() === null && $$("#grid .day").length === 5, "on revient aux 5 jours de la semaine");
+check(weekendPanel() === null && $$("#grid .day").length === 5, "on revient aux 5 jours de la semaine sans samedi de cours");
 check(window.document.body.dataset.view === "day" && $$('#grid .day:not(.hidden)')[0]?.dataset.day === "4", "sur téléphone, seul le vendredi est affiché");
 
 console.log("\n— bornes et retour à la semaine —");
@@ -172,13 +172,44 @@ check(label() === lastLabel, "cliquer sur un bouton désactivé ne change rien")
 window.eval("showDay('2026-10-11')");
 dispatch(window.document.querySelector('.tab[data-day="0"]'), "click");
 await wait(20);
-check(weekendPanel() === null && $$("#grid .day").length === 5, "un onglet ramène du week-end à la semaine");
+check(weekendPanel() === null && $$("#grid .day").length === 5, "un onglet ramène du week-end à la semaine sans samedi de cours");
 
 console.log("\n— le navigateur retient les informations —");
 window.eval("showDay('2026-10-14')");
 check(window.localStorage.getItem("schedule_last_day") === "2026-10-14", "le dernier jour consulté est mémorisé");
 check(window.eval("typeof CONFIG.myTd") === "string" && window.eval("typeof loadPersonal") === "function", "le TD et l'agenda personnel restent stockés localement");
 check(window.localStorage.getItem("schedule_hidden") === null, "les anciennes règles de matières masquées sont effacées");
+
+console.log("\n— samedi avec cours officiel : la semaine garde sa colonne —");
+const satMonday = window.eval("displayedWeekKey()");
+const satISO = window.eval(`addDaysISO("${satMonday}", 5)`);
+const saturdayEvent = {
+  id: "cm-samedi-nav",
+  start: `${satISO}T09:40:00`,
+  end: `${satISO}T11:10:00`,
+  description: "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Algèbre linéaire 2 [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 [S3MIASHS]",
+  eventCategory: "CM",
+  backgroundColor: "#00FFFF",
+  modules: ["LSMA302"],
+};
+window.eval(`(() => {
+  state.weeks[${JSON.stringify(satMonday)}].events.push(${JSON.stringify(saturdayEvent)});
+  state_view.recurring = findRecurringCancellations(state.weeks);
+  refreshDisplayedWeek();
+})()`);
+window.eval(`showDay("${satISO}")`);
+await wait(20);
+check(/Samedi/.test(label()) && weekendPanel() === null, "le samedi de cours s'ouvre dans la grille, pas comme un week-end vide");
+check($$("#grid .day").length === 6, "la colonne samedi est présente");
+dispatch($("#nextDay"), "click");
+await wait(20);
+check(/Dimanche/.test(label()) && weekendPanel()?.dataset.day === "6", "samedi de cours → dimanche isolé");
+dispatch($("#prevDay"), "click");
+await wait(20);
+check(/Samedi/.test(label()) && weekendPanel() === null && $$("#grid .day").length === 6, "dimanche → samedi de cours retrouve la colonne officielle");
+dispatch($("#prevDay"), "click");
+await wait(20);
+check(/Vendredi/.test(label()) && weekendPanel() === null, "samedi de cours → vendredi reste dans la même semaine");
 
 console.log("\n— erreurs JavaScript —");
 check(errors.length === 0, `aucune erreur console (${errors.length})`);
