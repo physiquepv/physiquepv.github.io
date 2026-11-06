@@ -116,7 +116,7 @@ check($("#calTitle").textContent === "Octobre 2026", `le mois affiché est celui
 check($$("#calMonths .cal-month").length === 12, "les 12 mois sont proposés");
 check($$("#calGrid .cal-day").length === 42, "la grille couvre 6 semaines (42 jours)");
 check($$("#calGrid .cal-day:not(:disabled)").length > 10, "les jours du semestre sont sélectionnables");
-check($$("#calGrid .cal-day.weekend:disabled").length > 0, "les week-ends ne sont pas sélectionnables");
+check($$("#calGrid .cal-day.weekend:disabled").length > 0, "les week-ends sans cours officiel ne sont pas sélectionnables");
 check($$("#calGrid .cal-day .cal-dot.has").length > 0, "les journées avec cours portent un point");
 check($("#calGrid .cal-day.week-selected") !== null, "la semaine ouverte est mise en évidence");
 check($$("#calGrid .cal-day.selected").length === 1, "le jour de référence est cerclé dans le calendrier");
@@ -224,6 +224,47 @@ check(breaksFor([[480, 540], [555, 600]])[0]?.text === "Pause · 15 min", "les p
 check(breaksFor([[480, 540], [1020, 1080]])[0]?.height === "56px", "les longues pauses gardent un espacement compact");
 check(breaksFor([]).length === 0, "un jour vide ne reçoit pas de séparateur");
 check(/\.agenda-break\{display:none\}/.test(html), "les séparateurs sont masqués par défaut sur ordinateur");
+
+console.log("\n— samedi de cours sur téléphone —");
+const satMonday = window.eval("displayedWeekKey()");
+const satISO = window.eval(`addDaysISO("${satMonday}", 5)`);
+const saturdayEvent = {
+  id: "cm-samedi-mobile",
+  start: `${satISO}T09:40:00`,
+  end: `${satISO}T11:10:00`,
+  description: "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Algèbre linéaire 2 [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 [S3MIASHS]",
+  eventCategory: "CM",
+  backgroundColor: "#00FFFF",
+  modules: ["LSMA302"],
+};
+window.eval(`(() => {
+  state.weeks[${JSON.stringify(satMonday)}].events.push(${JSON.stringify(saturdayEvent)});
+  state_view.recurring = findRecurringCancellations(state.weeks);
+  refreshDisplayedWeek();
+})()`);
+await wait(30);
+check($('.tab[data-day="5"]').hidden === false, "l'onglet Sam apparaît quand un cours du samedi est publié");
+$('.tab[data-day="5"]').click();
+await wait(30);
+check(visibleDays().length === 1 && visibleDays()[0].dataset.day === "5", "l'onglet Sam isole le samedi");
+check(/Analyse et Algèbre linéaire 2/.test(visibleDays()[0].textContent), "le cours du samedi est visible sur téléphone");
+$("#weekTitleBtn").click();
+await wait(30);
+const satCell = $(`#calGrid .cal-day[data-date="${satISO}"]`);
+check(satCell !== null && !satCell.disabled, "le calendrier rend le samedi de cours sélectionnable");
+check(satCell.querySelector(".cal-dot")?.classList.contains("has"), "le calendrier signale le cours du samedi par un point");
+satCell.click();
+await wait(60);
+check($("#calendarDialog").hidden === true, "le choix du samedi referme le calendrier");
+check(visibleDays().length === 1 && visibleDays()[0].dataset.day === "5", "le calendrier ouvre le samedi isolé");
+window.eval(`showDay("${satISO}")`);
+$("#nextDay").click();
+await wait(30);
+check(/Dimanche/.test($("#dayNavLabel").textContent), "samedi de cours → dimanche avec le bouton ›");
+check($("#grid .day.weekend-day") !== null, "le dimanche sans cours reste un panneau isolé");
+$("#prevDay").click();
+await wait(30);
+check(/Samedi/.test($("#dayNavLabel").textContent) && $("#grid .day.weekend-day") === null, "dimanche → samedi de cours retrouve la colonne officielle");
 
 console.log("\n— erreurs JavaScript —");
 check(errors.length === 0, `aucune erreur console (${errors.length})`);

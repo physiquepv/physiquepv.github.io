@@ -9,6 +9,7 @@ name: Sync emploi du temps UVSQ
 on:
   schedule:
     # Rafraîchissement glissant toutes les 15 min du lundi au samedi (~06h–23h Paris).
+    # Le samedi est inclus volontairement : l'université peut y publier des cours.
     - cron: "*/15 4-21 * * 1-6"
     # Veille du dimanche (~08h–22h Paris, 1×/heure) pour capter les annonces du lundi matin.
     - cron: "12 6-20 * * 0"

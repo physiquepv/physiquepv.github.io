@@ -545,8 +545,10 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   overflow:hidden;
   touch-action:pan-y;
 }
-/* Le week-end est affiché seul, en pleine largeur, quand on y arrive avec les
-   boutons ‹ › du bas. Les 5 colonnes de la semaine restent inchangées sinon. */
+/* Sixième colonne seulement quand CELCAT publie un cours le samedi.
+   Le week-end sans cours officiel reste affiché seul, en pleine largeur,
+   quand on y arrive avec les boutons ‹ › du bas. */
+.grid.has-saturday{grid-template-columns:repeat(6,minmax(0,1fr))}
 .grid.single{grid-template-columns:minmax(0,1fr)}
 .day.weekend-day .day-head{background:linear-gradient(180deg,color-mix(in srgb,var(--today-bg) 70%,var(--surface)),var(--surface))}
 
@@ -1526,6 +1528,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 <button class="tab" data-day="2" aria-pressed="false" onclick="setDay(2)">Mer</button>
 <button class="tab" data-day="3" aria-pressed="false" onclick="setDay(3)">Jeu</button>
 <button class="tab" data-day="4" aria-pressed="false" onclick="setDay(4)">Ven</button>
+<button class="tab" data-day="5" aria-pressed="false" onclick="setDay(5)" hidden>Sam</button>
 </div>
 
 <section class="grid" id="grid" aria-label="Emploi du temps de la semaine"></section>
@@ -2076,9 +2079,15 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
     .filter(Boolean)
     .filter((item) => isMyCourse(item));
 
+  // Le samedi rejoint la semaine uniquement si un créneau officiel le concerne
+  // (y compris une annulation ponctuelle). Pas de colonne vide inventée, et les
+  // créneaux suspendus en permanence ne suffisent pas à ouvrir la journée.
+  const recurringCancelled = (item) => item.cancelled && options.recurringCancellations?.has(recurringKey(item));
+  const saturdayISO = addDaysISO(weekKey, 5);
+  const hasSaturday = live && parsed.some((item) => item.date === saturdayISO && !recurringCancelled(item));
   const days = [];
 
-  for (let d = 0; d < 5; d++) {
+  for (let d = 0; d < (hasSaturday ? 6 : 5); d++) {
     const dateISO = addDaysISO(weekKey, d);
     const realDate = parseISO(dateISO);
     const dayLive = parsed.filter((item) => item.date === dateISO).sort((a, b) => a.startMin - b.startMin);
@@ -2088,7 +2097,7 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
     if (!live) {
       for (const ref of dayReference) courses.push(referenceCourse(ref, dateISO));
       courses.sort((a, b) => startMinutes(a.time) - startMinutes(b.time));
-      days.push({ name: DAY_NAMES[d], date: formatDate(realDate), realDate, courses, live: false });
+      days.push({ name: WEEK_DAY_NAMES[d], date: formatDate(realDate), realDate, courses, live: false });
       continue;
     }
 
@@ -2108,13 +2117,12 @@ function buildWeek(weekKey, rawEvents, reference, options = {}) {
 
     for (const item of dayLive) {
       if (used.has(item.id)) continue;
-      const recurringCancelled = item.cancelled && options.recurringCancellations?.has(recurringKey(item));
-      if (recurringCancelled) continue; // créneau suspendu en permanence : pas une information
+      if (recurringCancelled(item)) continue; // créneau suspendu en permanence : pas une information
       courses.push(liveCourse(item, dateISO));
     }
 
     courses.sort((a, b) => startMinutes(a.time) - startMinutes(b.time));
-    days.push({ name: DAY_NAMES[d], date: formatDate(realDate), realDate, courses, live: true });
+    days.push({ name: WEEK_DAY_NAMES[d], date: formatDate(realDate), realDate, courses, live: true });
   }
 
   return { days, live };
@@ -2249,7 +2257,7 @@ function changeDayLabel(change, today = todayISO()) {
   if (change.date === addDaysISO(today, 1)) return "Demain";
   if (change.date === addDaysISO(today, -1)) return "Hier";
   const date = parseISO(change.date);
-  return `${DAY_NAMES[weekdayIndex(change.date)] ?? ""} ${date.getDate()} ${MONTHS_LONG[date.getMonth()].toLowerCase()}`.trim();
+  return `${WEEK_DAY_NAMES[weekdayIndex(change.date)] ?? ""} ${date.getDate()} ${MONTHS_LONG[date.getMonth()].toLowerCase()}`.trim();
 }
 
 function changeWhenLabel(change, today = todayISO()) {
@@ -2911,9 +2919,9 @@ function weekNumber(weekKey) {
  * écrits à la main : ils deviendraient faux dès que le planning change).
  * Hors période universitaire, la semaine est simplement datée.
  */
-function weekLabel(weekKey) {
+function weekLabel(weekKey, lastDayIndex = 4) {
   const start = parseISO(weekKey);
-  const end = parseISO(addDaysISO(weekKey, 4));
+  const end = parseISO(addDaysISO(weekKey, lastDayIndex));
   const number = weekNumber(weekKey);
   const year = end.getFullYear();
   const sameMonth = start.getMonth() === end.getMonth();
@@ -2982,19 +2990,32 @@ function buildWeekView(weekKey, recurring) {
       : buildWeek(weekKey, [], reference, { live: false });
 }
 
+/** Le samedi est une journée de cours comme les autres quand CELCAT le publie. */
+function weekHasSaturday(weekKey, recurring = state_view.recurring) {
+  return Boolean(weekKey) && buildWeekView(weekKey, recurring).days.length > 5;
+}
+function lastWeekdayIndex(weekKey) {
+  return weekHasSaturday(weekKey) ? 5 : 4;
+}
+
 /**
  * Jour ciblé au démarrage, calculé avec les cours visibles de la journée.
- * Le week-end est toujours ramené au lundi suivant.
+ * Un samedi avec cours reste sélectionné ; après la dernière séance (ou sans
+ * cours le week-end), on revient au lundi suivant.
  */
 function scheduleOpeningDateISO(now = new Date()) {
   const iso = formatISO(now);
-  const weekday = now.getDay();
-  if (weekday === 0 || weekday === 6) return openingDateISO(now);
-
-  const view = buildWeekView(mondayOf(iso), null);
+  const view = buildWeekView(mondayOf(iso), state_view.recurring);
   const day = view.days[weekdayIndex(iso)];
-  const courses = (day?.courses ?? []).filter((item) => !item.isCancelled && !item.ghost);
+  if (!day) return openingDateISO(now); // dimanche, ou samedi sans cours officiel
+
+  const active = (item) => !item.isCancelled && !item.ghost;
+  const courses = (day.courses ?? []).filter(active);
   const lastEnd = courses.length ? Math.max(...courses.map((item) => item.endMin)) : TIMELINE.end;
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  if (minutes < lastEnd) return iso;
+  if (now.getDay() === 6) return nextWeekdayISO(iso);
+  if (now.getDay() === 5 && (view.days[5]?.courses ?? []).some(active)) return addDaysISO(iso, 1);
   return openingDateISO(now, lastEnd);
 }
 
@@ -3018,24 +3039,24 @@ function findTarget() {
   const now = new Date();
   const minutes = now.getHours() * 60 + now.getMinutes();
   const keys = state_view.weeks;
-  const todayKey = currentWeekKey();
+  const todayKey = mondayOf(formatISO(now));
   const todayIndex = keys.indexOf(todayKey);
   if (todayIndex >= 0) {
     const view = buildWeekView(todayKey, null);
     const today = view.days.find((day) => sameDay(day.realDate, now));
     const todayCourses = (today?.courses ?? []).filter((item) => !item.isCancelled && !item.ghost);
     if (todayCourses.length && !todayCourses.every((item) => item.endMin <= minutes)) {
-      return { weekIndex: todayIndex, dayIndex: DAY_NAMES.indexOf(today.name), ongoing: true };
+      return { weekIndex: todayIndex, dayIndex: WEEK_DAY_NAMES.indexOf(today.name), ongoing: true };
     }
   }
   for (let w = Math.max(0, todayIndex); w < keys.length; w++) {
     const view = buildWeekView(keys[w], null);
     for (const day of view.days) {
       const dateKey = formatISO(day.realDate);
-      if (dateKey < todayISO()) continue;
+      if (dateKey <= todayISO()) continue; // la journée en cours est traitée au-dessus
       if (!day.courses.some((item) => !item.isCancelled && !item.ghost)) continue;
       const ongoing = w === todayIndex && sameDay(day.realDate, now);
-      return { weekIndex: w, dayIndex: DAY_NAMES.indexOf(day.name), ongoing, future: !ongoing };
+      return { weekIndex: w, dayIndex: WEEK_DAY_NAMES.indexOf(day.name), ongoing, future: !ongoing };
     }
   }
   const last = keys.length - 1;
@@ -3075,7 +3096,14 @@ function renderWeek(index, options = {}) {
   const recurring = options.recurring ?? state_view.recurring;
   state_view.recurring = recurring;
   const view = mergePersonalEvents(buildWeekView(weekKey, recurring));
-  const label = weekLabel(weekKey);
+  const hasSaturday = view.days.length > 5;
+  if (Number.isInteger(state_view.mobileFilter) && state_view.mobileFilter >= view.days.length) {
+    state_view.mobileFilter = view.days.length - 1;
+  }
+  $("#grid")?.classList.toggle("has-saturday", hasSaturday);
+  const saturdayTab = $('.tab[data-day="5"]');
+  if (saturdayTab) saturdayTab.hidden = !hasSaturday;
+  const label = weekLabel(weekKey, view.days.length - 1);
 
   const titleBox = $("#weekTitleText");
   if (titleBox) {
@@ -3087,7 +3115,10 @@ function renderWeek(index, options = {}) {
   $("#prev").disabled = index === 0;
   $("#next").disabled = index >= keys.length - 1;
 
-  const target = options.target ?? findTarget();
+  let target = options.target ?? findTarget();
+  if (target.weekIndex === index && target.dayIndex >= view.days.length) {
+    target = { ...target, dayIndex: view.days.length - 1 };
+  }
   state_view.target = target;
   const targetWeek = target.weekIndex === index;
 
@@ -3099,7 +3130,7 @@ function renderWeek(index, options = {}) {
     const hidden = state_view.mobileFilter !== "all" && state_view.mobileFilter !== dayIndex;
     const indicatorLabel = target.ongoing
       ? `${icon("spark", 10)}Aujourd'hui`
-      : target.opening ? `${icon("calendar", 10)}Prochain jour ouvré` : `${icon("arrowRight", 10)}Prochain cours`;
+      : target.opening ? `${icon("calendar", 10)}Prochain jour de cours` : `${icon("arrowRight", 10)}Prochain cours`;
     const indicator = selected && !target.dayNav ? `<span class="target-pill">${indicatorLabel}</span>` : "";
     const isToday = sameDay(day.realDate, new Date());
     let content;
@@ -3124,7 +3155,12 @@ function renderWeek(index, options = {}) {
   if (options.animate !== false && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
     $("#grid").animate([{ opacity: 0.4, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 180, easing: "ease-out" });
   }
-  $$(".tab").forEach((tab) => tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex)));
+  $$(".tab").forEach((tab) => {
+    const active = tab.dataset.day === String(state_view.mobileFilter);
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-pressed", String(active));
+    tab.classList.toggle("current", targetWeek && tab.dataset.day === String(target.dayIndex));
+  });
   updateDayNav();
 }
 
@@ -3142,23 +3178,32 @@ function printCourse(item) {
 }
 
 function buildPrintPage(pageWeeks, page, total, period) {
-  const rows = pageWeeks.map(({ weekKey, number }) => {
-    const view = mergePersonalEvents(buildWeekView(weekKey, state_view.recurring));
-    const cells = view.days.map((day, dayIndex) => {
+  const entries = pageWeeks.map(({ weekKey, number }) => ({
+    weekKey,
+    number,
+    view: mergePersonalEvents(buildWeekView(weekKey, state_view.recurring)),
+  }));
+  // Une seule grille par page : si une semaine contient un samedi, toutes les
+  // lignes ont la colonne ; les autres semaines reçoivent une cellule vide.
+  const dayNames = entries.some(({ view }) => view.days.length > 5) ? WEEK_DAY_NAMES.slice(0, 6) : DAY_NAMES;
+  const rows = entries.map(({ weekKey, number, view }) => {
+    const cells = dayNames.map((_, dayIndex) => {
+      const day = view.days[dayIndex];
+      if (!day) return "<td></td>";
       if (day.courses.length) return `<td>${day.courses.map(printCourse).join("")}</td>`;
       const message = emptyMessage(weekKey, dayIndex, view.live, weekSource(weekKey));
       const special = /Trophée|fermée/.test(message);
       return `<td><div class="${special ? "p-alert" : "p-empty"}">${escapeHtml(message)}</div></td>`;
     }).join("");
     const start = parseISO(weekKey);
-    const end = parseISO(addDaysISO(weekKey, 4));
+    const end = view.days[view.days.length - 1].realDate;
     const label = number ? `Semaine ${number}` : weekKey < mondayOf(CONFIG.semester.start) ? "Avant-semestre" : "Hors semestre";
     return `<tr><td class="print-week"><b>${label}</b><span>${start.getDate()}/${pad2(start.getMonth() + 1)} – ${end.getDate()}/${pad2(end.getMonth() + 1)}</span></td>${cells}</tr>`;
   }).join("");
   const tdNum = selectedTdNumber();
   const tdLabel = tdNum ? `TD ${tdNum.padStart(2, "0")}` : "";
   const badge = "Planning officiel • annulations et absences signalées";
-  return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — ${escapeHtml(period)}</h2><p>Source : edt.uvsq.fr • Groupe ${escapeHtml(CONFIG.group)}${tdLabel ? ` • ${tdLabel}` : ""} • <strong>Page ${page} / ${total}</strong> • ${new Date().toLocaleString("fr-FR")}</p></div><div class="print-badge">${badge}</div></header><table class="print-table"><thead><tr><th>Semaine</th>${DAY_NAMES.map((day) => `<th>${day}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></section>`;
+  return `<section class="print-page"><header class="print-head"><div><h2>UVSQ • L2 MIASHS S3 — ${escapeHtml(period)}</h2><p>Source : edt.uvsq.fr • Groupe ${escapeHtml(CONFIG.group)}${tdLabel ? ` • ${tdLabel}` : ""} • <strong>Page ${page} / ${total}</strong> • ${new Date().toLocaleString("fr-FR")}</p></div><div class="print-badge">${badge}</div></header><table class="print-table"><thead><tr><th>Semaine</th>${dayNames.map((day) => `<th>${day}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></section>`;
 }
 
 /** Une page A4 paysage par bloc de 12 semaines : rien n'est tronqué. */
@@ -3244,7 +3289,7 @@ function renderCalendar() {
   const focusDay = target && target.weekIndex === state_view.index && state_view.weekKey
     ? addDaysISO(state_view.weekKey, target.dayIndex)
     : today;
-  const weekdayNames = [...DAY_NAMES, "Samedi", "Dimanche"];
+  const weekdayNames = WEEK_DAY_NAMES;
   const cells = [];
   for (let i = 0; i < 42; i++) {
     const date = new Date(year, month, 1 - offset + i);
@@ -3252,7 +3297,8 @@ function renderCalendar() {
     const weekday = (date.getDay() + 6) % 7;
     const outside = date.getMonth() !== month;
     const monday = mondayOf(iso);
-    const available = !outside && weekday <= 4 && state_view.weeks.includes(monday);
+    const published = state_view.weeks.includes(monday);
+    const available = !outside && published && (weekday <= 4 || (weekday === 5 && weekHasSaturday(monday)));
     const count = counts.get(iso) ?? 0;
     const classes = ["cal-day"];
     if (outside) classes.push("outside");
@@ -3309,19 +3355,11 @@ function closeCalendar(restoreFocus = true) {
   if (restoreFocus) $("#weekTitleBtn")?.focus({ preventScroll: true });
 }
 
-/** Ouvre la semaine du jour choisi (et isole ce jour sur téléphone). */
+/** Ouvre le jour choisi : samedi de cours dans la semaine, sinon week-end isolé. */
 function goToCalendarDate(iso) {
-  if (weekdayIndex(iso) >= 5) { showDay(iso); closeCalendar(); return; }
-  const monday = mondayOf(iso);
-  const index = state_view.weeks.indexOf(monday);
-  if (index < 0) return;
-  const dayIndex = weekdayIndex(iso);
-  renderWeek(index, { weekKey: monday });
-  const focus = dayIndex >= 0 && dayIndex <= 4 ? dayIndex : "all";
-  if (innerWidth <= 860) setDay(focus, false);
-  else setDay("all", false);
+  if (!dayIsNavigable(iso)) return;
+  showDay(iso);
   closeCalendar();
-  requestAnimationFrame(() => scrollToDay(focus, false));
 }
 
 function initCalendar() {
@@ -3532,21 +3570,25 @@ function changeWeek(delta) {
   if (state_view.weekendDate) { stepDay(delta * 7); return; }
   const next = state_view.index + delta;
   if (next < 0 || next >= state_view.weeks.length) return;
-  const dayIndex = Math.min(4, weekdayIndex(focusedDayISO()));
+  const dayIndex = Math.min(lastWeekdayIndex(state_view.weeks[next]), weekdayIndex(focusedDayISO()));
   renderWeek(next, { target: { weekIndex: next, dayIndex, ongoing: false, dayNav: true } });
-  if (innerWidth <= 860 && state_view.mobileFilter !== "all") scrollToDay(state_view.mobileFilter, false);
+  if (innerWidth <= 860 && state_view.mobileFilter !== "all") setDay(dayIndex, false);
 }
 function setDay(day, scroll = true) {
   // Depuis l'affichage isolé du week-end, un onglet ramène à la semaine.
   if (state_view.weekendDate && day !== state_view.mobileFilter) {
     if (day === "all") { renderWeek(state_view.index, { animate: false }); return; }
     const wanted = Number(day);
-    if (Number.isInteger(wanted) && wanted >= 0 && wanted <= 4) {
+    if (Number.isInteger(wanted) && wanted >= 0 && wanted <= lastWeekdayIndex(mondayOf(state_view.weekendDate))) {
       const wantedDate = addDaysISO(mondayOf(state_view.weekendDate), wanted);
       if (dayIsNavigable(wantedDate)) showDay(wantedDate, { animate: false });
       else renderWeek(state_view.index, { animate: false }); // semaine non publiée
       return;
     }
+  }
+  if (day !== "all") {
+    const wanted = Number(day);
+    if (!Number.isInteger(wanted) || wanted < 0 || wanted > lastWeekdayIndex(state_view.weekKey)) return;
   }
   state_view.mobileFilter = day === "all" ? "all" : Number(day);
   // La feuille de style a besoin de savoir si l'on regarde toute la semaine
@@ -3596,8 +3638,9 @@ function jumpToTarget(smooth = true) {
    On avance d'un vrai jour de calendrier : lundi → mardi, mais aussi
    lundi → dimanche (le week-end de la semaine d'avant), dimanche → lundi,
    vendredi → samedi… en changeant de semaine publiée quand il le faut.
-   Le week-end n'a pas de colonne dans les 5 jours ouvrés : il s'affiche
-   seul, en pleine largeur, avec les éventuels événements personnels du jour.
+   Le samedi avec cours officiel a sa colonne dans la semaine. Le week-end
+   sans cours officiel s'affiche seul, en pleine largeur, avec les éventuels
+   événements personnels du jour.
    ====================================================================== */
 function dayIsNavigable(iso) {
   const weeks = state_view.weeks;
@@ -3612,10 +3655,10 @@ function focusedDayISO() {
   if (state_view.weekendDate) return state_view.weekendDate;
   const monday = state_view.weekKey || state_view.weeks[0] || mondayOf(todayISO());
   const filter = state_view.mobileFilter;
-  let dayIndex = Number.isInteger(filter) && filter >= 0 && filter <= 4 ? filter : -1;
+  let dayIndex = Number.isInteger(filter) && filter >= 0 && filter <= 5 ? filter : -1;
   if (dayIndex < 0) {
     const t = state_view.target;
-    dayIndex = t && t.weekIndex === state_view.index && t.dayIndex >= 0 && t.dayIndex <= 4 ? t.dayIndex : 0;
+    dayIndex = t && t.weekIndex === state_view.index && t.dayIndex >= 0 && t.dayIndex <= 5 ? t.dayIndex : 0;
   }
   return addDaysISO(monday, dayIndex);
 }
@@ -3641,7 +3684,7 @@ function updateDayNav() {
   rememberDay(iso);
 }
 
-/** Week-end isolé : une seule colonne, sans cours officiel. */
+/** Week-end sans cours officiel : une seule colonne, événements personnels uniquement. */
 function renderWeekend(iso) {
   const dayIndex = weekdayIndex(iso);
   if (dayIndex < 5 || !state_view.weeks.length) return;
@@ -3665,6 +3708,9 @@ function renderWeekend(iso) {
   const grid = $("#grid");
   if (!grid) return;
   grid.classList.add("single");
+  grid.classList.remove("has-saturday");
+  const saturdayTab = $('.tab[data-day="5"]');
+  if (saturdayTab) saturdayTab.hidden = true;
   grid.innerHTML = `<section class="day weekend-day target" data-day="${dayIndex}"><header class="day-head"><div class="day-head-main"><div class="day-name">${escapeHtml(day.name)}</div><div class="day-date"><time datetime="${escapeHtml(iso)}">${escapeHtml(day.date)}</time></div></div><div class="day-tags"><span class="day-count${courses.length ? " has" : ""}">${courses.length ? `${courses.length} événement${courses.length > 1 ? "s" : ""}` : "libre"}</span></div></header><div class="day-body">${hourScaleHTML()}${currentTimeLine(day)}${content}</div></section>`;
   state_view.weekendDate = iso;
   state_view.weekKey = monday;
@@ -3686,8 +3732,8 @@ function renderWeekend(iso) {
 function showDay(iso, options = {}) {
   if (!dayIsNavigable(iso)) return;
   const dayIndex = weekdayIndex(iso);
-  if (dayIndex >= 5) { renderWeekend(iso); return; }
   const monday = mondayOf(iso);
+  if (dayIndex >= 5 && !(dayIndex === 5 && weekHasSaturday(monday))) { renderWeekend(iso); return; }
   const index = state_view.weeks.indexOf(monday);
   if (index < 0) return;
   const target = { weekIndex: index, dayIndex, ongoing: iso === todayISO(), dayNav: true };

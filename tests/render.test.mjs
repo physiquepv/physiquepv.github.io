@@ -79,13 +79,13 @@ const check = (condition, label) => {
 
 console.log("\n— état général —");
 check($("#grid .day") !== null, "la grille affiche des journées");
-check(window.document.querySelectorAll("#grid .day").length === 5, "5 colonnes (lundi → vendredi)");
+check(window.document.querySelectorAll("#grid .day").length === 5, "5 colonnes quand aucun cours du samedi n'est publié");
 const title = $("#weekTitle").textContent;
 console.log(`      titre affiché : ${title}`);
 const targetDay = $("#grid .day.target");
 check(targetDay !== null, "un jour est ciblé dès l'ouverture");
 const targetName = targetDay?.querySelector(".day-name")?.textContent;
-check(["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"].includes(targetName), `la destination est un jour ouvré (${targetName ?? "introuvable"})`);
+check(["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"].includes(targetName), `la destination est un jour de cours (${targetName ?? "introuvable"})`);
 const targetTime = targetDay?.querySelector(".day-date time");
 check(targetTime?.dateTime === "2026-10-12", "après la dernière séance du vendredi, lundi est affiché à l'ouverture");
 if (targetTime?.dateTime) {
@@ -223,6 +223,45 @@ window.dispatchEvent(new window.Event("online"));
 await wait(120);
 check(/Conférence spéciale démographie/.test($("#grid")?.textContent ?? ""), "le retour en ligne / sur l'onglet met à jour les matières directement dans l'emploi du temps");
 check($("#changeBanner") === null && !window.document.querySelector("#grid .card.removed"), "aucun bandeau ni cours en double après resynchronisation");
+
+console.log("\n— cours du samedi : apparaît et disparaît avec le planning officiel —");
+const saturdayMonday = window.eval("displayedWeekKey()");
+const saturdayISO = window.eval(`addDaysISO("${saturdayMonday}", 5)`);
+const saturdayEvent = {
+  id: "cours-samedi-auto",
+  start: `${saturdayISO}T09:40:00`,
+  end: `${saturdayISO}T11:10:00`,
+  description: "CM\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Algèbre linéaire 2 [LSMA302]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 [S3MIASHS]",
+  eventCategory: "CM",
+  backgroundColor: "#00FFFF",
+  modules: ["LSMA302"],
+};
+const withSaturday = JSON.parse(JSON.stringify(currentServedData));
+withSaturday.weeks[saturdayMonday].events.push(saturdayEvent);
+currentServedData = withSaturday;
+window.dispatchEvent(new window.Event("online"));
+await wait(120);
+check(window.document.querySelectorAll("#grid .day").length === 6, "la resynchronisation ajoute la colonne samedi sans rechargement");
+check($("#grid").classList.contains("has-saturday"), "la grille passe sur six colonnes");
+check($('.tab[data-day="5"]').hidden === false, "l'onglet samedi apparaît");
+check(/Analyse et Algèbre linéaire 2/.test($('#grid .day[data-day="5"]')?.textContent ?? ""), "le cours du samedi est affiché dans sa colonne");
+window.eval(`showDay("${saturdayISO}")`);
+check(window.eval("focusedDayISO()") === saturdayISO, "la navigation jour par jour atteint le samedi de cours");
+check($("#grid .day.weekend-day") === null, "un samedi de cours reste dans la grille de la semaine");
+window.dispatchEvent(new window.Event("beforeprint"));
+const saturdayPrint = $("#print").innerHTML;
+check(saturdayPrint.includes("<th>Samedi</th>"), "l'impression ajoute l'en-tête samedi quand nécessaire");
+check(saturdayPrint.includes("cours-samedi-auto") || /Analyse et Algèbre linéaire 2/.test(saturdayPrint), "l'impression conserve le cours du samedi");
+const withoutSaturday = JSON.parse(JSON.stringify(currentServedData));
+withoutSaturday.weeks[saturdayMonday].events = withoutSaturday.weeks[saturdayMonday].events.filter((event) => event.id !== saturdayEvent.id);
+currentServedData = withoutSaturday;
+window.dispatchEvent(new window.Event("online"));
+await wait(120);
+check(window.document.querySelectorAll("#grid .day").length === 5, "un cours du samedi retiré referme la colonne automatiquement");
+check($('.tab[data-day="5"]').hidden === true, "l'onglet samedi disparaît quand il n'y a plus de cours");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 14, 9, 0))") === "2026-11-14", "un samedi matin avec cours ouvre le samedi, pas le lundi");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 13, 19, 0))") === "2026-11-14", "vendredi soir, le prochain cours du samedi est ciblé");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 14, 13, 0))") === "2026-11-16", "après la dernière séance du samedi, on passe au lundi");
 
 console.log("\n— erreurs JavaScript —");
 check(errors.length === 0, `aucune erreur console (${errors.length})`);
