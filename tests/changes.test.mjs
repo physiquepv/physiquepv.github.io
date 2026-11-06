@@ -164,6 +164,7 @@ check(core.changeStatusLabel(oneOf("moved")) === "avant : 09:40 - 11:10", "le d�
 check(core.changeSentence(oneOf("moved")).includes("Jeudi 15 octobre · 14:00 - 15:30"), "la phrase indique le jour et le nouvel horaire");
 check(core.changeStatusLabel(oneOf("room")).includes("AMPHI G - FERMAT"), "le détail de salle est affiché");
 check(core.changeWhenLabel({ ...cancelled, date: "2026-10-12" }, "2026-10-12") === `Aujourd'hui · ${cancelled.time}`, "« Aujourd'hui » dans le libellé de date");
+check(core.changeWhenLabel({ date: "2026-11-14", time: "09:40 - 11:10" }, "2026-11-06") === "Samedi 14 novembre · 09:40 - 11:10", "un changement du samedi est daté « Samedi »");
 
 const td1Only = { kind: "added", date: "2026-10-12", time: "08:00 - 09:30", title: "Option TD 1", groups: ["S3MIASHS TD 1"] };
 const promo = { kind: "added", date: "2026-10-12", time: "08:00 - 09:30", title: "Conférence promo", groups: ["S3MIASHS"] };
