@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-05T11:41:24.040Z",
+  "generatedAt": "2026-11-06T11:39:53.774Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -39,31 +39,8 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "b759a1f1-91049",
+  "contentHash": "ca93eeb7-92027",
   "changes": [
-    {
-      "kind": "removed",
-      "date": "2026-10-06",
-      "startMin": 830,
-      "endMin": 920,
-      "time": "13:50 - 15:20",
-      "title": "Anglais UE2",
-      "type": "Annulation",
-      "room": "",
-      "cat": "anglais",
-      "groups": [
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5798251:8",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "13:50 - 15:20",
-        "room": "",
-        "type": "Annulation",
-        "cancelled": true
-      }
-    },
     {
       "kind": "room",
       "date": "2026-10-12",
@@ -634,6 +611,44 @@
       "eventId": "-1742255826:1073733534:17:5893798:13",
       "reason": "",
       "detectedAt": "2026-11-02T17:26:22.815Z",
+      "previous": null
+    },
+    {
+      "kind": "added",
+      "date": "2026-11-14",
+      "startMin": 580,
+      "endMin": 670,
+      "time": "09:40 - 11:10",
+      "title": "Analyse et Algèbre linéaire 2",
+      "type": "CM",
+      "room": "AMPHI G - FERMAT",
+      "cat": "maths",
+      "groups": [
+        "S3MIASHS",
+        "S3PHYSIQUE"
+      ],
+      "eventId": "-1742255826:1073733534:17:5909625:13",
+      "reason": "",
+      "detectedAt": "2026-11-06T11:39:53.774Z",
+      "previous": null
+    },
+    {
+      "kind": "added",
+      "date": "2026-11-14",
+      "startMin": 680,
+      "endMin": 770,
+      "time": "11:20 - 12:50",
+      "title": "Analyse et Algèbre linéaire 2",
+      "type": "CM",
+      "room": "AMPHI G - FERMAT",
+      "cat": "maths",
+      "groups": [
+        "S3MIASHS",
+        "S3PHYSIQUE"
+      ],
+      "eventId": "-1742255826:1073733534:17:5909627:13",
+      "reason": "",
+      "detectedAt": "2026-11-06T11:39:53.774Z",
       "previous": null
     },
     {
@@ -2170,7 +2185,7 @@
     },
     "2026-11-02": {
       "monday": "2026-11-02",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2332,7 +2347,7 @@
           "id": "-1742255826:1073733534:17:5784295:12",
           "start": "2026-11-05T11:20:00",
           "end": "2026-11-05T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2387,7 +2402,7 @@
     },
     "2026-11-09": {
       "monday": "2026-11-09",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2513,10 +2528,10 @@
           ]
         },
         {
-          "id": "-1742255826:1073733534:17:5784295:13",
+          "id": "-1742255826:1073733534:17:5909639:13",
           "start": "2026-11-12T11:20:00",
           "end": "2026-11-12T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2566,12 +2581,34 @@
           "modules": [
             "LSIN311"
           ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5909625:13",
+          "start": "2026-11-14T09:40:00",
+          "end": "2026-11-14T11:10:00",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "modules": [
+            "LSMA302"
+          ]
+        },
+        {
+          "id": "-1742255826:1073733534:17:5909627:13",
+          "start": "2026-11-14T11:20:00",
+          "end": "2026-11-14T12:50:00",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "eventCategory": "CM",
+          "backgroundColor": "#00FFFF",
+          "modules": [
+            "LSMA302"
+          ]
         }
       ]
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2700,7 +2737,7 @@
           "id": "-1742255826:1073733534:17:5784295:14",
           "start": "2026-11-19T11:20:00",
           "end": "2026-11-19T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2755,7 +2792,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2895,7 +2932,7 @@
           "id": "-1742255826:1073733534:17:5784295:15",
           "start": "2026-11-26T11:20:00",
           "end": "2026-11-26T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2939,7 +2976,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3046,7 +3083,7 @@
           "id": "-1742255826:1073733534:17:5784295:16",
           "start": "2026-12-03T11:20:00",
           "end": "2026-12-03T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3392,21 +3429,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3471,7 +3508,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-05T11:41:24.040Z",
+      "fetchedAt": "2026-11-06T11:39:53.774Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
