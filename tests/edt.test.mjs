@@ -212,6 +212,11 @@ test("parseEvent isole les noms d'enseignants CELCAT (mode LDAP) sans fausser sa
   assert.equal(parsed.room, "2206 - FERMAT", "GERMAIN / LASALLE ne deviennent pas des salles");
   assert.equal(parsed.cancelled, false, "FERMÉ ne déclenche pas une fausse annulation");
   assert.deepEqual(parsed.groups, ["L2 MIASHS S3 TD 2 [S3MIASHS TD 2]"], "[MFERME] ne pollue pas les groupes étudiants");
+  assert.equal(parsed.teacher, "", "aucun champ teacher : rien n'est affiché (la page n'invente rien)");
+
+  // La synchro publie les noms dans le champ structuré `teacher` (prénom nom).
+  const withTeacher = core.parseEvent({ ...authedRaw, teacher: "Paul GERMAIN / Marc FERMÉ" });
+  assert.equal(withTeacher.teacher, "Paul GERMAIN / Marc FERMÉ", "le champ teacher est repris tel quel sur la carte");
 
   const cancelledWithNote = {
     ...authedRaw,

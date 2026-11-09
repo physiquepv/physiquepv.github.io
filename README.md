@@ -12,7 +12,7 @@ edt.uvsq.fr (CELCAT)
         ▼
 .github/workflows/edt-sync.yml          toutes les 15 min (lun–sam) + dim + 1×/jour
         │  scripts/sync-edt.mjs ──▶ scripts/edt-changes.mjs
-        │  (session LDAP chiffrée via secrets GitHub, nettoyage RGPD, diff)
+        │  (session LDAP chiffrée via secrets GitHub, extraction des enseignants, diff)
         ▼
 data/edt.json                           planning du groupe + journal des `changes`
         │  fetch same-origin (au chargement + au retour sur l'onglet)
@@ -24,8 +24,10 @@ index.html                              filtrage du TD, bandeau « ce qui a chan
 1. **GitHub Actions** ouvre une session sur `edt.uvsq.fr/LdapLogin` à l'aide des
    secrets chiffrés `CELCAT_USERNAME` et `CELCAT_PASSWORD` (depuis octobre 2026,
    l'UVSQ bloque l'accès anonyme à CELCAT), interroge le groupe `S3MIASHS` (ainsi
-   que `S4MIASHS` sur les semaines de charnière de janvier), retire toute mention
-   nominative d'enseignant (dépôt public / RGPD) et écrit le planning dans
+   que `S4MIASHS` sur les semaines de charnière de janvier), extrait le nom des
+   enseignants dans un champ structuré `teacher` (« Prénom NOM », affiché sur
+   chaque carte, et au moment de l'impression) — les lignes nominatives sont
+   retirées du texte des descriptions avant publication — et écrit le planning dans
    `data/edt.json`. Au passage, chaque séance est comparée à la version déjà
    publiée : annulation (« prof absent »), nouveau cours, cours retiré, salle ou
    horaire modifiés sont consignés dans `changes`, et le commit de synchro les
@@ -327,10 +329,10 @@ officielles ne se suppriment plus : un clic ouvre leur page eCampus.
 
 ## Limites connues
 
-- CELCAT ne fournit pas le **nom du professeur** dans le flux « groupe » : la page
-  signale « cours annulé » avec la matière, le jour et l'horaire, et affiche le
-  motif (« enseignant absent »…) quand l'université en publie un — mais elle ne
-  peut pas nommer la personne absente.
+- Le **nom du professeur** (« Prénom NOM ») s'affiche sur la carte (et à l'impression)
+  quand CELCAT publie la ligne nominative en session authentifiée ; il est absent
+  sinon — la page n'invente rien. Sur les petits créneaux (cartes compactes), seule
+  la salle et l'intitulé restent, le nom réapparaît en infobulle au survol.
 - Un changement détecté reste affiché jusqu'à ce qu'il soit marqué « ✓ Vu » : le
   bandeau n'est pas une notification poussée (pas de mail ni de push).
 - La fraîcheur dépend de GitHub Actions (délai de quelques minutes) et du cache

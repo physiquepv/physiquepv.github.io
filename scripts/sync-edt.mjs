@@ -875,10 +875,66 @@ function isStaffFragment(fragment) {
 }
 
 /**
+ * Nomenclature des lignes nominatives (« NOM, Prénom ») publiées par CELCAT en
+ * session authentifiée. Le responsable du dépôt a choisi d'AFFICHER le nom des
+ * enseignants sur les cartes du site : les noms sont extraits dans un champ
+ * structuré `teacher` (« Prénom NOM »), retirés du texte de la `description`
+ * (lecture plus propre, et la page ne classe pas un patronyme comme une salle).
+ * Les motifs (« Enseignant absent »), salles, matières et groupes restent
+ * strictement intacts.
+ */
+
+const STAFF_PREFIX_RE = /^\s*enseignant(?:e)?\s*[:：]\s*/i;
+
+/**
+ * Normalise un fragment CELCAT désignant un·e enseignant·e en « Prénom NOM ».
+ * Tolère un préfixe « Enseignant: »/« Enseignante: » et un suffixe entre
+ * crochets (« FERMÉ, Marc [MFERME] »). Renvoie null sinon.
+ */
+function normalizeStaffFragment(fragment) {
+  const clean = decodeMiniEntities(String(fragment ?? ""))
+    .replace(/<br\s*\/?>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!clean) return null;
+  const body = clean.replace(STAFF_PREFIX_RE, "").replace(/\s*\[[^\]]*\]\s*$/, "").trim();
+  if (!body || /\d/.test(body)) return null;
+  if (!STAFF_LINE_RE.test(body)) return null;
+  // « Cours annulé, enseignant absent » : un motif, pas une personne.
+  if (NON_STAFF_WORD_RE.test(body)) return null;
+  const comma = body.indexOf(",");
+  const last = body.slice(0, comma).replace(/\s+/g, " ").trim();
+  const first = body.slice(comma + 1).replace(/\s+/g, " ").trim();
+  if (!last || !first) return null;
+  return `${first} ${last}`;
+}
+
+/**
+ * Noms des enseignant·es cités par un événement CELCAT, en « Prénom NOM »,
+ * dédupliqués, séparés par « / » (un créneau peut être co-animé). Chaîne vide
+ * si aucun nom publiable.
+ */
+export function extractStaffNames(description) {
+  if (typeof description !== "string" || description.indexOf(",") === -1) return "";
+  const names = [];
+  const seen = new Set();
+  for (const fragment of description.split(/<br\s*\/?>/i)) {
+    const name = normalizeStaffFragment(fragment);
+    if (name && !seen.has(name)) {
+      seen.add(name);
+      names.push(name);
+    }
+  }
+  return names.join(" / ");
+}
+
+/**
  * Retire uniquement les lignes nominatives d'enseignants (« NOM, Prénom ») que
- * CELCAT ajoute en session authentifiée : le dépôt GitHub est public (RGPD), et
- * la page n'affiche pas le nom des enseignants. Les motifs (« Enseignant absent »),
- * salles, matières et groupes restent strictement intacts.
+ * CELCAT ajoute en session authentifiée : elles sont déjà extraites dans le
+ * champ structuré `teacher`, les laisser dans la `description` doublerait
+ * l'affichage. Les motifs (« Enseignant absent »), salles, matières et groupes
+ * restent strictement intacts.
  */
 export function stripStaffLines(description) {
   if (typeof description !== "string" || !description.includes(",")) return description;
@@ -898,7 +954,7 @@ export function stripStaffLines(description) {
   return modified ? cleaned.join("") : description;
 }
 
-/** Champs lus par la page. Le reste (sites, faculté, couleurs de texte…) alourdit le dépôt sans changer l'affichage. */
+/** Champs lus par la page (+ `teacher`, extrait des lignes nominatives). Le reste (sites, faculté, couleurs de texte…) alourdit le dépôt sans changer l'affichage. */
 function slimEvent(event) {
   const keep = [
     "id",
@@ -909,12 +965,15 @@ function slimEvent(event) {
     "backgroundColor",
     "modules",
   ];
+  const rawDescription = event.description != null ? String(event.description) : "";
+  const teacher = rawDescription ? extractStaffNames(rawDescription) : "";
   const out = {};
   for (const key of keep) {
     if (event[key] !== undefined && event[key] !== null && event[key] !== "") {
       out[key] = key === "description" ? stripStaffLines(String(event[key])) : event[key];
     }
   }
+  if (teacher) out.teacher = teacher;
   return out;
 }
 
