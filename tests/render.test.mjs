@@ -263,6 +263,30 @@ check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 14, 9, 0))") === "2
 check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 13, 19, 0))") === "2026-11-14", "vendredi soir, le prochain cours du samedi est ciblé");
 check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 14, 13, 0))") === "2026-11-16", "après la dernière séance du samedi, on passe au lundi");
 
+console.log("\n— nom du prof sur la carte —");
+const teacherMonday = window.eval("displayedWeekKey()");
+const withTeacher = JSON.parse(JSON.stringify(currentServedData));
+withTeacher.weeks[teacherMonday].events.push({
+  id: "live-teacher-demo",
+  start: `${teacherMonday}T17:45:00`,
+  end: `${teacherMonday}T19:00:00`,
+  description: "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI B - DESCARTES\r\n\r\n<br />\r\n\r\nLSSO310N-Séminaire démographie [LSSO310N]\r\n",
+  eventCategory: "CM",
+  backgroundColor: "#00FFFF",
+  modules: ["LSSO310N"],
+  teacher: "Sarah Nandnaba",
+});
+currentServedData = withTeacher;
+window.dispatchEvent(new window.Event("online"));
+await wait(120);
+const teacherCard = window.document.querySelector('#grid .card[data-id="live-teacher-demo"]');
+check(Boolean(teacherCard), "le cours de démonstration est affiché après resynchronisation");
+const teacherLine = teacherCard?.querySelector(".card-teacher");
+check(teacherLine?.textContent?.includes("Sarah Nandnaba") ?? false, "le nom du prof est affiché sur la carte");
+check(/Enseignant/.test(teacherLine?.getAttribute("title") ?? ""), "l'infobulle précise qu'il s'agit de l'enseignant");
+window.dispatchEvent(new window.Event("beforeprint"));
+check(/Sarah Nandnaba/.test($("#print").innerHTML), "l'impression reprend le nom du prof");
+
 console.log("\n— erreurs JavaScript —");
 check(errors.length === 0, `aucune erreur console (${errors.length})`);
 errors.slice(0, 5).forEach((error) => console.log(`      ${error}`));

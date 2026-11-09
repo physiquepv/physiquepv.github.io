@@ -3,8 +3,9 @@ name: Sync emploi du temps UVSQ
 # Récupère le planning officiel CELCAT (edt.uvsq.fr) et l'écrit dans data/edt.json.
 # Depuis octobre 2026, edt.uvsq.fr exige une session LDAP UVSQ (/LdapLogin) :
 # le script ouvre cette session à partir des secrets GitHub Actions
-# CELCAT_USERNAME et CELCAT_PASSWORD, récupère les créneaux du groupe (aucune
-# donnée nominative n'est écrite dans le dépôt) et publie data/edt.json.
+# CELCAT_USERNAME et CELCAT_PASSWORD. Les noms d'enseignants sont publiés sur le
+# site (champ structuré `teacher`, choix assumé du mainteneur) ; ils sont retirés
+# du texte libre des descriptions avant publication.
 
 on:
   schedule:

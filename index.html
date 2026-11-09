@@ -808,6 +808,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 }
 .card-title{color:var(--text);font-size:11.5px;font-weight:600;line-height:1.3;letter-spacing:-.005em;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
 .card-room{overflow:hidden;color:var(--muted);font-size:10px;font-weight:450;line-height:1.35;white-space:nowrap;text-overflow:ellipsis}
+.card-teacher{overflow:hidden;color:var(--muted);font-size:9.5px;font-weight:500;line-height:1.35;white-space:nowrap;text-overflow:ellipsis;letter-spacing:.005em}
 .card-tag{
   display:inline-flex;
   align-items:center;
@@ -862,6 +863,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 .card.tiny{padding:2px 6px}
 .card.tiny .card-title{font-size:10.5px;-webkit-line-clamp:1}
 .card.tiny .course-type{display:none}
+.card.tiny .card-teacher{display:none}
 
 /* couleurs par matière */
 .card.maths{border-left-color:var(--maths);background:color-mix(in srgb,var(--maths-bg) 88%,var(--surface))}
@@ -1413,11 +1415,13 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   .card.compact .card-room,.card.compact .card-tag{display:block}
   .card-title{font-size:12.5px;line-height:1.35;-webkit-line-clamp:3}
   .card-room{font-size:11px;white-space:normal;overflow:visible;text-overflow:clip}
+  .card-teacher{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .card-tag{font-size:9.5px;white-space:normal}
   .card-note{font-size:10px}
   .card.cancelled::before{display:none}
   .card-flag{display:inline-flex;align-self:flex-start;margin-top:1px;padding:0 5px;color:#fff;font-size:8.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;background:#dc2626}
   .card.tiny .course-type{display:none}
+  .card.tiny .card-teacher{display:block}
   .card.tiny .card-title{-webkit-line-clamp:3;font-size:12.5px}
   .card.running::after{top:8px;right:8px}
   .day-foot{display:flex;align-items:center;gap:7px;margin-top:auto;padding:11px 4px 2px;color:var(--muted);font-size:10.5px;font-weight:600;letter-spacing:.01em}
@@ -1963,6 +1967,8 @@ function parseEventUncached(raw) {
     room: rooms.join(" / "),
     groups: buckets.group,
     note: notes,
+    // Nom(s) publié(s) par la synchro (champ structuré de data/edt.json).
+    teacher: decodeEntities(String(raw.teacher ?? "")).replace(/\s+/g, " ").trim(),
     cancelled,
     source: "live",
   };
@@ -2179,6 +2185,7 @@ function liveCourse(item, dateISO) {
     ghost: false,
     note: item.note,
     groups: item.groups,
+    teacher: item.teacher ?? "",
     source: "live",
   };
 }
@@ -2846,6 +2853,7 @@ function isCourseRunning(item, day) {
 const BARE_NOTE_LABEL = /^(annul[ée]e?s?|annulation|supprim[ée]e?s?|report[ée]e?s?|absence|absent)$/i;
 
 const PIN_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true" style="width:9px;height:9px;flex:none;display:inline-block;vertical-align:-1px;margin-right:3px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M8 14s4.4-4.1 4.4-7A4.4 4.4 0 0 0 3.6 7c0 2.9 4.4 7 4.4 7Z"/><circle cx="8" cy="7" r="1.5"/></svg>';
+const TEACHER_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true" style="width:9px;height:9px;flex:none;display:inline-block;vertical-align:-1px;margin-right:3px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round"><circle cx="8" cy="5.4" r="2.5"/><path d="M3.1 13.4c.9-2.6 2.8-3.9 4.9-3.9s4 1.3 4.9 3.9"/></svg>';
 
 function cardHTML(item, day, lane = { lane: 0, lanes: 1 }) {
   const p = position(item.time);
@@ -2866,8 +2874,9 @@ function cardHTML(item, day, lane = { lane: 0, lanes: 1 }) {
       return fragment && clean !== type && !BARE_NOTE_LABEL.test(clean);
     })
     .join(" · ");
-  const details = [item.title, item.time, item.room, item.tag, note].filter(Boolean).join(" — ");
+  const details = [item.title, item.time, item.room, item.teacher, item.tag, note].filter(Boolean).join(" — ");
   const room = item.room ? `<div class="card-room" title="${escapeHtml(item.room)}">${PIN_ICON}${escapeHtml(item.room)}</div>` : "";
+  const teacher = item.teacher ? `<div class="card-teacher" title="Enseignant·e : ${escapeHtml(item.teacher)}">${TEACHER_ICON}${escapeHtml(item.teacher)}</div>` : "";
   const tag = item.tag ? `<div class="card-tag ${escapeHtml(item.tagType || "")}">${escapeHtml(item.tag)}</div>` : "";
   const del = item.source === "personal" ? `<button class="card-delete" data-id="${escapeHtml(item.id)}" aria-label="Supprimer cet événement">×</button>` : "";
   // L'heure est découpée en deux lignes sur téléphone (début / fin) : elle tient
@@ -2887,7 +2896,7 @@ function cardHTML(item, day, lane = { lane: 0, lanes: 1 }) {
     : "";
   const hint = item.source === "personal" ? "maintenir ou cliquer sur × pour supprimer" : link ? "cliquer pour ouvrir la page eCampus" : "";
   const tooltip = hint ? `${details} — ${hint}` : details;
-  return `<${tagName} class="${classes.join(" ")}${link ? " is-link" : ""}"${linkAttrs} data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="--top:${p.top}%;--h:${p.height}%;--lane:${lane.lane};--lanes:${lane.lanes}" ${link ? "" : 'tabindex="0" '}title="${escapeHtml(tooltip)}"><div class="card-time">${timeRange}<span class="card-meta"><span class="course-type">${escapeHtml(item.type)}</span>${extIcon}</span></div><div class="card-main"><span class="card-kind">${escapeHtml(item.type)}</span><div class="card-title">${escapeHtml(item.title)}</div>${room}${flag}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}</div>${del}</${tagName}>`;
+  return `<${tagName} class="${classes.join(" ")}${link ? " is-link" : ""}"${linkAttrs} data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time)}" data-title="${escapeHtml(item.title)}" data-cat="${escapeHtml(item.cat)}" style="--top:${p.top}%;--h:${p.height}%;--lane:${lane.lane};--lanes:${lane.lanes}" ${link ? "" : 'tabindex="0" '}title="${escapeHtml(tooltip)}"><div class="card-time">${timeRange}<span class="card-meta"><span class="course-type">${escapeHtml(item.type)}</span>${extIcon}</span></div><div class="card-main"><span class="card-kind">${escapeHtml(item.type)}</span><div class="card-title">${escapeHtml(item.title)}</div>${room}${teacher}${flag}${tag}${note ? `<div class="card-note">${escapeHtml(note)}</div>` : ""}</div>${del}</${tagName}>`;
 }
 
 /**
@@ -3174,7 +3183,8 @@ function printCourse(item) {
   const title = link
     ? `<a class="p-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>`
     : escapeHtml(item.title);
-  return `<div class="${classes.join(" ")}"><span class="p-time">${escapeHtml(item.time)}</span><span class="p-type"> ${escapeHtml(item.type)}${flag}</span><br><b>${title}</b><br><span class="p-room">${escapeHtml(item.room || "lieu non précisé")} • ${escapeHtml(item.tag || "")}</span></div>`;
+  const place = [item.room || "lieu non précisé", item.tag || "", item.teacher || ""].filter(Boolean).join(" • ");
+  return `<div class="${classes.join(" ")}"><span class="p-time">${escapeHtml(item.time)}</span><span class="p-type"> ${escapeHtml(item.type)}${flag}</span><br><b>${title}</b><br><span class="p-room">${escapeHtml(place)}</span></div>`;
 }
 
 function buildPrintPage(pageWeeks, page, total, period) {

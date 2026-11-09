@@ -78,6 +78,7 @@ const {
   lastDetectedChanges,
   CelcatAuthError,
   stripStaffLines,
+  extractStaffNames,
   extractVerificationToken,
   todayParis,
   addDays,
@@ -214,9 +215,10 @@ assert.ok(calls <= 5, `détection immédiate sans marteler CELCAT (${calls} appe
 assert.equal(await readFile(outFile, "utf8"), snapshot, "data/edt.json reste intact");
 console.log(`  ✓ accès anonyme fermé (/LdapLogin multi-redirections) détecté immédiatement (${calls} appels, code 2)`);
 
-// 2. Session LDAP complète : anti-forgery + cookies par saut + nettoyage RGPD
-//    des noms d'enseignants + fusion S3MIASHS / S4MIASHS en janvier + reconnexion
-//    automatique si la session expire en cours de route.
+// 2. Session LDAP complète : anti-forgery + cookies par saut + extraction des
+//    noms d'enseignants (champ structuré `teacher`) + fusion S3MIASHS /
+//    S4MIASHS en janvier + reconnexion automatique si la session expire en
+//    cours de route.
 assert.equal(
   extractVerificationToken('<input type="hidden" value="tok-value-first" name="__RequestVerificationToken" />'),
   "tok-value-first",
@@ -225,8 +227,19 @@ assert.equal(
 const descWithStaff =
   "CM\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de données [LSIN311]\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nDUPONT, Jean<br />SAINT-GERMAIN, Marie<br />FERM&#201;, Marc [MFERME]\r\n\r\n<br />\r\n\r\nCours annulé, enseignant absent\r\n";
 const cleanedDesc = stripStaffLines(descWithStaff);
-assert.ok(!/DUPONT|SAINT-GERMAIN|MFERME|FERM&#201;|FERMÉ/.test(cleanedDesc), "les noms d'enseignants ne sont jamais écrits dans le dépôt public");
+assert.ok(!/DUPONT|SAINT-GERMAIN|MFERME|FERM&#201;|FERMÉ/.test(cleanedDesc), "les noms d'enseignants restent hors des descriptions publiées");
 assert.ok(/Cours annulé, enseignant absent/.test(cleanedDesc), "les remarques avec virgule sont intégralement conservées");
+assert.equal(
+  extractStaffNames(descWithStaff),
+  "Jean DUPONT / Marie SAINT-GERMAIN / Marc FERMÉ",
+  "les lignes nominatives sont extraites en « Prénom NOM », entités décodées, code entre crochets retiré",
+);
+assert.equal(
+  extractStaffNames("TD\r\n\r\n<br />\r\n\r\n2206 - FERMAT\r\n\r\n<br />\r\n\r\nEnseignant: Nandnaba, Sarah\r\n"),
+  "Sarah Nandnaba",
+  "le préfixe « Enseignant: » du CELCAT est compris",
+);
+assert.equal(extractStaffNames("CM\r\n\r\n<br />\r\n\r\nCours annulé, enseignant absent\r\n"), "", "un motif d'absence n'est pas une personne");
 
 let loginPosts = 0;
 let expireOnce = true;
@@ -355,11 +368,20 @@ assert.ok(
   authedOut.weeks["2027-01-04"].events.some((e) => e.id === "s4-2027-01-04"),
   "les premiers cours de S4MIASHS de janvier sont fusionnés dès qu'ils existent",
 );
+const authedEvents = Object.values(authedOut.weeks).flatMap((week) => week.events ?? []);
 assert.ok(
-  !JSON.stringify(authedOut).includes("DUPONT"),
-  "aucun nom d'enseignant n'est présent dans data/edt.json",
+  !authedEvents.map((e) => e.description ?? "").join(" ").match(/DUPONT|SAINT-GERMAIN|MFERME|FERM&#201;|FERMÉ/),
+  "aucun nom d'enseignant ne subsiste dans les descriptions de data/edt.json",
 );
-console.log("  ✓ connexion LDAP, reprise sur session expirée, nettoyage RGPD et fusion S3+S4 réussis");
+assert.ok(
+  authedEvents.some((e) => e.teacher === "Jean DUPONT / Marie SAINT-GERMAIN / Marc FERMÉ"),
+  "les noms d'enseignants sont publiés dans le champ structuré `teacher` (décision d'affichage du mainteneur)",
+);
+assert.ok(
+  authedEvents.filter((e) => e.id === "s4-2027-01-04").every((e) => e.teacher === "Jean DUPONT"),
+  "le créneau S4 de janvier ne retient que son enseignant",
+);
+console.log("  ✓ connexion LDAP, reprise sur session expirée, enseignants publiés via le champ teacher et fusion S3+S4 réussis");
 
 // 3. Mauvais mot de passe : 1 seule tentative (jamais de retry qui bloquerait le compte ENT)
 loginPosts = 0;
