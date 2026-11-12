@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-09T09:59:40.325Z",
+  "generatedAt": "2026-11-12T11:57:03.945Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -29,54 +29,18 @@
   ],
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
-    "2026-08-24",
-    "2026-08-31",
-    "2026-09-07",
-    "2026-09-14",
-    "2026-09-21",
-    "2026-09-28",
-    "2026-10-05",
-    "2026-10-12",
-    "2026-10-19",
-    "2026-10-26",
-    "2026-11-02",
     "2026-11-09",
     "2026-11-16",
     "2026-11-23",
     "2026-11-30",
     "2026-12-07",
-    "2026-12-14",
     "2026-12-21",
     "2026-12-28",
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "e0df6ed6-96600",
+  "contentHash": "ba0e7118-96496",
   "changes": [
-    {
-      "kind": "room",
-      "date": "2026-10-12",
-      "startMin": 1030,
-      "endMin": 1120,
-      "time": "17:10 - 18:40",
-      "title": "Initiation aux bases de données",
-      "type": "TD Cartable Numérique",
-      "room": "ALSACE - DESCARTES",
-      "cat": "info",
-      "groups": [
-        "S3MIASHS TD 1",
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5883572:9",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "17:10 - 18:40",
-        "room": "2206 - FERMAT",
-        "type": "TD Cartable Numérique",
-        "cancelled": false
-      }
-    },
     {
       "kind": "removed",
       "date": "2026-10-13",
@@ -2573,7 +2537,7 @@
     },
     "2026-11-09": {
       "monday": "2026-11-09",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2581,7 +2545,7 @@
           "id": "-1742255826:1073733534:17:5784284:13",
           "start": "2026-11-09T09:40:00",
           "end": "2026-11-09T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2593,7 +2557,7 @@
           "id": "-1742255826:1073733534:17:5845339:13",
           "start": "2026-11-09T11:20:00",
           "end": "2026-11-09T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -2713,7 +2677,7 @@
           "id": "-1742255826:1073733534:17:5909639:13",
           "start": "2026-11-12T11:20:00",
           "end": "2026-11-12T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2737,7 +2701,7 @@
           "id": "-1742255826:1073733534:17:5855063:13",
           "start": "2026-11-13T09:40:00",
           "end": "2026-11-13T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -2772,7 +2736,7 @@
           "id": "-1742255826:1073733534:17:5909625:13",
           "start": "2026-11-14T09:40:00",
           "end": "2026-11-14T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2783,7 +2747,7 @@
           "id": "-1742255826:1073733534:17:5909627:13",
           "start": "2026-11-14T11:20:00",
           "end": "2026-11-14T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2794,7 +2758,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2802,7 +2766,7 @@
           "id": "-1742255826:1073733534:17:5784284:14",
           "start": "2026-11-16T09:40:00",
           "end": "2026-11-16T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2814,7 +2778,7 @@
           "id": "-1742255826:1073733534:17:5845339:14",
           "start": "2026-11-16T11:20:00",
           "end": "2026-11-16T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -2898,7 +2862,7 @@
           "id": "-1742255826:1073733534:17:5780212:14",
           "start": "2026-11-18T09:40:00",
           "end": "2026-11-18T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -2934,7 +2898,7 @@
           "id": "-1742255826:1073733534:17:5784295:14",
           "start": "2026-11-19T11:20:00",
           "end": "2026-11-19T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -2958,7 +2922,7 @@
           "id": "-1742255826:1073733534:17:5855063:14",
           "start": "2026-11-20T09:40:00",
           "end": "2026-11-20T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -2993,7 +2957,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3001,7 +2965,7 @@
           "id": "-1742255826:1073733534:17:5784284:15",
           "start": "2026-11-23T09:40:00",
           "end": "2026-11-23T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3013,7 +2977,7 @@
           "id": "-1742255826:1073733534:17:5845339:15",
           "start": "2026-11-23T11:20:00",
           "end": "2026-11-23T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3097,7 +3061,7 @@
           "id": "-1742255826:1073733534:17:5780212:15",
           "start": "2026-11-25T09:40:00",
           "end": "2026-11-25T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3145,7 +3109,7 @@
           "id": "-1742255826:1073733534:17:5784295:15",
           "start": "2026-11-26T11:20:00",
           "end": "2026-11-26T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3169,7 +3133,7 @@
           "id": "-1742255826:1073733534:17:5855063:15",
           "start": "2026-11-27T09:40:00",
           "end": "2026-11-27T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3193,7 +3157,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3201,7 +3165,7 @@
           "id": "-1742255826:1073733534:17:5784284:16",
           "start": "2026-11-30T09:40:00",
           "end": "2026-11-30T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3213,7 +3177,7 @@
           "id": "-1742255826:1073733534:17:5845339:16",
           "start": "2026-11-30T11:20:00",
           "end": "2026-11-30T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3261,7 +3225,7 @@
           "id": "-1742255826:1073733534:17:5780212:16",
           "start": "2026-12-02T09:40:00",
           "end": "2026-12-02T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3309,7 +3273,7 @@
           "id": "-1742255826:1073733534:17:5784295:16",
           "start": "2026-12-03T11:20:00",
           "end": "2026-12-03T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3333,7 +3297,7 @@
           "id": "-1742255826:1073733534:17:5855063:16",
           "start": "2026-12-04T09:40:00",
           "end": "2026-12-04T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3357,7 +3321,7 @@
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3365,7 +3329,7 @@
           "id": "-1742255826:1073733534:17:5784284:17",
           "start": "2026-12-07T09:40:00",
           "end": "2026-12-07T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\n2203 - FERMAT [Salle de TD]\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3377,7 +3341,7 @@
           "id": "-1742255826:1073733534:17:5845339:17",
           "start": "2026-12-07T11:20:00",
           "end": "2026-12-07T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\n2203 - FERMAT\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3425,7 +3389,7 @@
           "id": "-1742255826:1073733534:17:5780212:17",
           "start": "2026-12-09T09:40:00",
           "end": "2026-12-09T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3449,7 +3413,7 @@
           "id": "-1742255826:1073733534:17:5784295:17",
           "start": "2026-12-10T11:20:00",
           "end": "2026-12-10T12:50:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3473,7 +3437,7 @@
           "id": "-1742255826:1073733534:17:5855063:17",
           "start": "2026-12-11T09:40:00",
           "end": "2026-12-11T12:50:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 PHYS TD02 OPTION ME312/PH302N [S3PHYTDOP-02B]\r\n\r\n<br />\r\n\r\nG105 - GERMAIN\r\n\r\n<br />\r\n\r\nLSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "TD",
           "backgroundColor": "#FFFF00",
           "modules": [
@@ -3660,21 +3624,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3719,7 +3683,7 @@
           "id": "-1742255826:1073733534:17:5898042:21",
           "start": "2027-01-08T09:30:00",
           "end": "2027-01-08T12:10:00",
-          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI BERTIN - BUFFON (255 / 126)\r\n\r\n<br />\r\n\r\nEXAMEN L2 SESSION 1 [EXAMEN L2 SESSION 1]<br />LSMA302-Analyse et Alg&#232;bre lin&#233;aire 2  [LSMA302]\r\n",
+          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]<br />L2 Physique S3 ( S3 PHYSIQUE ) [S3PHYSIQUE]\r\n\r\n<br />\r\n\r\nAMPHI BERTIN - BUFFON (255 / 126)\r\n\r\n<br />\r\n\r\nEXAMEN L2 SESSION 1 [EXAMEN L2 SESSION 1]<br />LSMA302-Analyse 2 et Alg&#232;bre lin&#233;aire 2 [LSMA302]\r\n",
           "eventCategory": "Examen Session 1",
           "backgroundColor": "#FF00FF",
           "modules": [
@@ -3731,7 +3695,7 @@
           "id": "-1742255826:1073733534:17:5907403:21",
           "start": "2027-01-08T14:00:00",
           "end": "2027-01-08T16:00:00",
-          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI F - FERMAT (120 / 65)\r\n\r\n<br />\r\n\r\nLSSO310N-LSSO310N - Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI F - FERMAT (120 / 65)\r\n\r\n<br />\r\n\r\nLSSO310N-Sociologie : d&#233;mographie [LSSO310N]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "Examen Session 1",
           "backgroundColor": "#FF00FF",
           "modules": [
@@ -3743,7 +3707,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-09T09:59:40.325Z",
+      "fetchedAt": "2026-11-12T11:57:03.945Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
