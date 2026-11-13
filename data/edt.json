@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-12T19:24:02.192Z",
+  "generatedAt": "2026-11-13T11:40:12.164Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -39,55 +39,8 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "da998232-97047",
+  "contentHash": "bc36429e-95802",
   "changes": [
-    {
-      "kind": "removed",
-      "date": "2026-10-13",
-      "startMin": 830,
-      "endMin": 920,
-      "time": "13:50 - 15:20",
-      "title": "Anglais UE2",
-      "type": "Annulation",
-      "room": "",
-      "cat": "anglais",
-      "groups": [
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5798251:9",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "13:50 - 15:20",
-        "room": "",
-        "type": "Annulation",
-        "cancelled": true
-      }
-    },
-    {
-      "kind": "removed",
-      "date": "2026-10-13",
-      "startMin": 1030,
-      "endMin": 1120,
-      "time": "17:10 - 18:40",
-      "title": "Initiation aux bases de données",
-      "type": "TD Cartable Numérique",
-      "room": "2104 - FERMAT",
-      "cat": "info",
-      "groups": [
-        "S3MIASHS TD 1",
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5883571:9",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "17:10 - 18:40",
-        "room": "2104 - FERMAT",
-        "type": "TD Cartable Numérique",
-        "cancelled": false
-      }
-    },
     {
       "kind": "added",
       "date": "2026-10-15",
@@ -839,6 +792,31 @@
     },
     {
       "kind": "removed",
+      "date": "2026-12-07",
+      "startMin": 1030,
+      "endMin": 1120,
+      "time": "17:10 - 18:40",
+      "title": "Initiation aux bases de données",
+      "type": "Contrôle continu",
+      "room": "AMPHI D - DESCARTES / AMPHI E - DESCARTES / AMPHI J - FERMAT",
+      "cat": "info",
+      "groups": [
+        "S3LDDMP",
+        "S3MATHS",
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5914210:17",
+      "reason": "",
+      "detectedAt": "2026-11-13T11:40:12.164Z",
+      "previous": {
+        "time": "17:10 - 18:40",
+        "room": "AMPHI D - DESCARTES / AMPHI E - DESCARTES / AMPHI J - FERMAT",
+        "type": "Contrôle continu",
+        "cancelled": false
+      }
+    },
+    {
+      "kind": "removed",
       "date": "2026-12-09",
       "startMin": 1030,
       "endMin": 1120,
@@ -881,6 +859,31 @@
       "reason": "",
       "detectedAt": "2026-11-12T19:24:02.192Z",
       "previous": null
+    },
+    {
+      "kind": "removed",
+      "date": "2026-12-10",
+      "startMin": 1030,
+      "endMin": 1120,
+      "time": "17:10 - 18:40",
+      "title": "Initiation aux bases de données",
+      "type": "Contrôle continu",
+      "room": "AMPHI BERTIN - BUFFON / AMPHI D - DESCARTES / AMPHI E - DESCARTES",
+      "cat": "info",
+      "groups": [
+        "S3LDDMP",
+        "S3MATHS",
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5914250:17",
+      "reason": "",
+      "detectedAt": "2026-11-13T11:40:12.164Z",
+      "previous": {
+        "time": "17:10 - 18:40",
+        "room": "AMPHI BERTIN - BUFFON / AMPHI D - DESCARTES / AMPHI E - DESCARTES",
+        "type": "Contrôle continu",
+        "cancelled": false
+      }
     },
     {
       "kind": "moved",
@@ -2675,7 +2678,7 @@
     },
     "2026-11-09": {
       "monday": "2026-11-09",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2896,7 +2899,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3084,7 +3087,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3284,7 +3287,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3448,7 +3451,7 @@
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3499,17 +3502,6 @@
             "LSEC311*"
           ],
           "teacher": "Sarah Nandnaba"
-        },
-        {
-          "id": "-1742255826:1073733534:17:5914210:17",
-          "start": "2026-12-07T17:10:00",
-          "end": "2026-12-07T18:40:00",
-          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI D - DESCARTES (200 / 100)<br />AMPHI E - DESCARTES (200 / 100)<br />AMPHI J - FERMAT (176 / 92)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n",
-          "eventCategory": "Contrôle continu",
-          "backgroundColor": "#FF00FF",
-          "modules": [
-            "LSIN311"
-          ]
         },
         {
           "id": "-1742255826:1073733534:17:5779513:17",
@@ -3570,17 +3562,6 @@
             "LSIN311"
           ],
           "teacher": "Laurent Yeh"
-        },
-        {
-          "id": "-1742255826:1073733534:17:5914250:17",
-          "start": "2026-12-10T17:10:00",
-          "end": "2026-12-10T18:40:00",
-          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI BERTIN - BUFFON (255 / 126)<br />AMPHI D - DESCARTES (200 / 100)<br />AMPHI E - DESCARTES (200 / 100)<br />(1 autres...)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n",
-          "eventCategory": "Contrôle continu",
-          "backgroundColor": "#FF00FF",
-          "modules": [
-            "LSIN311"
-          ]
         },
         {
           "id": "-1742255826:1073733534:17:5855063:17",
@@ -3773,21 +3754,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3856,7 +3837,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-12T19:24:02.192Z",
+      "fetchedAt": "2026-11-13T11:40:12.164Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
