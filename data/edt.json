@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-13T11:40:12.164Z",
+  "generatedAt": "2026-11-17T21:19:25.548Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -29,60 +29,18 @@
   ],
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
-    "2026-11-09",
     "2026-11-16",
     "2026-11-23",
     "2026-11-30",
     "2026-12-07",
+    "2026-12-14",
     "2026-12-21",
     "2026-12-28",
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "bc36429e-95802",
+  "contentHash": "92ebb0d5-96229",
   "changes": [
-    {
-      "kind": "added",
-      "date": "2026-10-15",
-      "startMin": 1030,
-      "endMin": 1120,
-      "time": "17:10 - 18:40",
-      "title": "Initiation aux bases de données",
-      "type": "TD Cartable Numérique",
-      "room": "RC22 - DESCARTES",
-      "cat": "info",
-      "groups": [
-        "S3MIASHS TD 1",
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5889185:9",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": null
-    },
-    {
-      "kind": "moved",
-      "date": "2026-10-16",
-      "startMin": 840,
-      "endMin": 1020,
-      "time": "14:00 - 17:00",
-      "title": "Microéconomie 2",
-      "type": "CM",
-      "room": "AMPHI G - FERMAT",
-      "cat": "micro",
-      "groups": [
-        "S3MIASHS"
-      ],
-      "eventId": "-1742255826:1073733534:17:5889136:9",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "14:00 - 16:00",
-        "room": "AMPHI G - FERMAT",
-        "type": "CM",
-        "cancelled": false
-      }
-    },
     {
       "kind": "room",
       "date": "2026-10-19",
@@ -628,6 +586,25 @@
       }
     },
     {
+      "kind": "added",
+      "date": "2026-11-18",
+      "startMin": 930,
+      "endMin": 1020,
+      "time": "15:30 - 17:00",
+      "title": "Macroéconomie 2",
+      "type": "TD",
+      "room": "AMPHI G - FERMAT",
+      "cat": "macro",
+      "groups": [
+        "S3MIASHS TD 1",
+        "S3MIASHS TD 2"
+      ],
+      "eventId": "-1742255826:1073733534:17:5780729:14",
+      "reason": "",
+      "detectedAt": "2026-11-17T21:19:25.548Z",
+      "previous": null
+    },
+    {
       "kind": "room",
       "date": "2026-11-19",
       "startMin": 580,
@@ -1136,6 +1113,76 @@
       "previous": null
     },
     {
+      "kind": "removed",
+      "date": "2027-01-07",
+      "startMin": 810,
+      "endMin": 900,
+      "time": "13:30 - 15:00",
+      "title": "Macroéconomie 2",
+      "type": "Examen Session 1",
+      "room": "AMPHI F - FERMAT",
+      "cat": "macro",
+      "groups": [
+        "S3MIASHS TD 1",
+        "S3MIASHS TD 2"
+      ],
+      "eventId": "-1742255826:1073733534:17:5907390:21",
+      "reason": "",
+      "detectedAt": "2026-11-17T21:19:25.548Z",
+      "previous": {
+        "time": "13:30 - 15:00",
+        "room": "AMPHI F - FERMAT",
+        "type": "Examen Session 1",
+        "cancelled": false
+      }
+    },
+    {
+      "kind": "moved",
+      "date": "2027-01-07",
+      "startMin": 840,
+      "endMin": 960,
+      "time": "14:00 - 16:00",
+      "title": "Microéconomie 2",
+      "type": "Examen Session 1",
+      "room": "AMPHI F - FERMAT",
+      "cat": "micro",
+      "groups": [
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5907398:21",
+      "reason": "",
+      "detectedAt": "2026-11-17T21:19:25.548Z",
+      "previous": {
+        "time": "16:00 - 18:00",
+        "room": "AMPHI G - FERMAT",
+        "type": "Examen Session 1",
+        "cancelled": false
+      }
+    },
+    {
+      "kind": "room",
+      "date": "2027-01-07",
+      "startMin": 840,
+      "endMin": 960,
+      "time": "14:00 - 16:00",
+      "title": "Microéconomie 2",
+      "type": "Examen Session 1",
+      "room": "AMPHI F - FERMAT",
+      "cat": "micro",
+      "groups": [
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5907398:21",
+      "reason": "",
+      "detectedAt": "2026-11-17T21:19:25.548Z",
+      "previous": {
+        "time": "16:00 - 18:00",
+        "room": "AMPHI G - FERMAT",
+        "type": "Examen Session 1",
+        "cancelled": false
+      }
+    },
+    {
       "kind": "added",
       "date": "2027-01-07",
       "startMin": 930,
@@ -1211,6 +1258,25 @@
       "eventId": "-1742255826:1073733534:17:5907403:21",
       "reason": "",
       "detectedAt": "2026-11-04T11:40:37.607Z",
+      "previous": null
+    },
+    {
+      "kind": "added",
+      "date": "2027-01-14",
+      "startMin": 570,
+      "endMin": 660,
+      "time": "09:30 - 11:00",
+      "title": "Macroéconomie 2",
+      "type": "Examen Session 1",
+      "room": "AMPHI H - FERMAT",
+      "cat": "macro",
+      "groups": [
+        "S3MIASHS TD 1",
+        "S3MIASHS TD 2"
+      ],
+      "eventId": "-1742255826:1073733534:17:5907390:22",
+      "reason": "",
+      "detectedAt": "2026-11-17T21:19:25.548Z",
       "previous": null
     }
   ],
@@ -2899,7 +2965,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3024,6 +3090,18 @@
           "teacher": "Florian Leniaud"
         },
         {
+          "id": "-1742255826:1073733534:17:5780729:14",
+          "start": "2026-11-18T15:30:00",
+          "end": "2026-11-18T17:00:00",
+          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD",
+          "backgroundColor": "#FFFF00",
+          "modules": [
+            "LSEC312*"
+          ],
+          "teacher": "Demba Diarra"
+        },
+        {
           "id": "-1742255826:1073733534:17:5779518:14",
           "start": "2026-11-19T09:40:00",
           "end": "2026-11-19T11:10:00",
@@ -3087,7 +3165,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3287,7 +3365,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3451,7 +3529,7 @@
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3602,7 +3680,7 @@
     },
     "2026-12-14": {
       "monday": "2026-12-14",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3754,21 +3832,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3786,22 +3864,10 @@
           "teacher": "Laurent Yeh"
         },
         {
-          "id": "-1742255826:1073733534:17:5907390:21",
-          "start": "2027-01-07T13:30:00",
-          "end": "2027-01-07T15:00:00",
-          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI F - FERMAT (120 / 65)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\n\r\n",
-          "eventCategory": "Examen Session 1",
-          "backgroundColor": "#FF00FF",
-          "modules": [
-            "LSEC312*"
-          ],
-          "teacher": "Alpha Ly"
-        },
-        {
           "id": "-1742255826:1073733534:17:5907398:21",
-          "start": "2027-01-07T16:00:00",
-          "end": "2027-01-07T18:00:00",
-          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI G - FERMAT (117 / 57) [Amphith&#233;&#226;tre]\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\n\r\n",
+          "start": "2027-01-07T14:00:00",
+          "end": "2027-01-07T16:00:00",
+          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI F - FERMAT (120 / 65)\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "Examen Session 1",
           "backgroundColor": "#FF00FF",
           "modules": [
@@ -3837,10 +3903,23 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-17T21:19:25.548Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
-      "events": []
+      "events": [
+        {
+          "id": "-1742255826:1073733534:17:5907390:22",
+          "start": "2027-01-14T09:30:00",
+          "end": "2027-01-14T11:00:00",
+          "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 TD 1  [S3MIASHS TD 1]<br />L2 MIASHS S3 TD 2  [S3MIASHS TD 2]\r\n\r\n<br />\r\n\r\nAMPHI H - FERMAT (114 / 61)\r\n\r\n<br />\r\n\r\nLSEC312*-Macro&#233;conomie 2 [LSEC312*]\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Examen Session 1",
+          "backgroundColor": "#FF00FF",
+          "modules": [
+            "LSEC312*"
+          ],
+          "teacher": "Alpha Ly"
+        }
+      ]
     }
   }
 }
