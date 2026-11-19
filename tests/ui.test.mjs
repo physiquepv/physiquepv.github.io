@@ -191,6 +191,14 @@ window.stopSky();
 check($$("#skyMeteors .meteor").length === 0, "passer en thème clair (ou masquer l'onglet) nettoie le ciel");
 window.document.documentElement.dataset.theme = "light";
 
+console.log("\n— ciel bleu et soleil (thème clair) —");
+check($("#sky .sky-sun") !== null, "un soleil dégradé occupe le fond");
+check($$("#sky .sky-cloud").length >= 2, "des nuages doux accompagnent le ciel");
+check(/linear-gradient\(178deg,#cfe5fd 0%,#e3f0fe 38%/.test(html), "le fond est un dégradé de ciel bleu");
+check(/@keyframes sun-breathe/.test(html) && /@keyframes cloud-drift/.test(html), "le soleil et les nuages sont animés en douceur");
+check(/\[data-theme="dark"\] \.sky-sun,\[data-theme="dark"\] \.sky-cloud\{display:none\}/.test(html), "le soleil disparaît en mode sombre");
+check(/\.sky-sun,\.sky-cloud\{animation:none!important\}/.test(html) || /\.sky-constellation,\.sky-sun,\.sky-cloud\{animation:none!important\}/.test(html), "les animations du ciel suivent « réduire les mouvements »");
+
 console.log("\n— verre dépoli en mode sombre —");
 check(/\[data-theme="dark"\] \.card\.maths\{background:color-mix\(in srgb,var\(--maths-bg\) 74%,transparent\)\}/.test(html), "les cartes de matière laissent voir le ciel (transparence légère)");
 check(/\[data-theme="dark"\] \.day\{background:color-mix\(in srgb,var\(--surface\) 46%,transparent\)\}/.test(html), "les colonnes sont translucides en mode sombre");

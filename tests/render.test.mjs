@@ -263,6 +263,17 @@ check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 14, 9, 0))") === "2
 check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 13, 19, 0))") === "2026-11-14", "vendredi soir, le prochain cours du samedi est ciblé");
 check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 14, 13, 0))") === "2026-11-16", "après la dernière séance du samedi, on passe au lundi");
 
+console.log("\n— ouverture : on saute au jour d'après dès la dernière matière terminée —");
+// Semaine du 16/11 : jeudi 19 = 09:40-11:10, 11:20-12:50 puis 13:50-17:00.
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 19, 16, 59))") === "2026-11-19", "16h59, la matière n'est pas finie : on reste sur jeudi");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 19, 17, 0))") === "2026-11-20", "17h, dernière matière finie : on ouvre vendredi");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 19, 20, 0))") === "2026-11-20", "à 20 h, on ne reste pas sur la journée terminée");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 20, 20, 0))") === "2026-11-23", "vendredi soir → lundi (samedi et dimanche sautés)");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 21, 10, 0))") === "2026-11-23", "samedi → lundi");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 22, 10, 0))") === "2026-11-23", "dimanche → lundi");
+check(window.eval("scheduleOpeningDateISO(new Date(2026, 10, 23, 6, 0))") === "2026-11-23", "lundi matin, la journée est bien celle du jour");
+check(window.eval("(() => { state_view.weeks = buildWeekList(); const t = findTarget(); const iso = scheduleOpeningDateISO(); return t.weekIndex === state_view.weeks.indexOf(mondayOf(iso)) && t.dayIndex === weekdayIndex(iso); })()"), "le jour ciblé après rechargement suit la même règle que l'ouverture");
+
 console.log("\n— nom du prof sur la carte —");
 const teacherMonday = window.eval("displayedWeekKey()");
 const withTeacher = JSON.parse(JSON.stringify(currentServedData));
