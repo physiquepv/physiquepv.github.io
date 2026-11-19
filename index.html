@@ -126,10 +126,14 @@ body{
   font-family:var(--font);
   font-size:14px;
   line-height:1.45;
+  /* Beau ciel bleu : dégradé d'azur, halo de fin d'après-midi et soleil
+     diffus dans le coin supérieur droit. */
   background:
-    radial-gradient(1100px 460px at 12% -10%,color-mix(in srgb,var(--primary) 7%,transparent),transparent 70%),
-    radial-gradient(900px 420px at 100% 0%,color-mix(in srgb,var(--info) 5%,transparent),transparent 70%),
-    var(--body);
+    radial-gradient(620px 400px at 84% -12%,rgba(255,232,166,.72),rgba(255,232,166,0) 68%),
+    radial-gradient(1200px 520px at 10% -8%,rgba(129,186,250,.42),rgba(129,186,250,0) 70%),
+    radial-gradient(900px 440px at 100% 4%,rgba(96,165,250,.34),rgba(96,165,250,0) 68%),
+    linear-gradient(178deg,#cfe5fd 0%,#e3f0fe 38%,#f4f8fe 76%,#fbfcfe 100%);
+  background-attachment:fixed;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   font-feature-settings:"cv11","ss01";
@@ -147,8 +151,59 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 .ambient-bg{display:none}
 
 /* ------------------------------------------------------- ciel de nuit */
-.sky{position:fixed;inset:0;z-index:0;display:none;overflow:hidden;pointer-events:none}
-[data-theme="dark"] .sky{display:block}
+.sky{position:fixed;inset:0;z-index:0;display:block;overflow:hidden;pointer-events:none}
+
+/* --------------------------------------------------- soleil (thème clair) */
+.sky-sun{
+  position:absolute;
+  top:clamp(-60px,-6vh,-24px);
+  right:clamp(-40px,4vw,90px);
+  width:clamp(220px,26vw,380px);
+  height:clamp(220px,26vw,380px);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,255,246,.98) 0,rgba(255,248,214,.92) 22%,rgba(255,226,146,.55) 42%,rgba(255,214,130,.22) 62%,rgba(255,214,130,0) 76%);
+  filter:blur(2px);
+  opacity:.9;
+  animation:sun-breathe 17s ease-in-out infinite alternate;
+}
+.sky-sun::after{
+  content:"";
+  position:absolute;
+  inset:24%;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,252,1) 0,rgba(255,247,206,.9) 60%,rgba(255,236,168,0) 100%);
+  filter:blur(6px);
+}
+@keyframes sun-breathe{from{opacity:.78;transform:scale(.97)}to{opacity:.95;transform:scale(1.03)}}
+
+/* nuages doux qui dérivent lentement */
+.sky-cloud{
+  position:absolute;
+  height:clamp(90px,12vw,170px);
+  border-radius:999px;
+  background:
+    radial-gradient(closest-side at 26% 62%,rgba(255,255,255,.92),rgba(255,255,255,0) 100%),
+    radial-gradient(closest-side at 52% 40%,rgba(255,255,255,.85),rgba(255,255,255,0) 100%),
+    radial-gradient(closest-side at 78% 64%,rgba(255,255,255,.88),rgba(255,255,255,0) 100%);
+  filter:blur(14px);
+  opacity:.72;
+  animation:cloud-drift 78s ease-in-out infinite alternate;
+}
+.sky-cloud-a{top:9%;left:-6%;width:clamp(300px,44vw,620px)}
+.sky-cloud-b{top:34%;right:-12%;width:clamp(240px,34vw,480px);opacity:.5;animation-duration:96s;animation-direction:alternate-reverse}
+@media (max-width:860px){
+  .sky-cloud-a{top:6%;width:74vw;opacity:.55}
+  .sky-cloud-b{top:30%;width:62vw;opacity:.38}
+  .sky-sun{top:-8vh;right:-14vw;width:62vw;height:62vw}
+}
+@keyframes cloud-drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(46px,14px,0)}}
+
+/* Les éléments de nuit restent réservés au mode sombre. */
+.sky-glow,.sky-moon,.sky-constellation,.sky-meteors{display:none}
+[data-theme="dark"] .sky-glow,[data-theme="dark"] .sky-moon,[data-theme="dark"] .sky-constellation,[data-theme="dark"] .sky-meteors{display:block}
+[data-theme="dark"] .sky-sun,[data-theme="dark"] .sky-cloud{display:none}
+@media print{.sky,.sky-sun,.sky-cloud{display:none!important}}
 .sky-glow{position:absolute;border-radius:50%;filter:blur(60px)}
 .sky-glow-a{top:-180px;right:-120px;width:520px;height:520px;background:radial-gradient(circle,rgba(99,102,241,.26),transparent 70%)}
 .sky-glow-b{left:-160px;bottom:-200px;width:560px;height:560px;background:radial-gradient(circle,rgba(56,189,248,.16),transparent 70%)}
@@ -216,7 +271,7 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
   .sky-moon{width:42px;height:42px;opacity:.32}
 }
 @media (prefers-reduced-motion:reduce){
-  .meteor,.sky-moon,.sky-glow,.sky-constellation{animation:none!important}
+  .meteor,.sky-moon,.sky-glow,.sky-constellation,.sky-sun,.sky-cloud{animation:none!important}
 }
 
 /* ------------------------------------- ciel étoilé discret (mode sombre) */
@@ -875,6 +930,22 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 .card.personal{border-left-color:var(--personal);background:color-mix(in srgb,var(--personal-bg) 92%,var(--surface))}
 .card.personal .card-tag{color:#fff;background:var(--personal)}
 
+/* --------------------------- ciel bleu : transparence légère (thème clair) */
+/* Les panneaux laissent deviner le dégradé de ciel et le soleil ; les cartes
+   de cours restent, elles, parfaitement lisibles. */
+[data-theme="light"] .day,
+html:not([data-theme="dark"]) .day{background:color-mix(in srgb,var(--surface) 80%,transparent)}
+[data-theme="light"] .day-body,
+html:not([data-theme="dark"]) .day-body{background-color:color-mix(in srgb,var(--surface) 58%,transparent)}
+[data-theme="light"] .bar,
+[data-theme="light"] .day-nav,
+[data-theme="light"] .mobile-tabs,
+[data-theme="light"] .segmented{background:color-mix(in srgb,var(--surface) 74%,transparent)}
+@media (max-width:860px){
+  [data-theme="light"] .day,
+  html:not([data-theme="dark"]) .day{background:color-mix(in srgb,var(--surface) 84%,transparent)}
+}
+
 /* --------------------------------------- mode sombre : verre dépoli */
 /* Tout l'habillage (barre, onglets, colonnes) laisse passer un peu du ciel
    étoilé ; les cartes de matière restent lisibles mais laissent voir les
@@ -1485,6 +1556,8 @@ button,a,select,[role="button"],.card{touch-action:manipulation}
 <body>
 <div class="ambient-bg" aria-hidden="true"><span class="ambient-orb ambient-orb-1"></span><span class="ambient-orb ambient-orb-2"></span><span class="ambient-orb ambient-orb-3"></span></div>
 <div class="sky" id="sky" aria-hidden="true">
+<span class="sky-sun"></span>
+<span class="sky-cloud sky-cloud-a"></span><span class="sky-cloud sky-cloud-b"></span>
 <span class="sky-glow sky-glow-a"></span><span class="sky-glow sky-glow-b"></span><span class="sky-moon"></span>
 <svg class="sky-constellation" viewBox="0 0 220 140" aria-hidden="true" focusable="false">
 <g fill="none" stroke="currentColor" stroke-width=".7"><path d="M18 96 62 64 108 78 150 40 196 56"/><path d="M62 64 78 22M108 78 118 118"/></g>
@@ -3015,17 +3088,35 @@ function lastWeekdayIndex(weekKey) {
 function scheduleOpeningDateISO(now = new Date()) {
   const iso = formatISO(now);
   const view = buildWeekView(mondayOf(iso), state_view.recurring);
-  const day = view.days[weekdayIndex(iso)];
-  if (!day) return openingDateISO(now); // dimanche, ou samedi sans cours officiel
+  /** Cours affichés réellement un jour donné (annulations et fantômes exclus). */
+  const activeOn = (dateISO) => {
+    const day = buildWeekView(mondayOf(dateISO), state_view.recurring).days[weekdayIndex(dateISO)] ?? { realDate: parseISO(dateISO), courses: [] };
+    // Les événements personnels empêchent aussi de considérer la journée comme finie.
+    const withPersonal = mergePersonalEvents({ days: [day], live: false }).days[0];
+    return (withPersonal.courses ?? []).filter((item) => !item.isCancelled && !item.ghost);
+  };
+  /** Un jour qui a encore (ou aura) une matière : on s'y arrête. */
+  const hasCourses = (dateISO) => activeOn(dateISO).length > 0;
+  const lastEndOn = (dateISO) => {
+    const courses = activeOn(dateISO);
+    return courses.length ? Math.max(...courses.map((item) => item.endMin)) : TIMELINE.end;
+  };
 
-  const active = (item) => !item.isCancelled && !item.ghost;
-  const courses = (day.courses ?? []).filter(active);
-  const lastEnd = courses.length ? Math.max(...courses.map((item) => item.endMin)) : TIMELINE.end;
+  const weekday = now.getDay();
   const minutes = now.getHours() * 60 + now.getMinutes();
-  if (minutes < lastEnd) return iso;
-  if (now.getDay() === 6) return nextWeekdayISO(iso);
-  if (now.getDay() === 5 && (view.days[5]?.courses ?? []).some(active)) return addDaysISO(iso, 1);
-  return openingDateISO(now, lastEnd);
+  // Journée en cours : elle reste affichée tant qu'une matière n'est pas finie.
+  if (view.days[weekdayIndex(iso)] && minutes < lastEndOn(iso)) return iso;
+
+  // Au-delà de la dernière matière du jour (ou pendant le week-end), on cherche
+  // le prochain jour qui a réellement cours : un samedi de cours est conservé,
+  // sinon on saute les jours libres (vendredi soir → lundi, samedi → lundi…).
+  for (let step = 1; step <= 21; step++) {
+    const candidate = addDaysISO(iso, step);
+    // Samedi ou dimanche sans cours officiel : on ne s'y arrête jamais.
+    if (weekdayIndex(candidate) >= 5 && !hasCourses(candidate)) continue;
+    if (hasCourses(candidate)) return candidate;
+  }
+  return nextWeekdayISO(iso);
 }
 
 function openingTarget(weekIndex, dateISO = scheduleOpeningDateISO()) {
@@ -3045,27 +3136,26 @@ function clearLegacyHiddenRules() {
 }
 
 function findTarget() {
-  const now = new Date();
-  const minutes = now.getHours() * 60 + now.getMinutes();
   const keys = state_view.weeks;
-  const todayKey = mondayOf(formatISO(now));
-  const todayIndex = keys.indexOf(todayKey);
-  if (todayIndex >= 0) {
-    const view = buildWeekView(todayKey, null);
-    const today = view.days.find((day) => sameDay(day.realDate, now));
-    const todayCourses = (today?.courses ?? []).filter((item) => !item.isCancelled && !item.ghost);
-    if (todayCourses.length && !todayCourses.every((item) => item.endMin <= minutes)) {
-      return { weekIndex: todayIndex, dayIndex: WEEK_DAY_NAMES.indexOf(today.name), ongoing: true };
-    }
+  if (!keys.length) return { weekIndex: 0, dayIndex: 0, ongoing: false, future: true };
+  // Même règle qu'à l'ouverture : la journée en cours tant qu'une matière n'est
+  // pas terminée, sinon le prochain jour qui a réellement cours (un samedi de
+  // cours compte, les jours libres et le week-end sont sautés).
+  const opening = scheduleOpeningDateISO();
+  const openingWeek = mondayOf(opening);
+  if (keys.includes(openingWeek)) {
+    return openingTarget(keys.indexOf(openingWeek), opening);
   }
-  for (let w = Math.max(0, todayIndex); w < keys.length; w++) {
+  // Jour ciblé hors de la fenêtre publiée : on prend le premier jour à cours
+  // après aujourd'hui, puis la dernière semaine connue à défaut.
+  const now = new Date();
+  const todayIndex = Math.max(0, keys.indexOf(mondayOf(formatISO(now))));
+  for (let w = todayIndex; w < keys.length; w++) {
     const view = buildWeekView(keys[w], null);
     for (const day of view.days) {
-      const dateKey = formatISO(day.realDate);
-      if (dateKey <= todayISO()) continue; // la journée en cours est traitée au-dessus
+      if (formatISO(day.realDate) <= todayISO()) continue;
       if (!day.courses.some((item) => !item.isCancelled && !item.ghost)) continue;
-      const ongoing = w === todayIndex && sameDay(day.realDate, now);
-      return { weekIndex: w, dayIndex: WEEK_DAY_NAMES.indexOf(day.name), ongoing, future: !ongoing };
+      return { weekIndex: w, dayIndex: WEEK_DAY_NAMES.indexOf(day.name), ongoing: false, future: true };
     }
   }
   const last = keys.length - 1;
@@ -3486,8 +3576,9 @@ function initTheme() {
 }
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  // Le ciel animé n'existe qu'en mode sombre : on l'arrête franchement en
-  // thème clair pour ne pas laisser tourner des animations invisibles.
+  // Les étoiles filantes n'existent qu'en mode sombre : on les arrête
+  // franchement en thème clair (le ciel bleu et le soleil restent, eux, fixes
+  // ou animés en CSS uniquement).
   if (theme === "dark") startSky();
   else stopSky();
   const button = $("#theme");
@@ -3838,8 +3929,16 @@ function refreshOnResume(force = false) {
   const nowDay = todayISO();
   const dayRolledOver = nowDay !== activeCalendarDay;
   if (dayRolledOver) activeCalendarDay = nowDay;
+  // Le dernier cours peut s'être terminé onglet ouvert : la journée visée
+  // change alors sans changement de date. On la recalcule après la synchro.
+  const before = { week: mondayOf(scheduleOpeningDateISO()), day: weekdayIndex(scheduleOpeningDateISO()) };
   return loadEverything({ force: true }).then((result) => {
-    if (dayRolledOver) jumpToTarget(false);
+    const now = scheduleOpeningDateISO();
+    // On ne recale que si l'utilisateur regardait justement la journée visée
+    // (sinon il a navigué ailleurs volontairement : on respecte son choix).
+    const onTarget = state_view.weekKey === before.week;
+    const moved = onTarget && (mondayOf(now) !== before.week || weekdayIndex(now) !== before.day);
+    if (dayRolledOver || moved) jumpToTarget(false);
     else if (result?.changed) refreshDisplayedWeek();
     return result;
   });
@@ -3897,14 +3996,24 @@ function initialize() {
   });
   // Le navigateur se souvient du dernier jour consulté : on le rouvre s'il
   // appartient à la semaine en cours (le site reste centré sur « aujourd'hui »).
-  if (remembered && remembered !== focusedDayISO()
+  // Exception : quand la dernière matière est dépassée (ou qu'on est en
+  // week-end), l'ouverture pointe déjà sur le prochain jour de cours — on ne
+  // revient pas en arrière sur un jour consulté plus tôt.
+  if (openingDate === todayISO() && remembered && remembered !== focusedDayISO()
       && mondayOf(remembered) === mondayOf(todayISO()) && dayIsNavigable(remembered)) {
     showDay(remembered, { animate: false });
   }
   // Chargement initial, puis resynchronisation passive uniquement quand on
   // rouvre l'onglet ou retrouve la connexion (aucun polling en arrière-plan).
+  // Les données fraîches peuvent changer le dernier cours de la journée :
+  // on recale alors l'ouverture sur le bon jour plutôt que de garder la
+  // semaine calculée à partir du cache.
   loadEverything().then((result) => {
-    if (result?.changed) refreshDisplayedWeek();
+    if (!result) return;
+    const openingNow = openingTarget(Math.max(0, state_view.weeks.indexOf(mondayOf(scheduleOpeningDateISO()))));
+    const moved = openingNow.weekIndex !== weekIndex || openingNow.dayIndex !== target.dayIndex;
+    if (moved) jumpToTarget(false);
+    else if (result.changed) refreshDisplayedWeek();
   });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") refreshOnResume(false);
