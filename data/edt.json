@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-17T21:19:25.548Z",
+  "generatedAt": "2026-11-19T20:51:06.155Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -39,32 +39,8 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "92ebb0d5-96229",
+  "contentHash": "b64732d9-96229",
   "changes": [
-    {
-      "kind": "room",
-      "date": "2026-10-19",
-      "startMin": 1030,
-      "endMin": 1120,
-      "time": "17:10 - 18:40",
-      "title": "Initiation aux bases de données",
-      "type": "TD Cartable Numérique",
-      "room": "ALSACE - DESCARTES",
-      "cat": "info",
-      "groups": [
-        "S3MIASHS TD 1",
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5883572:10",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "17:10 - 18:40",
-        "room": "2206 - FERMAT",
-        "type": "TD Cartable Numérique",
-        "cancelled": false
-      }
-    },
     {
       "kind": "removed",
       "date": "2026-10-20",
@@ -1131,6 +1107,29 @@
       "detectedAt": "2026-11-17T21:19:25.548Z",
       "previous": {
         "time": "13:30 - 15:00",
+        "room": "AMPHI F - FERMAT",
+        "type": "Examen Session 1",
+        "cancelled": false
+      }
+    },
+    {
+      "kind": "moved",
+      "date": "2027-01-07",
+      "startMin": 810,
+      "endMin": 930,
+      "time": "13:30 - 15:30",
+      "title": "Microéconomie 2",
+      "type": "Examen Session 1",
+      "room": "AMPHI F - FERMAT",
+      "cat": "micro",
+      "groups": [
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5907398:21",
+      "reason": "",
+      "detectedAt": "2026-11-19T20:51:06.155Z",
+      "previous": {
+        "time": "14:00 - 16:00",
         "room": "AMPHI F - FERMAT",
         "type": "Examen Session 1",
         "cancelled": false
@@ -2965,7 +2964,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3165,7 +3164,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3365,7 +3364,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3529,7 +3528,7 @@
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3680,7 +3679,7 @@
     },
     "2026-12-14": {
       "monday": "2026-12-14",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3832,21 +3831,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3865,8 +3864,8 @@
         },
         {
           "id": "-1742255826:1073733534:17:5907398:21",
-          "start": "2027-01-07T14:00:00",
-          "end": "2027-01-07T16:00:00",
+          "start": "2027-01-07T13:30:00",
+          "end": "2027-01-07T15:30:00",
           "description": "Examen Session 1\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI F - FERMAT (120 / 65)\r\n\r\n<br />\r\n\r\nLSEC311*-Micro&#233;conomie 2 [LSEC311*]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "Examen Session 1",
           "backgroundColor": "#FF00FF",
@@ -3903,7 +3902,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-17T21:19:25.548Z",
+      "fetchedAt": "2026-11-19T20:51:06.155Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
