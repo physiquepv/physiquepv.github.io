@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-19T20:51:06.155Z",
+  "generatedAt": "2026-11-20T12:18:20.635Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -39,55 +39,8 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "b64732d9-96229",
+  "contentHash": "c315f93a-96967",
   "changes": [
-    {
-      "kind": "removed",
-      "date": "2026-10-20",
-      "startMin": 830,
-      "endMin": 920,
-      "time": "13:50 - 15:20",
-      "title": "Anglais UE2",
-      "type": "Annulation",
-      "room": "",
-      "cat": "anglais",
-      "groups": [
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5798251:10",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "13:50 - 15:20",
-        "room": "",
-        "type": "Annulation",
-        "cancelled": true
-      }
-    },
-    {
-      "kind": "room",
-      "date": "2026-10-20",
-      "startMin": 1030,
-      "endMin": 1120,
-      "time": "17:10 - 18:40",
-      "title": "Initiation aux bases de données",
-      "type": "TD Cartable Numérique",
-      "room": "ALSACE - DESCARTES",
-      "cat": "info",
-      "groups": [
-        "S3MIASHS TD 1",
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5883571:10",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "17:10 - 18:40",
-        "room": "2104 - FERMAT",
-        "type": "TD Cartable Numérique",
-        "cancelled": false
-      }
-    },
     {
       "kind": "moved",
       "date": "2026-10-21",
@@ -722,6 +675,26 @@
         "type": "CM",
         "cancelled": false
       }
+    },
+    {
+      "kind": "added",
+      "date": "2026-12-06",
+      "startMin": 540,
+      "endMin": 630,
+      "time": "09:00 - 10:30",
+      "title": "Anglais UE1",
+      "type": "Contrôle continu",
+      "room": "",
+      "cat": "anglais",
+      "groups": [
+        "S1LDDMP",
+        "S1MIASCM-01",
+        "S3CHTD-01A"
+      ],
+      "eventId": "-1742255826:1073733534:17:5910616:16",
+      "reason": "",
+      "detectedAt": "2026-11-20T12:18:20.635Z",
+      "previous": null
     },
     {
       "kind": "added",
@@ -2964,7 +2937,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3164,7 +3137,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3364,7 +3337,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3523,12 +3496,27 @@
             "LSEC311*"
           ],
           "teacher": "Sarah Nandnaba"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5910616:16",
+          "start": "2026-12-06T09:00:00",
+          "end": "2026-12-06T10:30:00",
+          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nL1 Double Dipl&#244;me Math&#233;matiques Physique - S1LDDMPTD-01 [S1LDDMP]<br />L1 MIASHS S1 - S1MIASCM-01 [S1MIASCM-01]<br />L2 Chimie S3 TD 1A ( option BI304 ) [S3CHTD-01A]<br />(16 autres...)\r\n\r\n<br />\r\n\r\nLSANGS1-LSANGS1 - Anglais UE1 [LSANGS1]<br />LSANGS1N-LSANGS1N - Anglais UE1 - L1 LDD MP [LSANGS1N]<br />LSANGS3-Anglais UE2 [LSANGS3]<br />(1 autres...)\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "Contrôle continu",
+          "backgroundColor": "#FF00FF",
+          "modules": [
+            "LSANGS5",
+            "LSANGS1",
+            "LSANGS3",
+            "LSANGS1N"
+          ],
+          "teacher": "Loretta Kimble / Florian Leniaud / Claudia Ruault"
         }
       ]
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3679,7 +3667,7 @@
     },
     "2026-12-14": {
       "monday": "2026-12-14",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3831,21 +3819,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3902,7 +3890,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-19T20:51:06.155Z",
+      "fetchedAt": "2026-11-20T12:18:20.635Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
