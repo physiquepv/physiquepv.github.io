@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-20T12:18:20.635Z",
+  "generatedAt": "2026-11-23T13:46:51.893Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -29,7 +29,6 @@
   ],
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
-    "2026-11-16",
     "2026-11-23",
     "2026-11-30",
     "2026-12-07",
@@ -39,117 +38,8 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "c315f93a-96967",
+  "contentHash": "5a2db05d-96967",
   "changes": [
-    {
-      "kind": "moved",
-      "date": "2026-10-21",
-      "startMin": 580,
-      "endMin": 670,
-      "time": "09:40 - 11:10",
-      "title": "Analyse et Algèbre linéaire 2",
-      "type": "TD",
-      "room": "AMPHI G - FERMAT",
-      "cat": "maths",
-      "groups": [
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5886612:10",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "09:40 - 12:50",
-        "room": "AMPHI G - FERMAT",
-        "type": "TD",
-        "cancelled": false
-      }
-    },
-    {
-      "kind": "added",
-      "date": "2026-10-21",
-      "startMin": 680,
-      "endMin": 770,
-      "time": "11:20 - 12:50",
-      "title": "Analyse et Algèbre linéaire 2",
-      "type": "TD",
-      "room": "2206 - FERMAT",
-      "cat": "maths",
-      "groups": [
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5886648:10",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": null
-    },
-    {
-      "kind": "moved",
-      "date": "2026-10-22",
-      "startMin": 770,
-      "endMin": 1140,
-      "time": "12:50 - 19:00",
-      "title": "EVENT",
-      "type": "Journée banalisée",
-      "room": "",
-      "cat": "info",
-      "groups": [
-        "S1BICM-01",
-        "S1BITD-01",
-        "S1BITD-02"
-      ],
-      "eventId": "-1742255826:1073733534:17:5879344:10",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "08:00 - 19:00",
-        "room": "L1 Chimie Biologie S1 Amphi 1 - S1CBCM-01 / L1 Chimie Biologie S1 Amphi 1 TD 01 - S1CBTD-01 / L1 Chimie Biologie S1 Amphi 1 TD 02 - S1CBTD-02 / L1 Chimie Biologie S1 Amphi 1 TD 02 TP D - S1CBTP-D / L1 Chimie Biologie S1 Amphi 1 TD 03 - S1CBTD-03",
-        "type": "Journée banalisée",
-        "cancelled": false
-      }
-    },
-    {
-      "kind": "room",
-      "date": "2026-10-22",
-      "startMin": 770,
-      "endMin": 1140,
-      "time": "12:50 - 19:00",
-      "title": "EVENT",
-      "type": "Journée banalisée",
-      "room": "",
-      "cat": "info",
-      "groups": [
-        "S1BICM-01",
-        "S1BITD-01",
-        "S1BITD-02"
-      ],
-      "eventId": "-1742255826:1073733534:17:5879344:10",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": {
-        "time": "08:00 - 19:00",
-        "room": "L1 Chimie Biologie S1 Amphi 1 - S1CBCM-01 / L1 Chimie Biologie S1 Amphi 1 TD 01 - S1CBTD-01 / L1 Chimie Biologie S1 Amphi 1 TD 02 - S1CBTD-02 / L1 Chimie Biologie S1 Amphi 1 TD 02 TP D - S1CBTP-D / L1 Chimie Biologie S1 Amphi 1 TD 03 - S1CBTD-03",
-        "type": "Journée banalisée",
-        "cancelled": false
-      }
-    },
-    {
-      "kind": "added",
-      "date": "2026-10-23",
-      "startMin": 580,
-      "endMin": 770,
-      "time": "09:40 - 12:50",
-      "title": "Analyse et Algèbre linéaire 2",
-      "type": "TD",
-      "room": "2104 - FERMAT",
-      "cat": "maths",
-      "groups": [
-        "S3MIASHS TD 2"
-      ],
-      "eventId": "-1742255826:1073733534:17:5893698:10",
-      "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
-      "previous": null
-    },
     {
       "kind": "added",
       "date": "2026-11-02",
@@ -634,7 +524,7 @@
       "time": "09:40 - 11:10",
       "title": "Initiation aux bases de données",
       "type": "CM",
-      "room": "AMPHI D - DESCARTES",
+      "room": "AMPHI E - DESCARTES",
       "cat": "info",
       "groups": [
         "S3LDDMP",
@@ -643,10 +533,10 @@
       ],
       "eventId": "-1742255826:1073733534:17:5779518:15",
       "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
+      "detectedAt": "2026-11-23T13:46:51.893Z",
       "previous": {
         "time": "09:40 - 11:10",
-        "room": "AMPHI E - DESCARTES",
+        "room": "AMPHI D - DESCARTES",
         "type": "CM",
         "cancelled": false
       }
@@ -659,7 +549,7 @@
       "time": "09:40 - 11:10",
       "title": "Initiation aux bases de données",
       "type": "CM",
-      "room": "AMPHI D - DESCARTES",
+      "room": "AMPHI E - DESCARTES",
       "cat": "info",
       "groups": [
         "S3LDDMP",
@@ -668,10 +558,10 @@
       ],
       "eventId": "-1742255826:1073733534:17:5779518:16",
       "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
+      "detectedAt": "2026-11-23T13:46:51.893Z",
       "previous": {
         "time": "09:40 - 11:10",
-        "room": "AMPHI E - DESCARTES",
+        "room": "AMPHI D - DESCARTES",
         "type": "CM",
         "cancelled": false
       }
@@ -955,7 +845,7 @@
       "time": "09:40 - 11:10",
       "title": "Initiation aux bases de données",
       "type": "CM",
-      "room": "AMPHI D - DESCARTES",
+      "room": "AMPHI E - DESCARTES",
       "cat": "info",
       "groups": [
         "S3LDDMP",
@@ -964,10 +854,10 @@
       ],
       "eventId": "-1742255826:1073733534:17:5779518:18",
       "reason": "",
-      "detectedAt": "2026-11-02T17:26:22.815Z",
+      "detectedAt": "2026-11-23T13:46:51.893Z",
       "previous": {
         "time": "09:40 - 11:10",
-        "room": "AMPHI E - DESCARTES",
+        "room": "AMPHI D - DESCARTES",
         "type": "CM",
         "cancelled": false
       }
@@ -3137,7 +3027,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-23T13:46:51.893Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3277,7 +3167,7 @@
           "id": "-1742255826:1073733534:17:5779518:15",
           "start": "2026-11-26T09:40:00",
           "end": "2026-11-26T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI D - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI E - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3337,7 +3227,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-23T13:46:51.893Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3441,7 +3331,7 @@
           "id": "-1742255826:1073733534:17:5779518:16",
           "start": "2026-12-03T09:40:00",
           "end": "2026-12-03T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI D - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI E - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3516,7 +3406,7 @@
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-23T13:46:51.893Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3667,7 +3557,7 @@
     },
     "2026-12-14": {
       "monday": "2026-12-14",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-23T13:46:51.893Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3759,7 +3649,7 @@
           "id": "-1742255826:1073733534:17:5779518:18",
           "start": "2026-12-17T09:40:00",
           "end": "2026-12-17T11:10:00",
-          "description": "CM\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI D - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "CM\r\n\r\n<br />\r\n\r\nL2 Double Dipl&#244;me Math&#233;matiques Physique S3 ( S3 LDDMP ) [S3LDDMP]<br />L2 Math&#233;matiques S3 [S3MATHS]<br />L2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nAMPHI E - DESCARTES (200 / 100)\r\n\r\n<br />\r\n\r\nLSIN311-Initiation aux bases de donn&#233;es [LSIN311]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "CM",
           "backgroundColor": "#00FFFF",
           "modules": [
@@ -3819,21 +3709,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-23T13:46:51.893Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-23T13:46:51.893Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-23T13:46:51.893Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3890,7 +3780,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-23T13:46:51.893Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
