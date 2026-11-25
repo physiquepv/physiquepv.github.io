@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-25T09:36:32.106Z",
+  "generatedAt": "2026-11-25T19:36:06.508Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -29,19 +29,6 @@
   ],
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
-    "2026-08-24",
-    "2026-08-31",
-    "2026-09-07",
-    "2026-09-14",
-    "2026-09-21",
-    "2026-09-28",
-    "2026-10-05",
-    "2026-10-12",
-    "2026-10-19",
-    "2026-10-26",
-    "2026-11-02",
-    "2026-11-09",
-    "2026-11-16",
     "2026-11-23",
     "2026-11-30",
     "2026-12-07",
@@ -51,7 +38,7 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "7a4e9ea3-96501",
+  "contentHash": "777c8d8b-96929",
   "changes": [
     {
       "kind": "added",
@@ -576,6 +563,24 @@
         "type": "CM",
         "cancelled": false
       }
+    },
+    {
+      "kind": "added",
+      "date": "2026-12-02",
+      "startMin": 480,
+      "endMin": 570,
+      "time": "08:00 - 09:30",
+      "title": "Anglais UE2",
+      "type": "TD rattrapage",
+      "room": "E105- Bât Joliot-Curie",
+      "cat": "anglais",
+      "groups": [
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5925184:16",
+      "reason": "",
+      "detectedAt": "2026-11-25T19:36:06.508Z",
+      "previous": null
     },
     {
       "kind": "room",
@@ -3063,7 +3068,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-25T09:36:32.106Z",
+      "fetchedAt": "2026-11-25T19:36:06.508Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3251,7 +3256,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-25T09:36:32.106Z",
+      "fetchedAt": "2026-11-25T19:36:06.508Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3302,6 +3307,18 @@
             "LSEC311*"
           ],
           "teacher": "Sarah Nandnaba"
+        },
+        {
+          "id": "-1742255826:1073733534:17:5925184:16",
+          "start": "2026-12-02T08:00:00",
+          "end": "2026-12-02T09:30:00",
+          "description": "TD rattrapage\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nE105- B&#226;t Joliot-Curie\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\n\r\n",
+          "eventCategory": "TD rattrapage",
+          "backgroundColor": "#DD5ACF",
+          "modules": [
+            "LSANGS3"
+          ],
+          "teacher": "Florian Leniaud"
         },
         {
           "id": "-1742255826:1073733534:17:5779513:16",
@@ -3429,7 +3446,7 @@
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-11-25T09:36:32.106Z",
+      "fetchedAt": "2026-11-25T19:36:06.508Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3580,7 +3597,7 @@
     },
     "2026-12-14": {
       "monday": "2026-12-14",
-      "fetchedAt": "2026-11-25T09:36:32.106Z",
+      "fetchedAt": "2026-11-25T19:36:06.508Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3732,21 +3749,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-25T09:36:32.106Z",
+      "fetchedAt": "2026-11-25T19:36:06.508Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-25T09:36:32.106Z",
+      "fetchedAt": "2026-11-25T19:36:06.508Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-25T09:36:32.106Z",
+      "fetchedAt": "2026-11-25T19:36:06.508Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3803,7 +3820,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-25T09:36:32.106Z",
+      "fetchedAt": "2026-11-25T19:36:06.508Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
