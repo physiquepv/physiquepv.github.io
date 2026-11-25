@@ -9,13 +9,21 @@ name: Sync emploi du temps UVSQ
 
 on:
   schedule:
-    # Rafraîchissement glissant toutes les 15 min du lundi au samedi (~06h–23h Paris).
+    # Rafraîchissement glissant du lundi au samedi, 4 créneaux/h (~05h07–22h52 Paris).
+    # Minutes volontairement décalées (7, 22, 37, 52) : les schedules GitHub Actions
+    # sont best-effort et retardent/dropent silencieusement sous charge les créneaux
+    # aux heures rondes (:00, :15, :30, :45) — cf. community/discussions/210932.
+    # Un trou de plusieurs heures laissait le site afficher un planning périmé
+    # (cours retiré par l'université encore affiché) sans le moindre signal.
     # Le samedi est inclus volontairement : l'université peut y publier des cours.
-    - cron: "*/15 4-21 * * 1-6"
-    # Veille du dimanche (~08h–22h Paris, 1×/heure) pour capter les annonces du lundi matin.
+    - cron: "7,22,37,52 4-21 * * 1-6"
+    # Veille du dimanche (~07h12–21h12 Paris, 1×/heure) pour capter les annonces du lundi matin.
     - cron: "12 6-20 * * 0"
-    # Rechargement complet du semestre (et aperçu du suivant), chaque matin (~05:17 / 06:17 Paris).
+    # Rechargement complet du semestre (et aperçu du suivant) : chaque matin
+    # (~05h17 Paris) + un second passage l'après-midi (~16h41 Paris). Si un des
+    # deux créneaux est dropé, l'autre rattrape les semaines passées le jour même.
     - cron: "17 4 * * *"
+    - cron: "41 15 * * *"
   workflow_dispatch:
     inputs:
       full:
@@ -50,7 +58,7 @@ jobs:
 
       - name: Récupérer le planning CELCAT
         env:
-          EDT_FULL: ${{ (github.event.schedule == '17 4 * * *' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full != false)) && '1' || '0' }}
+          EDT_FULL: ${{ (github.event.schedule == '17 4 * * *' || github.event.schedule == '41 15 * * *' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full != false)) && '1' || '0' }}
           CELCAT_USERNAME: ${{ secrets.CELCAT_USERNAME }}
           CELCAT_PASSWORD: ${{ secrets.CELCAT_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

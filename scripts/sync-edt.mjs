@@ -760,6 +760,137 @@ async function shouldSkipScheduledAuth(env = process.env) {
   }
 }
 
+/* ----------------------- diagnostic des schedules GitHub (best-effort) */
+
+/**
+ * Les `schedule` de GitHub Actions sont best-effort : un créneau peut être
+ * retardé ou dropé silencieusement sous charge (surtout aux heures rondes).
+ * Quand un trou de plusieurs heures survient, `data/edt.json` reste périmé —
+ * un cours retiré par l'université continue d'être affiché — sans le moindre
+ * signal. Ce diagnostic lit les crons du workflow (source de vérité du
+ * cadencement), mesure depuis quand aucun créneau n'a été servi par une
+ * exécution réussie et publie un avertissement dans le journal du run quand
+ * le retard dépasse `SCHEDULE_GAP_WARN_MS`. Jamais bloquant.
+ */
+export const SCHEDULE_GAP_WARN_MS = 3 * 3600 * 1000;
+
+/** Crons `schedule:` de `.github/workflows/edt-sync.yml`, ou null si illisible. */
+export async function loadScheduleCrons(root = ROOT) {
+  try {
+    const yaml = await readFile(path.join(root, ".github", "workflows", "edt-sync.yml"), "utf8");
+    const crons = [...yaml.matchAll(/-\s*cron:\s*"([^"]+)"/g)].map((match) => match[1]);
+    return crons.length ? crons : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Champ de cron simple (astérisque, plage `a-b`, liste, pas éventuel `/n`) → ensemble de valeurs. */
+function parseCronField(field, min, max) {
+  const values = new Set();
+  for (const part of String(field).split(",")) {
+    const match = part.match(/^(\*|\d+(?:-\d+)?)(?:\/(\d+))?$/);
+    if (!match) return null;
+    const step = match[2] ? Number(match[2]) : 1;
+    if (!Number.isInteger(step) || step < 1) return null;
+    let from = min;
+    let to = max;
+    if (match[1] !== "*") {
+      const bounds = match[1].split("-").map(Number);
+      if (bounds.some((value) => !Number.isInteger(value))) return null;
+      from = bounds[0];
+      to = bounds.length > 1 ? bounds[1] : bounds[0];
+      if (to < from) return null;
+    }
+    for (let value = from; value <= to; value += step) {
+      if (value >= min && value <= max) values.add(value);
+    }
+  }
+  return values.size ? values : null;
+}
+
+/** Analyse un cron à 5 champs (les champs jour du mois / mois doivent être `*`). */
+export function parseCron(expr) {
+  const fields = String(expr ?? "").trim().split(/\s+/);
+  if (fields.length !== 5) return null;
+  const [minute, hour, dom, month, dow] = fields;
+  if (dom !== "*" || month !== "*") return null;
+  const minutes = parseCronField(minute, 0, 59);
+  const hours = parseCronField(hour, 0, 23);
+  const daysRaw = parseCronField(dow, 0, 7);
+  if (!minutes || !hours || !daysRaw) return null;
+  // POSIX : 0 et 7 valent dimanche.
+  const days = new Set([...daysRaw].map((value) => (value === 7 ? 0 : value)));
+  return { minutes, hours, days };
+}
+
+/**
+ * Premier créneau planifié strictement après `afterMs` (UTC), d'après les crons
+ * du workflow. Renvoie null si aucun créneau n'apparaît sous 8 jours.
+ */
+export function nextScheduleSlot(afterMs, crons) {
+  const schedules = (crons ?? []).map(parseCron).filter(Boolean);
+  if (!schedules.length || !Number.isFinite(afterMs)) return null;
+  let cursor = Math.floor(afterMs / 60000) * 60000 + 60000; // minute suivante
+  const limit = cursor + 8 * 24 * 3600 * 1000;
+  while (cursor <= limit) {
+    const date = new Date(cursor);
+    const minute = date.getUTCMinutes();
+    const hour = date.getUTCHours();
+    const day = date.getUTCDay();
+    if (schedules.some((cron) => cron.minutes.has(minute) && cron.hours.has(hour) && cron.days.has(day))) {
+      return cursor;
+    }
+    cursor += 60000;
+  }
+  return null;
+}
+
+/**
+ * Avertissement « Planning UVSQ en retard » : si le premier créneau non servi
+ * depuis la dernière exécution réussie remonte à plus de 3 h, le trou est
+ * publié en annotation du run. Renvoie le message (ou null) — ne lève jamais.
+ * Ne s'exécute qu'en contexte GitHub (schedule / push, token disponible).
+ */
+export async function reportScheduleGap(env = process.env, now = Date.now()) {
+  if (!["schedule", "push"].includes(env.GITHUB_EVENT_NAME) || !env.GITHUB_REPOSITORY || !env.GITHUB_TOKEN) {
+    return null;
+  }
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${env.GITHUB_REPOSITORY}/actions/workflows/edt-sync.yml/runs?branch=main&status=completed&per_page=5`,
+      {
+        headers: {
+          Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+          Accept: "application/vnd.github+json",
+          "User-Agent": "physiquepv-edt-sync",
+        },
+        signal: AbortSignal.timeout(8000),
+      },
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
+    const lastSuccess = (json?.workflow_runs ?? []).find((run) => run?.conclusion === "success");
+    const finishedAt = Date.parse(lastSuccess?.updated_at || lastSuccess?.created_at || "");
+    if (!Number.isFinite(finishedAt)) return null;
+    const firstMissed = nextScheduleSlot(finishedAt, await loadScheduleCrons(ROOT));
+    if (firstMissed == null || now - firstMissed < SCHEDULE_GAP_WARN_MS) return null;
+    const hours = Math.max(1, Math.round((now - firstMissed) / 3600000));
+    const iso = new Date(firstMissed).toISOString();
+    const message =
+      `le planning n'a pas été rafraîchi depuis ${hours} h (premier créneau non servi : ` +
+      `${iso.slice(11, 16)} UTC le ${iso.slice(0, 10)}) — les schedules GitHub Actions sont ` +
+      `best-effort et ont été retardés ou dropés sous charge, laissant data/edt.json périmé ` +
+      `(cours retiré encore affiché, salles obsolètes…). Vérifiez l'onglet Actions puis ` +
+      `relancez « Run workflow » si besoin.`;
+    console.warn(`[edt] ${message}`);
+    console.log(`::warning title=Planning UVSQ en retard::${message.replaceAll("%", "%25")}`);
+    return message;
+  } catch {
+    return null;
+  }
+}
+
 /* ----------------------------------------------------------------- lecture */
 
 /** Tous les semestres déclarés (`semesters`) ou l'ancien champ unique `semester`. */
@@ -1197,6 +1328,11 @@ async function main() {
     const markdown = summaryMarkdown(core, detected, { generatedAt: now, title: "Changements détectés dans le planning" });
     await appendFile(process.env.GITHUB_STEP_SUMMARY, `\n${markdown}\n`, "utf8").catch(() => {});
   }
+
+  // Les schedules GitHub Actions étant best-effort, un créneau dropé laisse le
+  // site afficher un planning périmé sans autre signal : on publie un
+  // avertissement dès que le premier créneau non servi dépasse 3 h.
+  await reportScheduleGap();
 
   if (dump) {
     console.log("::group::data/edt.json");

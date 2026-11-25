@@ -82,6 +82,10 @@ const {
   extractVerificationToken,
   todayParis,
   addDays,
+  loadScheduleCrons,
+  nextScheduleSlot,
+  reportScheduleGap,
+  SCHEDULE_GAP_WARN_MS,
 } = await import(path.join(ROOT, "scripts", "sync-edt.mjs"));
 
 const readOut = async () => JSON.parse(await readFile(outFile, "utf8"));
@@ -433,4 +437,83 @@ delete process.env.CELCAT_USERNAME;
 delete process.env.CELCAT_PASSWORD;
 console.log("  ✓ pause anti-blocage de 6 h en mode schedule vérifiée (0 appel CELCAT)");
 
-console.log("\n✅ 11/11 vérifications réussies");
+/* ----------------------- schedules GitHub Actions (best-effort) */
+console.log("\n— schedules GitHub Actions : trous de planification —");
+
+// 5. Les crons lus dans edt-sync.yml pilotent le diagnostic (source de vérité
+//    unique : le script ne duplicate jamais le cadencement du workflow).
+const crons = await loadScheduleCrons(ROOT);
+assert.ok(Array.isArray(crons) && crons.length >= 4, `crons du workflow lisibles (${crons?.length ?? 0})`);
+assert.ok(crons.includes("7,22,37,52 4-21 * * 1-6"), "le créneau glissant lun–sam (minutes décalées) est bien dans edt-sync.yml");
+assert.ok(crons.includes("41 15 * * *"), "le second rechargement complet de l'après-midi est bien dans edt-sync.yml");
+console.log(`  ✓ crons lus depuis .github/workflows/edt-sync.yml (${crons.length} entrées)`);
+
+// 6. Premier créneau non servi : fenêtres lun–sam, nuit et veille du dimanche.
+assert.equal(
+  nextScheduleSlot(Date.parse("2026-11-25T00:00:00Z"), crons),
+  Date.parse("2026-11-25T04:07:00Z"),
+  "mercredi 00:00 UTC → premier créneau du matin à 04:07 UTC",
+);
+assert.equal(
+  nextScheduleSlot(Date.parse("2026-11-21T22:00:00Z"), crons),
+  Date.parse("2026-11-22T04:17:00Z"),
+  "samedi 22:00 UTC → rechargement complet du dimanche à 04:17 UTC (pas de trou de nuit)",
+);
+assert.equal(
+  nextScheduleSlot(Date.parse("2026-11-22T04:30:00Z"), crons),
+  Date.parse("2026-11-22T06:12:00Z"),
+  "dimanche 04:30 UTC → premier créneau horaire du dimanche à 06:12 UTC",
+);
+assert.equal(
+  nextScheduleSlot(Date.parse("2026-11-22T21:30:00Z"), crons),
+  Date.parse("2026-11-23T04:07:00Z"),
+  "dimanche 21:30 UTC → lundi 04:07 UTC (la nuit ne compte pas comme un trou)",
+);
+console.log("  ✓ prochain créneau calculé depuis les crons (nuit, week-end, dimanche)");
+
+// 7. Avertissement seulement quand le premier créneau non servi dépasse 3 h :
+//    un trou de 9 h (comme le 25 novembre 2026, où un cours retiré de l'EDT
+//    officiel est resté affiché faute de synchro) doit être signalé.
+const gapEnv = {
+  GITHUB_EVENT_NAME: "schedule",
+  GITHUB_REPOSITORY: "physiquepv/physiquepv.github.io",
+  GITHUB_TOKEN: "ghs_fake_token",
+};
+const fixedNow = Date.parse("2026-11-25T10:00:00Z");
+let gapApiCalls = 0;
+globalThis.fetch = async (url) => {
+  gapApiCalls++;
+  assert.ok(String(url).includes("api.github.com"), "le diagnostic n'appelle jamais CELCAT");
+  return {
+    ok: true,
+    status: 200,
+    json: async () => ({
+      workflow_runs: [
+        { id: 1, conclusion: "success", updated_at: "2026-11-24T23:33:40Z" },
+        { id: 2, conclusion: "failure", updated_at: "2026-11-24T14:28:24Z" },
+      ],
+    }),
+  };
+};
+const staleMessage = await reportScheduleGap(gapEnv, fixedNow);
+assert.equal(typeof staleMessage, "string", "un trou de 9 h produit un avertissement");
+assert.match(staleMessage, /rafraîchi depuis \d+ h/, "le message indique la durée du trou");
+assert.match(staleMessage, /dropés/, "le message explique la cause (schedules best-effort)");
+assert.equal(SCHEDULE_GAP_WARN_MS, 3 * 3600 * 1000, "seuil d'alerte : 3 h");
+
+// Une synchro récente ou un lancement manuel reste silencieux.
+globalThis.fetch = async () => ({
+  ok: true,
+  status: 200,
+  json: async () => ({ workflow_runs: [{ id: 3, conclusion: "success", updated_at: "2026-11-25T09:52:10Z" }] }),
+});
+assert.equal(await reportScheduleGap(gapEnv, fixedNow), null, "une synchro récente ne déclenche rien");
+assert.equal(
+  await reportScheduleGap({ ...gapEnv, GITHUB_EVENT_NAME: "workflow_dispatch" }, fixedNow),
+  null,
+  "un lancement manuel ne déclenche pas d'alerte",
+);
+assert.equal(await reportScheduleGap({}, fixedNow), null, "hors GitHub, aucun appel");
+console.log(`  ✓ trou de 9 h signalé, synchro récente et lancement manuel silencieux (${gapApiCalls} appel API)`);
+
+console.log("\n✅ 14/14 vérifications réussies");
