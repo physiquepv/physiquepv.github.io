@@ -10,7 +10,7 @@ donc toujours à la bonne date, avec les **annulations et absences de professeur
 edt.uvsq.fr (CELCAT)
         │  /LdapLogin + POST /Home/GetCalendarData   ← CORS + session LDAP UVSQ
         ▼
-.github/workflows/edt-sync.yml          toutes les 15 min (lun–sam) + dim + 1×/jour
+.github/workflows/edt-sync.yml          4 créneaux/h décalés (lun–sam) + dim + 2×/jour
         │  scripts/sync-edt.mjs ──▶ scripts/edt-changes.mjs
         │  (session LDAP chiffrée via secrets GitHub, extraction des enseignants, diff)
         ▼
@@ -51,7 +51,7 @@ index.html                              filtrage du TD, bandeau « ce qui a chan
 | `edt.config.json` | **Configuration** : groupe CELCAT, TD de l'étudiant, semestre, paramètres d'appel et `courseLinks` (pages eCampus des matières). |
 | `scripts/sync-edt.mjs` | Récupère CELCAT et écrit `data/edt.json` (uniquement si le planning a changé). `--summary` / `--summary-subject` produisent le résumé lisible des changements. |
 | `scripts/edt-changes.mjs` | Compare deux versions du planning et décrit chaque changement (il réutilise le noyau de `index.html`, donc un cours est décrit exactement comme la page l'affiche). |
-| `.github/workflows/edt-sync.yml` | Synchro automatique (15 min lun–sam, horaire le dimanche + 1×/jour) et manuelle. |
+| `.github/workflows/edt-sync.yml` | Synchro automatique (4 créneaux/h décalés lun–sam, horaire le dimanche + 2×/jour) et manuelle. |
 | `.github/workflows/edt-tests.yml` | Lance les tests à chaque modification. |
 | `data/edt.json` | Planning brut publié (mis à jour par le workflow). |
 | `tests/` | Tests du noyau, des changements (détection + affichage), de la synchro, du rendu complet (jsdom) et du mode hors-ligne. |
@@ -87,12 +87,18 @@ Maintenant :
   dernière semaine contenant des cours ; une semaine publiée mais vide affiche
   « Aucun cours au planning officiel », et l'option de TD garde le numéro
   choisi en changeant de semestre (`S3MIASHS TD 2` → `S4MIASHS TD 2`) ;
-- la synchro glissante (toutes les 15 min du lundi au samedi, chaque heure le
+- la synchro glissante (4 créneaux/h du lundi au samedi, chaque heure le
   dimanche) rafraîchit la fenêtre autour du jour **plus les dernières semaines
   de la fenêtre du semestre** (`weeksTail`, 4 par défaut) : les rattrapages,
   cours du samedi et cours de janvier publiés par l'université apparaissent donc
-  sur le site automatiquement, sans attendre le rechargement complet du
-  lendemain ;
+  sur le site automatiquement, sans attendre le prochain rechargement complet ;
+- les `schedule` de GitHub Actions étant best-effort (créneaux retardés ou
+  dropés silencieusement sous charge, surtout aux heures rondes — d'où les
+  minutes décalées 7/22/37/52), la synchro mesure l'écart avec sa dernière
+  exécution réussie et publie un avertissement **Planning UVSQ en retard**
+  dans le run dès que le premier créneau non servi dépasse 3 h : un trou ne
+  laisse plus jamais un planning périmé (cours retiré encore affiché…) sans
+  signal ;
 - une semaine pas encore publiée est annoncée « Pas encore publié » — aucune
   vacance n'est inventée ;
 - l'impression découpe autant de pages A4 que nécessaire (12 semaines par page).
@@ -270,8 +276,8 @@ Garde-fous (détaillés par `npm run test:changes`) :
 3. Pages : *Deploy from a branch* → `main` / `/ (root)` (déjà en place).
 4. Lancer **Actions → « Sync emploi du temps UVSQ » → Run workflow** pour mettre
    immédiatement à jour `data/edt.json` (ensuite, la tâche tourne toute seule
-   toutes les 15 minutes du lundi au samedi, chaque heure le dimanche et en
-   rechargement complet chaque matin).
+   4×/h du lundi au samedi, chaque heure le dimanche, avec deux rechargements
+   complets par jour — matin et après-midi).
 
 ## Tests
 
