@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-23T13:46:51.893Z",
+  "generatedAt": "2026-11-25T09:36:32.106Z",
   "group": "S3MIASHS",
   "tdGroup": "S3MIASHS TD 2",
   "label": "L2 MIASHS — Semestre 3",
@@ -29,6 +29,19 @@
   ],
   "source": "https://edt.uvsq.fr/cal?vt=agendaWeek&et=group&fid0=S3MIASHS",
   "fetchedWeeks": [
+    "2026-08-24",
+    "2026-08-31",
+    "2026-09-07",
+    "2026-09-14",
+    "2026-09-21",
+    "2026-09-28",
+    "2026-10-05",
+    "2026-10-12",
+    "2026-10-19",
+    "2026-10-26",
+    "2026-11-02",
+    "2026-11-09",
+    "2026-11-16",
     "2026-11-23",
     "2026-11-30",
     "2026-12-07",
@@ -38,7 +51,7 @@
     "2027-01-04",
     "2027-01-11"
   ],
-  "contentHash": "5a2db05d-96967",
+  "contentHash": "7a4e9ea3-96501",
   "changes": [
     {
       "kind": "added",
@@ -514,6 +527,29 @@
         "room": "",
         "type": "Annulation",
         "cancelled": true
+      }
+    },
+    {
+      "kind": "removed",
+      "date": "2026-11-25",
+      "startMin": 830,
+      "endMin": 920,
+      "time": "13:50 - 15:20",
+      "title": "Anglais UE2",
+      "type": "TD",
+      "room": "E304- Bât Joliot-Curie",
+      "cat": "anglais",
+      "groups": [
+        "S3MIASHS"
+      ],
+      "eventId": "-1742255826:1073733534:17:5793485:15",
+      "reason": "",
+      "detectedAt": "2026-11-25T09:36:32.106Z",
+      "previous": {
+        "time": "13:50 - 15:20",
+        "room": "E304- Bât Joliot-Curie",
+        "type": "TD",
+        "cancelled": false
       }
     },
     {
@@ -1145,7 +1181,7 @@
   "weeks": {
     "2026-09-28": {
       "monday": "2026-09-28",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1332,7 +1368,7 @@
     },
     "2026-10-05": {
       "monday": "2026-10-05",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1532,7 +1568,7 @@
     },
     "2026-10-12": {
       "monday": "2026-10-12",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1756,21 +1792,21 @@
     },
     "2026-08-24": {
       "monday": "2026-08-24",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-08-31": {
       "monday": "2026-08-31",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-09-07": {
       "monday": "2026-09-07",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1801,7 +1837,7 @@
     },
     "2026-09-14": {
       "monday": "2026-09-14",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -1941,7 +1977,7 @@
     },
     "2026-09-21": {
       "monday": "2026-09-21",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2140,7 +2176,7 @@
     },
     "2026-10-19": {
       "monday": "2026-10-19",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2363,14 +2399,14 @@
     },
     "2026-10-26": {
       "monday": "2026-10-26",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-11-02": {
       "monday": "2026-11-02",
-      "fetchedAt": "2026-11-12T12:42:16.754Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2606,7 +2642,7 @@
     },
     "2026-11-09": {
       "monday": "2026-11-09",
-      "fetchedAt": "2026-11-13T11:40:12.164Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -2827,7 +2863,7 @@
     },
     "2026-11-16": {
       "monday": "2026-11-16",
-      "fetchedAt": "2026-11-20T12:18:20.635Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3027,7 +3063,7 @@
     },
     "2026-11-23": {
       "monday": "2026-11-23",
-      "fetchedAt": "2026-11-23T13:46:51.893Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3140,18 +3176,6 @@
           "teacher": "Aurelien Malthet"
         },
         {
-          "id": "-1742255826:1073733534:17:5793485:15",
-          "start": "2026-11-25T13:50:00",
-          "end": "2026-11-25T15:20:00",
-          "description": "TD\r\n\r\n<br />\r\n\r\nL2 MIASHS S3 ( S3MIASHS ) [S3MIASHS]\r\n\r\n<br />\r\n\r\nE304- B&#226;t Joliot-Curie [Salle de TD]\r\n\r\n<br />\r\n\r\nLSANGS3-Anglais UE2 [LSANGS3]\r\n\r\n<br />\r\n\r\n\r\n",
-          "eventCategory": "TD",
-          "backgroundColor": "#FFFF00",
-          "modules": [
-            "LSANGS3"
-          ],
-          "teacher": "Florian Leniaud"
-        },
-        {
           "id": "-1742255826:1073733534:17:5780729:15",
           "start": "2026-11-25T15:30:00",
           "end": "2026-11-25T17:00:00",
@@ -3227,7 +3251,7 @@
     },
     "2026-11-30": {
       "monday": "2026-11-30",
-      "fetchedAt": "2026-11-23T13:46:51.893Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3391,22 +3415,21 @@
           "id": "-1742255826:1073733534:17:5910616:16",
           "start": "2026-12-06T09:00:00",
           "end": "2026-12-06T10:30:00",
-          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nL1 Double Dipl&#244;me Math&#233;matiques Physique - S1LDDMPTD-01 [S1LDDMP]<br />L1 MIASHS S1 - S1MIASCM-01 [S1MIASCM-01]<br />L2 Chimie S3 TD 1A ( option BI304 ) [S3CHTD-01A]<br />(16 autres...)\r\n\r\n<br />\r\n\r\nLSANGS1-LSANGS1 - Anglais UE1 [LSANGS1]<br />LSANGS1N-LSANGS1N - Anglais UE1 - L1 LDD MP [LSANGS1N]<br />LSANGS3-Anglais UE2 [LSANGS3]<br />(1 autres...)\r\n\r\n<br />\r\n\r\n\r\n",
+          "description": "Contr&#244;le continu\r\n\r\n<br />\r\n\r\nL1 Double Dipl&#244;me Math&#233;matiques Physique - S1LDDMPTD-01 [S1LDDMP]<br />L1 MIASHS S1 - S1MIASCM-01 [S1MIASCM-01]<br />L2 Chimie S3 TD 1A ( option BI304 ) [S3CHTD-01A]<br />(16 autres...)\r\n\r\n<br />\r\n\r\nLSANGS1-LSANGS1 - Anglais UE1 [LSANGS1]<br />LSANGS1N-LSANGS1N - Anglais UE1 - L1 LDD MP [LSANGS1N]<br />LSANGS5-Anglais UE3 [LSANGS5]\r\n\r\n<br />\r\n\r\n\r\n",
           "eventCategory": "Contrôle continu",
           "backgroundColor": "#FF00FF",
           "modules": [
             "LSANGS5",
             "LSANGS1",
-            "LSANGS3",
             "LSANGS1N"
           ],
-          "teacher": "Loretta Kimble / Florian Leniaud / Claudia Ruault"
+          "teacher": "Florian Leniaud / Claudia Ruault"
         }
       ]
     },
     "2026-12-07": {
       "monday": "2026-12-07",
-      "fetchedAt": "2026-11-23T13:46:51.893Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3557,7 +3580,7 @@
     },
     "2026-12-14": {
       "monday": "2026-12-14",
-      "fetchedAt": "2026-11-23T13:46:51.893Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3709,21 +3732,21 @@
     },
     "2026-12-21": {
       "monday": "2026-12-21",
-      "fetchedAt": "2026-11-23T13:46:51.893Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2026-12-28": {
       "monday": "2026-12-28",
-      "fetchedAt": "2026-11-23T13:46:51.893Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": []
     },
     "2027-01-04": {
       "monday": "2027-01-04",
-      "fetchedAt": "2026-11-23T13:46:51.893Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
@@ -3780,7 +3803,7 @@
     },
     "2027-01-11": {
       "monday": "2027-01-11",
-      "fetchedAt": "2026-11-23T13:46:51.893Z",
+      "fetchedAt": "2026-11-25T09:36:32.106Z",
       "endpoint": "/Home/GetCalendarData",
       "calView": "agendaWeek",
       "events": [
